@@ -1,5 +1,19 @@
 package hardware;
 
+import hardware.channels.CoinChannel;
+import hardware.channels.PopCanChannel;
+import hardware.exceptions.SimulationException;
+import hardware.funds.CardSlot;
+import hardware.funds.CoinReceptacle;
+import hardware.funds.CoinSlot;
+import hardware.racks.CoinRack;
+import hardware.racks.PopCanRack;
+import hardware.ui.DeliveryChute;
+import hardware.ui.Display;
+import hardware.ui.IndicatorLight;
+import hardware.ui.PushButton;
+import hardware.ui.PushButtonCodeInterpreter;
+
 import java.util.HashMap;
 import java.util.Map;
 

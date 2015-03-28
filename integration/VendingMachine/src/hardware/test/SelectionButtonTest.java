@@ -1,7 +1,7 @@
 package hardware.test;
 
-import hardware.PushButton;
 import hardware.test.stub.SelectionButtonListenerStub;
+import hardware.ui.PushButton;
 
 import org.junit.After;
 import org.junit.Before;

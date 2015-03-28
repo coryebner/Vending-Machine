@@ -2,12 +2,12 @@ package hardware.test;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import hardware.CapacityExceededException;
-import hardware.Coin;
-import hardware.CoinChannel;
-import hardware.CoinSlot;
-import hardware.DisabledException;
-import hardware.SimulationException;
+import hardware.channels.CoinChannel;
+import hardware.exceptions.CapacityExceededException;
+import hardware.exceptions.DisabledException;
+import hardware.exceptions.SimulationException;
+import hardware.funds.Coin;
+import hardware.funds.CoinSlot;
 import hardware.test.stub.AbstractCoinAcceptorStub;
 import hardware.test.stub.CoinSlotListenerStub;
 

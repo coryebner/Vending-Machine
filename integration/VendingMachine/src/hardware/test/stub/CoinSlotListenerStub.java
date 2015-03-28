@@ -1,8 +1,8 @@
 package hardware.test.stub;
 
-import hardware.Coin;
-import hardware.CoinSlotListener;
-import hardware.CoinSlot;
+import hardware.funds.Coin;
+import hardware.funds.CoinSlot;
+import hardware.funds.CoinSlotListener;
 
 public class CoinSlotListenerStub extends AbstractStub implements
         CoinSlotListener {

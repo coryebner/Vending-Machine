@@ -3,11 +3,12 @@ package hardware.test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import hardware.CapacityExceededException;
-import hardware.Coin;
-import hardware.CoinChannel;
-import hardware.CoinReceptacle;
-import hardware.DisabledException;
+import hardware.channels.CoinChannel;
+import hardware.exceptions.CapacityExceededException;
+import hardware.exceptions.DisabledException;
+import hardware.exceptions.SimulationException;
+import hardware.funds.Coin;
+import hardware.funds.CoinReceptacle;
 import hardware.test.stub.AbstractCoinAcceptorStub;
 import hardware.test.stub.CoinReceptacleListenerStub;
 
@@ -17,7 +18,6 @@ import java.util.Map;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import hardware.SimulationException;
 
 public class CoinReceptacleTest {
     private Coin coin, invalidCoin;

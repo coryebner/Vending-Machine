@@ -1,8 +1,8 @@
 package hardware.test.stub;
 
-import hardware.Coin;
-import hardware.CoinReceptacleListener;
-import hardware.CoinReceptacle;
+import hardware.funds.Coin;
+import hardware.funds.CoinReceptacle;
+import hardware.funds.CoinReceptacleListener;
 
 public class CoinReceptacleListenerStub extends AbstractStub implements
         CoinReceptacleListener {

@@ -1,8 +1,8 @@
 package hardware.test.stub;
 
-import hardware.AbstractCoinAcceptor;
-import hardware.CapacityExceededException;
-import hardware.Coin;
+import hardware.acceptors.AbstractCoinAcceptor;
+import hardware.exceptions.CapacityExceededException;
+import hardware.funds.Coin;
 
 public class AbstractCoinAcceptorStub extends AbstractStub implements
         AbstractCoinAcceptor {

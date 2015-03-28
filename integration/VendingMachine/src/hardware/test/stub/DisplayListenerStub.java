@@ -1,7 +1,7 @@
 package hardware.test.stub;
 
-import hardware.Display;
-import hardware.DisplayListener;
+import hardware.ui.Display;
+import hardware.ui.DisplayListener;
 
 public class DisplayListenerStub extends AbstractStub implements
         DisplayListener {

@@ -1,7 +1,7 @@
 package hardware.test.stub;
 
-import hardware.PushButton;
-import hardware.PushButtonListener;
+import hardware.ui.PushButton;
+import hardware.ui.PushButtonListener;
 
 public class SelectionButtonListenerStub extends AbstractStub implements
         PushButtonListener {

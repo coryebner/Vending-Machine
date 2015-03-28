@@ -1,7 +1,7 @@
 package hardware.test;
 
-import hardware.Display;
 import hardware.test.stub.DisplayListenerStub;
+import hardware.ui.Display;
 
 import org.junit.After;
 import org.junit.Before;

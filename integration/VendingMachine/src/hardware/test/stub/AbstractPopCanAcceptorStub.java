@@ -1,8 +1,8 @@
 package hardware.test.stub;
 
-import hardware.AbstractPopCanAcceptor;
-import hardware.CapacityExceededException;
-import hardware.PopCan;
+import hardware.acceptors.AbstractPopCanAcceptor;
+import hardware.exceptions.CapacityExceededException;
+import hardware.products.PopCan;
 
 public class AbstractPopCanAcceptorStub extends AbstractStub implements
         AbstractPopCanAcceptor {

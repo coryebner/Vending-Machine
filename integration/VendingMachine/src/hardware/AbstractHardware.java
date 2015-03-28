@@ -1,5 +1,7 @@
 package hardware;
 
+import hardware.exceptions.SimulationException;
+
 import java.lang.reflect.Method;
 import java.util.Vector;
 

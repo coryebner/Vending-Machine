@@ -1,7 +1,7 @@
 package hardware.test.stub;
 
-import hardware.IndicatorLight;
-import hardware.IndicatorLightListener;
+import hardware.ui.IndicatorLight;
+import hardware.ui.IndicatorLightListener;
 
 public class IndicatorLightListenerStub extends AbstractStub implements
         IndicatorLightListener {

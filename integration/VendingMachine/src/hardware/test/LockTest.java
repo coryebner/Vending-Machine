@@ -2,8 +2,8 @@ package hardware.test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import hardware.Lock;
 import hardware.test.stub.LockListenerStub;
+import hardware.ui.Lock;
 
 import org.junit.After;
 import org.junit.Before;

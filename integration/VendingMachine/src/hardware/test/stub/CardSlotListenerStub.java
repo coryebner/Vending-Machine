@@ -1,7 +1,7 @@
 package hardware.test.stub;
 
-import hardware.CardSlotListener;
-import hardware.CardSlot;
+import hardware.funds.CardSlot;
+import hardware.funds.CardSlotListener;
 
 public class CardSlotListenerStub extends AbstractStub implements
         CardSlotListener {

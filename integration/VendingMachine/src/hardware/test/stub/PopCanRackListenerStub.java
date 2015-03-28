@@ -1,8 +1,8 @@
 package hardware.test.stub;
 
-import hardware.PopCan;
-import hardware.PopCanRackListener;
-import hardware.PopCanRack;
+import hardware.products.PopCan;
+import hardware.racks.PopCanRack;
+import hardware.racks.PopCanRackListener;
 
 public class PopCanRackListenerStub extends AbstractStub implements
         PopCanRackListener {

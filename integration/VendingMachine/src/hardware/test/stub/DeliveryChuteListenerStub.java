@@ -1,7 +1,7 @@
 package hardware.test.stub;
 
-import hardware.DeliveryChuteListener;
-import hardware.DeliveryChute;
+import hardware.ui.DeliveryChute;
+import hardware.ui.DeliveryChuteListener;
 
 public class DeliveryChuteListenerStub extends AbstractStub implements
         DeliveryChuteListener {

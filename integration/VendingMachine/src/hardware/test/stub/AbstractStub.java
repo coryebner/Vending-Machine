@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
-import hardware.SimulationException;
+import hardware.exceptions.SimulationException;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

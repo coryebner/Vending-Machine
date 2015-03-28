@@ -1,8 +1,8 @@
 package hardware.test.stub;
 
-import hardware.Coin;
-import hardware.CoinRackListener;
-import hardware.CoinRack;
+import hardware.funds.Coin;
+import hardware.racks.CoinRack;
+import hardware.racks.CoinRackListener;
 
 public class CoinRackListenerStub extends AbstractStub implements
         CoinRackListener {

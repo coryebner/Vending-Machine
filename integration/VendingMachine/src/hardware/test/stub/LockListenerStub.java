@@ -1,7 +1,7 @@
 package hardware.test.stub;
 
-import hardware.Lock;
-import hardware.LockListener;
+import hardware.ui.Lock;
+import hardware.ui.LockListener;
 
 public class LockListenerStub extends AbstractStub implements
         LockListener {
