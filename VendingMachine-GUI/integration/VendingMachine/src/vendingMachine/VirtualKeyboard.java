@@ -8,6 +8,7 @@
 package vendingMachine;
 
 import java.awt.EventQueue;
+import java.util.AbstractMap;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -66,15 +67,38 @@ public class VirtualKeyboard extends JFrame {
 
     public class MyActionListener implements ActionListener {
 
+    	public String stringToSend;
+    	public void updateString(String newValue){
+    		this.stringToSend=newValue;
+    		System.out.println("We are sending this string: "+stringToSend);
+    		//TODO 
+    		//Spencer you will do the action raising depending on key typed here
+    	}
+    	
         @Override
         public void actionPerformed(ActionEvent e) {
             JButton btn = (JButton) e.getSource();
-            if (btn.getClientProperty("key").equals("Space")) {
-//            		btn.getClientProperty("key").
-            }
             System.out.println("clicked column --> " + btn.getClientProperty("column")
                     + ", row --> " + btn.getClientProperty("row")
                     + ", Key Typed --> " + btn.getClientProperty("key"));
+            if (btn.getClientProperty("key").equals("           Space            ")) {
+            	updateString("/0");
+            }
+            else if (btn.getClientProperty("key").equals("Enter")) {
+            	updateString("/n");
+            }
+            else if (btn.getClientProperty("key").equals("Tab")) {
+            	updateString("/t");
+            }
+            else if (btn.getClientProperty("key").equals("Backspace")) {
+            	updateString("/b");
+            }
+            else if (btn.getClientProperty("key").equals("Shift")) {
+            	//TODO
+            	//Arnold you should implement the logic for shift here
+            }
+            else
+            	updateString(btn.getClientProperty("key").toString());
         }
     }
 
