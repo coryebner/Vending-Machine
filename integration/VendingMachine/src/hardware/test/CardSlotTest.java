@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import hardware.SimulationException;
+import hardware.exceptions.SimulationException;
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.EmptyException;
 import hardware.funds.Card;
