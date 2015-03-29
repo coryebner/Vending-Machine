@@ -23,7 +23,7 @@ public class CoinRackController implements CoinRackListener {
 	/** Description of getQuantity for a specific rack of coins
 	 * @return 			The number of coins in the specific rack
 	 */
-	protected int getQuanity(){
+	protected int getQuantity(){
 		return 0;
 	}
 	
