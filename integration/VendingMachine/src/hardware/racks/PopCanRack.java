@@ -1,6 +1,5 @@
 package hardware.racks;
 
-import hardware.AbstractHardware;
 import hardware.channels.PopCanChannel;
 import hardware.exceptions.CapacityExceededException;
 import hardware.exceptions.DisabledException;

@@ -3,6 +3,7 @@ package hardware.test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
 import hardware.Hardware;

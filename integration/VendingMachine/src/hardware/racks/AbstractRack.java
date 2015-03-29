@@ -2,6 +2,7 @@ package hardware.racks;
 
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
+import hardware.acceptors.IAcceptor;
 import hardware.channels.IChannel;
 import hardware.exceptions.SimulationException;
 import hardware.funds.IFund;
@@ -10,9 +11,9 @@ import hardware.funds.IRackable;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public abstract class AbstractRack<T extends AbstractHardwareListener, U extends IRackable, V extends IChannel<?>> extends AbstractHardware<T> 
+public abstract class AbstractRack<T extends AbstractHardwareListener, U extends IRackable, V extends IChannel<? extends IAcceptor>> extends AbstractHardware<T> 
 implements IRack<V> {
-    private int maxCapacity;
+    final private int maxCapacity;
     private Queue<U> queue = new LinkedList<U>();
     private V sink;
     
