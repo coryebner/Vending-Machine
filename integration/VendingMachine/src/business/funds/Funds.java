@@ -21,7 +21,7 @@ public class Funds {
 		private boolean payPalPresent;
 		
 		private PrepaidController prepaidController;
-		private BankNoteController bankNoteController;
+		private BanknoteController bankNoteController;
 		private CoinsController coinsController;
 		
 		private VMCurrencies machineCurrencies;
@@ -92,7 +92,7 @@ public class Funds {
 		/** Description of getBillsController
 		 * @return 			The BillsController for registration
 		 */
-		public BankNoteController getBankNoteController() {
+		public BanknoteController getBankNoteController() {
 			return bankNoteController;
 		}
 

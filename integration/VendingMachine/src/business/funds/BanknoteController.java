@@ -14,7 +14,7 @@ import hardware.funds.BanknoteReceptacleListener;
  * 
  * Class to interact with hardware to conduct a Bills Transaction
  */
-public class BankNoteController implements BanknoteReceptacleListener {
+public class BanknoteController implements BanknoteReceptacleListener {
 	
 	private int availableBalance = 0;
 	
@@ -48,14 +48,12 @@ public class BankNoteController implements BanknoteReceptacleListener {
 
 	@Override
 	public void banknoteAdded(BanknoteReceptacle receptacle, Banknote banknote) {
-		// TODO Auto-generated method stub
-		
+		availableBalance += banknote.getValue();
 	}
 
 	@Override
 	public void BanknoteRemoved(BanknoteReceptacle receptacle) {
-		// TODO Auto-generated method stub
-		
+		availableBalance = 0;
 	}
 
 	@Override
