@@ -2,6 +2,7 @@ package hardware;
 
 import hardware.channels.CoinChannel;
 import hardware.channels.PopCanChannel;
+import hardware.exceptions.NoSuchHardwareException;
 import hardware.exceptions.SimulationException;
 import hardware.funds.CardSlot;
 import hardware.funds.CoinReceptacle;
@@ -261,6 +262,13 @@ public class Hardware {
     public int getNumberOfOutOfProductLights(){
     	return outOfProductLights.length;
     }
+    
+    /**
+	 * Returns the return button.
+	 */
+	public PushButton getReturnButton() {
+		return returnButton;
+	}
 
     /**
      * Returns a selection button at the indicated index.
