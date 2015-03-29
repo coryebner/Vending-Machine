@@ -1,4 +1,7 @@
 package business.funds;
+
+import java.util.Currency;
+
 /** Description of PrepaidController
  * @author James Pihooja
  * @author Nabil Muthanna
@@ -19,6 +22,15 @@ public class Funds {
 		private PrepaidController prepaidController;
 		private BankNoteController bankNoteController;
 		private CoinsController coinsController;
+		
+		private VMCurrencies machineCurrencies;
+		
+		
+		public Funds(VMCurrencies machineCurrencies){
+			this.machineCurrencies = machineCurrencies;
+			
+		}
+		
 		
 		/** Description of ConductTransaction with all available payment methods
 		 * @param price 	The price in cents of the transaction attempted

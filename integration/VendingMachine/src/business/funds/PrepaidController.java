@@ -15,6 +15,11 @@ public class PrepaidController implements CardSlotListener {
 
 	private boolean prePaidCardInserted;
 	private Card prepaidCard;
+	private VMCurrencies currencies;
+	
+	public PrepaidController(VMCurrencies vmcurrencies){
+		currencies = vmcurrencies;
+	}
 	
 	/** Description of ConductTransaction for a Prepaid Card
 	 * @param price 	The price in cents of the transaction attempted
