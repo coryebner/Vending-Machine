@@ -1,6 +1,19 @@
 package hardware;
 
+import java.net.Socket;
+
 import hardware.exceptions.NoSuchHardwareException;
+import hardware.funds.BanknoteReceptacle;
+import hardware.funds.BanknoteSlot;
+import hardware.funds.CardSlot;
+import hardware.funds.CoinReceptacle;
+import hardware.funds.CoinSlot;
+import hardware.racks.CoinRack;
+import hardware.ui.DeliveryChute;
+import hardware.ui.Display;
+import hardware.ui.IndicatorLight;
+import hardware.ui.PushButton;
+import hardware.ui.PushButtonCodeInterpreter;
 
 public abstract class AbstractVendingMachine {
 
@@ -11,8 +24,7 @@ public abstract class AbstractVendingMachine {
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	// public IndicatorLight getOutOfOrderLight() {
-	public Object getOutOfOrderLight() throws NoSuchHardwareException {
+	public IndicatorLight getOutOfOrderLight() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 
@@ -21,8 +33,7 @@ public abstract class AbstractVendingMachine {
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	// public IndicatorLight getExactChangeLight() throws NoSuchHardwareException {
-	public Object getExactChangeLight() throws NoSuchHardwareException {
+	public IndicatorLight getExactChangeLight() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 
@@ -31,8 +42,7 @@ public abstract class AbstractVendingMachine {
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	// public IndicatorLight getNoInternetConnectionLight() throws NoSuchHardwareException {
-	public Object getNoInternetConnectionLight() throws NoSuchHardwareException {
+	public IndicatorLight getNoInternetConnectionLight() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 	
@@ -43,8 +53,7 @@ public abstract class AbstractVendingMachine {
 	 *            The index of the desired out of product light.
 	 * @throws NoSuchHardwareException
 	 */
-	// public IndicatorLight getOutOfProductLight(int index) throws NoSuchHardwareException {
-	public Object getOutOfProductLight(int index) throws NoSuchHardwareException {
+	public IndicatorLight getOutOfProductLight(int index) throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 
@@ -55,8 +64,7 @@ public abstract class AbstractVendingMachine {
 	 *            The index of the desired selection button.
 	 * @throws NoSuchHardwareException
 	 */
-	// public PushButton getSelectionButton(int index) throws NoSuchHardwareException {
-	public Object getSelectionButton(int index) throws NoSuchHardwareException {
+	public PushButton getSelectionButton(int index) throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 
@@ -77,8 +85,7 @@ public abstract class AbstractVendingMachine {
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	// public PushButton getReturnButton() throws NoSuchHardwareException {
-	public Object getReturnButton() throws NoSuchHardwareException {
+	public PushButton getReturnButton() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 	
@@ -87,8 +94,7 @@ public abstract class AbstractVendingMachine {
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	// public PushButtonCodeInterpreter getPushButtonCodeInterpreter() throws NoSuchHardwareException {
-	public Object getPushButtonCodeInterpreter() throws NoSuchHardwareException {
+	public PushButtonCodeInterpreter getPushButtonCodeInterpreter() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 	
@@ -97,18 +103,16 @@ public abstract class AbstractVendingMachine {
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	// public CoinSlot getCoinSlot() {
-	public Object getCoinSlot() throws NoSuchHardwareException {
+	public CoinSlot getCoinSlot() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 	
 	/**
-	 * Returns the bill slot.
+	 * Returns the banknote slot.
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	// public BillSlot getBillSlot() {
-	public Object getBillSlot() throws NoSuchHardwareException {
+	public BanknoteSlot getBanknoteSlot() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 	
@@ -117,8 +121,7 @@ public abstract class AbstractVendingMachine {
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	// public CardSlot getCardSlot() {
-	public Object getCardSlot() throws NoSuchHardwareException {
+	public CardSlot getCardSlot() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 
@@ -127,18 +130,16 @@ public abstract class AbstractVendingMachine {
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	// public CoinReceptacle getCoinReceptacle() throws NoSuchHardwareException {
-	public Object getCoinReceptacle() throws NoSuchHardwareException {
+	public CoinReceptacle getCoinReceptacle() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 
 	/**
-	 * Returns the bill receptacle.
+	 * Returns the banknote receptacle.
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	// public BillReceptacle getBillReceptacle() throws NoSuchHardwareException {
-	public Object getBillReceptacle() throws NoSuchHardwareException {
+	public BanknoteReceptacle getBanknoteReceptacle() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 	
@@ -147,8 +148,7 @@ public abstract class AbstractVendingMachine {
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	// public CoinReceptacle getStorageBin() throws NoSuchHardwareException {
-	public Object getStorageBin() throws NoSuchHardwareException {
+	public CoinReceptacle getStorageBin() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 
@@ -157,8 +157,7 @@ public abstract class AbstractVendingMachine {
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	// public DeliveryChute getDeliveryChute() throws NoSuchHardwareException {
-	public Object getDeliveryChute() throws NoSuchHardwareException {
+	public DeliveryChute getDeliveryChute() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 
@@ -171,8 +170,7 @@ public abstract class AbstractVendingMachine {
 	 * @throws IndexOutOfBoundsException
 	 *             if the index < 0 or the index >= number of coin racks.
 	 */
-	// public CoinRack getCoinRack(int index) throws NoSuchHardwareException {
-	public Object getCoinRack(int index) throws NoSuchHardwareException {
+	public CoinRack getCoinRack(int index) throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 
@@ -181,8 +179,7 @@ public abstract class AbstractVendingMachine {
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	// public Display getDisplay() throws NoSuchHardwareException {
-	public Object getDisplay() throws NoSuchHardwareException {
+	public Display getDisplay() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 
@@ -201,8 +198,7 @@ public abstract class AbstractVendingMachine {
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	// public Socket getSocket() throws NoSuchHardwareException {
-	public Object getSocket() throws NoSuchHardwareException {
+	public Socket getSocket() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 	
