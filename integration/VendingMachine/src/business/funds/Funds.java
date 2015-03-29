@@ -1,6 +1,7 @@
 package business.funds;
 
 import java.util.Currency;
+import java.util.Locale;
 
 /** Description of PrepaidController
  * @author James Pihooja
@@ -26,9 +27,8 @@ public class Funds {
 		private VMCurrencies machineCurrencies;
 		
 		
-		public Funds(VMCurrencies machineCurrencies){
-			this.machineCurrencies = machineCurrencies;
-			
+		public Funds(Locale locale){
+			this.machineCurrencies = new VMCurrencies(locale);
 		}
 		
 		

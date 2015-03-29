@@ -4,16 +4,16 @@ import java.util.Currency;
 
 public class SupportedCurrency {
 	
-	private final Currency locale;
+	private final Currency curr;
 	private float percentUSD;
 	
-	public SupportedCurrency(Currency locale, float usdExchangeRate){
-		this.locale = locale;
+	public SupportedCurrency(Currency curr, float usdExchangeRate){
+		this.curr = curr;
 		percentUSD = usdExchangeRate;
 	}
 	
-	public Currency getLocale(){
-		return locale;
+	public Currency getCurrancy(){
+		return curr;
 	}
 	
 	public float getPercentUSD(){

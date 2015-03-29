@@ -1,6 +1,7 @@
 package business.funds;
 
 import java.util.Currency;
+import java.util.Locale;
 import java.util.Vector;
 
 public class VMCurrencies {
@@ -8,55 +9,82 @@ public class VMCurrencies {
 	private SupportedCurrency machineLocale;
 	private int iterator = 0;
 	
-	public VMCurrencies(SupportedCurrency machineLocale){
-		this.machineLocale = machineLocale;
+	public VMCurrencies(Locale locale){
 		supportedCurrencies = new Vector<SupportedCurrency>();
-		supportedCurrencies.add(machineLocale);
+		setupSubsetOfCurrenciesHardCode(locale);
 	}
 	
-	public void addCurrency(SupportedCurrency newCurrency){	
-		for(SupportedCurrency supported: supportedCurrencies){
-			if(supported.getLocale() == newCurrency.getLocale()){
-				return;	// already added
-			}
+	private void setupSubsetOfCurrenciesHardCode(Locale locale){
+		SupportedCurrency newCurr;
+		Currency curr;
+		machineLocale = null;
+		
+		curr = Currency.getInstance(Locale.US);
+		newCurr = new SupportedCurrency(curr,1.00F);
+		supportedCurrencies.addElement(newCurr);
+		if(locale.equals(curr)){
+			machineLocale = newCurr;
 		}
-		supportedCurrencies.addElement(newCurrency);
+		
+		curr = Currency.getInstance(Locale.CANADA);
+		newCurr = new SupportedCurrency(curr,0.79F);
+		supportedCurrencies.addElement(newCurr);
+		if(locale.equals(curr)){
+			machineLocale = newCurr;
+		}
+		
+		curr = Currency.getInstance(Locale.UK);
+		newCurr = new SupportedCurrency(curr,1.09F); // Should return the EURO
+		supportedCurrencies.addElement(newCurr);
+		if(locale.equals(curr)){
+			machineLocale = newCurr;
+		}
+		
 	}
 	
-	public void removeCurrency(SupportedCurrency removal){
-		if(machineLocale.getLocale() == removal.getLocale()){
-			return; // cannot remove the local currency
-		}
-		supportedCurrencies.remove(removal);
-	}
+//	public void addCurrency(SupportedCurrency newCurrency){	
+//		for(SupportedCurrency supported: supportedCurrencies){
+//			if(supported.getLocale() == newCurrency.getLocale()){
+//				return;	// already added
+//			}
+//		}
+//		supportedCurrencies.addElement(newCurrency);
+//	}
+//	
+//	public void removeCurrency(SupportedCurrency removal){
+//		if(machineLocale.getLocale() == removal.getLocale()){
+//			return; // cannot remove the local currency
+//		}
+//		supportedCurrencies.remove(removal);
+//	}
+//	
+//	public void updateCurrency(SupportedCurrency update){
+//		for(SupportedCurrency supported: supportedCurrencies){
+//			if(supported.getLocale() == update.getLocale()){
+//				supported.setPercentUSD(update.getPercentUSD());
+//				return;
+//			}
+//		}
+//		supportedCurrencies.addElement(update);
+//	}
 	
-	public void updateCurrency(SupportedCurrency update){
-		for(SupportedCurrency supported: supportedCurrencies){
-			if(supported.getLocale() == update.getLocale()){
-				supported.setPercentUSD(update.getPercentUSD());
-				return;
-			}
-		}
-		supportedCurrencies.addElement(update);
-	}
-	
-	public void changeVMLocale(SupportedCurrency newLocale){
-
-		for(SupportedCurrency supported: supportedCurrencies){
-			if(supported.getLocale() == newLocale.getLocale()){
-				supported.setPercentUSD(newLocale.getPercentUSD()); //ensure the exchange rate is updated
-				machineLocale = supported;
-				return;
-			}
-		}
-		supportedCurrencies.addElement(newLocale);
-		machineLocale = newLocale;
-
-	}
+//	public void changeVMLocale(SupportedCurrency newLocale){
+//
+//		for(SupportedCurrency supported: supportedCurrencies){
+//			if(supported.getLocale() == newLocale.getLocale()){
+//				supported.setPercentUSD(newLocale.getPercentUSD()); //ensure the exchange rate is updated
+//				machineLocale = supported;
+//				return;
+//			}
+//		}
+//		supportedCurrencies.addElement(newLocale);
+//		machineLocale = newLocale;
+//
+//	}
 	
 	public SupportedCurrency getSupportedCurrency(Currency curr){
 		for(SupportedCurrency supported: supportedCurrencies){
-			if(supported.getLocale() == curr){
+			if(supported.getCurrancy() == curr){
 				return supported;
 			}
 		}
