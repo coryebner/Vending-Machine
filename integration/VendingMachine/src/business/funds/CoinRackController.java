@@ -1,4 +1,11 @@
 package business.funds;
+
+import hardware.AbstractHardware;
+import hardware.AbstractHardwareListener;
+import hardware.funds.Coin;
+import hardware.racks.CoinRack;
+import hardware.racks.CoinRackListener;
+
 /** Description of PrepaidController
  * @author Jan Clarin
  * @author Andrei (Andy) Savu
@@ -7,7 +14,7 @@ package business.funds;
  * 
  * Class to interact with hardware to conduct a Prepaid Transaction
  */
-public class CoinRackController {
+public class CoinRackController implements CoinRackListener {
 
 	private int quantity = 0;
 	private int capacity;			// possibly stored rather than calling hardware all the time
@@ -51,5 +58,41 @@ public class CoinRackController {
 	protected int provideChange(int amount)
 	{
 		return 0;
+	}
+
+	@Override
+	public void enabled(AbstractHardware<AbstractHardwareListener> hardware) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void coinsFull(CoinRack rack) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void coinsEmpty(CoinRack rack) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void coinAdded(CoinRack rack, Coin coin) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void coinRemoved(CoinRack rack, Coin coin) {
+		// TODO Auto-generated method stub
+		
 	}
 }

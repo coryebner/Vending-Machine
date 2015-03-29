@@ -1,4 +1,11 @@
 package business.funds;
+
+import hardware.AbstractHardware;
+import hardware.AbstractHardwareListener;
+import hardware.funds.Coin;
+import hardware.funds.CoinReceptacle;
+import hardware.funds.CoinReceptacleListener;
+
 /** Description of PrepaidController
  * @author Jan Clarin
  * @author Andrei (Andy) Savu
@@ -7,7 +14,7 @@ package business.funds;
  * 
  * Class to interact with hardware to conduct a coins Transaction
  */
-public class CoinsController {
+public class CoinsController implements CoinReceptacleListener{
 
 	private CoinRackController[] coinRackControllers;	// Storage of the coin racks
 	private boolean exactChangeStatus;
@@ -67,6 +74,48 @@ public class CoinsController {
 	 */
 	protected boolean isFullOfChangeActive() {
 		return fullOfChangeStatus;
+	}
+
+	@Override
+	public void enabled(AbstractHardware<AbstractHardwareListener> hardware) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void coinAdded(CoinReceptacle receptacle, Coin coin) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void coinsRemoved(CoinReceptacle receptacle) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void coinsFull(CoinReceptacle receptacle) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void enabled(CoinReceptacle receptacle) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void disabled(CoinReceptacle receptacle) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

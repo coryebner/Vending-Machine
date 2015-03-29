@@ -1,12 +1,20 @@
 package business.funds;
+
+import hardware.AbstractHardware;
+import hardware.AbstractHardwareListener;
+import hardware.funds.Card;
+import hardware.funds.CardSlot;
+import hardware.funds.CardSlotListener;
+
 /** Description of PrepaidController
  * @author Gurvir Singh
  * 
  * Class to interact with hardware to conduct a Prepaid Transaction
  */
-public class PrepaidController {
+public class PrepaidController implements CardSlotListener {
 
-	private boolean cardInserted;
+	private boolean prePaidCardInserted;
+	private Card prepaidCard;
 	
 	/** Description of ConductTransaction for a Prepaid Card
 	 * @param price 	The price in cents of the transaction attempted
@@ -30,6 +38,30 @@ public class PrepaidController {
 	 */
 	protected boolean isCardInserted(){
 		return false;
+	}
+
+	@Override
+	public void enabled(AbstractHardware<AbstractHardwareListener> hardware) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void cardInserted(CardSlot slot) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void cardEjected(CardSlot slot) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

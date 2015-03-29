@@ -17,7 +17,7 @@ public class Funds {
 		private boolean payPalPresent;
 		
 		private PrepaidController prepaidController;
-		private BillsController billsController;
+		private BankNoteController bankNoteController;
 		private CoinsController coinsController;
 		
 		/** Description of ConductTransaction with all available payment methods
@@ -80,8 +80,8 @@ public class Funds {
 		/** Description of getBillsController
 		 * @return 			The BillsController for registration
 		 */
-		public BillsController getBillsController() {
-			return billsController;
+		public BankNoteController getBankNoteController() {
+			return bankNoteController;
 		}
 
 		/** Description of getCoinsController
