@@ -9,15 +9,13 @@ import hardware.funds.Banknote;
  * Represents a simple device (like, say, a conveyor belt) that allows banknote to move
  * between other devices.
  */
-public class BanknoteChannel {
-    private AbstractBanknoteAcceptor sink;
-
+public class BanknoteChannel extends AbstractChannel<AbstractBanknoteAcceptor> {
     /**
      * Constructs a new banknote channel whose output is connected to the indicated
      * sink.
      */
     public BanknoteChannel(AbstractBanknoteAcceptor sink) {
-    	this.sink = sink;
+    	super(sink);
     }
 
     /**
@@ -33,17 +31,4 @@ public class BanknoteChannel {
     	getSink().acceptBanknote(banknote);
     }
 
-    /**
-     * Returns whether the sink has space for at least one more banknote.
-     */
-    public boolean hasSpace() {
-    	return getSink().hasSpace();
-    }
-
-    /**
-     * Returns the sink to which this channel is connected.
-     */
-    public AbstractBanknoteAcceptor getSink() {
-    	return sink;
-    }
 }

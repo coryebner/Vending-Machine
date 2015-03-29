@@ -9,5 +9,11 @@ public interface IChannel<T extends IAcceptor> {
      */
     public boolean hasSpace();
     
+    /**
+     * Returns the sink to which this channel is connected.
+     */
     public T getSink();
+    /**
+     * Returns whether the sink has space for at least one more banknote.
+     */
 }

@@ -5,11 +5,12 @@ import hardware.AbstractHardwareListener;
 import hardware.channels.IChannel;
 import hardware.exceptions.SimulationException;
 import hardware.funds.IFund;
+import hardware.funds.IRackable;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
-public abstract class AbstractRack<T extends AbstractHardwareListener, U extends IFund, V extends IChannel<?>> extends AbstractHardware<T> 
+public abstract class AbstractRack<T extends AbstractHardwareListener, U extends IRackable, V extends IChannel<?>> extends AbstractHardware<T> 
 implements IRack<V> {
     private int maxCapacity;
     private Queue<U> queue = new LinkedList<U>();
@@ -58,7 +59,8 @@ implements IRack<V> {
      *             the rack.
      */
     // TODO: Change funds to something else (PopCans != Funds)
-    @SuppressWarnings("unchecked")
+
+	@SuppressWarnings("unchecked")
 	public void loadWithoutEvents(IFund... funds) throws SimulationException {
 	if(maxCapacity < queue.size() + funds.length)
 	    throw new SimulationException("Capacity of rack is exceeded by load");
@@ -67,21 +69,7 @@ implements IRack<V> {
 	    queue.add((U)fund);
     }
         
-    private void notifyRackFull() {
-	Class<?>[] parameterTypes =
-	        new Class<?>[] { PopCanRack.class };
-	Object[] args = new Object[] { this };
-	notifyListeners(IRackListener.class, "rackFull", parameterTypes, args);
-    }
-
-    private void notifyRackEmpty() {
-	Class<?>[] parameterTypes =
-	        new Class<?>[] { PopCanRack.class };
-	Object[] args = new Object[] { this };
-	notifyListeners(IRackListener.class, "rackEmpty", parameterTypes, args);
-    }
-    
     public boolean hasSpace() {
-	return queue.size() < this.maxCapacity;
+    	return queue.size() < this.maxCapacity;
     }
 }

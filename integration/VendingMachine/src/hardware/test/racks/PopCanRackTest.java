@@ -154,7 +154,7 @@ public class PopCanRackTest {
 
     @Test(expected = SimulationException.class)
     public void testRackOverload() {
-	assertTrue(rack.getCapacity() == 2);
+	assertTrue(rack.getMaxCapacity() == 2);
 	rack.loadWithoutEvents(pop, pop, pop);
     }
 

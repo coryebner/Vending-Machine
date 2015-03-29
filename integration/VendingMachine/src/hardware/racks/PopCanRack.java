@@ -8,19 +8,13 @@ import hardware.exceptions.EmptyException;
 import hardware.exceptions.SimulationException;
 import hardware.products.PopCan;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 /**
  * Represents a storage rack for pop cans within the vending machine. More than
  * one would typically exist within the same vending machine. The pop can rack
  * has finite, positive capacity. A pop can rack can be disabled, which prevents
  * it from dispensing pop cans.
  */
-public class PopCanRack extends AbstractHardware<PopCanRackListener> {
-    private int maxCapacity;
-    private Queue<PopCan> queue = new LinkedList<PopCan>();
-    private PopCanChannel sink;
+public class PopCanRack extends AbstractRack<PopCanRackListener, PopCan, PopCanChannel> {
 
     /**
      * Creates a new pop can rack with the indicated maximum capacity. The pop
@@ -32,29 +26,9 @@ public class PopCanRack extends AbstractHardware<PopCanRackListener> {
      *             if the indicated capacity is not positive.
      */
     public PopCanRack(int capacity) {
-	if(capacity <= 0)
-	    throw new SimulationException("Capacity cannot be non-positive: " + capacity);
-
-	this.maxCapacity = capacity;
+    	super(capacity);
     }
 
-    /**
-     * Returns the maximum capacity of this pop can rack. Causes no events.
-     */
-    public int getCapacity() {
-	return maxCapacity;
-    }
-
-    /**
-     * Connects the pop can rack to an outlet channel, such as the delivery
-     * chute. Causes no events.
-     * 
-     * @param sink
-     *            The channel to be used as the outlet for dispensed pop cans.
-     */
-    public void connect(PopCanChannel sink) {
-	this.sink = sink;
-    }
 
     /**
      * Adds the indicated pop can to this pop can rack if there is sufficient
@@ -75,14 +49,14 @@ public class PopCanRack extends AbstractHardware<PopCanRackListener> {
 	if(isDisabled())
 	    throw new DisabledException();
 
-	if(queue.size() >= maxCapacity)
+	if(getQueue().size() >= getMaxCapacity())
 	    throw new CapacityExceededException();
 
-	queue.add(pop);
+	getQueue().add(pop);
 
 	notifyPopAdded(pop);
 
-	if(queue.size() >= maxCapacity)
+	if(getQueue().size() >= getMaxCapacity())
 	    notifyPopFull();
     }
 
@@ -105,18 +79,18 @@ public class PopCanRack extends AbstractHardware<PopCanRackListener> {
 	if(isDisabled())
 	    throw new DisabledException();
 
-	if(queue.isEmpty())
+	if(getQueue().isEmpty())
 	    throw new EmptyException();
 
-	PopCan pop = queue.remove();
+	PopCan pop = getQueue().remove();
 	notifyPopRemoved(pop);
 
-	if(sink == null)
+	if(getSink() == null)
 	    throw new SimulationException("The output channel is not connected");
 
-	sink.acceptPop(pop);
+	getSink().acceptPop(pop);
 
-	if(queue.isEmpty())
+	if(getQueue().isEmpty())
 	    notifyPopEmpty();
     }
 
@@ -132,11 +106,11 @@ public class PopCanRack extends AbstractHardware<PopCanRackListener> {
      *             this pop can rack.
      */
     public void loadWithoutEvents(PopCan... pops) throws SimulationException {
-	if(maxCapacity < queue.size() + pops.length)
+	if(getMaxCapacity() < getQueue().size() + pops.length)
 	    throw new SimulationException("Capacity exceeded by attempt to load");
 
 	for(PopCan pop : pops) {
-	    queue.add(pop);
+	    getQueue().add(pop);
 	}
     }
 

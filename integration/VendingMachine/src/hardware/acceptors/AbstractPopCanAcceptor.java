@@ -8,7 +8,7 @@ import hardware.products.PopCan;
  * A simple interface to allow a device to communicate with another device that
  * accepts pop cans.
  */
-public interface AbstractPopCanAcceptor {
+public interface AbstractPopCanAcceptor extends IAcceptor {
     /**
      * Instructs the device to take the pop can as input.
      * 

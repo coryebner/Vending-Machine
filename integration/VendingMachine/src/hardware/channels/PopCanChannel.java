@@ -10,14 +10,13 @@ import hardware.products.PopCan;
  * another. Once the hardware is configured, pop can channels will not be used
  * directly by other applications.
  */
-public class PopCanChannel implements AbstractPopCanAcceptor {
-    private AbstractPopCanAcceptor sink;
+public class PopCanChannel extends AbstractChannel<AbstractPopCanAcceptor> {
 
     /**
      * Creates a new pop can channel whose output will go to the indicated sink.
      */
     public PopCanChannel(AbstractPopCanAcceptor sink) {
-	this.sink = sink;
+	super(sink);
     }
 
     /**
@@ -28,9 +27,9 @@ public class PopCanChannel implements AbstractPopCanAcceptor {
      * @throws DisabledException
      *             if the output sink is currently disabled.
      */
-    @Override
+
     public void acceptPop(PopCan pop) throws CapacityExceededException,
 	    DisabledException {
-	sink.acceptPop(pop);
+    	getSink().acceptPop(pop);
     }
 }

@@ -9,15 +9,14 @@ import hardware.funds.Coin;
  * Represents a simple device (like, say, a tube) that allows coins to move
  * between other devices.
  */
-public class CoinChannel implements IChannel<AbstractCoinAcceptor> {
-    private AbstractCoinAcceptor sink;
+public class CoinChannel extends AbstractChannel<AbstractCoinAcceptor> {
 
     /**
      * Constructs a new coin channel whose output is connected to the indicated
      * sink.
      */
     public CoinChannel(AbstractCoinAcceptor sink) {
-	this.sink = sink;
+    	super(sink);
     }
 
     /**
@@ -34,17 +33,4 @@ public class CoinChannel implements IChannel<AbstractCoinAcceptor> {
 	getSink().acceptCoin(coin);
     }
 
-    /**
-     * Returns whether the sink has space for at least one more coin.
-     */
-    public boolean hasSpace() {
-    	return getSink().hasSpace();
-    }
-
-    /**
-     * Returns the sink to which this channel is connected.
-     */
-    public AbstractCoinAcceptor getSink() {
-    	return sink;
-    }
 }

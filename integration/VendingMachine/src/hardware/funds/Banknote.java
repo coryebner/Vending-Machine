@@ -9,4 +9,10 @@ public class Banknote extends AbstractFund {
 			super(value);
 		}
 
+		@Override
+		public int compareTo(IRackable o) {
+			// TODO : If banknote comparison is a possibility
+			return 0;
+		}
+
 }
