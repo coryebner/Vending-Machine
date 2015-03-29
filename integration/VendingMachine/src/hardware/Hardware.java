@@ -40,6 +40,8 @@ import java.util.Map;
  * letter&ndash;digit code; and</li>
  * <li>two indicator lights: one to indicate that exact change should be used by
  * the user; the other to indicate that the machine is out of order.</li>
+ * <li>one more indicator light for each selection button in the machine to
+ * indicate that the item is out of stock.</li>
  * </ul>
  * <p>
  * The component devices are interconnected as follows:
@@ -77,6 +79,8 @@ public class Hardware {
     private PushButton[] characterButtons;
     private PushButtonCodeInterpreter interpreter;
     private IndicatorLight exactChangeLight, outOfOrderLight;
+    private IndicatorLight[] outOfProductLights;
+    private PushButton returnButton;
 
     protected static int deliveryChuteCapacity = 20;
     protected static int coinReceptableCapacity = 50;
@@ -167,6 +171,10 @@ public class Hardware {
 
 	exactChangeLight = new IndicatorLight();
 	outOfOrderLight = new IndicatorLight();
+	for(int i = 0 ; i < popNames.length; i++){
+		outOfProductLights[i] = new IndicatorLight();
+	}
+	
     }
 
     /**
@@ -233,6 +241,25 @@ public class Hardware {
      */
     public IndicatorLight getOutOfOrderLight() {
 	return outOfOrderLight;
+    }
+    
+    /**
+     * Returns an out of product light at the indicated index.
+     * 
+     * @param index
+     * 			 The index of the desired out of product light.
+     * @throws IndexOutOfBoundsException
+     * 			 If the index < 0 or the index >= number of selection buttons. 
+     */
+    public IndicatorLight getOutOfProductLight(int index) {
+    return outOfProductLights[index]; 
+    }
+    
+    /**
+     * Returns the number of out of product lights.
+     */
+    public int getNumberOfOutOfProductLights(){
+    	return outOfProductLights.length;
     }
 
     /**
