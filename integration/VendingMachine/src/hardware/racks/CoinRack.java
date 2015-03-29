@@ -1,16 +1,13 @@
 package hardware.racks;
 
-import hardware.AbstractHardware;
 import hardware.acceptors.AbstractCoinAcceptor;
 import hardware.channels.CoinChannel;
 import hardware.exceptions.CapacityExceededException;
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.EmptyException;
-import hardware.exceptions.SimulationException;
 import hardware.funds.Coin;
 
-import java.util.LinkedList;
-import java.util.Queue;
+
 
 /**
  * Represents a device that stores coins of a particular denomination to
@@ -20,54 +17,15 @@ import java.util.Queue;
  * no check is performed on the value of each coin, meaning it is an external
  * responsibility to ensure the correct routing of coins.
  */
-public class CoinRack extends AbstractHardware<CoinRackListener>
-        implements AbstractCoinAcceptor {
-    private int maxCapacity;
-    private Queue<Coin> queue = new LinkedList<Coin>();
-    private CoinChannel sink;
+public class CoinRack extends AbstractRack<CoinRackListener, Coin, CoinChannel> implements AbstractCoinAcceptor {
 
     /**
      * Creates a coin rack with the indicated maximum capacity.
-     * 
-     * @throws SimulationException
-     *             if capacity is not positive.
      */
     public CoinRack(int capacity) {
-	if(capacity <= 0)
-	    throw new SimulationException("Capacity must be positive: " + capacity);
-	this.maxCapacity = capacity;
+    	super(capacity);
     }
 
-    /**
-     * Allows a set of coins to be loaded into the rack without events being
-     * announced. Existing coins in the rack are not removed.
-     * 
-     * @throws SimulationException
-     *             if the number of coins to be loaded exceeds the capacity of
-     *             the rack.
-     */
-    public void loadWithoutEvents(Coin... coins) throws SimulationException {
-	if(maxCapacity < queue.size() + coins.length)
-	    throw new SimulationException("Capacity of rack is exceeded by load");
-
-	for(Coin coin : coins)
-	    queue.add(coin);
-    }
-
-    /**
-     * Connects an output channel to this coin rack. Any existing output
-     * channels are disconnected.  Causes no events to be announced.
-     */
-    public void connect(CoinChannel sink) {
-	this.sink = sink;
-    }
-
-    /**
-     * Returns the maximum capacity of this coin rack.
-     */
-    public int getCapacity() {
-	return maxCapacity;
-    }
 
     /**
      * Causes the indicated coin to be added into the rack. If successful, a
@@ -86,13 +44,13 @@ public class CoinRack extends AbstractHardware<CoinRackListener>
 	if(isDisabled())
 	    throw new DisabledException();
 
-	if(queue.size() >= maxCapacity)
+	if(getQueue().size() >= getMaxCapacity())
 	    throw new CapacityExceededException();
 
-	queue.add(coin);
+	getQueue().add(coin);
 	notifyCoinAdded(coin);
 
-	if(queue.size() >= maxCapacity)
+	if(getQueue().size() >= getMaxCapacity())
 	    notifyCoinsFull();
     }
 
@@ -114,25 +72,16 @@ public class CoinRack extends AbstractHardware<CoinRackListener>
 	if(isDisabled())
 	    throw new DisabledException();
 
-	if(queue.size() == 0)
+	if(getQueue().size() == 0)
 	    throw new EmptyException();
 
-	Coin coin = queue.remove();
+	Coin coin = getQueue().remove();
 
 	notifyCoinRemoved(coin);
-	sink.deliver(coin);
+	getSink().deliver(coin);
 
-	if(queue.isEmpty())
+	if(getQueue().isEmpty())
 	    notifyCoinsEmpty();
-    }
-
-    /**
-     * Returns whether this coin rack has enough space to accept at least one
-     * more coin. Announces no events.
-     */
-    @Override
-    public boolean hasSpace() {
-	return queue.size() < maxCapacity;
     }
 
     private void notifyCoinAdded(Coin coin) {
@@ -160,4 +109,5 @@ public class CoinRack extends AbstractHardware<CoinRackListener>
 	Object[] args = new Object[] { this };
 	notifyListeners(CoinRackListener.class, "coinsEmpty", parameterTypes, args);
     }
+
 }

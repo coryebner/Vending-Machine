@@ -186,7 +186,7 @@ public class HardwareTest {
     @Test
     public void testCoinEntryAndStoreToBin() throws CapacityExceededException,
 	    DisabledException {
-	int capacity = hardware.getCoinRack(3).getCapacity(); // loonies rack
+	int capacity = hardware.getCoinRack(3).getMaxCapacity(); // loonies rack
 
 	for(int i = 0; i < capacity; i++) {
 	    coinSlotListener.expect("validCoinInserted");

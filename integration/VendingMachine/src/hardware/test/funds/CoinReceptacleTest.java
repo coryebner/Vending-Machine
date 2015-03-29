@@ -1,4 +1,4 @@
-package hardware.test;
+package hardware.test.funds;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

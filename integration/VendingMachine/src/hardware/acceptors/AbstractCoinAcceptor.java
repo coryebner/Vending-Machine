@@ -8,7 +8,7 @@ import hardware.funds.Coin;
  * A simple interface to allow a device to communicate with another device that
  * accepts coins.
  */
-public interface AbstractCoinAcceptor {
+public interface AbstractCoinAcceptor extends IAcceptor {
     /**
      * Instructs the device to take the coin as input.
      * 

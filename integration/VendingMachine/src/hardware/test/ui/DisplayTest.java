@@ -1,4 +1,4 @@
-package hardware.test;
+package hardware.test.ui;
 
 import hardware.test.stub.DisplayListenerStub;
 import hardware.ui.Display;
