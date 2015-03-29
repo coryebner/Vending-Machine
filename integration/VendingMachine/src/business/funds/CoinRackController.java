@@ -2,97 +2,129 @@ package business.funds;
 
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
+import hardware.exceptions.CapacityExceededException;
+import hardware.exceptions.DisabledException;
+import hardware.exceptions.EmptyException;
 import hardware.funds.Coin;
 import hardware.racks.CoinRack;
 import hardware.racks.CoinRackListener;
 
-/** Description of PrepaidController
+/**
+ * Maintains the state of a given coin rack.
+ * 
  * @author Jan Clarin
  * @author Andrei (Andy) Savu
  * @author Arthur Lee
  * @author Olabode (Sam) Adegbayike
  * 
- * Class to interact with hardware to conduct a Prepaid Transaction
+ * Class to interact with hardware to conduct a Coins transaction.
  */
 public class CoinRackController implements CoinRackListener {
 
-	private int quantity = 0;
-	private int capacity;			// possibly stored rather than calling hardware all the time
-	private int valueOfCoinRack;	// 5/10/25/100/200 cents
-	
-	/** Description of getQuantity for a specific rack of coins
-	 * @return 			The number of coins in the specific rack
-	 */
-	protected int getQuantity(){
-		return 0;
-	}
-	
-	/** Description of isEmpty for a specific rack of coins
-	 * @return 			If the number of coins in the specific rack equals zero
-	 */
-	protected boolean isEmpty(){
-		return false;
-	}
-	
-	/** Description of isFull for a specific rack of coins
-	 * @return 			If the number of coins in the specific rack is at capacity
-	 */
-	protected boolean isFull(){
-		return false;
-	}
-	
-	/** Description of releaseCoin for a specific rack of coins
-	 * 			If the number of coins in the specific rack has at least one coin
-	 * 			it will be released
-	 */
-	protected void releaseCoin(){
-		
-	}
-	
-	/** Description of provideChange with coins
-	 * 
-	 * 
-	 * @param amount 	The amount in cents of the amount of change to dispense
-	 * @return 			The amount remaining to be returned
-	 */
-	protected int provideChange(int amount)
-	{
-		return 0;
+	private CoinRack coinRack;
+	private int valueOfCoinRack; // in cents.
+	private int quantity;
+	private int capacity;
+
+	protected CoinRackController(CoinRack coinRack, int valueOfCoinRack,
+			int quantity) {
+		this.coinRack = coinRack;
+		this.valueOfCoinRack = valueOfCoinRack;
+		this.quantity = quantity;
 	}
 
-	@Override
-	public void enabled(AbstractHardware<AbstractHardwareListener> hardware) {
-		// TODO Auto-generated method stub
-		
+	/**
+	 * Returns the coin denomination for the coins in the rack.
+	 * 
+	 * @return coin denomination in cents
+	 */
+	protected int getValueOfCoinRack() {
+		return valueOfCoinRack;
 	}
 
-	@Override
-	public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {
-		// TODO Auto-generated method stub
-		
+	/**
+	 * Description of getQuantity for a specific rack of coins
+	 * 
+	 * @return The number of coins in the specific rack
+	 */
+	protected int getQuantity() {
+		return quantity;
+	}
+
+	/**
+	 * Description of isEmpty for a specific rack of coins
+	 * 
+	 * @return If the number of coins in the specific rack equals zero
+	 */
+	protected boolean isEmpty() {
+		return quantity == 0;
+	}
+
+	/**
+	 * Returns true if the rack is full of coins.
+	 * 
+	 * @return if the number of coins in the rack equals the capacity.
+	 */
+	protected boolean isFull() {
+		return quantity >= capacity;
+	}
+
+	/**
+	 * Description of releaseCoin for a specific rack of coins If the number of
+	 * coins in the specific rack has at least one coin it will be released
+	 * 
+	 * @throws EmptyException
+	 *             thrown when rack is empty.
+	 */
+	protected void releaseCoin() throws EmptyException {
+		try {
+			coinRack.releaseCoin();
+		} catch (CapacityExceededException e) {
+			e.printStackTrace();
+		} catch (DisabledException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Description of provideChange with coins
+	 * 
+	 * @param amount
+	 *            The amount in cents of the amount of change to dispense
+	 * @return The amount remaining to be returned
+	 */
+	protected int provideChange(int amount) {
+		return 0;
 	}
 
 	@Override
 	public void coinsFull(CoinRack rack) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void coinsEmpty(CoinRack rack) {
-		// TODO Auto-generated method stub
-		
+		quantity = 0;
 	}
 
 	@Override
 	public void coinAdded(CoinRack rack, Coin coin) {
-		// TODO Auto-generated method stub
-		
+		quantity++;
+	}
+
+	/**
+	 * Assuming that only ONE coin is removed.
+	 */
+	@Override
+	public void coinRemoved(CoinRack rack, Coin coin) {
+		quantity--;
 	}
 
 	@Override
-	public void coinRemoved(CoinRack rack, Coin coin) {
-		// TODO Auto-generated method stub
-		
+	public void enabled(AbstractHardware<AbstractHardwareListener> hardware) {
 	}
+
+	@Override
+	public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {
+	}
+
 }
