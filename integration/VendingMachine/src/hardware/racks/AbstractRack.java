@@ -18,8 +18,7 @@ implements IRack<V> {
     final private int maxCapacity;
     private Queue<U> queue = new LinkedList<U>();
     private V sink;
-    
-    
+      
     public AbstractRack(int capacity) {
     	if(capacity <= 0)
     	    throw new SimulationException("Capacity cannot be non-positive: " + capacity);
@@ -28,7 +27,7 @@ implements IRack<V> {
     }
     
     /**
-     * Returns the maximum capacity of this pop can rack. Causes no events.
+     * Returns the maximum capacity of this rack. Causes no events.
      */
     public int getMaxCapacity() {
     	return this.maxCapacity;
@@ -39,11 +38,11 @@ implements IRack<V> {
     }
     
     /**
-     * Connects the pop can rack to an outlet channel, such as the delivery
+     * Connects the rack to an outlet channel, such as the delivery
      * chute. Causes no events.
      * 
      * @param sink
-     *            The channel to be used as the outlet for dispensed pop cans.
+     *            The channel to be used as the outlet for dispensing rackables.
      */
     public void connect(V sink) {
     	this.sink = sink;
@@ -61,20 +60,19 @@ implements IRack<V> {
     	return this.queue;
     }
     /**
-     * Allows a set of funds to be loaded into the rack without events being
-     * announced. Existing coins in the rack are not removed.
+     * Allows a set of rackables(coins/products/etc) to be loaded into the rack without events being
+     * announced. Existing rackables in the rack are not removed.
      * 
      * @throws SimulationException
-     *             if the number of coins to be loaded exceeds the capacity of
+     *             if the number of rackables to be loaded exceeds the capacity of
      *             the rack.
      */
-    // TODO: Change funds to something else (PopCans != Funds)
-
 	@SuppressWarnings("unchecked")
 	public void loadWithoutEvents(IRackable... rackables) throws SimulationException {
 	if(maxCapacity < queue.size() + rackables.length)
 	    throw new SimulationException("Capacity of rack is exceeded by load");
 
+	/* Typecast is safe given we've used bounded parameter types and have initialized the queue based on U */
 	for(IRackable rackable : rackables)
 	    queue.add((U)rackable);
     }
