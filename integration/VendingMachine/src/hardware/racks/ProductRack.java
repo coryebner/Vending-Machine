@@ -19,6 +19,10 @@ import hardware.products.Product;
  *
  */
 public class ProductRack extends AbstractRack<ProductRackListener, Product, ProductChannel> {
+	
+	private String productName;
+	private int productPrice;
+	private String productImage;
 
 	/**
 	 * Explicit superclass constructor call to initialize the maximum capacity of the product rack
@@ -28,6 +32,71 @@ public class ProductRack extends AbstractRack<ProductRackListener, Product, Prod
 	 */
 	public ProductRack(int capacity) {
 		super(capacity);
+	}
+	
+	/**
+	 * Constructor that initializes the product rack with a maximum capacity, a name, a price and an image.
+	 * 
+	 * @param capacity
+	 * @param name
+	 * @param price
+	 * @param image
+	 * 
+	 * @see AbstractRack
+	 */
+	public ProductRack(int capacity, String name, int price, String image){
+		super(capacity);
+		productName = name;
+		productPrice = price;
+		productImage = image;
+	}
+	
+	/**
+	 * Standard setter that sets the name of the product assigned to this rack.
+	 * 
+	 * @param name
+	 */
+	public void setName(String name){
+		productName = name;
+	}
+	
+	/**
+	 * Standard getter that returns the name of the product assigned to this rack.
+	 */
+	public String getName(){
+		return productName;
+	}
+	
+	/**
+	 * Standard setter that sets the price of the product assigned to this rack.
+	 * 
+	 * @param price
+	 */
+	public void setPrice(int price){
+		productPrice = price;
+	}
+	
+	/**
+	 * Standard getter that returns the price of the product assigned to this rack.
+	 */
+	public int getPrice(){
+		return productPrice;
+	}
+	
+	/**
+	 * Standard setter that returns the image of the product assigned to this rack.
+	 * 
+	 * @param image A string that represents an image. NOTE: Is this a filepath or an actual image?
+	 */
+	public void setImage(String image){
+		productImage = image;
+	}
+	
+	/**
+	 * Standard getter that returns the image of the product assigned to this rack.
+	 */
+	public String getImage(){
+		return productImage;
 	}
 
 	/**
