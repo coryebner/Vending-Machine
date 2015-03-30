@@ -13,4 +13,16 @@ public class BusinessTouchScreen {
 		listeners.add(listener);
 	}
 	
+	private void notifyUserKeyboard(String userInput){
+		for (BusinessTouchScreenListener listener : listeners){
+			listener.UserSelectionInput(userInput);
+		}
+	}
+	
+	private void notifyUserSelection(String userInput){
+		for (BusinessTouchScreenListener listener : listeners){
+			listener.UserSelectionInput(userInput);
+		}
+	}
+	
 }
