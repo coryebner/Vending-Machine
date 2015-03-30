@@ -1,4 +1,4 @@
-package business;
+package business.touchscreen;
 
 public interface BusinessTouchScreenListener {
 
