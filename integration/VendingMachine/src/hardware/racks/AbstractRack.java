@@ -13,8 +13,22 @@ import hardware.products.IRackable;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public abstract class AbstractRack<T extends AbstractHardwareListener, U extends IRackable, V extends IChannel<? extends IAcceptor>> extends AbstractHardware<T> 
-implements IRack<V> {
+/**
+ * AbstractRack
+ * 
+ * @synopsis
+ * 		Base class (abstract) for racks, ensures the base rack API as imposed by IRack is implemented.  
+ * 
+ * @param <T extends AbstractHardwareListener> 		associated Listener class for the rack (ie: ProductRackListener, CoinRackListener)
+ * @param <U extends IRackable>						associated Type of rackable "items" (ie: Coin, Product, PopCan)
+ * @param <V extends IChannel>						associated Type of an outlet channel used as the outlet for dispensing rackable items
+ */
+
+public abstract class AbstractRack<T extends AbstractHardwareListener, U extends IRackable, V extends IChannel<? extends IAcceptor>> 
+	extends AbstractHardware<T> 
+			implements IRack<V> {
+	
+	
     final private int maxCapacity;
     private Queue<U> queue = new LinkedList<U>();
     private V sink;
