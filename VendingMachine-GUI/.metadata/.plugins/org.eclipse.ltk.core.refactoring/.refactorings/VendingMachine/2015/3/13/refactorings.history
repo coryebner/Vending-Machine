@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename field &apos;charToSend&apos; in &apos;vendingMachine.VirtualKeyboard.MyActionListener&apos; to &apos;stringToSend&apos;&#x0A;- Original project: &apos;VendingMachine&apos;&#x0A;- Original element: &apos;vendingMachine.VirtualKeyboard.MyActionListener.charToSend&apos;&#x0A;- Renamed element: &apos;vendingMachine.VirtualKeyboard.MyActionListener.stringToSend&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" delegate="false" deprecate="false" description="Rename field &apos;charToSend&apos;" flags="589830" getter="false" id="org.eclipse.jdt.ui.rename.field" input="/src&lt;vendingMachine{VirtualKeyboard.java[VirtualKeyboard[MyActionListener^charToSend" name="stringToSend" references="true" setter="false" stamp="1427583947069" textual="false" version="1.0"/>
-</session>
