@@ -37,6 +37,8 @@ public class ProductRack extends AbstractRack<ProductRackListener, Product, Prod
 	/**
 	 * Constructor that initializes the product rack with a maximum capacity, a name, a price and an image.
 	 * 
+	 * @deprecated Product racks no longer store the name, price or image of a product.
+	 * 
 	 * @param capacity
 	 * @param name
 	 * @param price
@@ -54,6 +56,8 @@ public class ProductRack extends AbstractRack<ProductRackListener, Product, Prod
 	/**
 	 * Standard setter that sets the name of the product assigned to this rack.
 	 * 
+	 * @deprecated Product racks no longer store the name, price or image of a product.
+	 * 
 	 * @param name
 	 */
 	public void setName(String name){
@@ -62,6 +66,8 @@ public class ProductRack extends AbstractRack<ProductRackListener, Product, Prod
 	
 	/**
 	 * Standard getter that returns the name of the product assigned to this rack.
+	 * 
+	 * @deprecated Product racks no longer store the name, price or image of a product.
 	 */
 	public String getName(){
 		return productName;
@@ -69,6 +75,8 @@ public class ProductRack extends AbstractRack<ProductRackListener, Product, Prod
 	
 	/**
 	 * Standard setter that sets the price of the product assigned to this rack.
+	 * 
+	 * @deprecated Product racks no longer store the name, price or image of a product.
 	 * 
 	 * @param price
 	 */
@@ -78,6 +86,8 @@ public class ProductRack extends AbstractRack<ProductRackListener, Product, Prod
 	
 	/**
 	 * Standard getter that returns the price of the product assigned to this rack.
+	 * 
+	 * @deprecated Product racks no longer store the name, price or image of a product.
 	 */
 	public int getPrice(){
 		return productPrice;
@@ -85,6 +95,8 @@ public class ProductRack extends AbstractRack<ProductRackListener, Product, Prod
 	
 	/**
 	 * Standard setter that returns the image of the product assigned to this rack.
+	 * 
+	 * @deprecated Product racks no longer store the name, price or image of a product.
 	 * 
 	 * @param image A string that represents an image. NOTE: Is this a filepath or an actual image?
 	 */
@@ -94,6 +106,8 @@ public class ProductRack extends AbstractRack<ProductRackListener, Product, Prod
 	
 	/**
 	 * Standard getter that returns the image of the product assigned to this rack.
+	 * 
+	 * @deprecated Product racks no longer store the name, price or image of a product.
 	 */
 	public String getImage(){
 		return productImage;
