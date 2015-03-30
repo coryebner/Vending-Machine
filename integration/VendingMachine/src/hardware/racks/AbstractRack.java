@@ -22,17 +22,33 @@ import java.util.Queue;
  * @param <T extends AbstractHardwareListener> 		associated Listener class for the rack (ie: ProductRackListener, CoinRackListener)
  * @param <U extends IRackable>						associated Type of rackable "items" (ie: Coin, Product, PopCan)
  * @param <V extends IChannel>						associated Type of an outlet channel used as the outlet for dispensing rackable items
+ * 
+ * Examples:
+ * 	AbstractRack<PopCanRackListener, PopCan, PopCanChannel> 
+ * 	AbstractRack<ProductRackListener, Product, ProductChannel>
+ * 	AbstractRack<CoinRackListener, Coin, CoinChannel>
+ * 
  */
 
 public abstract class AbstractRack<T extends AbstractHardwareListener, U extends IRackable, V extends IChannel<? extends IAcceptor>> 
 	extends AbstractHardware<T> 
 			implements IRack<V> {
 	
-	
+	/* Maximum capacity of the rack */
     final private int maxCapacity;
+    /* Queue of items stored in rack */
     private Queue<U> queue = new LinkedList<U>();
+    /* Associated outlet channel for the rank (used in the dispensing of rackable items) */
     private V sink;
       
+    /**
+     * AbstractRack(int capacity) <Constructor>
+     * 
+     * @synopsis
+     * 		Instantiate rack, setting the maximum capacity of the rack to that of the supplied prim. int parameter
+     * 
+     * @param capacity
+     */
     public AbstractRack(int capacity) {
     	if(capacity <= 0)
     	    throw new SimulationException("Capacity cannot be non-positive: " + capacity);

@@ -84,20 +84,50 @@ public class PopCanRack extends AbstractRack<PopCanRackListener, PopCan, PopCanC
 	    notifyPopEmpty();
     }
 
+	/**
+	 * notifyPopAdded
+	 * 
+	 * @synopsis
+	 * 			Notification method used to custom tailor AbstractHardware associated reflection call
+	 * 			- with the assumption that listeners registered to the affected PopCanRack as defined in 
+	 * 		 	PopCanRackListener class will be notified (triggering a method invocation to popAdded).
+	 * 
+	 * @param 	pop
+	 * 
+	 * @see		AbstractHardware, PopCanRackListener, PopCanRackListenerStub, AbstractStub
+	 */   
     private void notifyPopAdded(PopCan pop) {
 	Class<?>[] parameterTypes =
 	        new Class<?>[] { PopCanRack.class, PopCan.class };
 	Object[] args = new Object[] { this, pop };
 	notifyListeners(PopCanRackListener.class, "popAdded", parameterTypes, args);
     }
-
+    
+	/**
+	 * notifyPopFull
+	 * 
+	 * @synopsis
+	 * 			Notification method used via AbstractHardware reflection API (notifyListeners)
+	 * 			to signal that the associated pop can rack is full of pop cans.
+	 * 
+	 * 
+	 * @see		AbstractHardware, PopCanRackListener, PopCanRackListenerStub, AbstractStub
+	 */
     private void notifyPopFull() {
 	Class<?>[] parameterTypes =
 	        new Class<?>[] { PopCanRack.class };
 	Object[] args = new Object[] { this };
 	notifyListeners(PopCanRackListener.class, "popFull", parameterTypes, args);
     }
-
+	/**
+	 * notifyPopEmpty
+	 * 
+	 * @synopsis
+	 * 			Notification method used via AbstractHardware reflection API (notifyListeners)
+	 * 			to signal that the associated pop can rack is empty of pops.
+	 * 
+	 * @see		AbstractHardware, PopCanRackListener, PopCanRackListenerStub, AbstractStub
+	 */
     private void notifyPopEmpty() {
 	Class<?>[] parameterTypes =
 	        new Class<?>[] { PopCanRack.class };
@@ -105,6 +135,18 @@ public class PopCanRack extends AbstractRack<PopCanRackListener, PopCan, PopCanC
 	notifyListeners(PopCanRackListener.class, "popEmpty", parameterTypes, args);
     }
 
+	/**
+	 * notifyPopRemoved
+	 * 
+	 * @synopsis
+	 * 			Notification method used to custom tailor AbstractHardware associated reflection call
+	 * 			- with the assumption that listeners registered to the affected PopCanRack as defined in 
+	 * 		 	PopCanRackListener class will be notified (triggering a method invocation to popRemoved).
+	 * 
+	 * @param 	pop
+	 * 
+	 * @see		AbstractHardware, PopCanRackListener, PopCanRackListenerStub, AbstractStub
+	 */
     private void notifyPopRemoved(PopCan pop) {
 	Class<?>[] parameterTypes =
 	        new Class<?>[] { PopCanRack.class, PopCan.class };

@@ -2,6 +2,7 @@ package hardware.racks;
 
 import hardware.channels.IChannel;
 
+// TODO: Incorporate into current setup - minor priority 
 public interface IRackListener {
     /**
      * Announces that the indicated rack is full.
