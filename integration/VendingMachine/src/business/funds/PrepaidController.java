@@ -20,6 +20,9 @@ public class PrepaidController implements CardSlotListener {
 	private Card prepaidCard;
 	private VMCurrencies currencies;
 	
+	/** Description of PrepaidController Constructor for a Prepaid Card
+	 * @param vmcurrencies 	The currency of the current vending machine
+	 */
 	public PrepaidController(VMCurrencies vmcurrencies) {
 		currencies = vmcurrencies;
 		prepaidCard = null;
@@ -29,10 +32,11 @@ public class PrepaidController implements CardSlotListener {
 	
 	/** Description of ConductTransaction for a Prepaid Card
 	 * @param price 	The price in cents of the transaction attempted
-	 * @return 			The return code based on success of the transaction
-	 * @throws EmptyException 
+	 * @return			Returns creditcarderror if no card inserted or controller is disabled
+	 * @return 			Returns successful based on transaction success
+	 * @return			Returns unsuccessful upon an unsuccessful transaction or insufficient funds
 	 */
-	protected TransactionReturnCode ConductTransaction(int price) {
+	public TransactionReturnCode ConductTransaction(int price) {
 		if(!isDisabled) {
 			int exchangePrice;
 			if(!prepaidCardInserted) {
@@ -60,23 +64,37 @@ public class PrepaidController implements CardSlotListener {
 	}
 	
 	/** Description of getAvailableBalance for a Prepaid Card
-	 * @return 			The value of the prepaid card if inserted, otherwise zero
+	 * @return 			The value of the prepaid card if inserted
 	 */
-	protected int getAvailableBalance(){
-		//TODO return prepaidCard.checkCardBalance()
+	public int getAvailableBalance(){
+		//TODO
+		//if(isCardInserted())
+		//	return prepaidCard.checkCardBalance()
 		return 0;
 		
 	}
 	
 	/** Description of isCardInserted for a Prepaid Card
+	 * Check if the card is inserted into the card
 	 * @return 			Indicates the presence of a card in the slot
 	 */
-	protected boolean isCardInserted(){
+	public boolean isCardInserted(){
 		return prepaidCardInserted;
 	}
 	
-	protected void disablePrepaidController() {
+	/** Description of disablePrepaidController for a Prepaid Card
+	 * Disables the functionality of the prepaid card controller
+	 */
+	public void disablePrepaidController() {
 		isDisabled = true;
+		prepaidCardInserted = false;
+	}
+	
+	/** Description of isDisabled for a Prepaid Card
+	 * @return			Returns whether the prepaid controller is currently disabled
+	 */
+	public boolean isDisabled() {
+		return isDisabled;
 	}
 
 	@Override
@@ -96,8 +114,6 @@ public class PrepaidController implements CardSlotListener {
 			prepaidCardInserted = true;
 		} catch (EmptyException e) {
 			prepaidCardInserted = false;
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}	
 	}
 
