@@ -40,12 +40,12 @@ public class VendingMachine1 extends AbstractVendingMachine {
 	protected static int displayCharacters = 30;
 
 	// CONSTRUCTOR
-	public VendingMachine1(int[] popCosts, String[] popNames) {
+	public VendingMachine1(int[] coinValues, int[] popCosts, String[] popNames) {
 
 		int numOfProducts = 6;
-		int[] coinValues = { 5, 10, 25, 100, 200 };
+		// int[] coinValues = { 5, 10, 25, 100, 200 };
 
-		if (popCosts == null || popNames == null)
+		if (coinValues == null || popCosts == null || popNames == null)
 			throw new SimulationException("Arguments may not be null");
 
 		if (popCosts.length != numOfProducts)
@@ -164,7 +164,7 @@ public class VendingMachine1 extends AbstractVendingMachine {
 	}
 
 	@Override
-	public Object getProductRack(int index) {
+	public PopCanRack getProductRack(int index) {
 		return productRacks[index];
 	}
 
@@ -181,6 +181,36 @@ public class VendingMachine1 extends AbstractVendingMachine {
 	@Override
 	public CoinReceptacle getStorageBin() {
 		return storageBin;
+	}
+
+	@Override
+	public void enableSafety() {
+		super.enableSafety();
+		coinSlot.disable();
+		deliveryChute.disable();
+
+		for (int i = 0; i < productRacks.length; i++)
+			productRacks[i].disable();
+
+		for (int i = 0; i < coinRacks.length; i++)
+			coinRacks[i].disable();
+
+		outOfOrderLight.activate();
+	}
+
+	@Override
+	public void disableSafety() {
+		super.disableSafety();
+		coinSlot.enable();
+		deliveryChute.enable();
+
+		for (int i = 0; i < productRacks.length; i++)
+			productRacks[i].enable();
+
+		for (int i = 0; i < coinRacks.length; i++)
+			coinRacks[i].enable();
+
+		outOfOrderLight.deactivate();
 	}
 
 }
