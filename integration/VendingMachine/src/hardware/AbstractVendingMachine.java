@@ -222,11 +222,11 @@ public abstract class AbstractVendingMachine {
 	}
 	
 	/**
-	 * Returns the number of push buttons.
+	 * Returns the number of selection buttons.
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	public int getNumberOfPushButtons() throws NoSuchHardwareException {
+	public int getNumberOfSelectionButtons() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 
