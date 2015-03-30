@@ -1,5 +1,6 @@
 package hardware.products;
 
 
-public interface IProduct {
+public interface IProduct extends IRackable {
+	
 }

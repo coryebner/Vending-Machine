@@ -7,8 +7,6 @@ import hardware.exceptions.DisabledException;
 import hardware.exceptions.EmptyException;
 import hardware.funds.Coin;
 
-
-
 /**
  * Represents a device that stores coins of a particular denomination to
  * dispense them as change.
@@ -26,7 +24,6 @@ public class CoinRack extends AbstractRack<CoinRackListener, Coin, CoinChannel> 
     	super(capacity);
     }
 
-
     /**
      * Causes the indicated coin to be added into the rack. If successful, a
      * "coinAdded" event is announced to its listeners. If a successful coin
@@ -41,13 +38,8 @@ public class CoinRack extends AbstractRack<CoinRackListener, Coin, CoinChannel> 
     @Override
     public void acceptCoin(Coin coin) throws CapacityExceededException,
 	    DisabledException {
-	if(isDisabled())
-	    throw new DisabledException();
 
-	if(getQueue().size() >= getMaxCapacity())
-	    throw new CapacityExceededException();
-
-	getQueue().add(coin);
+    addToRack(coin);
 	notifyCoinAdded(coin);
 
 	if(getQueue().size() >= getMaxCapacity())
@@ -69,13 +61,8 @@ public class CoinRack extends AbstractRack<CoinRackListener, Coin, CoinChannel> 
      */
     public void releaseCoin() throws CapacityExceededException, EmptyException,
 	    DisabledException {
-	if(isDisabled())
-	    throw new DisabledException();
 
-	if(getQueue().size() == 0)
-	    throw new EmptyException();
-
-	Coin coin = getQueue().remove();
+    Coin coin = removeFromRack();
 
 	notifyCoinRemoved(coin);
 	getSink().deliver(coin);

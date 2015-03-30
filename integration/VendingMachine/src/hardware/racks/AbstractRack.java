@@ -4,9 +4,11 @@ import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
 import hardware.acceptors.IAcceptor;
 import hardware.channels.IChannel;
+import hardware.exceptions.CapacityExceededException;
+import hardware.exceptions.DisabledException;
+import hardware.exceptions.EmptyException;
 import hardware.exceptions.SimulationException;
-import hardware.funds.IFund;
-import hardware.funds.IRackable;
+import hardware.products.IRackable;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -47,7 +49,14 @@ implements IRack<V> {
     	this.sink = sink;
     }
     
-    
+    /**
+     * getQueue
+     * 
+     * @synopsis
+     * 		Getter for the rack queue
+     * 
+     * @return		Queue<U> 		where U extends IRackable as denoted in the class def.
+     */
     protected Queue<U> getQueue() {
     	return this.queue;
     }
@@ -62,15 +71,66 @@ implements IRack<V> {
     // TODO: Change funds to something else (PopCans != Funds)
 
 	@SuppressWarnings("unchecked")
-	public void loadWithoutEvents(IFund... funds) throws SimulationException {
-	if(maxCapacity < queue.size() + funds.length)
+	public void loadWithoutEvents(IRackable... rackables) throws SimulationException {
+	if(maxCapacity < queue.size() + rackables.length)
 	    throw new SimulationException("Capacity of rack is exceeded by load");
 
-	for(IFund fund : funds)
-	    queue.add((U)fund);
+	for(IRackable rackable : rackables)
+	    queue.add((U)rackable);
     }
         
+	/**
+	 * hasSpace
+	 * 
+	 * @synopsis
+	 * 		determine whether the given rack currently has space for any more Rackable objects
+	 * 
+	 * @return			TRUE			if the size of the queue is less than configured capacity
+	 * @return 			FALSE			otherwise
+	 */
     public boolean hasSpace() {
     	return queue.size() < this.maxCapacity;
+    }
+    
+    /**
+     * addToRack
+     * 
+     * @synopsis
+     * 		Adds an object extending the IRackable interface (U extends IRackable) to the 
+     * 		queue associated to this rack.
+     * 
+     * @param rackable						The object to be added to the queue
+     * @throws DisabledException			if the hardware is currently disabled
+     * @throws CapacityExceededException	if the current queue is at capacity
+     */
+    public void addToRack(U rackable) throws DisabledException, CapacityExceededException {
+    	if(isDisabled())
+    	    throw new DisabledException();
+
+    	if(getQueue().size() >= getMaxCapacity())
+    	    throw new CapacityExceededException();
+
+    	getQueue().add(rackable);
+    }
+    
+    /**
+     * removeFromRack
+     * 
+     * @synopsis
+     * 		remove the first element from the front of the queue, and return it to the caller.
+     * 
+     * @return		U				(U extends IRackable) and could represent things like:
+     * 								*	PopCan, Product, Coin, etc.
+     * @throws DisabledException	if the current hardware is disabled
+     * @throws EmptyException		if the queue is empty
+     */
+    public U removeFromRack() throws DisabledException, EmptyException {
+    	if(isDisabled())
+    	    throw new DisabledException();
+
+    	if(getQueue().size() == 0)
+    	    throw new EmptyException();
+
+    	return getQueue().remove();
     }
 }

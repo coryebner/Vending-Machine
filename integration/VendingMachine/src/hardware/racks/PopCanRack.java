@@ -45,13 +45,8 @@ public class PopCanRack extends AbstractRack<PopCanRackListener, PopCan, PopCanC
      */
     public void addPop(PopCan pop) throws CapacityExceededException,
 	    DisabledException {
-	if(isDisabled())
-	    throw new DisabledException();
-
-	if(getQueue().size() >= getMaxCapacity())
-	    throw new CapacityExceededException();
-
-	getQueue().add(pop);
+    
+    addToRack(pop);
 
 	notifyPopAdded(pop);
 
@@ -75,13 +70,9 @@ public class PopCanRack extends AbstractRack<PopCanRackListener, PopCan, PopCanC
      */
     public void dispensePop() throws DisabledException, EmptyException,
 	    CapacityExceededException {
-	if(isDisabled())
-	    throw new DisabledException();
 
-	if(getQueue().isEmpty())
-	    throw new EmptyException();
-
-	PopCan pop = getQueue().remove();
+    PopCan pop = removeFromRack();
+    
 	notifyPopRemoved(pop);
 
 	if(getSink() == null)
@@ -91,26 +82,6 @@ public class PopCanRack extends AbstractRack<PopCanRackListener, PopCan, PopCanC
 
 	if(getQueue().isEmpty())
 	    notifyPopEmpty();
-    }
-
-    /**
-     * Allows pop cans to be loaded into the pop can rack without causing events
-     * to occur on its listeners. This permits a simple initialization. Note
-     * that any existing pop cans in the rack are not removed.
-     * 
-     * @param pops
-     *            One or more pop cans to be loaded into this pop can rack.
-     * @throws SimulationException
-     *             if the number of cans to be loaded exceeds the capacity of
-     *             this pop can rack.
-     */
-    public void loadWithoutEvents(PopCan... pops) throws SimulationException {
-	if(getMaxCapacity() < getQueue().size() + pops.length)
-	    throw new SimulationException("Capacity exceeded by attempt to load");
-
-	for(PopCan pop : pops) {
-	    getQueue().add(pop);
-	}
     }
 
     private void notifyPopAdded(PopCan pop) {
