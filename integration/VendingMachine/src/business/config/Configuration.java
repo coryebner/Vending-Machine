@@ -8,9 +8,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import hardware.AbstractVendingMachine;
+import hardware.VendingMachine1;
+
 public class Configuration {
-	// Stubs for compiling - to be removed once these classes are actually merged in
-	static class AbstractVendingMachine {}
 	static class InventoryManager {}
 	static class FundsController {}
 	
@@ -96,39 +97,39 @@ public class Configuration {
 		if (type.equals("VMRUS-SFF-P/C")) {
 			machine = createSFFPC();
 		}
-		else if (type.equals("VMRUS-SFF-P/CI")) {
-			machine = createSFFPCI();
-		}
-		else if (type.equals("VMRUS-SFF-P/PI")) {
-			machine = createSFFPPI();
-		}
-		else if (type.equals("VMRUS-COM-P/MI")) {
-			machine = createCOMPMI();
-		}
-		else if (type.equals("VMRUS-COM-P/M")) {
-			machine = createCOMPM();
-		}
-		else if (type.equals("VMRUS-COM-C/MI")) {
-			machine = createCOMCMI();
-		}
-		else if (type.equals("VMRUS-COM-C/M")) {
-			machine = createCOMCM();
-		}
-		else if (type.equals("VMRUS-TOC-P/MI")) {
-			machine = createTOCPMI();
-		}
-		else if (type.equals("VMRUS-TOC-P/I")) {
-			machine = createTOCPI();
-		}
-		else if (type.equals("VMRUS-TOC-C/MI")) {
-			machine = createTOCCMI();
-		}
-		else if (type.equals("VMRUS-TOC-C+")) {
-			machine = createTOCCp();
-		}
-		else if (type.equals("VMRUS-TOC-C+/I")) {
-			machine = createTOCCpI();
-		}
+//		else if (type.equals("VMRUS-SFF-P/CI")) {
+//			machine = createSFFPCI();
+//		}
+//		else if (type.equals("VMRUS-SFF-P/PI")) {
+//			machine = createSFFPPI();
+//		}
+//		else if (type.equals("VMRUS-COM-P/MI")) {
+//			machine = createCOMPMI();
+//		}
+//		else if (type.equals("VMRUS-COM-P/M")) {
+//			machine = createCOMPM();
+//		}
+//		else if (type.equals("VMRUS-COM-C/MI")) {
+//			machine = createCOMCMI();
+//		}
+//		else if (type.equals("VMRUS-COM-C/M")) {
+//			machine = createCOMCM();
+//		}
+//		else if (type.equals("VMRUS-TOC-P/MI")) {
+//			machine = createTOCPMI();
+//		}
+//		else if (type.equals("VMRUS-TOC-P/I")) {
+//			machine = createTOCPI();
+//		}
+//		else if (type.equals("VMRUS-TOC-C/MI")) {
+//			machine = createTOCCMI();
+//		}
+//		else if (type.equals("VMRUS-TOC-C+")) {
+//			machine = createTOCCp();
+//		}
+//		else if (type.equals("VMRUS-TOC-C+/I")) {
+//			machine = createTOCCpI();
+//		}
 		else {
 			throw new ConfigurationException("Invalid machine type!");
 		}
@@ -288,63 +289,63 @@ public class Configuration {
 	 */
 	protected AbstractVendingMachine createSFFPC()
 	{
-		return new AbstractVendingMachine();
+		return new VendingMachine1(new int [] {5, 10, 25, 100, 200}, prices, names);
 	}
-
-	protected AbstractVendingMachine createSFFPCI()
-	{
-		return new AbstractVendingMachine();	
-	}
-
-	protected AbstractVendingMachine createSFFPPI()
-	{
-		return new AbstractVendingMachine();		
-	}
-
-	protected AbstractVendingMachine createCOMPMI()
-	{
-		return new AbstractVendingMachine();		
-	}
-
-	protected AbstractVendingMachine createCOMPM()
-	{
-		return new AbstractVendingMachine();		
-	}
-
-	protected AbstractVendingMachine createCOMCMI()
-	{
-		return new AbstractVendingMachine();		
-	}
-
-	protected AbstractVendingMachine createCOMCM()
-	{
-		return new AbstractVendingMachine();		
-	}
-	
-	protected AbstractVendingMachine createTOCPMI()
-	{
-		return new AbstractVendingMachine();		
-	}
-	
-	protected AbstractVendingMachine createTOCPI()
-	{
-		return new AbstractVendingMachine();		
-	}
-
-	protected AbstractVendingMachine createTOCCMI()
-	{
-		return new AbstractVendingMachine();		
-	}
-
-	protected AbstractVendingMachine createTOCCp()
-	{
-		return new AbstractVendingMachine();		
-	}
-
-	protected AbstractVendingMachine createTOCCpI()
-	{
-		return new AbstractVendingMachine();		
-	}
+//
+//	protected AbstractVendingMachine createSFFPCI()
+//	{
+//		return new AbstractVendingMachine();	
+//	}
+//
+//	protected AbstractVendingMachine createSFFPPI()
+//	{
+//		return new AbstractVendingMachine();		
+//	}
+//
+//	protected AbstractVendingMachine createCOMPMI()
+//	{
+//		return new AbstractVendingMachine();		
+//	}
+//
+//	protected AbstractVendingMachine createCOMPM()
+//	{
+//		return new AbstractVendingMachine();		
+//	}
+//
+//	protected AbstractVendingMachine createCOMCMI()
+//	{
+//		return new AbstractVendingMachine();		
+//	}
+//
+//	protected AbstractVendingMachine createCOMCM()
+//	{
+//		return new AbstractVendingMachine();		
+//	}
+//	
+//	protected AbstractVendingMachine createTOCPMI()
+//	{
+//		return new AbstractVendingMachine();		
+//	}
+//	
+//	protected AbstractVendingMachine createTOCPI()
+//	{
+//		return new AbstractVendingMachine();		
+//	}
+//
+//	protected AbstractVendingMachine createTOCCMI()
+//	{
+//		return new AbstractVendingMachine();		
+//	}
+//
+//	protected AbstractVendingMachine createTOCCp()
+//	{
+//		return new AbstractVendingMachine();		
+//	}
+//
+//	protected AbstractVendingMachine createTOCCpI()
+//	{
+//		return new AbstractVendingMachine();		
+//	}
 	
 	/**
 	 * Parsing functions - simple parsing of integer and string arrays
