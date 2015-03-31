@@ -34,8 +34,7 @@ public class PaypalControllerTest {
 		hw = new Hardware(null, null, null);
 		pc = new PrepaidController(curr);
 		cs = hw.getCardSlot();
-		//prepaidCard = new Card(Card.CardType.PREPAID, "7373737373", "Defualt Prepaid" , Locale.CANADA, 10000);;
-		prepaidCard = new Card(Card.CardType.PREPAID, "7373737373", "Defualt Prepaid" , "", 10000);;
+		prepaidCard = new Card(Card.CardType.PREPAID, "7373737373", "Defualt Prepaid" , "", "00/0000", Locale.CANADA, 10000);
 	}
 
 	@After

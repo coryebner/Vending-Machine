@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.util.Locale;
+
 import hardware.exceptions.SimulationException;
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.EmptyException;
@@ -27,7 +30,7 @@ public class CardSlotTest {
     public void setup() {
 	slot = new CardSlot();
 	listener = new CardSlotListenerStub();
-	card = new Card(Card.CardType.PREPAID, "123", "JoeyJoey", "1234", MAX_AMOUNT);
+	card = new Card(Card.CardType.PREPAID, "123", "JoeyJoey", "1234", "06/2018", Locale.CANADA, MAX_AMOUNT);
 
 	slot.register(listener);
 
@@ -164,7 +167,7 @@ public class CardSlotTest {
 	// To get full coverage, generated CardType methods have to be called
 
 	CardType[] types = Card.CardType.values();
-	assertTrue(types.length == 2);
+	assertTrue(types.length == 4);
 
 	assertTrue(Card.CardType.valueOf("PREPAID") == card.getType());
 	try {
@@ -178,21 +181,21 @@ public class CardSlotTest {
     
     @Test(expected = SimulationException.class)
     public void testBadSetup1() {
-	card = new Card(null, "123", "JoeyJoey", "1234", MAX_AMOUNT);
+	card = new Card(null, "123", "JoeyJoey", "1234", "06/2018", Locale.CANADA, MAX_AMOUNT);
     }
     
     @Test(expected = SimulationException.class)
     public void testBadSetup2() {
-	card = new Card(Card.CardType.PREPAID, null, "JoeyJoey", "1234", MAX_AMOUNT);
+	card = new Card(Card.CardType.PREPAID, null, "JoeyJoey", "1234", "06/2018", Locale.CANADA, MAX_AMOUNT);
     }
     
     @Test(expected = SimulationException.class)
     public void testBadSetup3() {
-	card = new Card(Card.CardType.PREPAID, "123", null, "1234", MAX_AMOUNT);
+	card = new Card(Card.CardType.PREPAID, "123", null, "1234", "06/2018", Locale.CANADA, MAX_AMOUNT);
     }
 
     @Test(expected = SimulationException.class)
     public void testBadSetup4() {
-	card = new Card(Card.CardType.PREPAID, "123", "JoeyJoey", null, MAX_AMOUNT);
+	card = new Card(Card.CardType.PREPAID, "123", "JoeyJoey", "1234", "ab/2018", Locale.CANADA, MAX_AMOUNT);
     }
 }

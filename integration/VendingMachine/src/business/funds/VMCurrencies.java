@@ -8,10 +8,12 @@ public class VMCurrencies {
 	private Vector<SupportedCurrency> supportedCurrencies;
 	private SupportedCurrency machineLocale;
 	private int iterator = 0;
+	private Currency vmCurrency;
 	
 	public VMCurrencies(Locale locale){
 		supportedCurrencies = new Vector<SupportedCurrency>();
 		setupSubsetOfCurrenciesHardCode(locale);
+		vmCurrency = Currency.getInstance(locale);
 	}
 	
 	private void setupSubsetOfCurrenciesHardCode(Locale locale){
@@ -40,6 +42,10 @@ public class VMCurrencies {
 			machineLocale = newCurr;
 		}
 		
+	}
+	
+	public Currency getVMCurrency() {
+		return vmCurrency;
 	}
 	
 //	public void addCurrency(SupportedCurrency newCurrency){	

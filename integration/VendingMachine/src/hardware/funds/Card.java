@@ -1,5 +1,11 @@
 package hardware.funds;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Currency;
+import java.util.Date;
+import java.util.Locale;
+
 import hardware.exceptions.SimulationException;
 
 /**
@@ -11,32 +17,52 @@ import hardware.exceptions.SimulationException;
  * "unknown".
  */
 public class Card {
+	
+  	/* Represents the anticipated/expected format of the expiration date */
+	private String acceptedExpirationFormat = "mm/YYYY";
+	
     /**
      * The types of cards recognized by the vending machine, plus "unknown".
      */
     public enum CardType {
-	PREPAID, UNKNOWN
+	PREPAID, VISA, MASTERCARD, UNKNOWN
     }
 
-    private String number, name, pin;
+    private String number, name, pin, expiry;
     private CardType type;
     private int maxAmount;
+    private Currency cardCurrency;
 
     /**
-     * Basic constructor.
+     * Basic constructor. All arguments must be provided to Card for an object to be created:
+     * <li>A CardType (PREPAID, VISA or MASTERCARD).</li>
+     * <li>A card number.</li>
+     * <li>A pin.</li>
+     * <li>An expiry date in the format "MM/YYYY".</li>
+     * <li>A Locale that serves as the country of the card's origin (for currency purposes).</li>
+     * <li>A maximum amount that the card can carry.</li>
      * 
      * @throws SimulationException
      *             if any of the arguments is null.
      */
-    public Card(CardType type, String number, String name, String pin, int maxAmount) {
-	if(type == null || number == null || name == null || pin == null)
+    public Card(CardType type, String number, String name, String pin, String expiry, Locale cardCurrency, int maxAmount) {
+	if(type == null || number == null || name == null || pin == null || expiry == null)
 	    throw new SimulationException("The arguments may not be null");
 
+    if(!isValidExpiration(this.acceptedExpirationFormat, expiry))
+    	throw new SimulationException("Invalid expiration format (mm/YYYY)");
+    
 	this.type = type;
 	this.number = number;
 	this.name = name;
 	this.pin = pin;
+	this.expiry = expiry;
 	this.maxAmount = maxAmount;
+	
+	if(cardCurrency == null)
+		this.cardCurrency = Currency.getInstance(Locale.CANADA);
+    else
+    	this.cardCurrency = Currency.getInstance(cardCurrency);
     }
 
     /**
@@ -58,6 +84,20 @@ public class Card {
      */
     public String getName() {
 	return name;
+    }
+    
+    /**
+     * Returns the expiry date recorded on the card.
+     */
+    public String getExpiryDate(){
+    return expiry;
+    }
+    
+    /**
+     * Returns the Currency instance of the card's locale.
+     */
+    public Currency getCurrency(){
+    	return cardCurrency;
     }
 
     /**
@@ -93,5 +133,23 @@ public class Card {
 	default:
 	    return false;
 	}
+    }
+    
+    /**
+     * isValidExpiration
+     * 
+     * @param   format 	String representing the SimpleDataFormat (ie: yy/MMMM)
+     * @param   value	String to test against the expected format 
+     * @return	true 	if the format of the expiration is as expected
+     * 			false	otherwise
+     */
+    private static boolean isValidExpiration(String format, String value) {
+        Date date = null;
+        try {
+            date = new SimpleDateFormat(format).parse(value);
+        } catch (ParseException ex) {
+            return false;
+        }
+        return date != null;
     }
 }

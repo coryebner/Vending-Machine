@@ -81,9 +81,8 @@ public class PrepaidController implements CardSlotListener {
 	 * @return 			The value of the prepaid card if inserted
 	 */
 	public int getAvailableBalance(){
-		//TODO
-		//if(isCardInserted())
-		//	return currencies.ExchangeFromToCurrency(prepaidCard.getLocale(), currencies.getCurrencyLocale(), prepaidCard.checkCardBalance());
+		if(isCardInserted())
+			return (int) currencies.ExchangeFromToCurrency(new SupportedCurrency(prepaidCard.getCurrency(), 1), new SupportedCurrency(currencies.getVMCurrency(), 1), 100);
 		return 0;
 		
 	}
