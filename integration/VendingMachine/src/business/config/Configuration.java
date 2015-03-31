@@ -18,6 +18,7 @@ public class Configuration {
 	// Configuration file
 	private File configFile;
 	
+	// Configuration data loaded from/written to the configuration file
 	private String type;
 	private String [] names;
 	private int [] quantities;
@@ -162,7 +163,9 @@ public class Configuration {
 
 	/**
 	 * Create a FundsController with the specified parameters, and register
-	 *  it with all the listeners it needs to be registered with.
+	 *  it with all the listeners it needs to be registered with. Note that
+	 *  this will also have to save the FundsController as the 'funds' field
+	 *  of this class so we have access to it when we want to save later.
 	 *  
 	 * @param machine				hardware to register listeners with
 	 * @param coin					does this machine accept coin?
@@ -205,7 +208,9 @@ public class Configuration {
 	
 	/**
 	 * Create an InventoryManager and register it with all the hardware it needs to
-	 *  listen to.
+	 *  listen to. Note that this will also need to save said InventoryManager
+	 *  as the 'inventory' field of this class, so we have access to it again
+	 *  when we want to save.
 	 *  	
 	 * @param machine				hardware to register listeners with
 	 */
