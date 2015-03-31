@@ -24,15 +24,15 @@ import javax.swing.JPanel;
 
 public class VirtualKeyboard extends JFrame 
 {    
-	private ArrayList<VirtualKeyboardActionListener> keyboardListeners = new ArrayList<VirtualKeyboardActionListener>();
+	private ArrayList<VirtualKeyboardListener> keyboardListeners = new ArrayList<VirtualKeyboardListener>();
 	
-    public void register(VirtualKeyboardActionListener listener) { keyboardListeners.add(listener); }
+    public void register(VirtualKeyboardListener listener) { keyboardListeners.add(listener); }
 	
-	public boolean deregister(VirtualKeyboardActionListener listener) { return keyboardListeners.remove(listener); }
+	public boolean deregister(VirtualKeyboardListener listener) { return keyboardListeners.remove(listener); }
     
 	private void notifyKeyDown(char key)
     {
-    	for (VirtualKeyboardActionListener listener : keyboardListeners)
+    	for (VirtualKeyboardListener listener : keyboardListeners)
     		listener.OnKeyDown(key);    	
     }
 	
@@ -101,11 +101,6 @@ public class VirtualKeyboard extends JFrame
             notifyKeyDown(charToSend);
 
         }
-    	
-        public void OnKeyDown(char key) {
-			// TODO Auto-generated method stub
-			
-		}
 
 		@Override
         public void actionPerformed(ActionEvent e) {
