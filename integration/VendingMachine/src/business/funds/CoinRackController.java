@@ -55,18 +55,6 @@ public class CoinRackController implements CoinRackListener {
 	}
 
 	/**
-	 * Description of provideChange with coins TODO: Check if at least 3 coins
-	 * in each rack.
-	 * 
-	 * @param amount
-	 *            The amount in cents of the amount of change to dispense
-	 * @return The amount remaining to be returned
-	 */
-	public int provideChange(int amount) {
-		return 0;
-	}
-
-	/**
 	 * Returns the coin denomination for the coins in the rack.
 	 * 
 	 * @return coin denomination in cents

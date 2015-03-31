@@ -71,14 +71,71 @@ public class CoinsController implements CoinReceptacleListener {
 	 * Description of provideChange with coins
 	 * 
 	 * Makes calls to each coinRackHandler to dispense their change in order
-	 * (greatest to least) TODO: Check if at least $4.95 in change other fail.
+	 * (greatest to least)
 	 * 
 	 * @param amount
 	 *            The amount in cents of the amount of change to dispense
 	 * @return The code of the success of change being provided
 	 */
 	public TransactionReturnCode provideChange(int amount) {
-		return null;
+		if (isChangePossible(amount)) {
+			int sum = 0;
+			// Start dispensing coins from highest denomination with coins
+			// in its respective racks.
+			for (int i = coinRackControllers.length; i >= 0; i--) {
+				int rackDenomination = coinRackControllers[i]
+						.getCoinRackDenomination();
+
+				// Dispense coin at this denomination if there are coins
+				// in the rack and dispensing another coin of this
+				// denomination is less or equal to the amount of total change.
+				while (coinRackControllers[i].getQuantity() > 0
+						&& sum + rackDenomination <= amount) {
+					// Dispense coin.
+					coinRackControllers[i].releaseCoin();
+					sum += rackDenomination;
+				}
+				if (sum == amount) break;
+			}
+
+			return TransactionReturnCode.SUCCESSFUL;
+		}
+		// Cannot return exact change.
+		return TransactionReturnCode.UNSUCCESSFUL;
+	}
+
+	/**
+	 * Returns a boolean indicating whether or not a specific amount can be
+	 * returned as change.
+	 * 
+	 * @param amount
+	 *            the amount of money to be returned change.
+	 * @return boolean indicating whether or not the amount can be returned.
+	 */
+	private boolean isChangePossible(int amount) {
+		boolean changePossible;
+		int sum = 0;
+
+		for (int i = coinRackControllers.length; i >= 0; i--) {
+			int numCoinsUsed = 0;
+			int rackDenomination = coinRackControllers[i]
+					.getCoinRackDenomination();
+			int rackQuantity = coinRackControllers[i].getQuantity();
+			while (rackQuantity - numCoinsUsed > 0 
+					&& sum + rackDenomination <= amount) {
+				numCoinsUsed++;
+				sum += rackDenomination;
+			}
+		}
+
+		changePossible = sum == amount;
+
+		if (changePossible) {
+			// TODO: Turn on exact change light.
+		} else {
+			// TODO: Turn off exact change light if it's on.
+		}
+		return changePossible;
 	}
 
 	/**
@@ -141,15 +198,7 @@ public class CoinsController implements CoinReceptacleListener {
 
 	@Override
 	public void coinsFull(CoinReceptacle receptacle) {
-		// Dump coins if the receptacle fills up.
-		try {
-			receptacle.returnCoins();
-		} catch (CapacityExceededException e) {
-			e.printStackTrace();
-		} catch (DisabledException e) {
-			e.printStackTrace();
-		}
-		availableBalance = 0;
+		// Taken care of by hardware.
 	}
 
 	@Override
