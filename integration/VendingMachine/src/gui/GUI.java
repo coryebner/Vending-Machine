@@ -68,13 +68,17 @@ public class GUI {
 	private ArrayList<JButton> coinButtons;
 	private ArrayList<JButton> billButtons;
 	private ArrayList<JButton> cardButtons;
-	private ArrayList<JButton> selectionButtons;
+	private ArrayList<JButton> popButtons;
 	private ArrayList<JLabel> outOfProductLabels;
 
 	// defaults to true
 	private boolean hasCoinSlot = true;
 	private boolean hasBillSlot = true;
 	private boolean hasCardSlot = true;
+	
+	private boolean hasPopButtons = true;
+	//TODO implement candy buttons and set to true
+	private boolean hasCandyButtons = false;
 
 	/**
 	 * Launch the application.
@@ -107,7 +111,7 @@ public class GUI {
 		billButtons = new ArrayList();
 		cardButtons = new ArrayList();
 		outOfProductLabels = new ArrayList();
-		selectionButtons = new ArrayList();
+		popButtons = new ArrayList();
 
 		frmVendingMachines = new JFrame();
 		frmVendingMachines.setTitle("Vending Machines");
@@ -171,7 +175,9 @@ public class GUI {
 		pnlMisc.add(lblOutOfOrder);
 
 		pnlPopButtons = new JPanel();
-		pnlMachineButtons.add(pnlPopButtons);
+		if (hasPopButtons) {
+			pnlMachineButtons.add(pnlPopButtons);
+		}
 		pnlPopButtons.setLayout(new GridLayout(0, 2, 2, 2));
 
 		machine1Setup();
@@ -278,7 +284,7 @@ public class GUI {
 	private void createPopButtons(ArrayList<String> names) {
 		for (String name : names) {
 			outOfProductLabels.add(createOutOfProductLight());
-			selectionButtons.add(createPopButton(name));
+			popButtons.add(createPopButton(name));
 		}
 	}
 
@@ -287,9 +293,9 @@ public class GUI {
 	 * out of product light arraylists
 	 */
 	private void reloadPopButtons() {
-		for (int i = 0; i < selectionButtons.size(); i++) {
+		for (int i = 0; i < popButtons.size(); i++) {
 			pnlPopButtons.add(outOfProductLabels.get(i));
-			pnlPopButtons.add(selectionButtons.get(i));
+			pnlPopButtons.add(popButtons.get(i));
 		}
 		pnlPopButtons.revalidate();
 		pnlPopButtons.repaint();
@@ -403,8 +409,10 @@ public class GUI {
 	}
 
 	/**
-	 * Should load the required components for the first machine's setup Not
-	 * currently correct
+	 * Should load the required components for the first machine's setup 
+	 * Not currently correct
+	 * Will not be used for actual program
+	 * TODO remove when functionality complete
 	 */
 	public void machine1Setup() {
 		ArrayList<String> names = new ArrayList();
