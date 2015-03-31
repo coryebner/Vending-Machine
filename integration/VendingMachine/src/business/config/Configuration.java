@@ -2,7 +2,6 @@ package config;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,9 +13,6 @@ public class Configuration {
 	static class AbstractVendingMachine {}
 	static class InventoryManager {}
 	static class FundsController {}
-	
-	// Configuration file
-	protected File configFile;
 	
 	// Configuration data loaded from/written to the configuration file
 	protected String type;
@@ -40,13 +36,62 @@ public class Configuration {
 	protected FundsController funds;
 	protected InventoryManager inventory;
 	
-	public Configuration(String filename)
+	public Configuration()
+	{}
+
+	/**
+	 * Loads a vending machine from a given configuration file.
+	 * 
+	 * @param filename					config file to read from
+	 * @param configListeners			listeners to register with the ConfigurationPanel
+	 * 									  (for the GUI pieces that need it)
+	 * 
+	 * @return							the created AbstractVendingMachine
+	 * 
+	 * @throws IOException				standard file reading exceptions
+	 * @throws ConfigurationException	if the configuration file is incorrectly formed
+	 */
+	public AbstractVendingMachine load(String filename,
+										  ArrayList<ConfigurationListener> configListeners)
+		throws IOException, ConfigurationException
 	{
-		configFile = new File(filename);
+		BufferedReader input = new BufferedReader(new FileReader(filename));
+		readConfigFile(input);
+		createMachine();
+		createConfigurationController(configListeners);
+		loadMachine();
+		return machine;
+	}
+
+	/**
+	 * Saves the vending machine previously created by load() to a given file.
+	 * 
+	 * Requires that a vending machine has been created previously with load().
+	 * 
+	 * @param filename					configuration file to save to
+	 * 
+	 * @throws IOException				standard file reading exceptions
+	 * @throws ConfigurationException 	if a machine has not been created
+	 */
+	public void save(String filename) throws IOException, ConfigurationException
+	{
+		if (machine == null) {
+			throw new ConfigurationException("Attempted to save a nonexistent machine!");
+		}
+
+		// Read all the data we need from machine, funds and inventory
+		BufferedWriter output = new BufferedWriter(new FileWriter(filename));
+		writeConfigFile(output);
 	}
 	
+	/**
+	 * Wrap the nasty type -> machine creation function if statement up in its own little
+	 *  bubble where it can't hurt anyone.
+	 *  			
+	 * @throws ConfigurationException	if the type is not a recognized vending machine type
+	 */
 	protected void createMachine()
-		throws IOException, ConfigurationException
+		throws ConfigurationException
 	{
 		if (type.equals("VMRUS-SFF-P/C")) {
 			machine = createSFFPC();
@@ -89,6 +134,15 @@ public class Configuration {
 		}
 	}
 	
+	/**
+	 * The main workhorse of parsing the configuration file into member variables
+	 *  for vending machine creation functions to use.
+	 *  
+	 * @param input						stream to read config file from
+	 * 
+	 * @throws IOException				standard stream reading exceptions
+	 * @throws ConfigurationException	if the configuration file is incorrectly formed
+	 */
 	protected void readConfigFile(BufferedReader input)
 		throws IOException, ConfigurationException
 	{
@@ -147,36 +201,17 @@ public class Configuration {
 		// making sure to use loadWithoutEvents() functions where you can
 	}
 
-	protected AbstractVendingMachine load()
-		throws IOException, ConfigurationException
-	{
-		BufferedReader input = new BufferedReader(new FileReader(configFile));
-		readConfigFile(input);
-		createMachine();
-		loadMachine();
-		return machine;
-	}
-	
-	protected void save() throws IOException
-	{
-		// Read all the data we need from machine, funds and inventory
-		BufferedWriter output = new BufferedWriter(new FileWriter(configFile));
-		writeConfigFile(output);
-	}
-
 	/**
 	 * Create a FundsController with the specified parameters, and register
 	 *  it with all the listeners it needs to be registered with. Note that
 	 *  this will also have to save the FundsController as the 'funds' field
 	 *  of this class so we have access to it when we want to save later.
 	 *  
-	 * @param machine				hardware to register listeners with
 	 * @param coin					does this machine accept coin?
 	 * @param card					does this machine accept card?
 	 * @param paypal				does this machine accept paypal?
 	 */
-	protected void createFundsController(AbstractVendingMachine machine,
-									     boolean coin,
+	protected void createFundsController(boolean coin,
 									     boolean card,
 									     boolean paypal)
 	{
@@ -188,10 +223,8 @@ public class Configuration {
 	/**
 	 * Create a ButtonController, and register it with all the buttons it needs
 	 *  to be registered with.
-	 *  
-	 * @param machine				hardware to register listeners with
 	 */
-	protected void createButtonController(AbstractVendingMachine machine)
+	protected void createButtonController()
 	{
 		
 	}
@@ -200,11 +233,10 @@ public class Configuration {
 	 * Create a CodeController at the specified selection button offset, and register
 	 *  it with the CodeInterpreter it needs to listen to.
 	 *  
-	 * @param machine				hardware to register listeners with
 	 * @param offset				beginning index of 'code' selection buttons
 	 * 								  (vs. normal push buttons)
 	 */
-	protected void createCodeController(AbstractVendingMachine machine, int offset)
+	protected void createCodeController(int offset)
 	{
 		
 	}
@@ -214,10 +246,8 @@ public class Configuration {
 	 *  listen to. Note that this will also need to save said InventoryManager
 	 *  as the 'inventory' field of this class, so we have access to it again
 	 *  when we want to save.
-	 *  	
-	 * @param machine				hardware to register listeners with
 	 */
-	protected void createInventoryManager(AbstractVendingMachine machine)
+	protected void createInventoryManager()
 	{
 		
 	}
@@ -229,7 +259,17 @@ public class Configuration {
 	 * @param frequency				logging frequency
 	 * 								  (one of either "instant", "batch" or "daily")
 	 */
-	protected void createLogger(AbstractVendingMachine machine, String frequency)
+	protected void createLogger(String frequency)
+	{
+		
+	}
+	
+	/**
+	 * Create a ConfigurationController and register it with the ConfigurationPanel,
+	 *  as well as registering anything that needs to be listening to it.
+	 * @param machine
+	 */
+	protected void createConfigurationController(ArrayList<ConfigurationListener> configListeners)
 	{
 		
 	}
