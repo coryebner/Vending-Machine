@@ -1,34 +1,37 @@
 package business.selection_delivery;
 
+import hardware.AbstractHardware;
+import hardware.AbstractHardwareListener;
+import hardware.exceptions.CapacityExceededException;
+import hardware.exceptions.DisabledException;
+import hardware.products.Product;
 import hardware.racks.AbstractRack;
-
-import com.vendingmachinesareus.AbstractHardware;
-import com.vendingmachinesareus.AbstractHardwareListener;
-import com.vendingmachinesareus.CapacityExceededException;
-import com.vendingmachinesareus.DisabledException;
-import com.vendingmachinesareus.Product;
-import com.vendingmachinesareus.ProductRack;
-import com.vendingmachinesareus.ProductRackListener;
+import hardware.racks.PopCanRack;
+import hardware.racks.ProductRack;
+import hardware.racks.ProductRackListener;
 
 
-public class ProductRackManager implements ProductRackListener {
+public class ProductRackController implements ProductRackListener
+{
 	private ProductRack rack;	//Connected rack
 	
 	private int productCount;
+	private int cost;
 	private String name;
 	
-	public ProductRackManager(ProductRack pr, String n, int cost)
+	public ProductRackController(ProductRack pr, String n, int c, int quantity)
 	{//Remember and register to the pop can rack that this manager is responsible for and get the values.
 		rack = pr;
 		pr.register(this);	//Register to appropriate pop can rack.
 		
-		productCount = 0;
+		refillQuantity(quantity);
+		
 		name = n;
-		changePrice(cost);
+		cost = c;
 	}
 	
 	//Default constructor
-	public ProductRackManager()
+	public ProductRackController()
 	{//Starts off empty upon construction with 0 pops.
 		productCount = 0;
 	}
@@ -55,6 +58,25 @@ public class ProductRackManager implements ProductRackListener {
 	}
 	
 	
+	public void refillQuantity(int quantity)
+	{
+		productCount = quantity;
+		
+		for (int j = 0 ; j <= quantity; j++ )
+		{
+			try{
+			rack.addProduct(new Product());
+			} catch (CapacityExceededException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (DisabledException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
 	/**
 	 * Getters
 	 */
@@ -70,12 +92,12 @@ public class ProductRackManager implements ProductRackListener {
 	
 	public int getCost()
 	{//Return the product cost.
-		return rack.getCost();
+		return cost;
 	}
 	
 	public int getCapacity()
 	{//Return the rack's capacity.
-		return rack.getCapacity();
+		return rack.getMaxCapacity();
 	}
 
 	public String getName()
@@ -103,9 +125,9 @@ public class ProductRackManager implements ProductRackListener {
 	/**
 	 * Setters
 	 */
-	public void changePrice(int cost)
+	public void changePrice(int newCost)
 	{//Return the product cost.
-		rack.setCost(cost);
+		cost = newCost;
 	}
 	
 	public void changeName(String newName)
@@ -118,11 +140,10 @@ public class ProductRackManager implements ProductRackListener {
 	 * Listeners
 	 */
 
-
 	@Override
 	public void productAdded(ProductRack arg0, Product arg1)
 	{//Add a pop to the count
-		if (productCount < rack.getCapacity())
+		if (productCount < rack.getMaxCapacity())
 			productCount++;
 	}
 
@@ -135,7 +156,7 @@ public class ProductRackManager implements ProductRackListener {
 	@Override
 	public void productFull(ProductRack arg0)
 	{//Rack is full. Set it right to max.
-		productCount = rack.getCapacity();
+		productCount = rack.getMaxCapacity();
 	}
 
 	@Override
@@ -145,7 +166,6 @@ public class ProductRackManager implements ProductRackListener {
 			productCount--;
 	}
 
-
 	/**
 	 * Things that I do not care about
 	 */
@@ -154,7 +174,4 @@ public class ProductRackManager implements ProductRackListener {
 
 	@Override
 	public void enabled(AbstractHardware<AbstractHardwareListener> arg0) {}
-	
-	@Override
-	public void costChanged(ProductRack pr, int newCost) {}
 }

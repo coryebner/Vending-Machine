@@ -36,17 +36,18 @@ public class ButtonSelectionController
 	 * Registers us with the PopVendingMachine's PushButtons to listen for
 	 *  pressed() events.
 	 */
-	public ButtonSelectionController(InventoryManager inv, DisplayController disp, FundsController f, PushButton[] butts, int numButts)
+	public ButtonSelectionController(InventoryController inv, DisplayController disp, FundsController f, PushButton[] butts, int numButts)
 	{
 		super(inv, disp, f);
 		
 		buttons = butts;
 		numButtons= numButts;
 		
+		/* Configuration is handling this.
 		for (int i = 0; i < numButts; ++i)
 		{//Register the buttons.
 			buttons[i].register(this);
-		}
+		}*/
 	}
 	
 	/**
@@ -62,17 +63,23 @@ public class ButtonSelectionController
 
 		if (index == -1)
 		{//Index of -1 is thrown by getIndex as an error.
-			display.setDisplay("Error: Invalid code", 5000);
+			notifyInvalidSelection();
+			//display.setDisplay("Error: Invalid selection", 5000);
 			return;
 		}
 		
 		if (inventory.isEmpty(index))
 		{//We are out of stock. Output message and leave function.
-			display.setDisplay("The product selected is empty", 5000);
+			notifyEmptySelection();
+			//display.setDisplay("The product selected is empty", 5000);
 			return;
 		}
-			
-		if (funds.conductTransaction(cost))
+		
+		boolean pass = funds.conductTransaction(cost);
+//		Rifffish logger = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
+//		Error e = logger.log(new Transaction(1, PaymentMethod.COIN, true));
+//			
+		if (pass)
 		{//If we can afford paying
 			dispense(index);
 
@@ -88,10 +95,11 @@ public class ButtonSelectionController
 		}
 		else
 		{//We cannot afford to pay
-			display.setDisplay("Insufficient funds for product: $"
+			notifyInsufficientFunds();
+			/*display.setDisplay("Insufficient funds for product: $"
 														+ Double.toString( cost / 100)
 														+ " required"
-														, 4000);
+														, 4000);*/
 		}
 	}
 	
@@ -121,4 +129,5 @@ public class ButtonSelectionController
 	public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {}
 	@Override
     public void enabled(AbstractHardware<AbstractHardwareListener> hardware) {}
+
 }

@@ -1,25 +1,29 @@
 package business.selection_delivery;
 
-import com.vendingmachinesareus.ProductRack;
+import hardware.products.Product;
+import hardware.racks.ProductRack;
 
-public class InventoryManager{
-	public ProductRackManager racks[];	//Connected rack managers
+import business.config.ConfigurationListener;
+
+public class InventoryController implements ConfigurationListener
+{
+	public ProductRackController racks[];	//Connected rack managers
 	private int rackCount;
 	
-	public InventoryManager(ProductRack[] pr, int rc, String[] names, int[] costs)
+	public InventoryController(ProductRack[] pr, int numRacks, String[] names, int[] costs, int [] quantity)
 	{
-		rackCount = rc;
-		
-		racks = new ProductRackManager[rackCount];
+		rackCount = numRacks;
+	
+		racks = new ProductRackController[rackCount];
 		for (int i = 0; i < rackCount; i++)
 		{//Create managers for each of the racks
-			racks[i] = new ProductRackManager(pr[i], names[i], costs[i]);
+			racks[i] = new ProductRackController(pr[i], names[i], costs[i], quantity[i]);
 		}
 		
 	}
 	
 	//Default constructor
-	public InventoryManager()
+	public InventoryController()
 	{
 		racks = null;
 		rackCount = 0;
@@ -34,6 +38,11 @@ public class InventoryManager{
 		{
 			racks[i].refill();
 		}
+	}
+	
+	public void refillQuantity(int index, int quantity)
+	{
+		racks[index].refillQuantity(quantity);
 	}
 	
 	public void refillRack(int index)
@@ -96,5 +105,21 @@ public class InventoryManager{
 	public void changeName(int index, String newName)
 	{//Change the name of the product for rack at index.
 		racks[index].changeName(newName);
+	}
+	
+	/**
+	 * Listeners
+	 */
+	
+	@Override
+	public void nameChanged(int index, String newName)
+	{//Config has told us a name has changed. Change it.
+		changeName(index, newName);
+	}
+	
+	@Override
+	public void priceChanged(int index, int newPrice)
+	{//Config has told us a price has changed. Change it.
+		changePrice(index, newPrice);
 	}
 }

@@ -37,10 +37,10 @@ public class CodeSelectionController
 	 */
 	// TODO: Changed these from MockDisplayManager, MockFundsManager - should they have been?
 	//  It wouldn't compile otherwise... - Liam Mar 31
-	public CodeSelectionController(InventoryManager inv, DisplayController disp, FundsController f, PushButtonCodeInterpreter interp, int off)
+	public CodeSelectionController(InventoryController inv, DisplayController disp, FundsController f, PushButtonCodeInterpreter interp, int off)
 	{
 		super(inv, disp, f);
-		interp.register(this); //Amy: Doesn't configuration handle registering listeners?
+		//interp.register(this); //Amy: Doesn't configuration handle registering listeners? Jon: Yes they do apparently.
 		
 		offset = off;
 	}
@@ -60,13 +60,15 @@ public class CodeSelectionController
 		
 		if (index == -1)
 		{//Index of -1 is thrown by getIndex as an error.
-			display.setDisplay("Error: Invalid code", 5000);
+			notifyInvalidSelection();
+			//display.setDisplay("Error: Invalid code", 5000);
 			return;
 		}
 		
 		if (inventory.isEmpty(index))
 		{//We are out of stock. Output message and leave function.
-			display.setDisplay("The product selected is empty", 5000);
+			notifyEmptySelection();
+			//display.setDisplay("The product selected is empty", 5000);
 			return;
 		}
 			
@@ -86,10 +88,11 @@ public class CodeSelectionController
 		}
 		else
 		{//We cannot afford to pay
-			display.setDisplay("Insufficient funds for product: $"
+			notifyInsufficientFunds();
+			/*display.setDisplay("Insufficient funds for product: $"
 														+ Double.toString( cost / 100)
 														+ " required"
-														, 4000);
+														, 4000);*/
 		}
 	}
 	
@@ -144,4 +147,5 @@ public class CodeSelectionController
 
 	@Override
 	public void enabled(AbstractHardware<AbstractHardwareListener> arg0) {}
+
 }

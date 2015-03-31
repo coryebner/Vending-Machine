@@ -1,25 +1,27 @@
 package business.selection_delivery;
 
-import com.vendingmachinesareus.CapacityExceededException;
-import com.vendingmachinesareus.DisabledException;
-import com.vendingmachinesareus.EmptyException;
+import hardware.exceptions.CapacityExceededException;
+import hardware.exceptions.DisabledException;
+import hardware.exceptions.EmptyException;
+
 
 import business.stub.DisplayController;
 import business.stub.FundsController;
 /*
  * The Selection Controller is the abstract shell for the CodeSelectionController
- * and ButtonSelectionController (Need to ask Liam about TouchScreenController)
+ * and ButtonSelectionController
  * 
  * REQUIRES: Instantiate this as either a code or button selection controller 
  * 				ex: selectionController = new CodeSelectionController();
  */
-public abstract class SelectionController {
+public abstract class SelectionController extends
+	AbstractController<SelectionControllerListener> {
 
-	protected InventoryManager inventory;
+	protected InventoryController inventory;
 	protected DisplayController display;
 	protected FundsController funds;
 	
-	public SelectionController(InventoryManager inv, DisplayController disp, FundsController f)
+	public SelectionController(InventoryController inv, DisplayController disp, FundsController f)
 	{
 		inventory = inv;
 		display = disp;
@@ -27,7 +29,7 @@ public abstract class SelectionController {
 	}
 	
 	/*
-	 * REQUIRES: Nothing
+	 * REQUIRES: The rack index
 	 * 
 	 * PROMISES: A pop will be dispensed if funds are sufficient
 	 */
@@ -43,12 +45,41 @@ public abstract class SelectionController {
 			display.setDisplay("Product dispensing functions are disabled", 5000);	
 		}
 		catch (EmptyException e) {/*
+			It shouldn't ever have to reach this catch block.
+		
 			display.getDisplayController().setDisplay("The product selected is empty", 5000);
 			if (!machine.getBalanceController().returnFunds(machine.getProductRack(index).getCost())) {
 				machine.getDisplayController().setDisplay("Unable to return funds - please contact support", 5000);
 			}*/
+			notifyEmptySelection();
 		}
 	}
 
-
+	/**
+	 * Notifications
+	 */
+	
+	protected void notifyEmptySelection()
+	{
+		Class<?>[] parameterTypes =
+		        new Class<?>[] { };
+		Object[] args = new Object[] { this };
+		notifyListeners(SelectionControllerListener.class, "emptySelection", parameterTypes, args);
+	}
+	
+	protected void notifyInvalidSelection()
+	{
+		Class<?>[] parameterTypes =
+		        new Class<?>[] { };
+		Object[] args = new Object[] { this };
+		notifyListeners(SelectionControllerListener.class, "invalidSelection", parameterTypes, args);
+	}
+	
+	protected void notifyInsufficientFunds()
+	{
+		Class<?>[] parameterTypes =
+		        new Class<?>[] { };
+		Object[] args = new Object[] { this };
+		notifyListeners(SelectionControllerListener.class, "insufficientFunds", parameterTypes, args);
+	}
 }
