@@ -2,6 +2,6 @@ package business.touchscreen;
 
 public interface BusinessTouchScreenListener {
 
-	void userKeyboardInput(String userInput);
+	void userKeyboardInput(char userInput);
 
 }
