@@ -6,6 +6,7 @@ import hardware.exceptions.EmptyException;
 import hardware.funds.Card;
 import hardware.funds.CardSlot;
 import hardware.funds.CardSlotListener;
+import hardware.funds.Card.CardType;
 
 /** Description of PrepaidController
  * @author Gurvir Singh
@@ -20,6 +21,17 @@ public class PrepaidController implements CardSlotListener {
 	private Card prepaidCard;
 	private VMCurrencies currencies;
 	
+	/**
+	 * Description of PrepaidController Contructor with no paramerers for a Prepaid Card
+	 * Meant for disabled version of card
+	 */
+	public PrepaidController() {
+		currencies = null;
+		prepaidCard = null;
+		prepaidCardInserted = false;
+		isDisabled = true;
+	}
+	
 	/** Description of PrepaidController Constructor for a Prepaid Card
 	 * @param vmcurrencies 	The currency of the current vending machine
 	 */
@@ -32,9 +44,11 @@ public class PrepaidController implements CardSlotListener {
 	
 	/** Description of ConductTransaction for a Prepaid Card
 	 * @param price 	The price in cents of the transaction attempted
-	 * @return			Returns creditcarderror if no card inserted or controller is disabled
+	 * @return			Returns creditcarderror if no card inserted
 	 * @return 			Returns successful based on transaction success
-	 * @return			Returns unsuccessful upon an unsuccessful transaction or insufficient funds
+	 * @return			Returns unsuccessful upon an unsuccessful transaction 
+	 * @return			Returns insufficientfunds if there are not enough funds
+	 * @reutnr 			Returns disabled if prepaid card controller is disabled
 	 */
 	public TransactionReturnCode ConductTransaction(int price) {
 		if(!isDisabled) {
@@ -48,19 +62,19 @@ public class PrepaidController implements CardSlotListener {
 				//if(prepaidCard.getCurrencyLocale() == currencies)
 				//	exchangePrice = price;
 				//else
-				//	exchangePrice = ExchangeFromToCurrency(currencies, prepaidCard.getCurrencyLocale(), price);
+				//	exchangePrice = ExchangeFromToCurrency(currencies.getLocale, prepaidCard.getCurrencyLocale(), price);
 				if(price <= getAvailableBalance()) {
-					if(prepaidCard.requestFunds(price, "")) //TODO Remove PIN
-						return TransactionReturnCode.SUCCESSFUL; 
+					if(prepaidCard.requestFunds(price, ""))
+						return TransactionReturnCode.SUCCESSFUL; //Payment successful
 					else
 						return TransactionReturnCode.UNSUCCESSFUL; //Could not request funds, card failure.
 				}
 				else
-					return TransactionReturnCode.UNSUCCESSFUL; //TODO Insufficient funds
+					return TransactionReturnCode.INSUFFICIENTFUNDS; //Insufficient funds
 			}
 		}
 		else
-			return TransactionReturnCode.CREDITCARDERROR;
+			return TransactionReturnCode.DISABLED; //Prepaid Card Controller disabled
 	}
 	
 	/** Description of getAvailableBalance for a Prepaid Card
@@ -69,7 +83,7 @@ public class PrepaidController implements CardSlotListener {
 	public int getAvailableBalance(){
 		//TODO
 		//if(isCardInserted())
-		//	return prepaidCard.checkCardBalance()
+		//	return currencies.ExchangeFromToCurrency(prepaidCard.getLocale(), currencies.getCurrencyLocale(), prepaidCard.checkCardBalance());
 		return 0;
 		
 	}
@@ -110,17 +124,19 @@ public class PrepaidController implements CardSlotListener {
 	@Override
 	public void cardInserted(CardSlot slot) {
 		try {
-			prepaidCard = slot.readCardData();
-			prepaidCardInserted = true;
+			if(slot.readCardData().getType() == CardType.PREPAID) { //Checks if card is of type PREPAID
+				prepaidCard = slot.readCardData();
+				prepaidCardInserted = true;
+			}
 		} catch (EmptyException e) {
 			prepaidCardInserted = false;
-		}	
+		}
 	}
 
 	@Override
 	public void cardEjected(CardSlot slot) {
-		prepaidCardInserted = false;
 		prepaidCard = null;
+		prepaidCardInserted = false;
 	}
 	
 }
