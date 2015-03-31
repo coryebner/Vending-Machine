@@ -55,17 +55,26 @@ public class GUI {
 	private JFrame frmVendingMachines;
 	private JPanel pnlMachineButtons;
 	private JPanel pnlPopButtons;
+	private JPanel pnlMoneySelection;
+	private JPanel pnlCoins;
 	private JPanel pnlCoinBtns;
+	private JPanel pnlBills;
 	private JPanel pnlBillBtns;
+	private JPanel pnlCards;
 	private JPanel pnlCardBtns;
+	
+	private JComboBox cmbCurr;
 
 	private ArrayList<JButton> coinButtons;
 	private ArrayList<JButton> billButtons;
 	private ArrayList<JButton> cardButtons;
 	private ArrayList<JButton> selectionButtons;
 	private ArrayList<JLabel> outOfProductLabels;
-	
-	private boolean hasCoinSlot, hasBillSlot, hasCardSlot;
+
+	// defaults to true
+	private boolean hasCoinSlot = true;
+	private boolean hasBillSlot = true;
+	private boolean hasCardSlot = true;
 
 	/**
 	 * Launch the application.
@@ -99,9 +108,6 @@ public class GUI {
 		cardButtons = new ArrayList();
 		outOfProductLabels = new ArrayList();
 		selectionButtons = new ArrayList();
-		
-		//defaults to has
-		hasCoinSlot = hasBillSlot = hasCardSlot = true;
 
 		frmVendingMachines = new JFrame();
 		frmVendingMachines.setTitle("Vending Machines");
@@ -145,9 +151,6 @@ public class GUI {
 		pnlMachineButtons = new JPanel();
 		pnlMachineMain.add(pnlMachineButtons, BorderLayout.CENTER);
 
-		JPanel panel = new JPanel();
-		pnlMachineButtons.add(panel);
-
 		JPanel pnlMisc = new JPanel();
 		pnlMachineButtons.add(pnlMisc);
 		pnlMisc.setLayout(new GridLayout(0, 1, 0, 3));
@@ -178,13 +181,15 @@ public class GUI {
 		frmVendingMachines.getContentPane().add(pnlMoney, BorderLayout.WEST);
 		pnlMoney.setLayout(new BorderLayout(0, 0));
 
-		JPanel pnlMoneySelection = new JPanel();
+		pnlMoneySelection = new JPanel();
 		pnlMoneySelection.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pnlMoney.add(pnlMoneySelection, BorderLayout.CENTER);
 		pnlMoneySelection.setLayout(new GridLayout(0, 1, 0, 0));
 
-		JPanel pnlCoins = new JPanel();
-		pnlMoneySelection.add(pnlCoins);
+		pnlCoins = new JPanel();
+		if (hasCoinSlot) {
+			pnlMoneySelection.add(pnlCoins);
+		}
 		pnlCoins.setLayout(new FlowLayout(FlowLayout.CENTER, 6, 6));
 
 		JLabel lblCoins = new JLabel("Coins:");
@@ -194,8 +199,10 @@ public class GUI {
 		pnlCoins.add(pnlCoinBtns);
 		pnlCoinBtns.setLayout(new GridLayout(0, 2, 2, 2));
 
-		JPanel pnlBills = new JPanel();
-		pnlMoneySelection.add(pnlBills);
+		pnlBills = new JPanel();
+		if (hasBillSlot) {
+			pnlMoneySelection.add(pnlBills);
+		}
 		pnlBills.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		JLabel lblBills = new JLabel("Bills:");
@@ -205,8 +212,10 @@ public class GUI {
 		pnlBills.add(pnlBillBtns);
 		pnlBillBtns.setLayout(new GridLayout(0, 2, 0, 0));
 
-		JPanel pnlCards = new JPanel();
-		pnlMoneySelection.add(pnlCards);
+		pnlCards = new JPanel();
+		if (hasCardSlot) {
+			pnlMoneySelection.add(pnlCards);
+		}
 		pnlCards.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		JLabel lblCards = new JLabel("Cards:");
@@ -223,23 +232,10 @@ public class GUI {
 		lblCurrencyType.setHorizontalAlignment(SwingConstants.TRAILING);
 		pnlCurrencyType.add(lblCurrencyType);
 
-		final JComboBox cmbCurr = new JComboBox();
+		cmbCurr = new JComboBox();
 		cmbCurr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				switch (cmbCurr.getSelectedIndex()) {
-				case 0:
-					resetCurrencyButtons();
-					canadaSetup();
-					break;
-				case 1:
-					resetCurrencyButtons();
-					americaSetup();
-					break;
-				case 2:
-					resetCurrencyButtons();
-					europeanSetup();
-					break;
-				}
+				setCurrencyType();
 			}
 		});
 		cmbCurr.setModel(new DefaultComboBoxModel(new String[] { "Canadian",
@@ -247,6 +243,56 @@ public class GUI {
 		pnlCurrencyType.add(cmbCurr);
 
 		canadaSetup();
+	}
+	
+	/**
+	 * Sets what currency buttons are shown based on the currency type 
+	 * selected in the combo box
+	 * Mainly used by combo box action listener
+	 */
+	private void setCurrencyType() {
+		switch (cmbCurr.getSelectedIndex()) {
+		case 0:
+			resetCurrencyButtons();
+			canadaSetup();
+			break;
+		case 1:
+			resetCurrencyButtons();
+			americaSetup();
+			break;
+		case 2:
+			resetCurrencyButtons();
+			europeanSetup();
+			break;
+		}
+	}
+
+	/**
+	 * Will create a pop button and out of product light for each product name
+	 * passed
+	 * 
+	 * @param names
+	 *            are the names of the products the buttons are being created
+	 *            for
+	 */
+	private void createPopButtons(ArrayList<String> names) {
+		for (String name : names) {
+			outOfProductLabels.add(createOutOfProductLight());
+			selectionButtons.add(createPopButton(name));
+		}
+	}
+
+	/**
+	 * Redraws the pop button panel based on the elements in the selection and
+	 * out of product light arraylists
+	 */
+	private void reloadPopButtons() {
+		for (int i = 0; i < selectionButtons.size(); i++) {
+			pnlPopButtons.add(outOfProductLabels.get(i));
+			pnlPopButtons.add(selectionButtons.get(i));
+		}
+		pnlPopButtons.revalidate();
+		pnlPopButtons.repaint();
 	}
 
 	/**
@@ -286,7 +332,7 @@ public class GUI {
 			cardButtons.add(createCardButton(2500, "$"));
 		}
 
-		redisplayCurrencyButtons();
+		reloadCurrencyButtons();
 	}
 
 	/**
@@ -306,7 +352,7 @@ public class GUI {
 		cardButtons.add(createCardButton(500, "$"));
 		cardButtons.add(createCardButton(2500, "$"));
 
-		redisplayCurrencyButtons();
+		reloadCurrencyButtons();
 	}
 
 	/**
@@ -328,14 +374,14 @@ public class GUI {
 		cardButtons.add(createCardButton(500, EURO));
 		cardButtons.add(createCardButton(250, EURO));
 
-		redisplayCurrencyButtons();
+		reloadCurrencyButtons();
 	}
 
 	/**
 	 * Puts all currency buttons in the arraylists into their respective panels
 	 * and redraws those panels
 	 */
-	public void redisplayCurrencyButtons() {
+	public void reloadCurrencyButtons() {
 		for (int i = 0; i < coinButtons.size(); i++) {
 			pnlCoinBtns.add(coinButtons.get(i));
 		}
@@ -361,16 +407,17 @@ public class GUI {
 	 * currently correct
 	 */
 	public void machine1Setup() {
+		ArrayList<String> names = new ArrayList();
 
-		for (int i = 0; i < 6; i++) {
-			outOfProductLabels.add(createOutOfProductLight());
-			selectionButtons.add(createPopButton("Pop " + i));
-		}
+		names.add("Coke");
+		names.add("Diet Coke");
+		names.add("Coke Zero");
+		names.add("Sprite");
+		names.add("Root Beer");
+		names.add("Water");
 
-		for (int i = 0; i < selectionButtons.size(); i++) {
-			pnlPopButtons.add(outOfProductLabels.get(i));
-			pnlPopButtons.add(selectionButtons.get(i));
-		}
+		createPopButtons(names);
+		reloadPopButtons();
 	}
 
 	/**
