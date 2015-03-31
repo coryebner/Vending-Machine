@@ -2,8 +2,6 @@ package test;
 
 import static org.junit.Assert.*;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -15,7 +13,7 @@ import config.ConfigurationException;
 public class ConfigurationTest extends Configuration {
 	public ConfigurationTest()
 	{
-		super("");
+		super();
 	}
 
 	@Test
