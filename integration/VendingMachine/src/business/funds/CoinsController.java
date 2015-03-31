@@ -25,6 +25,13 @@ public class CoinsController implements CoinReceptacleListener {
 	private boolean fullOfChangeStatus;
 
 	/**
+	 * Constructor takes in:
+	 * @param coinReceptacle
+	 * @param coinRacks[]
+	 * @param coinRackDenominations[]
+	 */
+	
+	/**
 	 * Description of ConductTransaction with coins
 	 * 
 	 * @param price
@@ -32,8 +39,8 @@ public class CoinsController implements CoinReceptacleListener {
 	 * @return The return code based on success of the transaction
 	 */
 	protected TransactionReturnCode ConductTransaction(int price) {
-		if (availableBalance == price) {
-			return null; // return success.
+		if (availableBalance >= price) {
+			return null;
 		} else if (availableBalance > price) {
 			// TODO: Check if change is possible.
 			// If possible, return availableBalance - price in change.
@@ -43,12 +50,13 @@ public class CoinsController implements CoinReceptacleListener {
         // Not enough money.
         return null; // return insufficient funds.
 	}
-
+	
 	/**
 	 * Description of provideChange with coins
 	 * 
 	 * Makes calls to each coinRackHandler to dispense their change in order
 	 * (greatest to least)
+	 * TODO: Check if at least $4.95 in change other fail.
 	 * 
 	 * @param amount
 	 *            The amount in cents of the amount of change to dispense

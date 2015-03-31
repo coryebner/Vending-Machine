@@ -88,6 +88,7 @@ public class CoinRackController implements CoinRackListener {
 
 	/**
 	 * Description of provideChange with coins
+	 * TODO: Check if at least 3 coins in each rack.
 	 * 
 	 * @param amount
 	 *            The amount in cents of the amount of change to dispense
