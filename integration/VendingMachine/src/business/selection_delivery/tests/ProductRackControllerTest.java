@@ -38,7 +38,11 @@ public class ProductRackControllerTest {
 		
 		rack = new ProductRack(capacity);
 		
-		rackManager = new ProductRackController(ProductRack pr, String n, int cost);
+		String n = "name";
+		int cost = 100;
+		int qty = 0;
+		
+		rackManager = new ProductRackController(rack,n,cost, qty);
 	}
 
 	@After
