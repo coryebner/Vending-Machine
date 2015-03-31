@@ -1,11 +1,19 @@
 package business.selection_delivery;
 
+import business.stub.DisplayController;
+import business.stub.FundsController;
+
 import com.vendingmachinesareus.AbstractHardware;
 import com.vendingmachinesareus.AbstractHardwareListener;
-import com.vendingmachinesareus.DisabledException;
-import com.vendingmachinesareus.EmptyException;
+// TODO: Changed these like the ones in ButtonSelectionController - the same comments
+//  apply here I suppose - Liam Mar 31
+//import com.vendingmachinesareus.DisabledException;
+//import com.vendingmachinesareus.EmptyException;
 import com.vendingmachinesareus.PushButtonCodeInterpreter;
 import com.vendingmachinesareus.PushButtonCodeInterpreterListener;
+
+import hardware.exceptions.DisabledException;
+import hardware.exceptions.EmptyException;
 
 
 /**
@@ -27,7 +35,9 @@ public class CodeSelectionController
 	 * Registers us with the CandyVendingMachine's PushButtonInterpreter to
 	 *  listen for codeEntered() events.
 	 */
-	public CodeSelectionController(InventoryManager inv, MockDisplayManager disp, MockFundsManager f, PushButtonCodeInterpreter interp, int off)
+	// TODO: Changed these from MockDisplayManager, MockFundsManager - should they have been?
+	//  It wouldn't compile otherwise... - Liam Mar 31
+	public CodeSelectionController(InventoryManager inv, DisplayController disp, FundsController f, PushButtonCodeInterpreter interp, int off)
 	{
 		super(inv, disp, f);
 		interp.register(this); //Amy: Doesn't configuration handle registering listeners?

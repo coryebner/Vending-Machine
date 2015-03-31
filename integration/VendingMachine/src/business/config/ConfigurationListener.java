@@ -1,4 +1,4 @@
-package config;
+package business.config;
 
 public interface ConfigurationListener {
 	public void nameChanged(int index, String newName);
