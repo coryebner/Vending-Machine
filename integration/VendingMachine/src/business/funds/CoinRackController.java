@@ -22,57 +22,35 @@ import hardware.racks.CoinRackListener;
 public class CoinRackController implements CoinRackListener {
 
 	private CoinRack coinRack;
-	private int valueOfCoinRack; // in cents.
+	private int rackDenomination; // in cents.
 	private int quantity;
 
-	protected CoinRackController(CoinRack coinRack, int valueOfCoinRack,
+	/**
+	 * Public constructor.
+	 * 
+	 * @param coinRack reference to the coin rack.
+	 * @param rackDenomination denomination of the coin rack
+	 * @param quantity number of coins in the coin rack.
+	 */
+	public CoinRackController(CoinRack coinRack, int rackDenomination,
 			int quantity) {
 		this.coinRack = coinRack;
-		this.valueOfCoinRack = valueOfCoinRack;
+		this.rackDenomination = rackDenomination;
 		this.quantity = quantity;
 	}
 
 	/**
-	 * Returns the coin denomination for the coins in the rack.
-	 * 
-	 * @return coin denomination in cents
+	 * Releases a coin from the coin rack.
 	 */
-	protected int getValueOfCoinRack() {
-		return valueOfCoinRack;
-	}
-
-	/**
-	 * Description of getQuantity for a specific rack of coins
-	 * 
-	 * @return The number of coins in the specific rack
-	 */
-	protected int getQuantity() {
-		return quantity;
-	}
-
-	/**
-	 * Description of isEmpty for a specific rack of coins
-	 * 
-	 * @return If the number of coins in the specific rack equals zero
-	 */
-	protected boolean isEmpty() {
-		return quantity == 0;
-	}
-
-	/**
-	 * Description of releaseCoin for a specific rack of coins If the number of
-	 * coins in the specific rack has at least one coin it will be released
-	 * 
-	 * @throws EmptyException
-	 *             thrown when rack is empty.
-	 */
-	protected void releaseCoin() throws EmptyException {
+	public void releaseCoin() {
 		try {
 			coinRack.releaseCoin();
+		} catch (EmptyException e) {
+			e.printStackTrace(); // Should never occur.
 		} catch (CapacityExceededException e) {
-			e.printStackTrace();
+			e.printStackTrace(); // Should never occur.
 		} catch (DisabledException e) {
-			e.printStackTrace();
+			e.printStackTrace(); // Should never occur.
 		}
 	}
 
@@ -84,13 +62,41 @@ public class CoinRackController implements CoinRackListener {
 	 *            The amount in cents of the amount of change to dispense
 	 * @return The amount remaining to be returned
 	 */
-	protected int provideChange(int amount) {
+	public int provideChange(int amount) {
 		return 0;
+	}
+
+	/**
+	 * Returns the coin denomination for the coins in the rack.
+	 * 
+	 * @return coin denomination in cents
+	 */
+	public int getCoinRackDenomination() {
+		return rackDenomination;
+	}
+
+	/**
+	 * Returns the number of coins in the specific rack.
+	 * 
+	 * @return The number of coins in the specific rack
+	 */
+	public int getQuantity() {
+		return quantity;
+	}
+
+	/**
+	 * Returns a boolean indicating if the rack is empty.
+	 * 
+	 * @return If the number of coins in the specific rack equals zero
+	 */
+	public boolean isEmpty() {
+		return quantity == 0;
 	}
 
 	@Override
 	public void coinsFull(CoinRack rack) {
-		// Should never be encountered since we have an overflow bin for coin racks.
+		// Should never be encountered since we have an overflow bin for coin
+		// racks.
 	}
 
 	@Override

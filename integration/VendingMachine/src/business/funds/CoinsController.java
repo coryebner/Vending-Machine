@@ -2,6 +2,8 @@ package business.funds;
 
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
+import hardware.exceptions.CapacityExceededException;
+import hardware.exceptions.DisabledException;
 import hardware.funds.Coin;
 import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinReceptacleListener;
@@ -19,7 +21,6 @@ import hardware.racks.CoinRack;
  */
 public class CoinsController implements CoinReceptacleListener {
 
-	private CoinReceptacle coinReceptacle;
 	private CoinRackController[] coinRackControllers;
 	private int[] productPrices;
 	private int availableBalance; // value of coins in cents in the receptacle.
@@ -29,8 +30,6 @@ public class CoinsController implements CoinReceptacleListener {
 	/**
 	 * Public constructor.
 	 * 
-	 * @param coinReceptacle
-	 *            the coin receptacle.
 	 * @param coinRacks
 	 *            list of coin rack references.
 	 * @param coinRackDenominations
@@ -40,9 +39,8 @@ public class CoinsController implements CoinReceptacleListener {
 	 * @param productPrices
 	 *            prices of each product.
 	 */
-	public CoinsController(CoinReceptacle coinReceptacle, CoinRack[] coinRacks,
-			int[] coinRackDenominations, int[] coinRackQuantities,
-			int[] productPrices) {
+	public CoinsController(CoinRack[] coinRacks, int[] coinRackDenominations,
+			int[] coinRackQuantities, int[] productPrices) {
 		this.productPrices = productPrices;
 
 		// Initialize all coin rack controllers.
@@ -61,16 +59,12 @@ public class CoinsController implements CoinReceptacleListener {
 	 * @return The return code based on success of the transaction
 	 */
 	public TransactionReturnCode ConductTransaction(int price) {
+		// Return success if enough coins.
 		if (availableBalance >= price) {
-			return null;
-		} else if (availableBalance > price) {
-			// TODO: Check if change is possible.
-			// If possible, return availableBalance - price in change.
-			return null; // return success.
+			return TransactionReturnCode.SUCCESSFUL;
+		} else { // Not enough money.
+			return TransactionReturnCode.INSUFFICIENTFUNDS;
 		}
-
-		// Not enough money.
-		return null; // return insufficient funds.
 	}
 
 	/**
@@ -125,8 +119,7 @@ public class CoinsController implements CoinReceptacleListener {
 	}
 
 	/**
-	 * Description of isFullOfChangeActive if at least one coin rack is full of
-	 * coins
+	 * Returns a boolean indicating if at least one coin rack is full of coins.
 	 * 
 	 * @return The state of at least one rack being full of coins
 	 */
@@ -148,7 +141,15 @@ public class CoinsController implements CoinReceptacleListener {
 
 	@Override
 	public void coinsFull(CoinReceptacle receptacle) {
-		// TODO: Should coins be dumped when full?
+		// Dump coins if the receptacle fills up.
+		try {
+			receptacle.returnCoins();
+		} catch (CapacityExceededException e) {
+			e.printStackTrace();
+		} catch (DisabledException e) {
+			e.printStackTrace();
+		}
+		availableBalance = 0;
 	}
 
 	@Override
