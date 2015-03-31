@@ -44,51 +44,52 @@ public class Configuration {
 		configFile = new File(filename);
 	}
 	
-	private AbstractVendingMachine createMachine()
-		throws IOException
+	private void createMachine()
+		throws IOException, ConfigurationException
 	{
 		if (type.equals("VMRUS-SFF-P/C")) {
-			return createSFFPC();
+			machine = createSFFPC();
 		}
 		else if (type.equals("VMRUS-SFF-P/CI")) {
-			return createSFFPCI();
+			machine = createSFFPCI();
 		}
 		else if (type.equals("VMRUS-SFF-P/PI")) {
-			return createSFFPPI();
+			machine = createSFFPPI();
 		}
 		else if (type.equals("VMRUS-COM-P/MI")) {
-			return createCOMPMI();
+			machine = createCOMPMI();
 		}
 		else if (type.equals("VMRUS-COM-P/M")) {
-			return createCOMPM();
+			machine = createCOMPM();
 		}
 		else if (type.equals("VMRUS-COM-C/MI")) {
-			return createCOMCMI();
+			machine = createCOMCMI();
 		}
 		else if (type.equals("VMRUS-COM-C/M")) {
-			return createCOMCM();
+			machine = createCOMCM();
 		}
 		else if (type.equals("VMRUS-TOC-P/MI")) {
-			return createTOCPMI();
+			machine = createTOCPMI();
 		}
 		else if (type.equals("VMRUS-TOC-P/I")) {
-			return createTOCPI();
+			machine = createTOCPI();
 		}
 		else if (type.equals("VMRUS-TOC-C/MI")) {
-			return createTOCCMI();
+			machine = createTOCCMI();
 		}
 		else if (type.equals("VMRUS-TOC-C+")) {
-			return createTOCCp();
+			machine = createTOCCp();
 		}
 		else if (type.equals("VMRUS-TOC-C+/I")) {
-			return createTOCCpI();
+			machine = createTOCCpI();
 		}
 		else {
-			return null;
+			throw new ConfigurationException("Invalid machine type!");
 		}
 	}
 	
-	private void readConfigFile(BufferedReader input) throws IOException
+	private void readConfigFile(BufferedReader input)
+		throws IOException, ConfigurationException
 	{
 		ArrayList<String> lines = readFileLines(input);
 		
@@ -127,7 +128,7 @@ public class Configuration {
 			|| billRackQuantities == null
 			|| billStorageQuantities == null)
 		{
-			// Throw something! Parsing problem
+			throw new ConfigurationException("Missing line in config file!");
 		}
 	}
 	
@@ -135,12 +136,20 @@ public class Configuration {
 	{
 		// Do basically the opposite of what we do in readConfigFile()
 	}
+	
+	private void loadMachine()
+	{
+		// Load the machine with all the right amounts of coins, bills, products
+		// making sure to use loadWithoutEvents() functions where you can
+	}
 
-	public AbstractVendingMachine load() throws IOException
+	public AbstractVendingMachine load()
+		throws IOException, ConfigurationException
 	{
 		BufferedReader input = new BufferedReader(new FileReader(configFile));
 		readConfigFile(input);
-		machine = createMachine();
+		createMachine();
+		loadMachine();
 		return machine;
 	}
 	
@@ -150,7 +159,7 @@ public class Configuration {
 		BufferedWriter output = new BufferedWriter(new FileWriter(configFile));
 		writeConfigFile(output);
 	}
-	
+
 	/**
 	 * Create a FundsController with the specified parameters, and register
 	 *  it with all the listeners it needs to be registered with.
