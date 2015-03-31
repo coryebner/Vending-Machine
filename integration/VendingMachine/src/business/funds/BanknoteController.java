@@ -73,6 +73,4 @@ public class BanknoteController implements BanknoteReceptacleListener {
 		// TODO Auto-generated method stub
 		
 	}
-	
-
 }
