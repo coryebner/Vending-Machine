@@ -1,4 +1,4 @@
-package config;
+package business.config;
 
 @SuppressWarnings("serial")
 public class ConfigurationException extends Exception {

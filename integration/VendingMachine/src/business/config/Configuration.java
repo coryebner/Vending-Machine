@@ -1,4 +1,4 @@
-package config;
+package business.config;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -1,4 +1,4 @@
-package test;
+package business.test;
 
 import static org.junit.Assert.*;
 
@@ -7,8 +7,8 @@ import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.StringReader;
 
-import config.Configuration;
-import config.ConfigurationException;
+import business.config.Configuration;
+import business.config.ConfigurationException;
 
 public class ConfigurationTest extends Configuration {
 	public ConfigurationTest()
