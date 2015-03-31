@@ -16,36 +16,36 @@ public class Configuration {
 	static class FundsController {}
 	
 	// Configuration file
-	private File configFile;
+	protected File configFile;
 	
 	// Configuration data loaded from/written to the configuration file
-	private String type;
-	private String [] names;
-	private int [] quantities;
-	private int [] prices;
+	protected String type;
+	protected String [] names;
+	protected int [] quantities;
+	protected int [] prices;
 	
-	private int [] coinRackQuantities;
-	private int [] coinStorageQuantities;
-	private int [] billRackQuantities;
-	private int [] billStorageQuantities;
+	protected int [] coinRackQuantities;
+	protected int [] coinStorageQuantities;
+	protected int [] billRackQuantities;
+	protected int [] billStorageQuantities;
 	
-	private String logFrequency;
-	private Locale locale;
+	protected String logFrequency;
+	protected Locale locale;
 	
 	// Vending machine we created
-	private AbstractVendingMachine machine;
+	protected AbstractVendingMachine machine;
 	
 	// Controllers we require data from when saving
 	// eg. FundsController needs to tell us how many coins in each rack
-	private FundsController funds;
-	private InventoryManager inventory;
+	protected FundsController funds;
+	protected InventoryManager inventory;
 	
 	public Configuration(String filename)
 	{
 		configFile = new File(filename);
 	}
 	
-	private void createMachine()
+	protected void createMachine()
 		throws IOException, ConfigurationException
 	{
 		if (type.equals("VMRUS-SFF-P/C")) {
@@ -89,10 +89,13 @@ public class Configuration {
 		}
 	}
 	
-	private void readConfigFile(BufferedReader input)
+	protected void readConfigFile(BufferedReader input)
 		throws IOException, ConfigurationException
 	{
 		ArrayList<String> lines = readFileLines(input);
+		if (lines.size() < 8) {
+			throw new ConfigurationException("Incomplete config file");
+		}
 		
 		type = lines.get(0);
 		
@@ -133,18 +136,18 @@ public class Configuration {
 		}
 	}
 	
-	private void writeConfigFile(BufferedWriter output)
+	protected void writeConfigFile(BufferedWriter output)
 	{
 		// Do basically the opposite of what we do in readConfigFile()
 	}
 	
-	private void loadMachine()
+	protected void loadMachine()
 	{
 		// Load the machine with all the right amounts of coins, bills, products
 		// making sure to use loadWithoutEvents() functions where you can
 	}
 
-	public AbstractVendingMachine load()
+	protected AbstractVendingMachine load()
 		throws IOException, ConfigurationException
 	{
 		BufferedReader input = new BufferedReader(new FileReader(configFile));
@@ -154,7 +157,7 @@ public class Configuration {
 		return machine;
 	}
 	
-	public void save() throws IOException
+	protected void save() throws IOException
 	{
 		// Read all the data we need from machine, funds and inventory
 		BufferedWriter output = new BufferedWriter(new FileWriter(configFile));
@@ -172,10 +175,10 @@ public class Configuration {
 	 * @param card					does this machine accept card?
 	 * @param paypal				does this machine accept paypal?
 	 */
-	private void createFundsController(AbstractVendingMachine machine,
-									   boolean coin,
-									   boolean card,
-									   boolean paypal)
+	protected void createFundsController(AbstractVendingMachine machine,
+									     boolean coin,
+									     boolean card,
+									     boolean paypal)
 	{
 		// funds = new FundsController(locale, coin, card, paypal);
 		// machine.getCoinSlot().register(funds.getCoinController());
@@ -188,7 +191,7 @@ public class Configuration {
 	 *  
 	 * @param machine				hardware to register listeners with
 	 */
-	private void createButtonController(AbstractVendingMachine machine)
+	protected void createButtonController(AbstractVendingMachine machine)
 	{
 		
 	}
@@ -201,7 +204,7 @@ public class Configuration {
 	 * @param offset				beginning index of 'code' selection buttons
 	 * 								  (vs. normal push buttons)
 	 */
-	private void createCodeController(AbstractVendingMachine machine, int offset)
+	protected void createCodeController(AbstractVendingMachine machine, int offset)
 	{
 		
 	}
@@ -214,7 +217,7 @@ public class Configuration {
 	 *  	
 	 * @param machine				hardware to register listeners with
 	 */
-	private void createInventoryManager(AbstractVendingMachine machine)
+	protected void createInventoryManager(AbstractVendingMachine machine)
 	{
 		
 	}
@@ -226,7 +229,7 @@ public class Configuration {
 	 * @param frequency				logging frequency
 	 * 								  (one of either "instant", "batch" or "daily")
 	 */
-	private void createLogger(AbstractVendingMachine machine, String frequency)
+	protected void createLogger(AbstractVendingMachine machine, String frequency)
 	{
 		
 	}
@@ -243,62 +246,62 @@ public class Configuration {
 	 *   - createInventoryController()
 	 *  in the correct order. Note that this does NOT include createLogger()
 	 */
-	private AbstractVendingMachine createSFFPC()
+	protected AbstractVendingMachine createSFFPC()
 	{
 		return new AbstractVendingMachine();
 	}
 
-	private AbstractVendingMachine createSFFPCI()
+	protected AbstractVendingMachine createSFFPCI()
 	{
 		return new AbstractVendingMachine();	
 	}
 
-	private AbstractVendingMachine createSFFPPI()
+	protected AbstractVendingMachine createSFFPPI()
 	{
 		return new AbstractVendingMachine();		
 	}
 
-	private AbstractVendingMachine createCOMPMI()
+	protected AbstractVendingMachine createCOMPMI()
 	{
 		return new AbstractVendingMachine();		
 	}
 
-	private AbstractVendingMachine createCOMPM()
+	protected AbstractVendingMachine createCOMPM()
 	{
 		return new AbstractVendingMachine();		
 	}
 
-	private AbstractVendingMachine createCOMCMI()
+	protected AbstractVendingMachine createCOMCMI()
 	{
 		return new AbstractVendingMachine();		
 	}
 
-	private AbstractVendingMachine createCOMCM()
+	protected AbstractVendingMachine createCOMCM()
 	{
 		return new AbstractVendingMachine();		
 	}
 	
-	private AbstractVendingMachine createTOCPMI()
+	protected AbstractVendingMachine createTOCPMI()
 	{
 		return new AbstractVendingMachine();		
 	}
 	
-	private AbstractVendingMachine createTOCPI()
+	protected AbstractVendingMachine createTOCPI()
 	{
 		return new AbstractVendingMachine();		
 	}
 
-	private AbstractVendingMachine createTOCCMI()
+	protected AbstractVendingMachine createTOCCMI()
 	{
 		return new AbstractVendingMachine();		
 	}
 
-	private AbstractVendingMachine createTOCCp()
+	protected AbstractVendingMachine createTOCCp()
 	{
 		return new AbstractVendingMachine();		
 	}
 
-	private AbstractVendingMachine createTOCCpI()
+	protected AbstractVendingMachine createTOCCpI()
 	{
 		return new AbstractVendingMachine();		
 	}
@@ -307,7 +310,7 @@ public class Configuration {
 	 * Parsing functions - simple parsing of integer and string arrays
 	 *  from file lines. Used by readConfigFile().
 	 */
-	private ArrayList<String> readFileLines(BufferedReader input)
+	protected ArrayList<String> readFileLines(BufferedReader input)
 		throws IOException
 	{
 		ArrayList<String> lines = new ArrayList<String>();
@@ -320,7 +323,7 @@ public class Configuration {
 		return lines;
 	}
 	
-	private String [] stripFirst(String [] components)
+	protected String [] stripFirst(String [] components)
 	{
 		String [] ret = new String[components.length - 1];
 
@@ -331,13 +334,13 @@ public class Configuration {
 		return ret;
 	}
 	
-	private String [] readStringArray(String line) {
+	protected String [] readStringArray(String line) {
 		String [] components = line.split(" ");
 
 		return stripFirst(components);
 	}
 	
-	private int [] toIntArray(String [] strings) {
+	protected int [] toIntArray(String [] strings) {
 		int [] ret = new int[strings.length];
 		
 		for (int i = 0; i < ret.length; ++i) {
@@ -347,11 +350,10 @@ public class Configuration {
 		return ret;
 	}
 	
-	private int [] readIntArray(String line) {
+	protected int [] readIntArray(String line) {
 		String [] components = line.split(" ");
 		String [] strings = stripFirst(components);
 		
 		return toIntArray(strings);
 	}
-	
 }
