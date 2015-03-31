@@ -17,14 +17,13 @@ import hardware.racks.CoinRackListener;
  * @author Arthur Lee
  * @author Olabode (Sam) Adegbayike
  * 
- * Class to interact with hardware to conduct a Coins transaction.
+ *         Class to interact with hardware to conduct a Coins transaction.
  */
 public class CoinRackController implements CoinRackListener {
 
 	private CoinRack coinRack;
 	private int valueOfCoinRack; // in cents.
 	private int quantity;
-	private int capacity;
 
 	protected CoinRackController(CoinRack coinRack, int valueOfCoinRack,
 			int quantity) {
@@ -61,15 +60,6 @@ public class CoinRackController implements CoinRackListener {
 	}
 
 	/**
-	 * Returns true if the rack is full of coins.
-	 * 
-	 * @return if the number of coins in the rack equals the capacity.
-	 */
-	protected boolean isFull() {
-		return quantity >= capacity;
-	}
-
-	/**
 	 * Description of releaseCoin for a specific rack of coins If the number of
 	 * coins in the specific rack has at least one coin it will be released
 	 * 
@@ -87,8 +77,8 @@ public class CoinRackController implements CoinRackListener {
 	}
 
 	/**
-	 * Description of provideChange with coins
-	 * TODO: Check if at least 3 coins in each rack.
+	 * Description of provideChange with coins TODO: Check if at least 3 coins
+	 * in each rack.
 	 * 
 	 * @param amount
 	 *            The amount in cents of the amount of change to dispense
@@ -100,6 +90,7 @@ public class CoinRackController implements CoinRackListener {
 
 	@Override
 	public void coinsFull(CoinRack rack) {
+		// Should never be encountered since we have an overflow bin for coin racks.
 	}
 
 	@Override

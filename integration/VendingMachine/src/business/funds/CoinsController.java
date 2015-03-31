@@ -5,6 +5,7 @@ import hardware.AbstractHardwareListener;
 import hardware.funds.Coin;
 import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinReceptacleListener;
+import hardware.racks.CoinRack;
 
 /**
  * Description of PrepaidController
@@ -18,19 +19,40 @@ import hardware.funds.CoinReceptacleListener;
  */
 public class CoinsController implements CoinReceptacleListener {
 
-	private CoinRackController[] coinRackControllers; // Storage of the coin
-														// racks
+	private CoinReceptacle coinReceptacle;
+	private CoinRackController[] coinRackControllers;
+	private int[] productPrices;
 	private int availableBalance; // value of coins in cents in the receptacle.
 	private boolean exactChangeStatus;
 	private boolean fullOfChangeStatus;
 
 	/**
-	 * Constructor takes in:
+	 * Public constructor.
+	 * 
 	 * @param coinReceptacle
-	 * @param coinRacks[]
-	 * @param coinRackDenominations[]
+	 *            the coin receptacle.
+	 * @param coinRacks
+	 *            list of coin rack references.
+	 * @param coinRackDenominations
+	 *            value of each coin in a coin rack.
+	 * @param coinRackQuantities
+	 *            the number of coins in each rack.
+	 * @param productPrices
+	 *            prices of each product.
 	 */
-	
+	public CoinsController(CoinReceptacle coinReceptacle, CoinRack[] coinRacks,
+			int[] coinRackDenominations, int[] coinRackQuantities,
+			int[] productPrices) {
+		this.productPrices = productPrices;
+
+		// Initialize all coin rack controllers.
+		coinRackControllers = new CoinRackController[coinRacks.length];
+		for (int i = 0; i < coinRacks.length; i++) {
+			coinRackControllers[i] = new CoinRackController(coinRacks[i],
+					coinRackDenominations[i], coinRackQuantities[i]);
+		}
+	}
+
 	/**
 	 * Description of ConductTransaction with coins
 	 * 
@@ -38,7 +60,7 @@ public class CoinsController implements CoinReceptacleListener {
 	 *            The price in cents of the transaction attempted
 	 * @return The return code based on success of the transaction
 	 */
-	protected TransactionReturnCode ConductTransaction(int price) {
+	public TransactionReturnCode ConductTransaction(int price) {
 		if (availableBalance >= price) {
 			return null;
 		} else if (availableBalance > price) {
@@ -47,22 +69,21 @@ public class CoinsController implements CoinReceptacleListener {
 			return null; // return success.
 		}
 
-        // Not enough money.
-        return null; // return insufficient funds.
+		// Not enough money.
+		return null; // return insufficient funds.
 	}
-	
+
 	/**
 	 * Description of provideChange with coins
 	 * 
 	 * Makes calls to each coinRackHandler to dispense their change in order
-	 * (greatest to least)
-	 * TODO: Check if at least $4.95 in change other fail.
+	 * (greatest to least) TODO: Check if at least $4.95 in change other fail.
 	 * 
 	 * @param amount
 	 *            The amount in cents of the amount of change to dispense
 	 * @return The code of the success of change being provided
 	 */
-	protected TransactionReturnCode provideChange(int amount) {
+	public TransactionReturnCode provideChange(int amount) {
 		return null;
 	}
 
@@ -72,7 +93,7 @@ public class CoinsController implements CoinReceptacleListener {
 	 * @return The value of the coins in the temporary storage bin available for
 	 *         a transaction
 	 */
-	protected int getAvailableBalance() {
+	public int getAvailableBalance() {
 		return availableBalance;
 	}
 
@@ -81,7 +102,7 @@ public class CoinsController implements CoinReceptacleListener {
 	 * 
 	 * @return The current status of the exact change state
 	 */
-	protected boolean getExactChangeStatus() {
+	public boolean getExactChangeStatus() {
 		return exactChangeStatus;
 	}
 
@@ -90,7 +111,7 @@ public class CoinsController implements CoinReceptacleListener {
 	 * 
 	 * @return The array of coin rack controllers (for use to register)
 	 */
-	protected CoinRackController[] getCoinRackControllers() {
+	public CoinRackController[] getCoinRackControllers() {
 		return coinRackControllers;
 	}
 
@@ -99,7 +120,7 @@ public class CoinsController implements CoinReceptacleListener {
 	 * 
 	 * @return The state of not providing change due to exact change status
 	 */
-	protected boolean isExactChangeActive() {
+	public boolean isExactChangeActive() {
 		return exactChangeStatus;
 	}
 
@@ -109,7 +130,7 @@ public class CoinsController implements CoinReceptacleListener {
 	 * 
 	 * @return The state of at least one rack being full of coins
 	 */
-	protected boolean isFullOfChangeActive() {
+	public boolean isFullOfChangeActive() {
 		return fullOfChangeStatus;
 	}
 
