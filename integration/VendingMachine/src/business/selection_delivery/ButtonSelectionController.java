@@ -1,5 +1,6 @@
 package business.selection_delivery;
 
+<<<<<<< HEAD
 import com.vendingmachinesareus.AbstractHardware;
 import com.vendingmachinesareus.AbstractHardwareListener;
 // TODO: Should the rest of these use hardware.* instead of com.vendingmachinesareus.*?
@@ -15,6 +16,23 @@ import business.stub.*;
 
 import hardware.exceptions.EmptyException;
 import hardware.exceptions.DisabledException;
+=======
+//Imports for logging
+import productController.MockDisplayController;
+import productController.MockFundsController;
+import rifffish.Error;
+import rifffish.Rifffish;
+import rifffish.Rifffish.PaymentMethod;
+import rifffish.Transaction;
+import hardware.AbstractHardware;
+import hardware.AbstractHardwareListener;
+import hardware.exceptions.DisabledException;
+import hardware.exceptions.EmptyException;
+import hardware.ui.PushButton;
+import hardware.ui.PushButtonListener;
+
+
+>>>>>>> Ok actually adding changes now
 
 /**
  * @class PopSelectionController
@@ -36,17 +54,29 @@ public class ButtonSelectionController
 	 * Registers us with the PopVendingMachine's PushButtons to listen for
 	 *  pressed() events.
 	 */
+<<<<<<< HEAD
 	public ButtonSelectionController(InventoryManager inv, DisplayController disp, FundsController f, PushButton[] butts, int numButts)
+=======
+	public ButtonSelectionController(InventoryController inv, MockDisplayController disp, MockFundsController f, PushButton[] butts, int numButts)
+>>>>>>> Ok actually adding changes now
 	{
 		super(inv, disp, f);
 		
 		buttons = butts;
 		numButtons= numButts;
 		
+<<<<<<< HEAD
 		for (int i = 0; i < numButts; ++i)
 		{//Register the buttons.
 			buttons[i].register(this);
 		}
+=======
+		/* Configuration is handling this.
+		for (int i = 0; i < numButts; ++i)
+		{//Register the buttons.
+			buttons[i].register(this);
+		}*/
+>>>>>>> Ok actually adding changes now
 	}
 	
 	/**
@@ -62,17 +92,35 @@ public class ButtonSelectionController
 
 		if (index == -1)
 		{//Index of -1 is thrown by getIndex as an error.
+<<<<<<< HEAD
 			display.setDisplay("Error: Invalid code", 5000);
+=======
+			notifyInvalidSelection();
+			//display.setDisplay("Error: Invalid selection", 5000);
+>>>>>>> Ok actually adding changes now
 			return;
 		}
 		
 		if (inventory.isEmpty(index))
 		{//We are out of stock. Output message and leave function.
+<<<<<<< HEAD
 			display.setDisplay("The product selected is empty", 5000);
 			return;
 		}
 			
 		if (funds.conductTransaction(cost))
+=======
+			notifyEmptySelection();
+			//display.setDisplay("The product selected is empty", 5000);
+			return;
+		}
+		
+		boolean pass = funds.conductTransaction(cost);
+//		Rifffish logger = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
+//		Error e = logger.log(new Transaction(1, PaymentMethod.COIN, true));
+//			
+		if (pass)
+>>>>>>> Ok actually adding changes now
 		{//If we can afford paying
 			dispense(index);
 
@@ -88,10 +136,18 @@ public class ButtonSelectionController
 		}
 		else
 		{//We cannot afford to pay
+<<<<<<< HEAD
 			display.setDisplay("Insufficient funds for product: $"
 														+ Double.toString( cost / 100)
 														+ " required"
 														, 4000);
+=======
+			notifyInsufficientFunds();
+			/*display.setDisplay("Insufficient funds for product: $"
+														+ Double.toString( cost / 100)
+														+ " required"
+														, 4000);*/
+>>>>>>> Ok actually adding changes now
 		}
 	}
 	
@@ -121,4 +177,8 @@ public class ButtonSelectionController
 	public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {}
 	@Override
     public void enabled(AbstractHardware<AbstractHardwareListener> hardware) {}
+<<<<<<< HEAD
+=======
+
+>>>>>>> Ok actually adding changes now
 }
