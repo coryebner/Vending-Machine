@@ -14,7 +14,7 @@ import business.selection_delivery.ProductRackController;
 
 public class ProductRackControllerTest {
 
-	static ProductRackManager rackManager;
+	static ProductRackController rackManager;
 	static ProductRack rack;
 	
 	@BeforeClass
@@ -38,7 +38,7 @@ public class ProductRackControllerTest {
 		
 		rack = new ProductRack(capacity);
 		
-		rackManager = new ProductRackManager(ProductRack pr, String n, int cost);
+		rackManager = new ProductRackController(ProductRack pr, String n, int cost);
 	}
 
 	@After
