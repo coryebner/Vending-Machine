@@ -11,11 +11,8 @@
 
 package gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.Font;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -27,15 +24,15 @@ import javax.swing.JPanel;
 
 public class VirtualKeyboard extends JFrame 
 {    
-	private ArrayList<VirtualKeyboardListener> keyboardListeners = new ArrayList<VirtualKeyboardListener>();
+	private ArrayList<VirtualKeyboardActionListener> keyboardListeners = new ArrayList<VirtualKeyboardActionListener>();
 	
-    public void register(VirtualKeyboardListener listener) { keyboardListeners.add(listener); }
+    public void register(VirtualKeyboardActionListener listener) { keyboardListeners.add(listener); }
 	
-	public boolean deregister(VirtualKeyboardListener listener) { return keyboardListeners.remove(listener); }
+	public boolean deregister(VirtualKeyboardActionListener listener) { return keyboardListeners.remove(listener); }
     
 	private void notifyKeyDown(char key)
     {
-    	for (VirtualKeyboardListener listener : keyboardListeners)
+    	for (VirtualKeyboardActionListener listener : keyboardListeners)
     		listener.OnKeyDown(key);    	
     }
 	
@@ -80,7 +77,7 @@ public class VirtualKeyboard extends JFrame
                 button[row][column].putClientProperty("column", column);
                 button[row][column].putClientProperty("row", row);
                 button[row][column].putClientProperty("key", key[row][column]);
-                button[row][column].addActionListener(new VirtualKeyboardListener());
+                button[row][column].addActionListener(new VirtualKeyboardActionListener());
                 panel[row].add(button[row][column]);
             }
             parent.add(panel[row]);
@@ -92,17 +89,18 @@ public class VirtualKeyboard extends JFrame
         setVisible(true);
     }
 
-    public class VirtualKeyboardListener implements ActionListener {
-    	public char stringToSend;
+    class VirtualKeyboardActionListener implements ActionListener {
+    	public char charToSend;
     	public void updateString(char newValue){
-    		this.stringToSend=newValue;
-    		System.out.println("We are sending this string: "+ stringToSend);
-    		
-    		
+    		this.charToSend =newValue;
+    		System.out.println("We are sending this string: "+ charToSend);
     		
     		//TODO 
     		//Spencer you will do the action raising depending on key typed here
-    	}
+
+            notifyKeyDown(charToSend);
+
+        }
     	
         public void OnKeyDown(char key) {
 			// TODO Auto-generated method stub
@@ -112,8 +110,8 @@ public class VirtualKeyboard extends JFrame
 		@Override
         public void actionPerformed(ActionEvent e) {
             JButton btn = (JButton) e.getSource();
-            
-            
+
+
             System.out.println("Clicked Column: --> " + btn.getClientProperty("column")
                     + ", Clicked Row: --> " + btn.getClientProperty("row")
                     + ", Key Typed: --> " + btn.getClientProperty("key"));
@@ -156,8 +154,6 @@ public class VirtualKeyboard extends JFrame
             
             else
             	updateString(btn.getClientProperty("key").toString().charAt(0));
-            
-            notifyKeyDown(stringToSend);
         }
     }
 
