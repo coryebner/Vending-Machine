@@ -57,7 +57,7 @@ public class GUI {
 	
 	private boolean codeInProgress = false;
 
-	private JFrame frmVendingMachines;
+	JFrame frmVendingMachines;
 	private JPanel pnlMachineButtons;
 	private JPanel pnlPopButtons;
 	private JPanel pnlCandyButtons;
