@@ -2,6 +2,7 @@ package business.funds;
 
 import hardware.racks.CoinRack;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,8 +36,7 @@ public class Funds {
     
     private VMCurrencies machineCurrencies;
     
-    private List<String> PaymentMethodUsedAndPaymentStatus;
-    
+	private HashMap<String, String> LOG;    
     
     /*
      CoinRack[] coinRacks, int[] coinRackDenominations,
@@ -58,6 +58,8 @@ public class Funds {
         this.coinsController =  new CoinsController(coinRacks, coinRackDenominations, coinRackQuantities, productPrices);
         this.payPalController = new PayPalController();
         this.creditCardController = new CreditCardController(this.payPalController);
+        
+        this.LOG = new HashMap<String, String>();
         
         /* Set the payment methods for this machine */
         if(availablePaymentMethods.contains(PaymentMethods.PREPAID)){
@@ -96,7 +98,7 @@ public class Funds {
         if(totalBalance >= price){
             //conduct transaction accordingly
             conductPrePBillCoinTransaction(price);
-            this.PaymentMethodUsedAndPaymentStatus.add("SUCCESSFUL");
+			this.LOG.putIfAbsent("STATUS", "SUCCESS");
             return TransactionReturnCode.SUCCESSFUL;
         }
         //Try to conduct CreditCard and/or PayPal transaction with (price - totalBalance)
@@ -115,10 +117,10 @@ public class Funds {
         
         if(transactionSuccess){
             conductPrePBillCoinTransaction(totalBalance);
-            this.PaymentMethodUsedAndPaymentStatus.add("SUCCESSFUL");
+			this.LOG.putIfAbsent("STATUS", "SUCCESS");
             return TransactionReturnCode.SUCCESSFUL;
         } else{
-            this.PaymentMethodUsedAndPaymentStatus.add("INSUFFICIENTFUNDS");
+			this.LOG.putIfAbsent("STATUS", "FAIL");
             return TransactionReturnCode.INSUFFICIENTFUNDS;
         }
     }
@@ -147,22 +149,32 @@ public class Funds {
     
     
     /**
-     * return true if there is  balance of(PrePaid and/or Bills and/or Coins) that is equal or greater than the price
-     * @return
+     * @return totalBalanceInPreBilCoin of(PrePaid and/or Bills and/or Coins)
      */
     private int getTotalBalanceInPreBilCoin() {
         // TODO Auto-generated method stub
-        return this.prepaidController.getAvailableBalance() + this.bankNoteController.getAvailableBalance()+ this.coinsController.getAvailableBalance();
-        
+    	int totalBalanceInPreBilCoin = 0;
+    	if(this.prepaidPresent){
+    		totalBalanceInPreBilCoin += this.prepaidController.getAvailableBalance();
+    	}
+    	if(this.billsPresent){
+    		totalBalanceInPreBilCoin += this.bankNoteController.getAvailableBalance();
+    	}
+    	if(this.coinsPresent){
+    		totalBalanceInPreBilCoin += this.coinsController.getAvailableBalance();
+    	}
+    	
+    	return totalBalanceInPreBilCoin;
     }
+    
     
     /**
      * @return null if no attempt made to conduct transaction
      * otherwise it returns the PaymentMethodUsedAndPaymentStatus list;
      */
-    public List<String> getPaymentMethodUsedAndPaymentStatus(){
+    public HashMap<String, String> getPaymentMethodUsedAndPaymentStatus(){
         if(this.conductTransactionIsCalled){
-            return this.PaymentMethodUsedAndPaymentStatus;
+            return this.LOG;
         }
         return null;
     }
