@@ -55,6 +55,7 @@ public class GUI {
 	private JFrame frmVendingMachines;
 	private JPanel pnlMachineButtons;
 	private JPanel pnlPopButtons;
+	private JPanel pnlCandyButtons;
 	private JPanel pnlMoneySelection;
 	private JPanel pnlCoins;
 	private JPanel pnlCoinBtns;
@@ -64,6 +65,7 @@ public class GUI {
 	private JPanel pnlCardBtns;
 
 	private JComboBox cmbCurr;
+	private JButton billEject;
 
 	private JTextPane Display_text;
 
@@ -80,7 +82,7 @@ public class GUI {
 
 	private boolean hasPopButtons = true;
 	// TODO implement candy buttons and set to true
-	private boolean hasCandyButtons = false;
+	private boolean hasCandyButtons = true;
 
 	/**
 	 * Launch the application.
@@ -180,7 +182,74 @@ public class GUI {
 		if (hasPopButtons) {
 			pnlMachineButtons.add(pnlPopButtons);
 		}
+		pnlPopButtons.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pnlPopButtons.setLayout(new GridLayout(0, 2, 2, 2));
+
+		pnlCandyButtons = new JPanel();
+		if (hasCandyButtons) {
+			pnlMachineButtons.add(pnlCandyButtons);
+		}
+		pnlCandyButtons.setBorder(new LineBorder(new Color(0, 0, 0)));
+		pnlCandyButtons.setLayout(new GridLayout(1, 0, 0, 0));
+
+		JPanel pnlLetterCandyButtons = new JPanel();
+		pnlCandyButtons.add(pnlLetterCandyButtons);
+		pnlLetterCandyButtons.setLayout(new GridLayout(0, 1, 0, 0));
+
+		JButton btnA = new JButton("A");
+		pnlLetterCandyButtons.add(btnA);
+
+		JButton btnB = new JButton("B");
+		pnlLetterCandyButtons.add(btnB);
+
+		JButton btnC = new JButton("C");
+		pnlLetterCandyButtons.add(btnC);
+
+		JButton btnD = new JButton("D");
+		pnlLetterCandyButtons.add(btnD);
+
+		JButton btnE = new JButton("E");
+		pnlLetterCandyButtons.add(btnE);
+
+		JButton btnF = new JButton("F");
+		pnlLetterCandyButtons.add(btnF);
+
+		JPanel pnlNumberCandyButtons = new JPanel();
+		pnlCandyButtons.add(pnlNumberCandyButtons);
+		pnlNumberCandyButtons.setLayout(new GridLayout(0, 3, 0, 0));
+
+		JButton btn1 = new JButton("1");
+		pnlNumberCandyButtons.add(btn1);
+
+		JButton btn2 = new JButton("2");
+		pnlNumberCandyButtons.add(btn2);
+
+		JButton btn3 = new JButton("3");
+		pnlNumberCandyButtons.add(btn3);
+
+		JButton btn4 = new JButton("4");
+		pnlNumberCandyButtons.add(btn4);
+
+		JButton btn5 = new JButton("5");
+		pnlNumberCandyButtons.add(btn5);
+
+		JButton btn6 = new JButton("6");
+		pnlNumberCandyButtons.add(btn6);
+
+		JButton btn7 = new JButton("7");
+		pnlNumberCandyButtons.add(btn7);
+
+		JButton btn8 = new JButton("8");
+		pnlNumberCandyButtons.add(btn8);
+
+		JButton btn9 = new JButton("9");
+		pnlNumberCandyButtons.add(btn9);
+
+		JPanel pnlCndyNumSpaceing = new JPanel();
+		pnlNumberCandyButtons.add(pnlCndyNumSpaceing);
+
+		JButton btn0 = new JButton("0");
+		pnlNumberCandyButtons.add(btn0);
 
 		machine1Setup();
 
@@ -249,6 +318,9 @@ public class GUI {
 		cmbCurr.setModel(new DefaultComboBoxModel(new String[] { "Canadian",
 				"American", "European" }));
 		pnlCurrencyType.add(cmbCurr);
+
+		billEject = new JButton("Remove bill");
+		billEject.setEnabled(false);
 
 		canadaSetup();
 	}
@@ -397,6 +469,10 @@ public class GUI {
 			pnlBillBtns.add(billButtons.get(i));
 		}
 
+		JPanel pnl = new JPanel();
+		pnlBillBtns.add(pnl);
+		pnlBillBtns.add(billEject);
+
 		for (int i = 0; i < cardButtons.size(); i++) {
 			pnlCardBtns.add(cardButtons.get(i));
 		}
@@ -543,9 +619,7 @@ public class GUI {
 			btn.setEnabled(status);
 		}
 
-		for (JButton btn : billButtons) {
-			btn.setEnabled(status);
-		}
+		enableBillButtons(status);
 
 		for (JButton btn : cardButtons) {
 			btn.setEnabled(status);
@@ -556,6 +630,17 @@ public class GUI {
 		}
 
 		cmbCurr.setEnabled(status);
+	}
+
+	/**
+	 * Enables or disables all bill buttons based on the parameter
+	 * 
+	 * @param status
+	 */
+	public void enableBillButtons(boolean status) {
+		for (JButton btn : billButtons) {
+			btn.setEnabled(status);
+		}
 	}
 
 	// TODO replace method signature with proper one from listener
