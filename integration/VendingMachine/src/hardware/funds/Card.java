@@ -1,6 +1,9 @@
 package hardware.funds;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Currency;
+import java.util.Date;
 import java.util.Locale;
 
 import hardware.exceptions.SimulationException;
@@ -14,6 +17,10 @@ import hardware.exceptions.SimulationException;
  * "unknown".
  */
 public class Card {
+	
+  	/* Represents the anticipated/expected format of the expiration date */
+	private String acceptedExpirationFormat = "mm/YYYY";
+	
     /**
      * The types of cards recognized by the vending machine, plus "unknown".
      */
@@ -41,15 +48,10 @@ public class Card {
     public Card(CardType type, String number, String name, String pin, String expiry, Locale cardCurrency, int maxAmount) {
 	if(type == null || number == null || name == null || pin == null || expiry == null)
 	    throw new SimulationException("The arguments may not be null");
-	String[] expiryParts = expiry.split("/");
-	if(expiryParts.length < 0 || expiryParts[0].length() != 2 || expiryParts[1].length() != 4)
-		throw new SimulationException("Expiry date format: MM/YYYY");
-	try{
-		int expiryMonth = Integer.parseInt(expiryParts[0]);
-		int expiryYear = Integer.parseInt(expiryParts[1]);
-	} catch(NumberFormatException e){
-		throw new SimulationException("Expiry date format: MM/YYYY");
-	}
+
+    if(!isValidExpiration(this.acceptedExpirationFormat, expiry))
+    	throw new SimulationException("Invalid expiration format (mm/YYYY)");
+    
 	this.type = type;
 	this.number = number;
 	this.name = name;
@@ -97,6 +99,13 @@ public class Card {
     public Currency getCurrency(){
     	return cardCurrency;
     }
+    
+    /**
+     * Returns the current card balance.
+     */
+    public int getCardBalance(){
+    	return maxAmount;
+    }
 
     /**
      * Tests whether a given PIN conforms to what is stored on the card.
@@ -131,5 +140,23 @@ public class Card {
 	default:
 	    return false;
 	}
+    }
+    
+    /**
+     * isValidExpiration
+     * 
+     * @param   format 	String representing the SimpleDataFormat (ie: yy/MMMM)
+     * @param   value	String to test against the expected format 
+     * @return	true 	if the format of the expiration is as expected
+     * 			false	otherwise
+     */
+    private static boolean isValidExpiration(String format, String value) {
+        Date date = null;
+        try {
+            date = new SimpleDateFormat(format).parse(value);
+        } catch (ParseException ex) {
+            return false;
+        }
+        return date != null;
     }
 }
