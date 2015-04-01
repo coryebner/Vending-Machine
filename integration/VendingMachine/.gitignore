@@ -1,1 +1,6 @@
 /bin/
+
+# Ignores files for IntelliJ Idea users.
+.idea/
+*.iml
+out/
