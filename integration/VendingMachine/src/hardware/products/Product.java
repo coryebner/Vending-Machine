@@ -7,7 +7,7 @@ package hardware.products;
  * for the purposes of the current requirements, but can represent any
  * product stored in this manner.
  * 
- * @see AbstractProduct, IProduct, IRackable
+ * @see IProduct, IRackable
  *
  */
-public class Product extends AbstractProduct {}
+public class Product implements IProduct {}
