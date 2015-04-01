@@ -51,11 +51,15 @@ public class GUI {
 
 	// unicode for the euro symbol
 	private final String EURO = "\u20ac";
+	private static final String[] ALPHABET = { "A", "B", "C", "D", "E", "F", "G",
+		"H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+		"U", "V", "W", "X", "Y", "Z" };
 
 	private JFrame frmVendingMachines;
 	private JPanel pnlMachineButtons;
 	private JPanel pnlPopButtons;
 	private JPanel pnlCandyButtons;
+	private JPanel pnlCandyLetterButtons;
 	private JPanel pnlMoneySelection;
 	private JPanel pnlCoins;
 	private JPanel pnlCoinBtns;
@@ -73,6 +77,8 @@ public class GUI {
 	private ArrayList<JButton> billButtons;
 	private ArrayList<JButton> cardButtons;
 	private ArrayList<JButton> popButtons;
+	private ArrayList<JButton> candyLetterButtons;
+	private ArrayList<JButton> candyNumberButtons;
 	private ArrayList<JLabel> outOfProductLabels;
 
 	// defaults to true
@@ -116,6 +122,8 @@ public class GUI {
 		cardButtons = new ArrayList();
 		outOfProductLabels = new ArrayList();
 		popButtons = new ArrayList();
+		candyLetterButtons = new ArrayList();
+		candyNumberButtons = new ArrayList();
 
 		frmVendingMachines = new JFrame();
 		frmVendingMachines.setTitle("Vending Machines");
@@ -192,63 +200,55 @@ public class GUI {
 		pnlCandyButtons.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pnlCandyButtons.setLayout(new GridLayout(1, 0, 0, 0));
 
-		JPanel pnlLetterCandyButtons = new JPanel();
-		pnlCandyButtons.add(pnlLetterCandyButtons);
-		pnlLetterCandyButtons.setLayout(new GridLayout(0, 1, 0, 0));
-
-		JButton btnA = new JButton("A");
-		pnlLetterCandyButtons.add(btnA);
-
-		JButton btnB = new JButton("B");
-		pnlLetterCandyButtons.add(btnB);
-
-		JButton btnC = new JButton("C");
-		pnlLetterCandyButtons.add(btnC);
-
-		JButton btnD = new JButton("D");
-		pnlLetterCandyButtons.add(btnD);
-
-		JButton btnE = new JButton("E");
-		pnlLetterCandyButtons.add(btnE);
-
-		JButton btnF = new JButton("F");
-		pnlLetterCandyButtons.add(btnF);
+		pnlCandyLetterButtons = new JPanel();
+		pnlCandyButtons.add(pnlCandyLetterButtons);
+		pnlCandyLetterButtons.setLayout(new GridLayout(0, 1, 0, 0));
 
 		JPanel pnlNumberCandyButtons = new JPanel();
 		pnlCandyButtons.add(pnlNumberCandyButtons);
 		pnlNumberCandyButtons.setLayout(new GridLayout(0, 3, 0, 0));
 
 		JButton btn1 = new JButton("1");
+		candyNumberButtons.add(btn1);
 		pnlNumberCandyButtons.add(btn1);
 
 		JButton btn2 = new JButton("2");
+		candyNumberButtons.add(btn2);
 		pnlNumberCandyButtons.add(btn2);
 
 		JButton btn3 = new JButton("3");
+		candyNumberButtons.add(btn3);
 		pnlNumberCandyButtons.add(btn3);
 
 		JButton btn4 = new JButton("4");
+		candyNumberButtons.add(btn4);
 		pnlNumberCandyButtons.add(btn4);
 
 		JButton btn5 = new JButton("5");
+		candyNumberButtons.add(btn5);
 		pnlNumberCandyButtons.add(btn5);
 
 		JButton btn6 = new JButton("6");
+		candyNumberButtons.add(btn6);
 		pnlNumberCandyButtons.add(btn6);
 
 		JButton btn7 = new JButton("7");
+		candyNumberButtons.add(btn7);
 		pnlNumberCandyButtons.add(btn7);
 
 		JButton btn8 = new JButton("8");
+		candyNumberButtons.add(btn8);
 		pnlNumberCandyButtons.add(btn8);
 
 		JButton btn9 = new JButton("9");
+		candyNumberButtons.add(btn9);
 		pnlNumberCandyButtons.add(btn9);
 
 		JPanel pnlCndyNumSpaceing = new JPanel();
 		pnlNumberCandyButtons.add(pnlCndyNumSpaceing);
 
 		JButton btn0 = new JButton("0");
+		candyNumberButtons.add(btn0);
 		pnlNumberCandyButtons.add(btn0);
 
 		machine1Setup();
@@ -359,6 +359,33 @@ public class GUI {
 			outOfProductLabels.add(createOutOfProductLight());
 			popButtons.add(createPopButton(name));
 		}
+	}
+
+	/**
+	 * Creates a number of candy letter buttons, starting with the letter A and
+	 * adds them to the appropriate arraylist
+	 * 
+	 * @param num
+	 *            is the number of the buttons being created
+	 */
+	private void createCandyLetterButtons(int num) {
+		for (int i = 0; i < num; i++) {
+			JButton btn = new JButton(ALPHABET[i]);
+			candyLetterButtons.add(btn);
+		}
+	}
+
+	/**
+	 * Redraws the candy letter buttons panel based on the elements in the candy
+	 * letter buttons arraylist
+	 */
+	private void reloadCandyLetterButtons() {
+		for (JButton btn : candyLetterButtons) {
+			pnlCandyLetterButtons.add(btn);
+		}
+
+		pnlCandyLetterButtons.revalidate();
+		pnlCandyLetterButtons.repaint();
 	}
 
 	/**
@@ -502,6 +529,9 @@ public class GUI {
 
 		createPopButtons(names);
 		reloadPopButtons();
+		
+		createCandyLetterButtons(6);
+		reloadCandyLetterButtons();
 	}
 
 	/**
@@ -626,6 +656,14 @@ public class GUI {
 		}
 
 		for (JButton btn : popButtons) {
+			btn.setEnabled(status);
+		}
+		
+		for (JButton btn : candyLetterButtons) {
+			btn.setEnabled(status);
+		}
+		
+		for (JButton btn : candyNumberButtons) {
 			btn.setEnabled(status);
 		}
 
