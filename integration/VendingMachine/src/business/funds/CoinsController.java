@@ -82,7 +82,7 @@ public class CoinsController implements CoinReceptacleListener {
 			int sum = 0;
 			// Start dispensing coins from highest denomination with coins
 			// in its respective racks.
-			for (int i = coinRackControllers.length; i >= 0; i--) {
+			for (int i = coinRackControllers.length-1; i >= 0; i--) {
 				int rackDenomination = coinRackControllers[i]
 						.getCoinRackDenomination();
 
@@ -116,7 +116,7 @@ public class CoinsController implements CoinReceptacleListener {
 		boolean changePossible;
 		int sum = 0;
 
-		for (int i = coinRackControllers.length; i >= 0; i--) {
+		for (int i = coinRackControllers.length-1; i >= 0; i--) {
 			int numCoinsUsed = 0;
 			int rackDenomination = coinRackControllers[i]
 					.getCoinRackDenomination();
