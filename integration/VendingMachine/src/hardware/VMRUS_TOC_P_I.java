@@ -29,7 +29,7 @@ public class VMRUS_TOC_P_I extends AbstractVendingMachine{
 	private ProductRack[] productRacks;
 	private Display display;
 	private PushButton[] selectionButtons;
-	//private PushButton returnButton;
+	private PushButton returnButton;
 	
 	//private IndicatorLight exactChangeLight, outOfOrderLight;
 	//private IndicatorLight[] outOfProductLights;
@@ -78,7 +78,7 @@ public class VMRUS_TOC_P_I extends AbstractVendingMachine{
 		selectionButtons = new PushButton[numOfProducts];
 		for (int i = 0; i < numOfProducts; i++)
 			selectionButtons[i] = new PushButton();
-		//returnButton = new PushButton();
+		returnButton = new PushButton();
 
 		/*
 		exactChangeLight = new IndicatorLight();
@@ -154,12 +154,10 @@ public class VMRUS_TOC_P_I extends AbstractVendingMachine{
 		return productRacks[index];
 	}
 
-	/*
 	@Override
 	public PushButton getReturnButton() {
 		return returnButton;
 	}
-	*/
 
 	@Override
 	public PushButton getSelectionButton(int index) {
