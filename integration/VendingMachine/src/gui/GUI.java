@@ -62,7 +62,7 @@ public class GUI {
 	private JPanel pnlBillBtns;
 	private JPanel pnlCards;
 	private JPanel pnlCardBtns;
-	
+
 	private JComboBox cmbCurr;
 
 	private ArrayList<JButton> coinButtons;
@@ -75,9 +75,9 @@ public class GUI {
 	private boolean hasCoinSlot = true;
 	private boolean hasBillSlot = true;
 	private boolean hasCardSlot = true;
-	
+
 	private boolean hasPopButtons = true;
-	//TODO implement candy buttons and set to true
+	// TODO implement candy buttons and set to true
 	private boolean hasCandyButtons = false;
 
 	/**
@@ -250,11 +250,10 @@ public class GUI {
 
 		canadaSetup();
 	}
-	
+
 	/**
-	 * Sets what currency buttons are shown based on the currency type 
-	 * selected in the combo box
-	 * Mainly used by combo box action listener
+	 * Sets what currency buttons are shown based on the currency type selected
+	 * in the combo box Mainly used by combo box action listener
 	 */
 	private void setCurrencyType() {
 		switch (cmbCurr.getSelectedIndex()) {
@@ -409,10 +408,9 @@ public class GUI {
 	}
 
 	/**
-	 * Should load the required components for the first machine's setup 
-	 * Not currently correct
-	 * Will not be used for actual program
-	 * TODO remove when functionality complete
+	 * Should load the required components for the first machine's setup Not
+	 * currently correct Will not be used for actual program TODO remove when
+	 * functionality complete
 	 */
 	public void machine1Setup() {
 		ArrayList<String> names = new ArrayList();
@@ -501,4 +499,33 @@ public class GUI {
 	public JButton createPopButton(String name) {
 		return new JButton(name);
 	}
+
+	/**
+	 * Enables or disables all interactable components in the GUI based on the
+	 * passed parameter
+	 * 
+	 * @param status
+	 *            is true if the components will be enabled, false if the
+	 *            components will be disabled
+	 */
+	public void enableInteractivity(boolean status) {
+		for (JButton btn : coinButtons) {
+			btn.setEnabled(status);
+		}
+
+		for (JButton btn : billButtons) {
+			btn.setEnabled(status);
+		}
+
+		for (JButton btn : cardButtons) {
+			btn.setEnabled(status);
+		}
+
+		for (JButton btn : popButtons) {
+			btn.setEnabled(status);
+		}
+
+		cmbCurr.setEnabled(status);
+	}
+
 }
