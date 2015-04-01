@@ -183,7 +183,7 @@ public class ProductRack extends AbstractRack<ProductRackListener, Product, Prod
 		Class<?>[] parameterTypes =
 				new Class<?>[] { ProductRack.class, Product.class };
 		Object[] args = new Object[] { this, product };
-		notifyListeners(PopCanRackListener.class, "productAdded", parameterTypes, args);
+		notifyListeners(ProductRackListener.class, "productAdded", parameterTypes, args);
 	}
 
 	/**
@@ -199,7 +199,7 @@ public class ProductRack extends AbstractRack<ProductRackListener, Product, Prod
 		Class<?>[] parameterTypes =
 				new Class<?>[] { ProductRack.class };
 		Object[] args = new Object[] { this };
-		notifyListeners(PopCanRackListener.class, "productFull", parameterTypes, args);
+		notifyListeners(ProductRackListener.class, "productFull", parameterTypes, args);
 	}
 
 	/**
