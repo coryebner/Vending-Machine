@@ -10,6 +10,7 @@ import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinSlot;
 import hardware.racks.CoinRack;
 import hardware.racks.PopCanRack;
+import hardware.racks.ProductRack;
 import hardware.ui.DeliveryChute;
 import hardware.ui.Display;
 import hardware.ui.IndicatorLight;
@@ -77,7 +78,7 @@ public abstract class AbstractVendingMachine {
 	 * @throws NoSuchHardwareException 
 	 */
 	// public ProductRack getProductRack(int index) throws NoSuchHardwareException {
-	public PopCanRack getProductRack(int index) throws NoSuchHardwareException {
+	public ProductRack getProductRack(int index) throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 	
@@ -143,13 +144,22 @@ public abstract class AbstractVendingMachine {
 	public BanknoteReceptacle getBanknoteReceptacle() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
-	
+
 	/**
-	 * Returns the storage bin.
+	 * Returns the banknote storage bin.
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	public CoinReceptacle getStorageBin() throws NoSuchHardwareException {
+	public CoinReceptacle getBanknoteStorageBin() throws NoSuchHardwareException {
+		throw new NoSuchHardwareException();
+	}
+	
+	/**
+	 * Returns the coin storage bin.
+	 * 
+	 * @throws NoSuchHardwareException
+	 */
+	public CoinReceptacle getCoinStorageBin() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 
