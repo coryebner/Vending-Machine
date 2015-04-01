@@ -2,7 +2,9 @@ package hardware.ui;
 
 import hardware.AbstractHardware;
 
-
+/**
+ * A class that allows software to interact with the configuration panel
+ */
 public class ConfigurationPanelTransmitter extends AbstractHardware<ConfigurationPanelTransmitterListener>{
 
 	public void enterCommand(String inputString){

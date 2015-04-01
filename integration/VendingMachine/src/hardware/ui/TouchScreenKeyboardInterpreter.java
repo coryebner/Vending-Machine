@@ -2,7 +2,9 @@ package hardware.ui;
 
 import hardware.AbstractHardware;
 
-
+/**
+ * A class that allows the Touch Screen to interact with software indirectly.
+ */
 public class TouchScreenKeyboardInterpreter extends AbstractHardware<TouchScreenKeyboardInterpreterListener>{
 
 	public void enterString(String inputString){
