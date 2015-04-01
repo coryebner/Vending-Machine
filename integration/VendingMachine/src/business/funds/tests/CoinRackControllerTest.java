@@ -1,14 +1,8 @@
 package business.funds.tests;
 
-import java.util.Locale;
-
-import hardware.exceptions.CapacityExceededException;
-import hardware.exceptions.DisabledException;
 import hardware.exceptions.EmptyException;
 import hardware.funds.Coin;
-import hardware.funds.CoinSlot;
 import hardware.racks.CoinRack;
-
 import static org.junit.Assert.*;
 
 import org.junit.After;
@@ -51,8 +45,14 @@ public class CoinRackControllerTest {
 	}
 	
 	@Test
-	public void releaseCoinTest(){
-		
+	public void releaseCoinTest() throws EmptyException{
+		coinRackController.releaseCoin();
+		assertEquals(quantity-1, coinRackController.getQuantity());
+		quantity = 0;
+		coinRack= new CoinRack(0);
+		coinRackController = new CoinRackController(coinRack, rackDenomination, quantity);
+		coinRackController.releaseCoin();
+		fail("Exception was not thrown.");
 		
 	}
 	
