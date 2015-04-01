@@ -41,12 +41,12 @@ public class CoinRackController implements CoinRackListener {
 
 	/**
 	 * Releases a coin from the coin rack.
+	 * 
+	 * @throws EmptyException if empty when trying to release coin.
 	 */
-	public void releaseCoin() {
+	public void releaseCoin() throws EmptyException {
 		try {
 			coinRack.releaseCoin();
-		} catch (EmptyException e) {
-			e.printStackTrace(); // Should never occur.
 		} catch (CapacityExceededException e) {
 			e.printStackTrace(); // Should never occur.
 		} catch (DisabledException e) {

@@ -4,6 +4,7 @@ import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
 import hardware.exceptions.CapacityExceededException;
 import hardware.exceptions.DisabledException;
+import hardware.exceptions.EmptyException;
 import hardware.funds.Coin;
 import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinReceptacleListener;
@@ -92,7 +93,11 @@ public class CoinsController implements CoinReceptacleListener {
 				while (coinRackControllers[i].getQuantity() > 0
 						&& sum + rackDenomination <= amount) {
 					// Dispense coin.
-					coinRackControllers[i].releaseCoin();
+					try {
+						coinRackControllers[i].releaseCoin();
+					} catch (EmptyException e) {
+						break;
+					}
 					sum += rackDenomination;
 				}
 				if (sum == amount) break;
