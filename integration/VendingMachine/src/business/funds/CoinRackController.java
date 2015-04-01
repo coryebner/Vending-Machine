@@ -37,6 +37,11 @@ public class CoinRackController implements CoinRackListener {
 		this.coinRack = coinRack;
 		this.rackDenomination = rackDenomination;
 		this.quantity = quantity;
+		
+		// Load the coin racks with the quantity of coins specified.
+		for (int i = 0; i < quantity; i++) {
+			coinRack.loadWithoutEvents(new Coin(rackDenomination));
+		}
 	}
 
 	/**

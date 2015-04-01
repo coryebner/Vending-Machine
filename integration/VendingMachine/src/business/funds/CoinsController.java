@@ -27,10 +27,14 @@ public class CoinsController implements CoinReceptacleListener {
 	private int availableBalance; // value of coins in cents in the receptacle.
 	private boolean exactChangeStatus;
 	private boolean fullOfChangeStatus;
+	private boolean bestEffortChange;
 
 	/**
 	 * Public constructor.
 	 * 
+	 * @param bestEffortChange
+	 *            boolean indicating whether best-effort change mode is on
+	 *            best-effort: give as much change as possible.
 	 * @param coinRacks
 	 *            list of coin rack references.
 	 * @param coinRackDenominations
@@ -40,8 +44,10 @@ public class CoinsController implements CoinReceptacleListener {
 	 * @param productPrices
 	 *            prices of each product.
 	 */
-	public CoinsController(CoinRack[] coinRacks, int[] coinRackDenominations,
-			int[] coinRackQuantities, int[] productPrices) {
+	public CoinsController(boolean bestEffortChange, CoinRack[] coinRacks,
+			int[] coinRackDenominations, int[] coinRackQuantities,
+			int[] productPrices) {
+		this.bestEffortChange = bestEffortChange;
 		this.productPrices = productPrices;
 
 		// Initialize all coin rack controllers.
@@ -79,11 +85,15 @@ public class CoinsController implements CoinReceptacleListener {
 	 * @return The code of the success of change being provided
 	 */
 	public TransactionReturnCode provideChange(int amount) {
-		if (isChangePossible(amount)) {
+		boolean exactChangePossible = isChangePossible(amount);
+
+		// Return change if best-effort change mode is on or if exact change
+		// is possible. Otherwise, don't return change.
+		if (bestEffortChange || exactChangePossible) {
 			int sum = 0;
 			// Start dispensing coins from highest denomination with coins
 			// in its respective racks.
-			for (int i = coinRackControllers.length-1; i >= 0; i--) {
+			for (int i = coinRackControllers.length - 1; i >= 0; i--) {
 				int rackDenomination = coinRackControllers[i]
 						.getCoinRackDenomination();
 
@@ -100,7 +110,8 @@ public class CoinsController implements CoinReceptacleListener {
 					}
 					sum += rackDenomination;
 				}
-				if (sum == amount) break;
+				if (sum == amount)
+					break;
 			}
 
 			return TransactionReturnCode.SUCCESSFUL;
@@ -121,12 +132,12 @@ public class CoinsController implements CoinReceptacleListener {
 		boolean changePossible;
 		int sum = 0;
 
-		for (int i = coinRackControllers.length-1; i >= 0; i--) {
+		for (int i = coinRackControllers.length - 1; i >= 0; i--) {
 			int numCoinsUsed = 0;
 			int rackDenomination = coinRackControllers[i]
 					.getCoinRackDenomination();
 			int rackQuantity = coinRackControllers[i].getQuantity();
-			while (rackQuantity - numCoinsUsed > 0 
+			while (rackQuantity - numCoinsUsed > 0
 					&& sum + rackDenomination <= amount) {
 				numCoinsUsed++;
 				sum += rackDenomination;

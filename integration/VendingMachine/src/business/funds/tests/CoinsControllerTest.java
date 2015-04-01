@@ -65,7 +65,7 @@ public class CoinsControllerTest {
 		coinRacks[4] = new CoinRack(100);
 		
 		
-		coinsController = new CoinsController(coinRacks, coinRackDenominations, coinRackQuantities, productPrices);
+		coinsController = new CoinsController(false, coinRacks, coinRackDenominations, coinRackQuantities, productPrices);
 		coinsController.coinAdded(receptacle, new Coin(100));
 		coinsController.coinAdded(receptacle, new Coin(25));
 		coinsController.coinAdded(receptacle, new Coin(25));
