@@ -9,7 +9,7 @@
 		
 */
 
-package vendingMachine;
+package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -85,7 +85,6 @@ public class VirtualKeyboard extends JFrame {
     		//Spencer you will do the action raising depending on key typed here
     	}
     	
-        @Override
         public void actionPerformed(ActionEvent e) {
             JButton btn = (JButton) e.getSource();
             
@@ -163,7 +162,6 @@ public class VirtualKeyboard extends JFrame {
     
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
-            @Override
             public void run() {
                 VirtualKeyboard virtualKeyboard = new VirtualKeyboard();
             }
