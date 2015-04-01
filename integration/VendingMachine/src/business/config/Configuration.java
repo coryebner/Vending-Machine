@@ -8,12 +8,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import business.selection_delivery.CodeSelectionController;
+import business.selection_delivery.InventoryController;
+import business.stub.DisplayController;
+import business.stub.FundsController;
 import hardware.AbstractVendingMachine;
 import hardware.VendingMachine1;
+import hardware.exceptions.NoSuchHardwareException;
+import hardware.racks.ProductRack;
+import hardware.ui.PushButtonCodeInterpreter;
 
 public class Configuration {
-	static class InventoryManager {}
-	static class FundsController {}
+	
 	
 	// Configuration data loaded from/written to the configuration file
 	protected String type;
@@ -34,9 +40,12 @@ public class Configuration {
 	
 	// Controllers we require data from when saving
 	// eg. FundsController needs to tell us how many coins in each rack
-	protected FundsController funds;
-	protected InventoryManager inventory;
 	
+	protected FundsController funds;
+	//protected InventoryManager inventory; 
+	protected InventoryController inventoryController; // Maria: added as InventoryManager was commented.
+	protected CodeSelectionController codeSelectionController; // Maria: Added CodeSelectionController object
+	protected DisplayController displayController; // Maria: added for the displayController
 	public Configuration()
 	{}
 
@@ -239,7 +248,21 @@ public class Configuration {
 	 */
 	protected void createCodeController(int offset)
 	{
+		
 		// TODO Maria: Work in progress
+		try {
+			// Creating the codeselection controller.
+			this.codeSelectionController = new CodeSelectionController(
+					this.inventoryController, 
+					this.displayController, 
+					this.funds, 
+					this.machine.getPushButtonCodeInterpreter(), 
+					offset);
+			
+		} catch (NoSuchHardwareException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -248,9 +271,24 @@ public class Configuration {
 	 *  as the 'inventory' field of this class, so we have access to it again
 	 *  when we want to save.
 	 */
-	protected void createInventoryManager()
+	protected void createInventoryController()
 	{
 		// TODO Maria: Work in progress
+		
+		try {
+			// An array of ProductRack is created and used to build an InventoryController object
+			ProductRack racks[] = new ProductRack[this.machine.getNumberOfProductRacks()];
+			for(int i=0; i < this.machine.getNumberOfProductRacks(); i++){
+				racks[i] = new ProductRack(this.machine.getProductRack(i).getMaxCapacity());
+			}
+			
+			//Inventory controller creation with information known from machine.
+			this.inventoryController = new InventoryController(racks,this.machine.getNumberOfProductRacks(),this.names,this.prices,this.quantities);
+			
+		} catch (NoSuchHardwareException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	/**
