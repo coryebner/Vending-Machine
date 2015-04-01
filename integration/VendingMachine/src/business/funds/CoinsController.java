@@ -39,8 +39,6 @@ public class CoinsController implements CoinReceptacleListener {
 	 *            list of coin rack references.
 	 * @param coinRackDenominations
 	 *            value of each coin in a coin rack.
-	 * @param coinRackQuantities
-	 *            the number of coins in each rack.
 	 * @param productPrices
 	 *            prices of each product.
 	 */
@@ -54,7 +52,7 @@ public class CoinsController implements CoinReceptacleListener {
 		coinRackControllers = new CoinRackController[coinRacks.length];
 		for (int i = 0; i < coinRacks.length; i++) {
 			coinRackControllers[i] = new CoinRackController(coinRacks[i],
-					coinRackDenominations[i], coinRackQuantities[i]);
+					coinRackDenominations[i], coinRackDenominations[i]);
 		}
 	}
 

@@ -17,7 +17,6 @@ import java.util.Locale;
  *         PayPal 5. Credit Card - Through PayPal
  */
 public class Funds {
-
 	private boolean prepaidPresent;
 	private boolean billsPresent;
 	private boolean coinsPresent;

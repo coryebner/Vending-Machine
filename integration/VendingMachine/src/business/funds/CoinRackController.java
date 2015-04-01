@@ -28,16 +28,19 @@ public class CoinRackController implements CoinRackListener {
 	/**
 	 * Public constructor.
 	 * 
-	 * @param coinRack reference to the coin rack.
-	 * @param rackDenomination denomination of the coin rack
-	 * @param quantity number of coins in the coin rack.
+	 * @param coinRack
+	 *            reference to the coin rack.
+	 * @param rackDenomination
+	 *            denomination of the coin rack
+	 * @param quantity
+	 *            number of coins in the coin rack.
 	 */
 	public CoinRackController(CoinRack coinRack, int rackDenomination,
 			int quantity) {
 		this.coinRack = coinRack;
 		this.rackDenomination = rackDenomination;
 		this.quantity = quantity;
-		
+
 		// Load the coin racks with the quantity of coins specified.
 		for (int i = 0; i < quantity; i++) {
 			coinRack.loadWithoutEvents(new Coin(rackDenomination));
@@ -47,7 +50,8 @@ public class CoinRackController implements CoinRackListener {
 	/**
 	 * Releases a coin from the coin rack.
 	 * 
-	 * @throws EmptyException if empty when trying to release coin.
+	 * @throws EmptyException
+	 *             if empty when trying to release coin.
 	 */
 	public void releaseCoin() throws EmptyException {
 		try {

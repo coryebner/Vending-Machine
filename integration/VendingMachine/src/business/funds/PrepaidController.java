@@ -53,11 +53,11 @@ public class PrepaidController implements CardSlotListener {
 	 */
 	public TransactionReturnCode ConductTransaction(int price) {
 		if(!isDisabled) {
-			int exchangePrice;
 			if(!prepaidCardInserted) {
-				return TransactionReturnCode.CREDITCARDERROR;
+				return TransactionReturnCode.UNSUCCESSFUL;
 			}
 			else {
+				int exchangePrice;
 				if(prepaidCard.getCurrency().getNumericCode() == currencies.getVMCurrency().getNumericCode())
 					exchangePrice = price;
 				else {

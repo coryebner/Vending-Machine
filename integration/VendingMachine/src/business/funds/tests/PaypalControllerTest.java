@@ -53,7 +53,7 @@ public class PaypalControllerTest {
 	public void getAvailableBalanceTest() {
 		try {	
 			cs.insertCard(prepaidCard);
-			//TODO assertEquals("Expected 10000 balance", prepaidCard.getCardBalance(), pc.getAvailableBalance());
+			assertEquals("Expected 10000 balance", prepaidCard.getCardBalance(), pc.getAvailableBalance());
 		} catch (CardSlotNotEmptyException e) {
 			fail("Card slot was not empty when trying to insert new card.");
 		} catch (DisabledException e) {
