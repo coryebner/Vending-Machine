@@ -342,8 +342,11 @@ public class GUI {
 				"American", "European" }));
 		pnlCurrencyType.add(cmbCurr);
 		
-		JPanel panel = new JPanel();
-		pnlMoney.add(panel, BorderLayout.SOUTH);
+		JPanel pnlAdminBtn = new JPanel();
+		pnlMoney.add(pnlAdminBtn, BorderLayout.SOUTH);
+		
+		JButton btnAdmin = new JButton("Admin");
+		pnlAdminBtn.add(btnAdmin);
 
 		billEject = new JButton("Remove bill");
 		billEject.setEnabled(false);
@@ -648,6 +651,7 @@ public class GUI {
 		label.setOpaque(true);
 		label.setForeground(Color.LIGHT_GRAY);
 		label.setBackground(Color.LIGHT_GRAY);
+		
 		return label;
 	}
 
