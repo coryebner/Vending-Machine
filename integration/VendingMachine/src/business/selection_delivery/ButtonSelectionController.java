@@ -1,15 +1,15 @@
 package business.selection_delivery;
 
-import com.vendingmachinesareus.AbstractHardware;
-import com.vendingmachinesareus.AbstractHardwareListener;
+import hardware.AbstractHardware;
+import hardware.AbstractHardwareListener;
 // TODO: Should the rest of these use hardware.* instead of com.vendingmachinesareus.*?
 // The exceptions thrown by the hardware are of the hardware.* type, which is why I had
 //  to remove these and import the hardware versions... this seems like something that
 //  should probably be consistent - Liam Mar 31
 //import com.vendingmachinesareus.DisabledException;
 //import com.vendingmachinesareus.EmptyException;
-import com.vendingmachinesareus.PushButton;
-import com.vendingmachinesareus.PushButtonListener;
+import hardware.ui.PushButton;
+import hardware.ui.PushButtonListener;
 
 import business.stub.*;
 

@@ -227,7 +227,7 @@ public class Configuration {
 	 */
 	protected void createButtonController()
 	{
-		
+		// TODO Maria: Work in progress
 	}
 	
 	/**
@@ -239,7 +239,7 @@ public class Configuration {
 	 */
 	protected void createCodeController(int offset)
 	{
-		
+		// TODO Maria: Work in progress
 	}
 	
 	/**
@@ -250,7 +250,7 @@ public class Configuration {
 	 */
 	protected void createInventoryManager()
 	{
-		
+		// TODO Maria: Work in progress
 	}
 	
 	/**
