@@ -9,61 +9,55 @@ import org.junit.Test;
 import business.selection_delivery.InventoryController;
 
 
+
 public class InventoryControllerTest {
 
+	public InventoryController manager;
+	public ProductRack[] rack = new ProductRack[2];
+	public int rackcount;
+	String [] names = new String[2];
+	int [] costs = new int [2];
+	int [] quantity = new int [2];
 	@Before
 	public void setUp() throws Exception {
-	}
-
-	@Test
-	public void testInventroyManagerConstructor() {
 		
+<<<<<<< HEAD
 		//**need to wait for hardware to change their popcan rack into something more abstract like productrack before doing anything else 
 		ProductRack[] rack;
 		rack[0] = new ProductRack();
 		rack[1] = new ProductRack();
 		rack[0] = new ProductRack(0);
 		rack[1] = new ProductRack(0);
+=======
+		rack[0] = new ProductRack(10);
+		rack[1] = new ProductRack(10);
+>>>>>>> SelectionDelivery
 
 
-		int rackcount = 2;
-		String [] names = {"Product1","Product2"}
-		int [] costs = {1,2};
+		rackcount = 2;
+		names[0] = "Product1";
+		names[1] = "Product2";
+		costs[0] = 1;
+		costs[1] = 2;
+		quantity[0] = 4;
+		quantity [1] = 3;
+
 		
-		InventoryManager manager = new InventoryManager(rack,rackcount,names,costs);
+		manager = new InventoryController(rack,rackcount,names,costs,quantity);
+	}
+
+	@Test
+	public void testInventroyManagerConstructor() {
 	
-		int changelater;
-		//Test to see if the cost is correct for first rack
-		assertEquals(manager.getCost(0),1);
-		//test to see if the cost is correct for second rack
-		assertEquals(manager.getCost(1),2);
-
-		
-		//****need to update the amount of count after ProductRack can be constructed
-		//Test to see if the amount of product in first rack is correct
-		assertEquals(manager.getCount(0),changelater);
-		//Test to see if the amount of product in second rack is correct
-		assertEquals(manager.getCount(1),changelater);
-		
-		//check to see if the name for the first rack is properly assigned
-		assertEquals(manager.getName(0),"Product1");
-		//check to see if the name for the second rack is properly assigned
-		assertEquals(manager.getName(1),"Product2");
-		
-		//Check to see if InventoryManager created productrackmanager[] in the right order by comparing the name of the racks
-		assertEquals(manager.racks[0].getName(),"Product1");
-		assertEquals(manager.racks[1].getName(),"Product2");
-
-
-		
+		assertNotNull(manager);	
 
 	}
 
 	@Test
 	public void testInventoryManager() {
-		InventoryManager manager = new InventoryManager();
+		InventoryController defaultconstructormanager = new InventoryController();
 
-		if(manager == null)
+		if(defaultconstructormanager == null)
 			assertTrue(false);
 		else
 			assertTrue(true);
@@ -72,18 +66,7 @@ public class InventoryControllerTest {
 	@Test
 	public void testRefillAll() {
 
-		//**need to wait for hardware to change their popcan rack into something more abstract like productrack before doing anything else 
-		ProductRack[] rack;
-		rack[0] = new ProductRack();
-		rack[1] = new ProductRack();
-
-
-		int rackcount = 2;
-		String [] names = {"Product1","Product2"};
-		int [] costs = {1,2};
 		
-		InventoryManager manager = new InventoryManager(rack,rackcount,names,costs);
-
 		//Empty racks
 		//*****Enter code (added later) ****
 		//Check racks are emptied
@@ -103,18 +86,7 @@ public class InventoryControllerTest {
 
 	@Test
 	public void testRefillRack() {
-		//**need to wait for hardware to change their popcan rack into something more abstract like productrack before doing anything else 
-		ProductRack[] rack;
-		rack[0] = new ProductRack();
-		rack[1] = new ProductRack();
-
-
-		int rackcount = 2;
-		String [] names = {"Product1","Product2"};
-		int [] costs = {1,2};
 		
-		InventoryManager manager = new InventoryManager(rack,rackcount,names,costs);
-
 		//To Empty Rack 0
 		//**********Enter code (added later)
 		// Test to see rack 0 is emptied
@@ -132,123 +104,55 @@ public class InventoryControllerTest {
 	@Test
 	public void testGetRack() {
 
-		ProductRack[] rack;
-		rack[0] = new ProductRack();
-		rack[1]= new ProductRack();
-		
-		int rackcount = 2;
-		String [] names = {"Product1","Product2"};
-		int [] cost = {1,2};
-		
-		InventoryManager manager = new InventoryManager(rack,rackcount,names,cost);
-		
-		//set up test ProductRack the same as rack 0
-		ProductRack test = new ProductRack();
-		
-		assertEquals(test,manager.getRack(0));
+	
 		
 		
 	}
 
 	@Test
 	public void testGetRackCount() {
-		ProductRack[] rack;
-		rack[0] = new ProductRack();
-		rack[1]= new ProductRack();
 		
-		int rackcount = 2;
-		String [] names = {"Product1","Product2"};
-		int [] cost = {1,2};
-		
-		InventoryManager manager = new InventoryManager(rack,rackcount,names,cost);
 		
 		assertEquals(2,manager.getRackCount());
 	}
 
 	@Test
 	public void testGetCount() {
-		ProductRack[] rack;
-		rack[0] = new ProductRack();
-		rack[1]= new ProductRack();
-		
-		int rackcount = 2;
-		String [] names = {"Product1","Product2"};
-		int [] cost = {1,2};
-		
-		InventoryManager manager = new InventoryManager(rack,rackcount,names,cost);
-			
+	
 		//change changelater to value of rack0's count
-		assertEquals(int changedlater, manager.getCount(0));
+		assertEquals(quantity[0], manager.getCount(0));
+		assertEquals(quantity[1], manager.getCount(1));
+
 	}
 	
 	@Test
 	public void testGetCount_Fail() {
-		ProductRack[] rack;
-		rack[0] = new ProductRack();
-		rack[1]= new ProductRack();
 		
-		int rackcount = 2;
-		String [] names = {"Product1","Product2"};
-		int [] cost = {1,2};
-		
-		InventoryManager manager = new InventoryManager(rack,rackcount,names,cost);
-			
 		//change changelater to not a value of rack0's count
-		assertEquals(int changedlater, manager.getCount(0));
+		assertEquals(1, manager.getCount(0));
 	}
 	
 	
 	@Test
-	public void testGetCost() {
-		@Test
-		public void testGetCount() {
-			ProductRack[] rack;
-			rack[0] = new ProductRack();
-			rack[1]= new ProductRack();
+		public void testGetCost() {
 			
-			int rackcount = 2;
-			String [] names = {"Product1","Product2"};
-			int [] cost = {1,2};
-			
-			InventoryManager manager = new InventoryManager(rack,rackcount,names,cost);
-				
 			
 			assertEquals(1, manager.getCost(0));
 			assertEquals(2, manager.getCost(1));
 
-		}	}
+		}	
 
 	@Test
 	public void testGetCapacity() {
-		ProductRack[] rack;
-		rack[0] = new ProductRack();
-		rack[1]= new ProductRack();
 		
-		int rackcount = 2;
-		String [] names = {"Product1","Product2"};
-		int [] cost = {1,2};
-		
-		InventoryManager manager = new InventoryManager(rack,rackcount,names,cost);
-			
-		//change changelater to not a value of rack0's capacity
-		assertEquals(int changedlater, manager.getCapacity(0));	
-		//change changelater to not a value of rack01s capacity
-		assertEquals(int changedlater, manager.getCapacity(1));	
+		assertEquals(10, manager.getCapacity(0));	
+		assertEquals(10, manager.getCapacity(1));	
 		
 	}
 
 	@Test
 	public void testGetName() {
-		ProductRack[] rack;
-		rack[0] = new ProductRack();
-		rack[1]= new ProductRack();
 		
-		int rackcount = 2;
-		String [] names = {"Product1","Product2"};
-		int [] cost = {1,2};
-		
-		InventoryManager manager = new InventoryManager(rack,rackcount,names,cost);
-			
 		assertEquals("Product1", manager.getName(0));		
 		assertEquals("Product2", manager.getName(1));		
 
@@ -259,17 +163,9 @@ public class InventoryControllerTest {
 	public void testIsFull() {
 		
 		
-		ProductRack[] rack;
-		rack[0] = new ProductRack();
-		rack[1]= new ProductRack();
 		
-		int rackcount = 2;
-		String [] names = {"Product1","Product2"};
-		int [] cost = {1,2};
-		
-		InventoryManager manager = new InventoryManager(rack,rackcount,names,cost);
-			
 		//set rack0 to full
+		manager.refillRack(0);
 		//set rack1 to empty
 		//****Enter code here****
 		assertEquals(true,manager.isFull(0));
@@ -279,17 +175,10 @@ public class InventoryControllerTest {
 
 	@Test
 	public void testIsEmpty() {
-		ProductRack[] rack;
-		rack[0] = new ProductRack();
-		rack[1]= new ProductRack();
 		
-		int rackcount = 2;
-		String [] names = {"Product1","Product2"};
-		int [] cost = {1,2};
-		
-		InventoryManager manager = new InventoryManager(rack,rackcount,names,cost);
-			
 		//set rack0 to full or partially full
+		manager.refillRack(0);
+
 		//set rack1 to empty
 		//****Enter code here****
 		assertEquals(false,manager.isEmpty(0));
@@ -298,17 +187,8 @@ public class InventoryControllerTest {
 
 	@Test
 	public void testChangePrice() {
-		ProductRack[] rack;
-		rack[0] = new ProductRack();
-		rack[1]= new ProductRack();
 		
-		int rackcount = 2;
-		String [] names = {"Product1","Product2"};
-		int [] cost = {1,2};
-		
-		InventoryManager manager = new InventoryManager(rack,rackcount,names,cost);
-			
-		manager.ChangePrice(0, 5);
+		manager.changePrice(0, 5);
 	
 		assertEquals(5,manager.getCost(0));
 		assertEquals(2, manager.getCost(1));
@@ -317,20 +197,12 @@ public class InventoryControllerTest {
 
 	@Test
 	public void testChangeName() {
-		ProductRack[] rack;
-		rack[0] = new ProductRack();
-		rack[1]= new ProductRack();
 		
-		int rackcount = 2;
-		String [] names = {"Product1","Product2"};
-		int [] cost = {1,2};
-		
-		InventoryManager manager = new InventoryManager(rack,rackcount,names,cost);
-			
 		manager.changeName(0, "NewProduct1");
 	
 		assertEquals("NewProduct1",manager.getName(0));
 		assertEquals("Product2", manager.getName(1));
-			}
+			
+		}
 
 }
