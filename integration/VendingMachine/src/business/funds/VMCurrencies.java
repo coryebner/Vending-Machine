@@ -10,6 +10,10 @@ public class VMCurrencies {
 	private int iterator = 0;
 	private Currency vmCurrency;
 	
+	private static float EXCHANGE_US = 1.00F;
+	private static float EXCHANGE_CAN = 0.79F;
+	private static float EXCHANGE_UK = 1.09F;
+	
 	public VMCurrencies(Locale locale){
 		supportedCurrencies = new Vector<SupportedCurrency>();
 		setupSubsetOfCurrenciesHardCode(locale);
@@ -22,26 +26,37 @@ public class VMCurrencies {
 		machineLocale = null;
 		
 		curr = Currency.getInstance(Locale.US);
-		newCurr = new SupportedCurrency(curr,1.00F);
+		newCurr = new SupportedCurrency(curr, EXCHANGE_US);
 		supportedCurrencies.addElement(newCurr);
 		if(locale.equals(curr)){
 			machineLocale = newCurr;
 		}
 		
 		curr = Currency.getInstance(Locale.CANADA);
-		newCurr = new SupportedCurrency(curr,0.79F);
+		newCurr = new SupportedCurrency(curr, EXCHANGE_CAN);
 		supportedCurrencies.addElement(newCurr);
 		if(locale.equals(curr)){
 			machineLocale = newCurr;
 		}
 		
 		curr = Currency.getInstance(Locale.UK);
-		newCurr = new SupportedCurrency(curr,1.09F); // Should return the EURO
+		newCurr = new SupportedCurrency(curr, EXCHANGE_UK); // Should return the EURO
 		supportedCurrencies.addElement(newCurr);
 		if(locale.equals(curr)){
 			machineLocale = newCurr;
 		}
 		
+	}
+	
+	public float getExchangeRate(Currency curr) {
+		
+		if(curr.getNumericCode() == Currency.getInstance(Locale.US).getNumericCode())
+			return EXCHANGE_US;
+		else if(curr.getNumericCode() == Currency.getInstance(Locale.CANADA).getNumericCode())
+			return EXCHANGE_CAN;
+		else if(curr.getNumericCode() == Currency.getInstance(Locale.UK).getNumericCode())
+			return EXCHANGE_UK;
+		return 0;
 	}
 	
 	public Currency getVMCurrency() {
@@ -122,7 +137,7 @@ public class VMCurrencies {
 		return newValueInLocale;
 	}
 	
-	public static float ExchangeFromToCurrency(SupportedCurrency other, SupportedCurrency to, int value){
+	public float ExchangeFromToCurrency(SupportedCurrency other, SupportedCurrency to, int value){
 		float newValueInUSD = (value * other.getPercentUSD());
 		float newValueInTo = newValueInUSD/to.getPercentUSD();
 		return newValueInTo;
