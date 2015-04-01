@@ -65,6 +65,8 @@ public class GUI {
 
 	private JComboBox cmbCurr;
 
+	private JTextPane Display_text;
+
 	private ArrayList<JButton> coinButtons;
 	private ArrayList<JButton> billButtons;
 	private ArrayList<JButton> cardButtons;
@@ -138,7 +140,7 @@ public class GUI {
 		txtpnDiplay.setText("Diplay");
 		pnlDisplay.add(txtpnDiplay);
 
-		JTextPane Display_text = new JTextPane();
+		Display_text = new JTextPane();
 		Display_text.setSize(500, 1);
 		Display_text.setVisible(true);
 		Display_text.setEditable(false);
@@ -439,7 +441,13 @@ public class GUI {
 		DecimalFormat df = new DecimalFormat("0.00");
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
-		return new JButton(buttonText);
+		JButton btn = new JButton(buttonText);
+		btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO add insertCoin method call here
+			}
+		});
+		return btn;
 	}
 
 	/**
@@ -456,7 +464,13 @@ public class GUI {
 		DecimalFormat df = new DecimalFormat("0.00");
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
-		return new JButton(buttonText);
+		JButton btn = new JButton(buttonText);
+		btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO add insertBill method call here
+			}
+		});
+		return btn;
 	}
 
 	/**
@@ -473,7 +487,13 @@ public class GUI {
 		DecimalFormat df = new DecimalFormat("0.00");
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
-		return new JButton(buttonText);
+		JButton btn = new JButton(buttonText);
+		btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO add insertCard method call here
+			}
+		});
+		return btn;
 	}
 
 	/**
@@ -497,7 +517,17 @@ public class GUI {
 	 * @return the button being asked for
 	 */
 	public JButton createPopButton(String name) {
-		return new JButton(name);
+		JButton btn = new JButton(name);
+		btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// pushing a pop button starts a "transaction"
+				// components are disabled as the hardware will
+				// not be handling thread type behavior
+				enableInteractivity(false);
+				// TODO add buttonPressed method call here
+			}
+		});
+		return btn;
 	}
 
 	/**
@@ -526,6 +556,30 @@ public class GUI {
 		}
 
 		cmbCurr.setEnabled(status);
+	}
+
+	// TODO replace method signature with proper one from listener
+	// implementation
+	/**
+	 * Listens to the display of the machine and updates the display text shown
+	 * on the GUI Also enables components on the machine This event is being
+	 * used as a "transaction complete/failed" event
+	 * 
+	 * @param display
+	 *            is the physical display on the machine that is showing the
+	 *            message
+	 * @param oldMsg
+	 *            is the message that was displayed before the message was
+	 *            changed
+	 * @param newMsg
+	 *            is the message that is currently displayed on the display
+	 */
+	public void messageChange(Object display, String oldMsg, String newMsg) {
+		// prevents wrong enabling cases for timed messages
+		if (!oldMsg.equals(newMsg)) {
+			enableInteractivity(true);
+			Display_text.setText(newMsg);
+		}
 	}
 
 }
