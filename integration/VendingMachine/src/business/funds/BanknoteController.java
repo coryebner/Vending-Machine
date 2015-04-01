@@ -27,7 +27,7 @@ public class BanknoteController implements BanknoteReceptacleListener {
 	 *            The price in cents of the transaction attempted
 	 * @return The return code based on success of the transaction
 	 */
-	protected TransactionReturnCode ConductTransaction(int price) {
+	public TransactionReturnCode ConductTransaction(int price) {
 		// Return success if enough coins.
 		if (availableBalance >= price) {
 			return TransactionReturnCode.SUCCESSFUL;
@@ -42,7 +42,7 @@ public class BanknoteController implements BanknoteReceptacleListener {
 	 * 
 	 * @return The value of the bills currently stored
 	 */
-	protected int getAvailableBalance() {
+	public int getAvailableBalance() {
 		return availableBalance;
 	}
 
