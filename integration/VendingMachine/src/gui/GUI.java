@@ -54,6 +54,8 @@ public class GUI {
 	private static final String[] ALPHABET = { "A", "B", "C", "D", "E", "F", "G",
 		"H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
 		"U", "V", "W", "X", "Y", "Z" };
+	
+	private boolean codeInProgress = false;
 
 	private JFrame frmVendingMachines;
 	private JPanel pnlMachineButtons;
@@ -87,7 +89,6 @@ public class GUI {
 	private boolean hasCardSlot = true;
 
 	private boolean hasPopButtons = true;
-	// TODO implement candy buttons and set to true
 	private boolean hasCandyButtons = true;
 
 	/**
@@ -209,6 +210,14 @@ public class GUI {
 		pnlNumberCandyButtons.setLayout(new GridLayout(0, 3, 0, 0));
 
 		JButton btn1 = new JButton("1");
+		btn1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (codeInProgress) {
+					enableInteractivity(false);
+					// TODO add button press method call
+				}
+			}
+		});
 		candyNumberButtons.add(btn1);
 		pnlNumberCandyButtons.add(btn1);
 
@@ -371,6 +380,16 @@ public class GUI {
 	private void createCandyLetterButtons(int num) {
 		for (int i = 0; i < num; i++) {
 			JButton btn = new JButton(ALPHABET[i]);
+			btn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if (!codeInProgress) {
+						codeInProgress = true;
+					} else {
+						codeInProgress = false;
+					}
+					// TODO add press button method call here
+				}
+			});
 			candyLetterButtons.add(btn);
 		}
 	}
