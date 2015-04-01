@@ -55,7 +55,7 @@ public class GUI {
 		"H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
 		"U", "V", "W", "X", "Y", "Z" };
 
-	private JFrame frmVendingMachines;
+	JFrame frmVendingMachines;
 	private JPanel pnlMachineButtons;
 	private JPanel pnlPopButtons;
 	private JPanel pnlCandyButtons;
