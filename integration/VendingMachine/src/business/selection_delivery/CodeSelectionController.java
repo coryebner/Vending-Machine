@@ -1,6 +1,5 @@
 package business.selection_delivery;
 
-<<<<<<< HEAD
 import business.stub.DisplayController;
 import business.stub.FundsController;
 
@@ -15,7 +14,7 @@ import com.vendingmachinesareus.PushButtonCodeInterpreterListener;
 
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.EmptyException;
-=======
+
 import productController.MockDisplayController;
 import productController.MockFundsController;
 import hardware.AbstractHardware;
@@ -24,7 +23,7 @@ import hardware.exceptions.DisabledException;
 import hardware.exceptions.EmptyException;
 import hardware.ui.PushButtonCodeInterpreter;
 import hardware.ui.PushButtonCodeInterpreterListener;
->>>>>>> Ok actually adding changes now
+
 
 
 /**
@@ -46,19 +45,24 @@ public class CodeSelectionController
 	 * Registers us with the CandyVendingMachine's PushButtonInterpreter to
 	 *  listen for codeEntered() events.
 	 */
-<<<<<<< HEAD
 	// TODO: Changed these from MockDisplayManager, MockFundsManager - should they have been?
 	//  It wouldn't compile otherwise... - Liam Mar 31
 	public CodeSelectionController(InventoryManager inv, DisplayController disp, FundsController f, PushButtonCodeInterpreter interp, int off)
 	{
 		super(inv, disp, f);
 		interp.register(this); //Amy: Doesn't configuration handle registering listeners?
-=======
+	}
 	public CodeSelectionController(InventoryController inv, MockDisplayController disp, MockFundsController f, int off)
 	{
 		super(inv, disp, f);
 		//interp.register(this); //Amy: Doesn't configuration handle registering listeners? Jon: Yes they do apparently.
->>>>>>> Ok actually adding changes now
+	// TODO: Changed these from MockDisplayManager, MockFundsManager - should they have been?
+	//  It wouldn't compile otherwise... - Liam Mar 31
+	}
+	public CodeSelectionController(InventoryController inv, DisplayController disp, FundsController f, PushButtonCodeInterpreter interp, int off)
+	{
+		super(inv, disp, f);
+		//interp.register(this); //Amy: Doesn't configuration handle registering listeners? Jon: Yes they do apparently.
 		
 		offset = off;
 	}
@@ -72,33 +76,30 @@ public class CodeSelectionController
 	 *  @param interpreter	interpreter which received the code
 	 */
 	@Override
-<<<<<<< HEAD
+	public void codeEntered(String code, PushButtonCodeInterpreter interpreter) {}
+	public void codeEntered(String code, PushButtonCodeInterpreter arg1) {}
 	public void codeEntered(String code, PushButtonCodeInterpreter interpreter) {
-=======
-	public void codeEntered(String code, PushButtonCodeInterpreter arg1) {
->>>>>>> Ok actually adding changes now
 		int index = productIndex(code, offset);
 		int cost = inventory.getCost(index);
 		
 		if (index == -1)
 		{//Index of -1 is thrown by getIndex as an error.
-<<<<<<< HEAD
 			display.setDisplay("Error: Invalid code", 5000);
-=======
 			notifyInvalidSelection();
 			//display.setDisplay("Error: Invalid code", 5000);
->>>>>>> Ok actually adding changes now
+
+			notifyInvalidSelection();
+			//display.setDisplay("Error: Invalid code", 5000);
 			return;
 		}
 		
 		if (inventory.isEmpty(index))
 		{//We are out of stock. Output message and leave function.
-<<<<<<< HEAD
 			display.setDisplay("The product selected is empty", 5000);
-=======
 			notifyEmptySelection();
 			//display.setDisplay("The product selected is empty", 5000);
->>>>>>> Ok actually adding changes now
+			notifyEmptySelection();
+			//display.setDisplay("The product selected is empty", 5000);
 			return;
 		}
 			
@@ -118,18 +119,15 @@ public class CodeSelectionController
 		}
 		else
 		{//We cannot afford to pay
-<<<<<<< HEAD
 			display.setDisplay("Insufficient funds for product: $"
 														+ Double.toString( cost / 100)
 														+ " required"
 														, 4000);
-=======
 			notifyInsufficientFunds();
 			/*display.setDisplay("Insufficient funds for product: $"
 														+ Double.toString( cost / 100)
 														+ " required"
 														, 4000);*/
->>>>>>> Ok actually adding changes now
 		}
 	}
 	
@@ -184,8 +182,4 @@ public class CodeSelectionController
 
 	@Override
 	public void enabled(AbstractHardware<AbstractHardwareListener> arg0) {}
-<<<<<<< HEAD
-=======
-
->>>>>>> Ok actually adding changes now
 }

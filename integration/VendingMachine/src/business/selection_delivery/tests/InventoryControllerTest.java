@@ -1,6 +1,7 @@
 package business.selection_delivery.tests;
 
 import static org.junit.Assert.*;
+import hardware.racks.ProductRack;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +22,8 @@ public class InventoryControllerTest {
 		ProductRack[] rack;
 		rack[0] = new ProductRack();
 		rack[1] = new ProductRack();
+		rack[0] = new ProductRack(0);
+		rack[1] = new ProductRack(0);
 
 
 		int rackcount = 2;

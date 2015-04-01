@@ -4,6 +4,9 @@ import hardware.products.Product;
 import hardware.racks.ProductRack;
 import config.ConfigurationListener;
 
+import business.config.ConfigurationListener;
+
+
 public class InventoryController implements ConfigurationListener
 {
 	public ProductRackController racks[];	//Connected rack managers
