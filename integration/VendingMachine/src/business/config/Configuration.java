@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import business.selection_delivery.ButtonSelectionController;
 import business.selection_delivery.CodeSelectionController;
 import business.selection_delivery.InventoryController;
 import business.stub.DisplayController;
@@ -17,7 +16,7 @@ import hardware.AbstractVendingMachine;
 import hardware.VendingMachine1;
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.racks.ProductRack;
-import hardware.ui.PushButton;
+import hardware.ui.PushButtonCodeInterpreter;
 
 public class Configuration {
 	
@@ -47,7 +46,6 @@ public class Configuration {
 	protected InventoryController inventoryController; // Maria: added as InventoryManager was commented.
 	protected CodeSelectionController codeSelectionController; // Maria: Added CodeSelectionController object
 	protected DisplayController displayController; // Maria: added for the displayController
-	protected ButtonSelectionController buttonSelectionController;
 	public Configuration()
 	{}
 
@@ -144,6 +142,14 @@ public class Configuration {
 		else {
 			throw new ConfigurationException("Invalid machine type!");
 		}
+		
+	/**
+	 * This will take the values of all prices racks and quantities from the controllers
+	 * and update the Configuration values
+	 */
+	}
+	protected void updateValues(){
+		//TODO Anish: Working on this
 	}
 	
 	/**
@@ -204,7 +210,8 @@ public class Configuration {
 	
 	protected void writeConfigFile(BufferedWriter output)
 	{
-		// Do basically the opposite of what we do in readConfigFile()
+		//TODO Anish:Working on this
+		//Do basically the opposite of what we do in readConfigFile()
 	}
 	
 	protected void loadMachine()
@@ -236,29 +243,9 @@ public class Configuration {
 	 * Create a ButtonController, and register it with all the buttons it needs
 	 *  to be registered with.
 	 */
-	protected void createButtonSelectionController()
+	protected void createButtonController()
 	{
 		// TODO Maria: Work in progress
-
-		try {
-		int numberOfButtons = this.machine.getNumberOfSelectionButtons();
-		PushButton [] pushButtons = new PushButton[numberOfButtons];
-		for(int i = 0; i < numberOfButtons; i++){
-			
-				pushButtons[i] = this.machine.getSelectionButton(i);
-		}
-		//Creation of controller
-		this.buttonSelectionController = new ButtonSelectionController(this.inventoryController,this.displayController,this.funds,pushButtons,numberOfButtons);
-		
-		// Registering the buttons from hardware with the buttonSelectionController
-		for(int i=0; i < numberOfButtons; i++){
-			pushButtons[i].register(buttonSelectionController);
-		}
-			} catch (NoSuchHardwareException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
 	}
 	
 	/**
@@ -281,10 +268,8 @@ public class Configuration {
 					this.machine.getPushButtonCodeInterpreter(), 
 					offset);
 			
-			//Registering the PushButtonCodeInterpreter with the codeSelectionController
-			this.machine.getPushButtonCodeInterpreter().register(codeSelectionController);
 		} catch (NoSuchHardwareException e) {
-			
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -300,21 +285,14 @@ public class Configuration {
 		// TODO Maria: Work in progress
 		
 		try {
-			int numberOfRacks = this.machine.getNumberOfProductRacks();
 			// An array of ProductRack is created and used to build an InventoryController object
-			ProductRack racks[] = new ProductRack[numberOfRacks];
+			ProductRack racks[] = new ProductRack[this.machine.getNumberOfProductRacks()];
 			for(int i=0; i < this.machine.getNumberOfProductRacks(); i++){
 				racks[i] = new ProductRack(this.machine.getProductRack(i).getMaxCapacity());
 			}
 			
 			//Inventory controller creation with information known from machine.
-			this.inventoryController = new InventoryController(racks,numberOfRacks,this.names,this.prices,this.quantities);
-			
-			// Register
-			// Still figuring out which listener is supposed to be registered.
-			//for(int i=0; i <numberOfRacks; i++){
-				//this.machine.getProductRack(i).r
-			//}
+			this.inventoryController = new InventoryController(racks,this.machine.getNumberOfProductRacks(),this.names,this.prices,this.quantities);
 			
 		} catch (NoSuchHardwareException e) {
 			e.printStackTrace();
