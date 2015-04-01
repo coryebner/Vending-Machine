@@ -2,6 +2,7 @@ package business.funds;
 
 import hardware.racks.CoinRack;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -15,6 +16,7 @@ import java.util.Locale;
  * 2. Bills
  * 3. Coins - change provided
  * 4. PayPal
+ * 5. Credit Card - Through PayPal
  */
 public class Funds {
     
@@ -23,14 +25,18 @@ public class Funds {
     private boolean coinsPresent;
     private boolean payPalPresent;
     private boolean creditCardPresent;
+    private boolean conductTransactionIsCalled;
     
     private PrepaidController prepaidController;
     private BanknoteController bankNoteController;
     private CoinsController coinsController;
+    private CreditCardController creditCardController;
+    private PayPalController payPalController;
+    
     
     private VMCurrencies machineCurrencies;
     
-    
+	private HashMap<String, String> LOG;    
     
     /*
      CoinRack[] coinRacks, int[] coinRackDenominations,
@@ -50,6 +56,10 @@ public class Funds {
         this.prepaidController = new PrepaidController(this.machineCurrencies);
         this.bankNoteController = new BanknoteController();
         this.coinsController =  new CoinsController(coinRacks, coinRackDenominations, productPrices);
+        this.payPalController = new PayPalController();
+        this.creditCardController = new CreditCardController(this.payPalController);
+        
+        this.LOG = new HashMap<String, String>();
         
         /* Set the payment methods for this machine */
         if(availablePaymentMethods.contains(PaymentMethods.PREPAID)){
@@ -61,11 +71,11 @@ public class Funds {
         if(availablePaymentMethods.contains(PaymentMethods.COINS)){
             this.coinsPresent = true;
         }
-        if(availablePaymentMethods.contains(PaymentMethods.PAYPAL)){
-            this.payPalPresent = true;
-        }
         if(availablePaymentMethods.contains(PaymentMethods.CREDITCARD)){
             this.creditCardPresent = true;
+        }
+        if(availablePaymentMethods.contains(PaymentMethods.PAYPAL)){
+            this.payPalPresent = true;
         }
     }
     
@@ -73,10 +83,106 @@ public class Funds {
     /** Description of ConductTransaction with all available payment methods
      * @param price 	The price in cents of the transaction attempted
      * @return 			The return code based on success of the transaction
+     * Assumption, returnValue of ConductTransaction
      */
     public TransactionReturnCode ConductTransaction(int price){
+        boolean transactionSuccess = false;
+        TransactionReturnCode returnCodeOne;
+        TransactionReturnCode returnCodeTwo;
+        
+        //Payment Flow is as follow, PrePaid, Bills, Coins, Credit Card, PayPal
+        this.conductTransactionIsCalled = true;
+        int totalBalance = getTotalBalanceInPreBilCoin();
+        
+        //There is enough balance with (PrePaid and/or Bills and/or Coins)
+        if(totalBalance >= price){
+            //conduct transaction accordingly
+            conductPrePBillCoinTransaction(price);
+			this.LOG.putIfAbsent("STATUS", "SUCCESS");
+            return TransactionReturnCode.SUCCESSFUL;
+        }
+        //Try to conduct CreditCard and/or PayPal transaction with (price - totalBalance)
+        else{
+            returnCodeOne = this.creditCardController.ConductTransaction(price - totalBalance);
+            if(returnCodeOne == TransactionReturnCode.SUCCESSFUL){
+                transactionSuccess = true;
+            }
+            if(!transactionSuccess){
+                returnCodeTwo = this.payPalController.ConductTransaction(price - totalBalance);
+                if(returnCodeTwo == TransactionReturnCode.SUCCESSFUL){
+                    transactionSuccess = true;
+                }
+            }
+        }
+        
+        if(transactionSuccess){
+            conductPrePBillCoinTransaction(totalBalance);
+			this.LOG.putIfAbsent("STATUS", "SUCCESS");
+            return TransactionReturnCode.SUCCESSFUL;
+        } else{
+			this.LOG.putIfAbsent("STATUS", "FAIL");
+            return TransactionReturnCode.INSUFFICIENTFUNDS;
+        }
+    }
+    
+    /**
+     * No error Handling
+     * @param price
+     */
+    private void conductPrePBillCoinTransaction(int price) {
+        // TODO Auto-generated method stub
+        int prepaidBalance = this.prepaidController.getAvailableBalance();
+        int billBalance = this.bankNoteController.getAvailableBalance();
+        
+        if(prepaidBalance >= price){
+            this.prepaidController.ConductTransaction(price);
+        } else if((prepaidBalance + billBalance) >= price){
+            this.prepaidController.ConductTransaction(prepaidBalance);
+            this.bankNoteController.ConductTransaction(price - prepaidBalance);
+        } else{
+            this.prepaidController.ConductTransaction(prepaidBalance);
+            this.bankNoteController.ConductTransaction(price - prepaidBalance);
+            this.coinsController.ConductTransaction(price - prepaidBalance - billBalance);
+        }
+        
+    }
+    
+    
+    /**
+     * @return totalBalanceInPreBilCoin of(PrePaid and/or Bills and/or Coins)
+     */
+    private int getTotalBalanceInPreBilCoin() {
+        // TODO Auto-generated method stub
+    	int totalBalanceInPreBilCoin = 0;
+    	if(this.prepaidPresent){
+    		totalBalanceInPreBilCoin += this.prepaidController.getAvailableBalance();
+    	}
+    	if(this.billsPresent){
+    		totalBalanceInPreBilCoin += this.bankNoteController.getAvailableBalance();
+    	}
+    	if(this.coinsPresent){
+    		totalBalanceInPreBilCoin += this.coinsController.getAvailableBalance();
+    	}
+    	
+    	return totalBalanceInPreBilCoin;
+    }
+    
+    
+    /**
+     * @return null if no attempt made to conduct transaction
+     * otherwise it returns the PaymentMethodUsedAndPaymentStatus list;
+     */
+    public HashMap<String, String> getPaymentMethodUsedAndPaymentStatus(){
+        if(this.conductTransactionIsCalled){
+            return this.LOG;
+        }
         return null;
     }
+    
+    
+    
+    
+    //Getters
     
     /** Description of isPrepaidPresent for determining if there is prepaid on this machine
      * @return 			Indicates if the prepaid functionality is present
@@ -98,6 +204,15 @@ public class Funds {
     public boolean isCoinsPresent() {
         return coinsPresent;
     }
+    
+    /**
+     *
+     * @return
+     */
+    public boolean isCreditCardPresent() {
+        return creditCardPresent;
+    }
+    
     
     /** Description of isPayPalPresent for determining if there is PayPal on this machine
      * @return 			Indicates if the PayPal functionality is present
@@ -147,5 +262,4 @@ public class Funds {
     public CoinRackController[] getCoinRackControllers(){
         return null;
     }
-    
 }

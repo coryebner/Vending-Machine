@@ -32,7 +32,7 @@ public class CoinRackControllerTest {
 		quantity = 10;
 		rackDenomination = 10;
 		coinRack = new CoinRack(capacity);
-		coinRackController = new CoinRackController(coinRack, rackDenomination, quantity);
+		coinRackController = new CoinRackController(coinRack, rackDenomination);
 	}
 	
 	@After
@@ -50,7 +50,7 @@ public class CoinRackControllerTest {
 		assertEquals(quantity-1, coinRackController.getQuantity());
 		quantity = 0;
 		coinRack= new CoinRack(0);
-		coinRackController = new CoinRackController(coinRack, rackDenomination, quantity);
+		coinRackController = new CoinRackController(coinRack, rackDenomination);
 		coinRackController.releaseCoin();
 		fail("Exception was not thrown.");
 		
@@ -71,7 +71,7 @@ public class CoinRackControllerTest {
 	public void isEmptyTest(){
 		assertEquals(false, coinRackController.isEmpty());
 		quantity = 0;
-		coinRackController= new CoinRackController(coinRack, rackDenomination, quantity);
+		coinRackController= new CoinRackController(coinRack, rackDenomination);
 		assertEquals(true, coinRackController.isEmpty());
 	}
 	
@@ -84,7 +84,7 @@ public class CoinRackControllerTest {
 	@Test
 	public void coinAddedTest(){
 		quantity = 15;
-		coinRackController = new CoinRackController(coinRack, rackDenomination, quantity);
+		coinRackController = new CoinRackController(coinRack, rackDenomination);
 		coinRackController.coinAdded(coinRack, coin);
 		assertEquals(quantity+1, coinRackController.getQuantity());		
 	}
@@ -92,7 +92,7 @@ public class CoinRackControllerTest {
 	@Test
 	public void coinRemoved(){
 		quantity = 15;
-		coinRackController = new CoinRackController(coinRack, rackDenomination, quantity);
+		coinRackController = new CoinRackController(coinRack, rackDenomination);
 		coinRackController.coinRemoved(coinRack, coin);
 		assertEquals(quantity-1, coinRackController.getQuantity());	
 	}
