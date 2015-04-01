@@ -111,13 +111,17 @@ public class GUI {
 	 * Create the application.
 	 */
 	public GUI() {
-		initialize();
+		initialize(null, true, true, true, true, true);
+	}
+	
+	public GUI(Object machine, ArrayList<Boolean> parts) {
+		initialize(machine, parts.get(0), parts.get(1), parts.get(2), parts.get(3), parts.get(4));
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(Object machine, boolean coinSlot, boolean billSlot, boolean cardSlot, boolean popBtns, boolean candyBtns) {
 		coinButtons = new ArrayList();
 		billButtons = new ArrayList();
 		cardButtons = new ArrayList();
@@ -125,6 +129,12 @@ public class GUI {
 		popButtons = new ArrayList();
 		candyLetterButtons = new ArrayList();
 		candyNumberButtons = new ArrayList();
+		
+		hasCoinSlot = coinSlot;
+		hasBillSlot = billSlot;
+		hasCardSlot = cardSlot;
+		hasPopButtons = popBtns;
+		hasCandyButtons = candyBtns;
 
 		frmVendingMachines = new JFrame();
 		frmVendingMachines.setTitle("Vending Machines");
@@ -210,14 +220,6 @@ public class GUI {
 		pnlNumberCandyButtons.setLayout(new GridLayout(0, 3, 0, 0));
 
 		JButton btn1 = new JButton("1");
-		btn1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (codeInProgress) {
-					enableInteractivity(false);
-					// TODO add button press method call
-				}
-			}
-		});
 		candyNumberButtons.add(btn1);
 		pnlNumberCandyButtons.add(btn1);
 
@@ -252,6 +254,7 @@ public class GUI {
 		JButton btn9 = new JButton("9");
 		candyNumberButtons.add(btn9);
 		pnlNumberCandyButtons.add(btn9);
+		
 
 		JPanel pnlCndyNumSpaceing = new JPanel();
 		pnlNumberCandyButtons.add(pnlCndyNumSpaceing);
@@ -259,6 +262,17 @@ public class GUI {
 		JButton btn0 = new JButton("0");
 		candyNumberButtons.add(btn0);
 		pnlNumberCandyButtons.add(btn0);
+		
+		for (JButton btn : candyNumberButtons) {
+			btn1.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if (codeInProgress) {
+						enableInteractivity(false);
+						// TODO add button press method call
+					}
+				}
+			});
+		}
 
 		machine1Setup();
 
@@ -327,6 +341,9 @@ public class GUI {
 		cmbCurr.setModel(new DefaultComboBoxModel(new String[] { "Canadian",
 				"American", "European" }));
 		pnlCurrencyType.add(cmbCurr);
+		
+		JPanel panel = new JPanel();
+		pnlMoney.add(panel, BorderLayout.SOUTH);
 
 		billEject = new JButton("Remove bill");
 		billEject.setEnabled(false);
