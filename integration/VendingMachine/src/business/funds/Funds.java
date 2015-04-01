@@ -42,14 +42,14 @@ public class Funds {
      */
     
     //Public Constructor for Funds
-    public Funds(Locale locale, CoinRack[] coinRacks, int[] coinRackDenominations, int[] coinRackQuantities, int[] productPrices, List<PaymentMethods> availablePaymentMethods){
+    public Funds(Locale locale, CoinRack[] coinRacks, int[] coinRackDenominations, int[] productPrices, List<PaymentMethods> availablePaymentMethods){
         this.prepaidPresent = this.creditCardPresent = this.payPalPresent = this.coinsPresent = this.prepaidPresent = false;
         
         this.machineCurrencies = new VMCurrencies(locale);
         
         this.prepaidController = new PrepaidController(this.machineCurrencies);
         this.bankNoteController = new BanknoteController();
-        this.coinsController =  new CoinsController(coinRacks, coinRackDenominations, coinRackQuantities, productPrices);
+        this.coinsController =  new CoinsController(coinRacks, coinRackDenominations, productPrices);
         
         /* Set the payment methods for this machine */
         if(availablePaymentMethods.contains(PaymentMethods.PREPAID)){

@@ -23,7 +23,7 @@ public class CoinRackController implements CoinRackListener {
 
 	private CoinRack coinRack;
 	private int rackDenomination; // in cents.
-	private int quantity;
+	private int quantity = 0;
 
 	/**
 	 * Public constructor.
@@ -32,11 +32,9 @@ public class CoinRackController implements CoinRackListener {
 	 * @param rackDenomination denomination of the coin rack
 	 * @param quantity number of coins in the coin rack.
 	 */
-	public CoinRackController(CoinRack coinRack, int rackDenomination,
-			int quantity) {
+	public CoinRackController(CoinRack coinRack, int rackDenomination) {
 		this.coinRack = coinRack;
 		this.rackDenomination = rackDenomination;
-		this.quantity = quantity;
 	}
 
 	/**

@@ -35,20 +35,18 @@ public class CoinsController implements CoinReceptacleListener {
 	 *            list of coin rack references.
 	 * @param coinRackDenominations
 	 *            value of each coin in a coin rack.
-	 * @param coinRackQuantities
-	 *            the number of coins in each rack.
 	 * @param productPrices
 	 *            prices of each product.
 	 */
 	public CoinsController(CoinRack[] coinRacks, int[] coinRackDenominations,
-			int[] coinRackQuantities, int[] productPrices) {
+			int[] productPrices) {
 		this.productPrices = productPrices;
 
 		// Initialize all coin rack controllers.
 		coinRackControllers = new CoinRackController[coinRacks.length];
 		for (int i = 0; i < coinRacks.length; i++) {
 			coinRackControllers[i] = new CoinRackController(coinRacks[i],
-					coinRackDenominations[i], coinRackQuantities[i]);
+					coinRackDenominations[i]);
 		}
 	}
 
@@ -83,7 +81,7 @@ public class CoinsController implements CoinReceptacleListener {
 			int sum = 0;
 			// Start dispensing coins from highest denomination with coins
 			// in its respective racks.
-			for (int i = coinRackControllers.length-1; i >= 0; i--) {
+			for (int i = coinRackControllers.length - 1; i >= 0; i--) {
 				int rackDenomination = coinRackControllers[i]
 						.getCoinRackDenomination();
 
@@ -100,7 +98,8 @@ public class CoinsController implements CoinReceptacleListener {
 					}
 					sum += rackDenomination;
 				}
-				if (sum == amount) break;
+				if (sum == amount)
+					break;
 			}
 
 			return TransactionReturnCode.SUCCESSFUL;
@@ -121,12 +120,12 @@ public class CoinsController implements CoinReceptacleListener {
 		boolean changePossible;
 		int sum = 0;
 
-		for (int i = coinRackControllers.length-1; i >= 0; i--) {
+		for (int i = coinRackControllers.length - 1; i >= 0; i--) {
 			int numCoinsUsed = 0;
 			int rackDenomination = coinRackControllers[i]
 					.getCoinRackDenomination();
 			int rackQuantity = coinRackControllers[i].getQuantity();
-			while (rackQuantity - numCoinsUsed > 0 
+			while (rackQuantity - numCoinsUsed > 0
 					&& sum + rackDenomination <= amount) {
 				numCoinsUsed++;
 				sum += rackDenomination;
