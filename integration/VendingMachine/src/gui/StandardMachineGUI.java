@@ -157,28 +157,34 @@ public class StandardMachineGUI extends VendingMachineGUI {
 		pnlMachine.add(pnlMachineMain, BorderLayout.CENTER);
 		pnlMachineMain.setLayout(new BorderLayout(0, 0));
 
+
 		JPanel pnlDisplay = new JPanel();
 		pnlMachineMain.add(pnlDisplay, BorderLayout.NORTH);
 
-		JTextPane txtpnDiplay = new JTextPane();
-		txtpnDiplay.setForeground(Color.RED);
-		txtpnDiplay.setEditable(false);
-		txtpnDiplay.setText("Diplay");
-		pnlDisplay.add(txtpnDiplay);
+		JLabel Display = new JLabel ("Display");
+		Display.setForeground(Color.red);
+		pnlDisplay.add(Display);
 
 		Display_text = new JTextPane();
 		Display_text.setSize(500, 1);
 		Display_text.setVisible(true);
-		Display_text.setEditable(false);
 		Display_text
 				.setText("$0.00                                                                                                                      ");
 		pnlDisplay.add(Display_text, BorderLayout.EAST);
-
+		
 		JPanel pnlDeliveryChute = new JPanel();
 		pnlMachineMain.add(pnlDeliveryChute, BorderLayout.SOUTH);
+		JLabel DeliveryChute = new JLabel("Delivery Chute");
+		pnlDeliveryChute.add(DeliveryChute);
+		DeliveryChute.setSize(35,1);
 
-		JLabel lblDeliveryChute = new JLabel("Delivery Chute");
-		pnlDeliveryChute.add(lblDeliveryChute);
+		JTextPane DeliveryChuteText = new JTextPane();
+		DeliveryChuteText.setText("                                                                                ");
+		DeliveryChuteText.setSize(500, 1);
+		pnlDeliveryChute.add(DeliveryChuteText);
+		DeliveryChute.setVisible(true); 
+		//DeliveryChute.setEditable(false);
+
 
 		pnlMachineButtons = new JPanel();
 		pnlMachineMain.add(pnlMachineButtons, BorderLayout.CENTER);
