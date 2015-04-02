@@ -13,6 +13,7 @@ import hardware.ui.PushButton;
 import java.net.Socket;
 
 /**
+ * @deprecated This machine is not ready yet
  * Configuration 3 of the Vending Machine
  */
 public class VMRUS_SFF_P_PI extends AbstractVendingMachine {

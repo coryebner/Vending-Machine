@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * @deprecated This machine is not ready yet
  * Configuration 2 of the Vending Machine
  */
 public class VMRUS_SFF_P_CI extends AbstractVendingMachine {
