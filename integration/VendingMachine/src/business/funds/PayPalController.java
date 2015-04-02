@@ -17,7 +17,7 @@ public class PayPalController {
 	 * @param price 	The price in cents of the transaction attempted
 	 * @return 			The return code based on success of the transaction
 	 */
-	protected TransactionReturnCode ConductTransaction(int price)
+	public TransactionReturnCode ConductTransaction(int price)
 	{
 		try {
 			PayPalTransaction p = new PayPalTransaction();
