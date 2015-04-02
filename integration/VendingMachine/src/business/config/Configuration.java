@@ -154,7 +154,18 @@ public class Configuration {
 	 */
 	}
 	protected void updateValues(){
+		int rackcount=inventoryController.getRackCount();
+		for(int i=0;i<rackcount;i++){
+				names[i]=inventoryController.getName(i);
+			}
+		for(int i=0;i<rackcount;i++){
+				quantities[i]=inventoryController.getCount(i);
+		}
+		for(int i=0;i<rackcount;i++){
+				prices[i]=inventoryController.getCost(i);
+		}
 		//TODO Anish: Working on this
+		//Add funds controller stuff here
 	}
 	
 	/**
@@ -213,8 +224,50 @@ public class Configuration {
 		}
 	}
 	
-	protected void writeConfigFile(BufferedWriter output)
+	protected void writeConfigFile(BufferedWriter output) throws IOException
 	{
+		String namestring,pricesstring,Qstring,CRQString,CSQString,BRQString,BSQString;
+		namestring="names";
+		for(int i=0;i<names.length;i++){
+			namestring+=" "+names[i];
+		}
+		pricesstring="prices";
+		for(int i=0;i<prices.length;i++){
+			pricesstring+=" "+Integer.toString(prices[i]);
+		}
+		Qstring="quantities";
+		for(int i=0;i<quantities.length;i++){
+			Qstring+=" "+Integer.toString(quantities[i]);
+		}
+		CRQString="coinracks";
+		for(int i=0;i<coinRackQuantities.length;i++){
+			CRQString+=" "+Integer.toString(coinRackQuantities[i]);
+		}
+		CSQString="coinstorage";
+		for(int i=0;i<coinStorageQuantities.length;i++){
+			CRQString+=" "+Integer.toString(coinStorageQuantities[i]);
+		}
+		BRQString="billracks";
+		for(int i=0;i<billRackQuantities.length;i++){
+			BRQString+=" "+Integer.toString(billRackQuantities[i]);
+		}
+		BSQString="billstorage";
+		for(int i=0;i<billStorageQuantities.length;i++){
+			BRQString+=" "+Integer.toString(billStorageQuantities[i]);
+		}
+		output.write(namestring);
+		output.newLine();
+		output.write(pricesstring);
+		output.newLine();
+		output.write(Qstring);
+		output.newLine();
+		output.write(CRQString);
+		output.newLine();
+		output.write(CSQString);
+		output.newLine();
+		output.write(BRQString);
+		output.newLine();
+		output.write(BSQString);
 		//TODO Anish:Working on this
 		//Do basically the opposite of what we do in readConfigFile()
 	}
