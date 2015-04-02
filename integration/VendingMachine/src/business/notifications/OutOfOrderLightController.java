@@ -6,14 +6,12 @@ import hardware.funds.Coin;
 import hardware.funds.CoinReceptacle;
 import hardware.ui.IndicatorLight;
 
-import com.vendingmachinesareus.CoinReceptacleListener;
-
 public class OutOfOrderLightController implements hardware.funds.CoinReceptacleListener{
 	IndicatorLight light;
 	public OutOfOrderLightController(IndicatorLight light, CoinReceptacle storageBin) {
 		this.light = light;
 		storageBin.register(this);
-		//TODO determine init state.
+		//TODO determine initial state.
 		/*
 		 * this could be done in two ways:
 		 * 1) we are given the state: inconvenient for a user!

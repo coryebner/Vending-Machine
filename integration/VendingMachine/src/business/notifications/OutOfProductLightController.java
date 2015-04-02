@@ -22,6 +22,8 @@ public class OutOfProductLightController implements ProductRackListener{
 			productRacks[i].register(this);
 			rackLightMap.put(productRacks[i], outOfProductLight[i]);
 		}
+		
+		//TODO determine initial state
 	}
 
 	@Override
