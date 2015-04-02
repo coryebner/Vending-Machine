@@ -13,19 +13,30 @@ import hardware.exceptions.DisabledException;
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.exceptions.SimulationException;
 import hardware.funds.Coin;
+import hardware.products.PopCan;
+import hardware.racks.CoinRack;
+import hardware.racks.PopCanRack;
+import hardware.racks.ProductRack;
 import hardware.test.stub.CoinRackListenerStub;
 import hardware.test.stub.CoinReceptacleListenerStub;
 import hardware.test.stub.CoinSlotListenerStub;
 import hardware.test.stub.DeliveryChuteListenerStub;
 import hardware.test.stub.IndicatorLightListenerStub;
 import hardware.test.stub.PopCanRackListenerStub;
+import hardware.test.stub.PushButtonListenerStub;
 import hardware.ui.IndicatorLight;
+import hardware.ui.PushButtonListener;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class VendingMachine1Test {
+	
+	private final int NO_COINRACKS=6;
+	private final int NO_PRODUCTRACKS=6;
+	private final int NO_SELECTIONBUTTONS=6;
+	
 	private AbstractVendingMachine hardware;
 	private Coin coin;
 
@@ -37,6 +48,8 @@ public class VendingMachine1Test {
 	private CoinRackListenerStub[] coinRackListeners;
 	private PopCanRackListenerStub[] popRackListeners;
 	private IndicatorLightListenerStub outOfOrderListener, exactChangeListener;
+	private PushButtonListenerStub[] pushButtonListeners;
+	private PushButtonListenerStub returnButtonListener;
 
 	@Before
 	public void setup() throws NoSuchHardwareException {
@@ -52,16 +65,26 @@ public class VendingMachine1Test {
 		storageBinListener = new CoinReceptacleListenerStub();
 		// cardSlotListener = new CardSlotListenerStub();
 		deliveryChuteListener = new DeliveryChuteListenerStub();
-		coinRackListeners = new CoinRackListenerStub[5];
-		for (int i = 0; i < 5; i++) {
+		coinRackListeners = new CoinRackListenerStub[NO_COINRACKS];
+		for (int i = 0; i < NO_COINRACKS; i++) {
 			coinRackListeners[i] = new CoinRackListenerStub();
 			hardware.getCoinRack(i).register(coinRackListeners[i]);
 		}
+		
 		popRackListeners = new PopCanRackListenerStub[6];
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < NO_PRODUCTRACKS; i++) {
 			popRackListeners[i] = new PopCanRackListenerStub();
 			hardware.getProductRack(i).register(popRackListeners[i]);
 		}
+		
+		pushButtonListeners=new PushButtonListenerStub[NO_SELECTIONBUTTONS];
+		for(int i=0; i<NO_SELECTIONBUTTONS; i++){
+			hardware.getSelectionButton(i).register(pushButtonListeners[i]);
+		}
+		
+		returnButtonListener=new PushButtonListenerStub();
+		hardware.getReturnButton().register(returnButtonListener);
+		
 		outOfOrderListener = new IndicatorLightListenerStub();
 		exactChangeListener = new IndicatorLightListenerStub();
 
@@ -84,15 +107,23 @@ public class VendingMachine1Test {
 		hardware.getExactChangeLight().deregister(exactChangeListener);
 		hardware.getOutOfOrderLight().deregister(outOfOrderListener);
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < NO_COINRACKS; i++) {
 			hardware.getCoinRack(i).deregister(coinRackListeners[i]);
 			coinRackListeners[i] = null;
 		}
 
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < NO_PRODUCTRACKS; i++) {
 			hardware.getProductRack(i).deregister(popRackListeners[i]);
 			popRackListeners[i] = null;
 		}
+		
+		for(int i=0; i<NO_SELECTIONBUTTONS; i++){
+			hardware.getSelectionButton(i).deregisterAll();
+			pushButtonListeners[i]=null;
+		}
+		
+		hardware.getReturnButton().deregisterAll();
+		returnButtonListener=null;
 
 		hardware = null;
 		coin = null;
@@ -348,6 +379,20 @@ public class VendingMachine1Test {
 
 		outOfOrderListener.assertProtocol();
 	}
+	@Test
+	public void testExactChangeLight() throws NoSuchHardwareException {
+		IndicatorLight exactChangeLight = hardware.getExactChangeLight();
+		exactChangeListener.expect("deactivated", "activated");
+
+		exactChangeLight.loadWithoutEvents(true);
+		assertTrue(exactChangeLight.isActive());
+		exactChangeLight.deactivate();
+		assertFalse(exactChangeLight.isActive());
+		exactChangeLight.activate();
+		assertTrue(exactChangeLight.isActive());
+
+		exactChangeListener.assertProtocol();
+	}
 
 	@Test
 	public void testGetCoinRacks() throws NoSuchHardwareException {
@@ -392,4 +437,57 @@ public class VendingMachine1Test {
 	public void testGetDisplay() throws NoSuchHardwareException {
 		assertFalse(hardware.getDisplay() == null);
 	}
+	
+	//test dispense pop
+	@Test
+	public void testDispensePopRacks() throws NoSuchHardwareException{
+		PopCanRack rack;
+		Object[] chuteContents=hardware.getDeliveryChute().removeItems();
+		assertTrue(chuteContents.length==0);
+		for(int i=0; i<hardware.getNumberOfProductRacks(); i++){
+			rack=hardware.getProductRack(i);
+			deliveryChuteListener.expect("itemDelivered");
+			try{
+				rack.addPop(new PopCan());
+				rack.dispensePop();
+			}catch(Exception e){
+				fail("Unexpected Exception: "+e);
+			}
+			deliveryChuteListener.assertProtocol();
+			chuteContents=hardware.getDeliveryChute().removeItems();
+			assertTrue(chuteContents.length==1);
+			assertTrue(chuteContents[0].getClass()==PopCan.class);
+		}
+			
+	}
+	//test dispense coin
+	@Test
+	public void testReleaseCoinRacks() throws NoSuchHardwareException{
+		CoinRack rack;
+		Object[] chuteContents=hardware.getDeliveryChute().removeItems();
+		assertTrue(chuteContents.length==0);
+		for(int i=0; i<hardware.getNumberOfCoinRacks(); i++){
+			rack=hardware.getCoinRack(i);
+			deliveryChuteListener.expect("itemDelivered");
+			try{
+				rack.acceptCoin(new Coin(2));
+				rack.releaseCoin();
+			}catch(Exception e){
+				fail("Unexpected Exception: "+e);
+			}
+		}
+		deliveryChuteListener.assertProtocol();
+		chuteContents=hardware.getDeliveryChute().removeItems();
+		assertTrue(chuteContents.length==1);
+		assertTrue(chuteContents[0].getClass()==Coin.class);
+	} 
+	//test return button
+	@Test
+	public void testReturnButton() throws NoSuchHardwareException{
+		returnButtonListener.expect("pressed");
+		hardware.getReturnButton().press();
+		returnButtonListener.assertProtocol();
+		
+	}
+	
 }
