@@ -2,13 +2,8 @@ package hardware.funds;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Currency;
 import java.util.Date;
 import java.util.Locale;
-
-
-
-import org.apache.commons.lang.LocaleUtils;
 
 import hardware.exceptions.SimulationException;
 
@@ -17,7 +12,7 @@ import hardware.exceptions.SimulationException;
  * card.
  * <p>
  * The vending machine is only capable of recognizing 3 kinds of cards: Visa and
- * Mastercard credit cards, and prepaid cards. All others will register as
+ * MasterCard credit cards, and prepaid cards. All others will register as
  * "unknown".
  */
 public class Card {
@@ -35,7 +30,7 @@ public class Card {
     private String number, name, pin, expiry;
     private CardType type;
     private int maxAmount;
-    private Currency cardCurrency;
+    private Locale cardLocale;
 
     /**
      * Basic constructor. All arguments must be provided to Card for an object to be created:
@@ -43,7 +38,7 @@ public class Card {
      * <li>A card number.</li>
      * <li>A pin.</li>
      * <li>An expiry date in the format "MM/YYYY".</li>
-     * <li>A Locale that serves as the country of the card's origin (for currency purposes).</li>
+     * <li>A Locale that serves as the country of the card's origin.</li>
      * <li>A maximum amount that the card can carry.</li>
      * 
      * @throws SimulationException
@@ -64,9 +59,9 @@ public class Card {
 	this.maxAmount = maxAmount;
 	
 	if(cardCurrency == null)
-		this.cardCurrency = Currency.getInstance(Locale.CANADA);
+		this.cardLocale = Locale.CANADA;
     else
-    	this.cardCurrency = Currency.getInstance(cardCurrency);
+    	this.cardLocale = cardCurrency;
     }
 
     /**
@@ -83,7 +78,7 @@ public class Card {
      * @see commons-lang 
      */
     public Locale getCardLocale() {
-    	return LocaleUtils.toLocale(this.cardCurrency.toString());
+    	return cardLocale;
     }
 
     /**
@@ -105,13 +100,6 @@ public class Card {
      */
     public String getExpiryDate(){
     return expiry;
-    }
-    
-    /**
-     * Returns the Currency instance of the card's locale.
-     */
-    public Currency getCurrency(){
-    	return cardCurrency;
     }
     
     /**
