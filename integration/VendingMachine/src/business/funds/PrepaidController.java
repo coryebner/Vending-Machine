@@ -7,7 +7,7 @@ import hardware.funds.Card;
 import hardware.funds.CardSlot;
 import hardware.funds.CardSlotListener;
 import hardware.funds.Card.CardType;
-import business.funds.VMCurrencies;
+import business.funds.Currency;
 
 /** Description of PrepaidController
  * @author Gurvir Singh
@@ -20,24 +20,24 @@ public class PrepaidController implements CardSlotListener {
 	private boolean prepaidCardInserted;
 	private boolean isDisabled;
 	private Card prepaidCard;
-	private VMCurrencies currencies;
+	private Currency vmCurrency;
 	
 	/**
 	 * Description of PrepaidController Contructor with no paramerers for a Prepaid Card
 	 * Meant for disabled version of card
 	 */
 	public PrepaidController() {
-		currencies = null;
+		vmCurrency = null;
 		prepaidCard = null;
 		prepaidCardInserted = false;
 		isDisabled = true;
 	}
 	
 	/** Description of PrepaidController Constructor for a Prepaid Card
-	 * @param vmcurrencies 	The currency of the current vending machine
+	 * @param vmcurrency 	The currency of the current vending machine
 	 */
-	public PrepaidController(VMCurrencies vmcurrencies) {
-		currencies = vmcurrencies;
+	public PrepaidController(Currency vmcurrency) {
+		vmCurrency = vmcurrency;
 		prepaidCard = null;
 		prepaidCardInserted = false;
 		isDisabled = false;
@@ -58,14 +58,10 @@ public class PrepaidController implements CardSlotListener {
 			}
 			else {
 				int exchangePrice;
-				if(prepaidCard.getCurrency().getNumericCode() == currencies.getVMCurrency().getNumericCode())
+				if(prepaidCard.getCardLocale() == vmCurrency.getVendingMachineLocale())
 					exchangePrice = price;
-				else {
-					//Get exchange rates for prepaid card and vending machine
-					float ppEx = currencies.getExchangeRate(prepaidCard.getCurrency());
-					float vmEx = currencies.getExchangeRate(currencies.getVMCurrency());
-					
-					exchangePrice = (int) Math.ceil(currencies.ExchangeFromToCurrency(new SupportedCurrency(prepaidCard.getCurrency(), ppEx), new SupportedCurrency(currencies.getVMCurrency(), vmEx), price));
+				else {					
+					exchangePrice = (int) Math.ceil(vmCurrency.ExchangeFromToCurrency(vmCurrency.getVendingMachineLocale(), prepaidCard.getCardLocale(), price));
 				}
 				if(price <= getAvailableBalance()) {
 					if(prepaidCard.requestFunds(exchangePrice, ""))
@@ -87,12 +83,8 @@ public class PrepaidController implements CardSlotListener {
 	 */
 	public int getAvailableBalance(){
 		if(isCardInserted()) {
-			//Get exchange rates for prepaid card and vending machine
-			float ppEx = currencies.getExchangeRate(prepaidCard.getCurrency());
-			float vmEx = currencies.getExchangeRate(currencies.getVMCurrency());
-			
 			//Exchanges prepaid currency to vending machine currency
-			return (int) Math.ceil(currencies.ExchangeFromToCurrency(new SupportedCurrency(prepaidCard.getCurrency(), ppEx), new SupportedCurrency(currencies.getVMCurrency(), vmEx), prepaidCard.getCardBalance()));
+			return (int) Math.ceil(vmCurrency.ExchangeToMachineCurrency(prepaidCard.getCardLocale(), prepaidCard.getCardBalance()));
 		}
 		return 0;
 		
