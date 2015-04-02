@@ -19,6 +19,8 @@ import java.util.Map;
 
 /**
  * Configuration 1 of the Vending Machine
+ * No ConfigurationPanel yet
+ * Has 6 Racks
  */
 public class VMRUS_SFF_P_C extends AbstractVendingMachine {
 	private CoinSlot coinSlot;
