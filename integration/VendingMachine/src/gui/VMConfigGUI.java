@@ -269,8 +269,9 @@ public class VMConfigGUI implements ActionListener{
 					String [] popname = {"Coke","DietCode","RootBeer", "asdf", "qwer","zxcv"};
 //					VendingMachine1 popmachine = new VendingMachine1(coinvalue,popcost,popname);
 //					GUI window = new GUI(popmachine);
-					GUI window = new GUI();
-					window.frmVendingMachines.setVisible(true);
+					
+					VendingMachineGUI window = new StandardMachineGUI();
+					window.getMainFrame().setVisible(true);
 					frmVendingMachinesRUS.setVisible(false);
 				}else{
 					System.out.println("Please choose the configuration for the vending machine and the report");
@@ -285,14 +286,12 @@ public class VMConfigGUI implements ActionListener{
 
 
 	class VendingMachineConfig implements ActionListener{
-		@Override
 		public void actionPerformed(ActionEvent e) {
 			machineConfig = machineConfigRadioGroup.getSelection().getActionCommand();
 			System.out.println("The selected Configuration is: "+ machineConfig);		
 		}
 	}
 	class ReportConfigListener implements ActionListener{
-		@Override
 		public void actionPerformed(ActionEvent e) {
 			reportConfig = reportConfigRadioGroup.getSelection().getActionCommand();	
 			System.out.println("The selected report configuration is: "+ reportConfig);
@@ -300,7 +299,6 @@ public class VMConfigGUI implements ActionListener{
 	}
 	
 	
-	@Override
 	public void actionPerformed(ActionEvent e) {
 	
 	}

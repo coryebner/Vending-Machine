@@ -47,7 +47,7 @@ import javax.swing.JList;
  * 
  */
 
-public class GUI {
+public class StandardMachineGUI extends VendingMachineGUI {
 
 	// unicode for the euro symbol
 	private final String EURO = "\u20ac";
@@ -57,7 +57,6 @@ public class GUI {
 	
 	private boolean codeInProgress = false;
 
-	JFrame frmVendingMachines;
 	private JPanel pnlMachineButtons;
 	private JPanel pnlPopButtons;
 	private JPanel pnlCandyButtons;
@@ -102,8 +101,8 @@ public class GUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					GUI window = new GUI();
-					window.frmVendingMachines.setVisible(true);
+					StandardMachineGUI window = new StandardMachineGUI();
+					window.getMainFrame().setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -114,11 +113,11 @@ public class GUI {
 	/**
 	 * Create the application.
 	 */
-	public GUI() {
+	public StandardMachineGUI() {
 		initialize(null, true, true, true, true, true, true);
 	}
 	
-	public GUI(Object machine, ArrayList<Boolean> parts) {
+	public StandardMachineGUI(Object machine, ArrayList<Boolean> parts) {
 		initialize(machine, parts.get(0), parts.get(1), parts.get(2), parts.get(3), parts.get(4), parts.get(5));
 	}
 
@@ -141,15 +140,16 @@ public class GUI {
 		hasPopButtons = popBtns;
 		hasCandyButtons = candyBtns;
 
-		frmVendingMachines = new JFrame();
-		frmVendingMachines.setTitle("Vending Machines");
-		frmVendingMachines.setBounds(100, 100, 800, 600);
-		frmVendingMachines.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmVendingMachines.getContentPane().setLayout(new BorderLayout(0, 0));
+		JFrame mainFrame = new JFrame();
+		mainFrame.setTitle("Vending Machines");
+		mainFrame.setBounds(100, 100, 800, 600);
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.getContentPane().setLayout(new BorderLayout(0, 0));
+		setMainFrame(mainFrame);
 
 		JPanel pnlMachine = new JPanel();
 		pnlMachine.setBorder(null);
-		frmVendingMachines.getContentPane()
+		getMainFrame().getContentPane()
 				.add(pnlMachine, BorderLayout.CENTER);
 		pnlMachine.setLayout(new BorderLayout(0, 0));
 
@@ -291,7 +291,7 @@ public class GUI {
 
 		JPanel pnlMoney = new JPanel();
 		pnlMoney.setBorder(new LineBorder(new Color(0, 0, 0)));
-		frmVendingMachines.getContentPane().add(pnlMoney, BorderLayout.WEST);
+		getMainFrame().getContentPane().add(pnlMoney, BorderLayout.WEST);
 		pnlMoney.setLayout(new BorderLayout(0, 0));
 
 		pnlMoneySelection = new JPanel();
