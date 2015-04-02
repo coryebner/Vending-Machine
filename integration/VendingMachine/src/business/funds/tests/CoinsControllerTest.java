@@ -2,16 +2,8 @@ package business.funds.tests;
 
 import static org.junit.Assert.*;
 
-import java.util.Locale;
-
-import hardware.Hardware;
-import hardware.exceptions.DisabledException;
-import hardware.exceptions.EmptyException;
-import hardware.funds.Card;
-import hardware.funds.CardSlotNotEmptyException;
 import hardware.funds.Coin;
 import hardware.funds.CoinReceptacle;
-import hardware.funds.CoinSlot;
 import hardware.racks.CoinRack;
 
 import org.junit.After;
@@ -21,7 +13,6 @@ import org.junit.Test;
 import business.funds.CoinRackController;
 import business.funds.CoinsController;
 import business.funds.TransactionReturnCode;
-import business.funds.VMCurrencies;
 
 public class CoinsControllerTest {
 	CoinsController coinsController;

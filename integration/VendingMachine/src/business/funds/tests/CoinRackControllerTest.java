@@ -5,7 +5,6 @@ package business.funds.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import hardware.Hardware;
 import hardware.acceptors.AbstractCoinAcceptor;
 import hardware.channels.CoinChannel;
 import hardware.exceptions.CapacityExceededException;
