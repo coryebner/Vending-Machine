@@ -26,6 +26,7 @@ public class Funds {
 	private boolean creditCardPresent = false;
 	private boolean conductTransactionIsCalled = false;
 	
+	boolean bestEffortChange = false;
 	boolean noChangeDueToPrepaidExceed = false;
 
 	private PrepaidController prepaidController;
@@ -60,6 +61,7 @@ public class Funds {
 		
 		/* Setup the Exact Change Object */
 		exactChangeController = new ExactChangeController(inventoryController);
+		this.bestEffortChange = bestEffortChange;
 
 		/* Set the payment methods for this machine */
 		if (availablePaymentMethods.contains(PaymentMethods.PREPAID)) {
@@ -125,6 +127,10 @@ public class Funds {
 	
 	
 	private void giveChange(int amount){
+		if(exactChangeController.isExactChangeActive() && !bestEffortChange){
+			return; // we do not provide change
+		}
+		
 		if(amount > 0 && coinsPresent && !noChangeDueToPrepaidExceed){
 			coinsController.provideChange(amount);
 		}
@@ -275,16 +281,7 @@ public class Funds {
 	 * @return The state of not providing change due to exact change status
 	 */
 	public boolean isExactChangeActive() {
-		return false;
-	}
-
-	/**
-	 * Description of isFullOfChange if at least one coin rack is full of coins
-	 * 
-	 * @return The state of at least one rack being full of coins
-	 */
-	public boolean isFullOfChangeActive() {
-		return false;
+		return exactChangeController.isExactChangeActive();
 	}
 
 	/**
