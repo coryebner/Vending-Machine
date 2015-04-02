@@ -57,8 +57,9 @@ public class BanknoteController implements BanknoteReceptacleListener {
 	}
 
 	@Override
-	public void banknoteFull(BanknoteReceptacle receptacle) {
+	public void BanknotesFull(BanknoteReceptacle receptacle) {
 		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -76,4 +77,6 @@ public class BanknoteController implements BanknoteReceptacleListener {
 	@Override
 	public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {
 	}
+
+
 }

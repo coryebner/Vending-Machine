@@ -24,6 +24,7 @@ import business.funds.PayPalController;
 import business.funds.PaymentMethods;
 import business.funds.PrepaidController;
 import business.funds.TransactionReturnCode;
+import business.selection_delivery.InventoryController;
 
 public class FundsTest {
 	
@@ -59,10 +60,11 @@ public class FundsTest {
 	
 	private Funds setupControllers(boolean prepaid, boolean banknote, boolean coins,
 			boolean creditCard, boolean payPal){
+		InventoryController inventoryController = null;
 		int [] nothing = null;
 		CoinRack[] coinRack = null;
 		List<PaymentMethods> availablePaymentMethods = new ArrayList<PaymentMethods>();
-		Funds funds = new Funds(Locale.CANADA, false, coinRack, nothing, nothing, nothing, availablePaymentMethods);
+		Funds funds = new Funds(Locale.CANADA, false, coinRack, nothing, nothing, availablePaymentMethods,inventoryController);
 		
 		prepaidController = context.mock(PrepaidController.class);
 		coinsController = context.mock(CoinsController.class);
@@ -102,7 +104,7 @@ public class FundsTest {
 			will(returnValue(25));
 			}
 		});
-		TransactionReturnCode returnCode = funds.ConductTransaction2(100);
+		TransactionReturnCode returnCode = funds.ConductTransaction(100);
 		assertEquals(TransactionReturnCode.INSUFFICIENTFUNDS,returnCode);
 
 	}
@@ -118,7 +120,7 @@ public class FundsTest {
 			will(returnValue(TransactionReturnCode.SUCCESSFUL));
 			}
 		});
-		TransactionReturnCode returnCode = funds.ConductTransaction2(100);
+		TransactionReturnCode returnCode = funds.ConductTransaction(100);
 		assertEquals(TransactionReturnCode.SUCCESSFUL,returnCode);
 
 	}
@@ -134,7 +136,7 @@ public class FundsTest {
 			will(returnValue(TransactionReturnCode.SUCCESSFUL));
 			}
 		});
-		TransactionReturnCode returnCode = funds.ConductTransaction2(100);
+		TransactionReturnCode returnCode = funds.ConductTransaction(100);
 		assertEquals(TransactionReturnCode.SUCCESSFUL,returnCode);
 
 	}
@@ -152,7 +154,7 @@ public class FundsTest {
 			will(returnValue(500));
 			}
 		});
-		TransactionReturnCode returnCode = funds.ConductTransaction2(600);
+		TransactionReturnCode returnCode = funds.ConductTransaction(600);
 		assertEquals(TransactionReturnCode.INSUFFICIENTFUNDS,returnCode);
 
 	}
@@ -168,7 +170,7 @@ public class FundsTest {
 			will(returnValue(TransactionReturnCode.SUCCESSFUL));
 			}
 		});
-		TransactionReturnCode returnCode = funds.ConductTransaction2(500);
+		TransactionReturnCode returnCode = funds.ConductTransaction(500);
 		assertEquals(TransactionReturnCode.SUCCESSFUL,returnCode);
 
 	}
@@ -184,7 +186,7 @@ public class FundsTest {
 			will(returnValue(TransactionReturnCode.SUCCESSFUL));
 			}
 		});
-		TransactionReturnCode returnCode = funds.ConductTransaction2(100);
+		TransactionReturnCode returnCode = funds.ConductTransaction(100);
 		assertEquals(TransactionReturnCode.SUCCESSFUL,returnCode);
 
 	}
@@ -203,7 +205,7 @@ public class FundsTest {
 			will(returnValue(25));
 			}
 		});
-		TransactionReturnCode returnCode = funds.ConductTransaction2(100);
+		TransactionReturnCode returnCode = funds.ConductTransaction(100);
 		assertEquals(TransactionReturnCode.INSUFFICIENTFUNDS,returnCode);
 
 	}
@@ -220,7 +222,7 @@ public class FundsTest {
 			will(returnValue(TransactionReturnCode.SUCCESSFUL));
 			}
 		});
-		TransactionReturnCode returnCode = funds.ConductTransaction2(100);
+		TransactionReturnCode returnCode = funds.ConductTransaction(100);
 		assertEquals(TransactionReturnCode.SUCCESSFUL,returnCode);
 
 	}
@@ -238,7 +240,7 @@ public class FundsTest {
 			will(returnValue(TransactionReturnCode.SUCCESSFUL));
 			}
 		});
-		TransactionReturnCode returnCode = funds.ConductTransaction2(100);
+		TransactionReturnCode returnCode = funds.ConductTransaction(100);
 		assertEquals(TransactionReturnCode.SUCCESSFUL,returnCode);
 
 	}
@@ -256,7 +258,7 @@ public class FundsTest {
 			will(returnValue(TransactionReturnCode.UNSUCCESSFUL));
 			}
 		});
-		TransactionReturnCode returnCode = funds.ConductTransaction2(100);
+		TransactionReturnCode returnCode = funds.ConductTransaction(100);
 		assertEquals(TransactionReturnCode.UNSUCCESSFUL,returnCode);
 
 	}
@@ -270,7 +272,7 @@ public class FundsTest {
 			will(returnValue(TransactionReturnCode.SUCCESSFUL));
 			}
 		});
-		TransactionReturnCode returnCode = funds.ConductTransaction2(100);
+		TransactionReturnCode returnCode = funds.ConductTransaction(100);
 		assertEquals(TransactionReturnCode.SUCCESSFUL,returnCode);
 	}
 	
@@ -287,7 +289,7 @@ public class FundsTest {
 			will(returnValue(TransactionReturnCode.UNSUCCESSFUL));
 			}
 		});
-		TransactionReturnCode returnCode = funds.ConductTransaction2(100);
+		TransactionReturnCode returnCode = funds.ConductTransaction(100);
 		assertEquals(TransactionReturnCode.UNSUCCESSFUL,returnCode);
 
 	}
@@ -301,7 +303,7 @@ public class FundsTest {
 			will(returnValue(TransactionReturnCode.TIMEOUT));
 			}
 		});
-		TransactionReturnCode returnCode = funds.ConductTransaction2(100);
+		TransactionReturnCode returnCode = funds.ConductTransaction(100);
 		assertEquals(TransactionReturnCode.TIMEOUT,returnCode);
 
 	}
@@ -315,7 +317,7 @@ public class FundsTest {
 			will(returnValue(TransactionReturnCode.SUCCESSFUL));
 			}
 		});
-		TransactionReturnCode returnCode = funds.ConductTransaction2(100);
+		TransactionReturnCode returnCode = funds.ConductTransaction(100);
 		assertEquals(TransactionReturnCode.SUCCESSFUL,returnCode);
 	}
 	
