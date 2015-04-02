@@ -74,6 +74,10 @@ public class GUI {
 	private JButton billEject;
 
 	private JTextPane Display_text;
+	
+	private JLabel lblExactChange;
+	private JLabel lblOutOfOrder;
+	private JLabel lblInternetLight;
 
 	private ArrayList<JButton> coinButtons;
 	private ArrayList<JButton> billButtons;
@@ -87,7 +91,7 @@ public class GUI {
 	private boolean hasCoinSlot = true;
 	private boolean hasBillSlot = true;
 	private boolean hasCardSlot = true;
-
+	private boolean hasInternetLight = true;
 	private boolean hasPopButtons = true;
 	private boolean hasCandyButtons = true;
 
@@ -111,17 +115,17 @@ public class GUI {
 	 * Create the application.
 	 */
 	public GUI() {
-		initialize(null, true, true, true, true, true);
+		initialize(null, true, true, true, true, true, true);
 	}
 	
 	public GUI(Object machine, ArrayList<Boolean> parts) {
-		initialize(machine, parts.get(0), parts.get(1), parts.get(2), parts.get(3), parts.get(4));
+		initialize(machine, parts.get(0), parts.get(1), parts.get(2), parts.get(3), parts.get(4), parts.get(5));
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(Object machine, boolean coinSlot, boolean billSlot, boolean cardSlot, boolean popBtns, boolean candyBtns) {
+	private void initialize(Object machine, boolean coinSlot, boolean billSlot, boolean cardSlot, boolean internetLight, boolean popBtns, boolean candyBtns) {
 		coinButtons = new ArrayList();
 		billButtons = new ArrayList();
 		cardButtons = new ArrayList();
@@ -133,6 +137,7 @@ public class GUI {
 		hasCoinSlot = coinSlot;
 		hasBillSlot = billSlot;
 		hasCardSlot = cardSlot;
+		hasInternetLight = internetLight;
 		hasPopButtons = popBtns;
 		hasCandyButtons = candyBtns;
 
@@ -185,17 +190,25 @@ public class GUI {
 		JButton btnReturn = new JButton("Return");
 		pnlMisc.add(btnReturn);
 
-		JLabel lblExactChange = new JLabel("     ");
-		lblExactChange.setBackground(Color.RED);
-		lblExactChange.setForeground(Color.RED);
+		lblExactChange = new JLabel("     ");
+		lblExactChange.setBackground(Color.LIGHT_GRAY);
+		lblExactChange.setForeground(Color.LIGHT_GRAY);
 		lblExactChange.setOpaque(true);
 		pnlMisc.add(lblExactChange);
 
-		JLabel lblOutOfOrder = new JLabel("     ");
+		lblOutOfOrder = new JLabel("     ");
 		lblOutOfOrder.setOpaque(true);
 		lblOutOfOrder.setForeground(Color.LIGHT_GRAY);
 		lblOutOfOrder.setBackground(Color.LIGHT_GRAY);
 		pnlMisc.add(lblOutOfOrder);
+		
+		lblInternetLight = new JLabel("     ");
+		lblInternetLight.setOpaque(true);
+		lblInternetLight.setForeground(Color.LIGHT_GRAY);
+		lblInternetLight.setBackground(Color.LIGHT_GRAY);
+		if (hasInternetLight) {
+			pnlMisc.add(lblInternetLight);
+		}
 
 		pnlPopButtons = new JPanel();
 		if (hasPopButtons) {
@@ -745,4 +758,17 @@ public class GUI {
 		}
 	}
 
+	/**
+	 * Listens to the indicator lights and changes the color of 
+	 * the appropriate label to red
+	 * @param light
+	 */
+	public void activated(Object light) {
+		/*
+		 * if (light.equals(machine.getOutOfOrderLight()) {
+		 * 	lblInternetLight.setForeground(Color.RED);
+		 *	lblInternetLight.setBackground(Color.RED);
+		 * }
+		 */
+	}
 }
