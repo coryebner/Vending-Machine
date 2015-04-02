@@ -45,13 +45,8 @@ public class PopCanRack extends AbstractRack<PopCanRackListener, PopCan, PopCanC
      */
     public void addPop(PopCan pop) throws CapacityExceededException,
 	    DisabledException {
-	if(isDisabled())
-	    throw new DisabledException();
-
-	if(getQueue().size() >= getMaxCapacity())
-	    throw new CapacityExceededException();
-
-	getQueue().add(pop);
+    
+    addToRack(pop);
 
 	notifyPopAdded(pop);
 
@@ -75,13 +70,9 @@ public class PopCanRack extends AbstractRack<PopCanRackListener, PopCan, PopCanC
      */
     public void dispensePop() throws DisabledException, EmptyException,
 	    CapacityExceededException {
-	if(isDisabled())
-	    throw new DisabledException();
 
-	if(getQueue().isEmpty())
-	    throw new EmptyException();
-
-	PopCan pop = getQueue().remove();
+    PopCan pop = removeFromRack();
+    
 	notifyPopRemoved(pop);
 
 	if(getSink() == null)
@@ -93,40 +84,50 @@ public class PopCanRack extends AbstractRack<PopCanRackListener, PopCan, PopCanC
 	    notifyPopEmpty();
     }
 
-    /**
-     * Allows pop cans to be loaded into the pop can rack without causing events
-     * to occur on its listeners. This permits a simple initialization. Note
-     * that any existing pop cans in the rack are not removed.
-     * 
-     * @param pops
-     *            One or more pop cans to be loaded into this pop can rack.
-     * @throws SimulationException
-     *             if the number of cans to be loaded exceeds the capacity of
-     *             this pop can rack.
-     */
-    public void loadWithoutEvents(PopCan... pops) throws SimulationException {
-	if(getMaxCapacity() < getQueue().size() + pops.length)
-	    throw new SimulationException("Capacity exceeded by attempt to load");
-
-	for(PopCan pop : pops) {
-	    getQueue().add(pop);
-	}
-    }
-
+	/**
+	 * notifyPopAdded
+	 * 
+	 * @synopsis
+	 * 			Notification method used to custom tailor AbstractHardware associated reflection call
+	 * 			- with the assumption that listeners registered to the affected PopCanRack as defined in 
+	 * 		 	PopCanRackListener class will be notified (triggering a method invocation to popAdded).
+	 * 
+	 * @param 	pop
+	 * 
+	 * @see		AbstractHardware, PopCanRackListener, PopCanRackListenerStub, AbstractStub
+	 */   
     private void notifyPopAdded(PopCan pop) {
 	Class<?>[] parameterTypes =
 	        new Class<?>[] { PopCanRack.class, PopCan.class };
 	Object[] args = new Object[] { this, pop };
 	notifyListeners(PopCanRackListener.class, "popAdded", parameterTypes, args);
     }
-
+    
+	/**
+	 * notifyPopFull
+	 * 
+	 * @synopsis
+	 * 			Notification method used via AbstractHardware reflection API (notifyListeners)
+	 * 			to signal that the associated pop can rack is full of pop cans.
+	 * 
+	 * 
+	 * @see		AbstractHardware, PopCanRackListener, PopCanRackListenerStub, AbstractStub
+	 */
     private void notifyPopFull() {
 	Class<?>[] parameterTypes =
 	        new Class<?>[] { PopCanRack.class };
 	Object[] args = new Object[] { this };
 	notifyListeners(PopCanRackListener.class, "popFull", parameterTypes, args);
     }
-
+	/**
+	 * notifyPopEmpty
+	 * 
+	 * @synopsis
+	 * 			Notification method used via AbstractHardware reflection API (notifyListeners)
+	 * 			to signal that the associated pop can rack is empty of pops.
+	 * 
+	 * @see		AbstractHardware, PopCanRackListener, PopCanRackListenerStub, AbstractStub
+	 */
     private void notifyPopEmpty() {
 	Class<?>[] parameterTypes =
 	        new Class<?>[] { PopCanRack.class };
@@ -134,6 +135,18 @@ public class PopCanRack extends AbstractRack<PopCanRackListener, PopCan, PopCanC
 	notifyListeners(PopCanRackListener.class, "popEmpty", parameterTypes, args);
     }
 
+	/**
+	 * notifyPopRemoved
+	 * 
+	 * @synopsis
+	 * 			Notification method used to custom tailor AbstractHardware associated reflection call
+	 * 			- with the assumption that listeners registered to the affected PopCanRack as defined in 
+	 * 		 	PopCanRackListener class will be notified (triggering a method invocation to popRemoved).
+	 * 
+	 * @param 	pop
+	 * 
+	 * @see		AbstractHardware, PopCanRackListener, PopCanRackListenerStub, AbstractStub
+	 */
     private void notifyPopRemoved(PopCan pop) {
 	Class<?>[] parameterTypes =
 	        new Class<?>[] { PopCanRack.class, PopCan.class };

@@ -1,0 +1,9 @@
+Bitbucket [SENG403-Integration]
+
+> master
+>> Hardware 
+
+package naming :  
+
+ca.ucalgary.vendingmachine.Hardware			  // Main package for Hardware-Firmware
+ca.ucalgary.vendingmachine.Hardware.Utils     // Utility functions, etc, included in case you need ~ wwrighter (wwright@ucalgary.ca)

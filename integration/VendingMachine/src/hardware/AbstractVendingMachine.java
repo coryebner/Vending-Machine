@@ -9,6 +9,7 @@ import hardware.funds.CardSlot;
 import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinSlot;
 import hardware.racks.CoinRack;
+import hardware.racks.PopCanRack;
 import hardware.ui.DeliveryChute;
 import hardware.ui.Display;
 import hardware.ui.IndicatorLight;
@@ -76,7 +77,7 @@ public abstract class AbstractVendingMachine {
 	 * @throws NoSuchHardwareException 
 	 */
 	// public ProductRack getProductRack(int index) throws NoSuchHardwareException {
-	public Object getProductRack(int index) throws NoSuchHardwareException {
+	public PopCanRack getProductRack(int index) throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 	
@@ -222,11 +223,11 @@ public abstract class AbstractVendingMachine {
 	}
 	
 	/**
-	 * Returns the number of push buttons.
+	 * Returns the number of selection buttons.
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	public int getNumberOfPushButtons() throws NoSuchHardwareException {
+	public int getNumberOfSelectionButtons() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 
@@ -262,7 +263,7 @@ public abstract class AbstractVendingMachine {
 	 * movements.
 	 */
 	public void disableSafety() {
-		safetyOn = true;
+		safetyOn = false;
 		// subclasses should enable hardware components here
 	}
 

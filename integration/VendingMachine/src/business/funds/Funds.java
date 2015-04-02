@@ -17,12 +17,14 @@ import java.util.Locale;
  *         PayPal 5. Credit Card - Through PayPal
  */
 public class Funds {
-	private boolean prepaidPresent;
-	private boolean billsPresent;
-	private boolean coinsPresent;
-	private boolean payPalPresent;
-	private boolean creditCardPresent;
-	private boolean conductTransactionIsCalled;
+	private boolean prepaidPresent = false;
+	private boolean billsPresent = false;
+	private boolean coinsPresent = false;
+	private boolean payPalPresent = false;
+	private boolean creditCardPresent = false;
+	private boolean conductTransactionIsCalled = false;
+	
+	boolean noChangeDueToPrepaidExceed = false;
 
 	private PrepaidController prepaidController;
 	private BanknoteController bankNoteController;
@@ -49,35 +51,34 @@ public class Funds {
 	public Funds(Locale locale, boolean bestEffortChange, CoinRack[] coinRacks,
 			int[] coinRackDenominations, int[] coinRackQuantities,
 			int[] productPrices, List<PaymentMethods> availablePaymentMethods) {
-		this.prepaidPresent = this.billsPresent = this.coinsPresent = this.creditCardPresent = this.payPalPresent = this.conductTransactionIsCalled = false;
+		//this.prepaidPresent = this.billsPresent = this.coinsPresent = this.creditCardPresent = this.payPalPresent = this.conductTransactionIsCalled = false;
 
 		this.machineCurrencies = new VMCurrencies(locale);
-
-		this.prepaidController = new PrepaidController(this.machineCurrencies);
-		this.bankNoteController = new BanknoteController();
-		this.coinsController = new CoinsController(bestEffortChange, coinRacks,
-				coinRackDenominations, coinRackQuantities, productPrices);
-		this.payPalController = new PayPalController();
-		this.creditCardController = new CreditCardController(
-				this.payPalController);
 
 		this.LOG = new HashMap<String, String>();
 
 		/* Set the payment methods for this machine */
 		if (availablePaymentMethods.contains(PaymentMethods.PREPAID)) {
 			this.prepaidPresent = true;
+			this.prepaidController = new PrepaidController(this.machineCurrencies);
 		}
 		if (availablePaymentMethods.contains(PaymentMethods.BILLS)) {
 			this.billsPresent = true;
+			this.bankNoteController = new BanknoteController();
 		}
 		if (availablePaymentMethods.contains(PaymentMethods.COINS)) {
 			this.coinsPresent = true;
+			this.coinsController = new CoinsController(bestEffortChange, coinRacks,
+					coinRackDenominations, coinRackQuantities, productPrices);
 		}
 		if (availablePaymentMethods.contains(PaymentMethods.CREDITCARD)) {
 			this.creditCardPresent = true;
+			this.creditCardController = new CreditCardController(
+					this.payPalController);
 		}
 		if (availablePaymentMethods.contains(PaymentMethods.PAYPAL)) {
 			this.payPalPresent = true;
+			this.payPalController = new PayPalController();
 		}
 	}
 
@@ -131,6 +132,99 @@ public class Funds {
 			return TransactionReturnCode.INSUFFICIENTFUNDS;
 		}
 	}
+	
+	public TransactionReturnCode ConductTransaction2(int price){
+		TransactionReturnCode returnCode = TransactionReturnCode.INSUFFICIENTFUNDS;
+		TransactionReturnCode returnCodeCC_PP = TransactionReturnCode.INSUFFICIENTFUNDS;
+		
+		noChangeDueToPrepaidExceed = false;
+		
+		int availableFunds = 0;
+		availableFunds = getTotalBalanceInPreBilCoin();
+		
+		// Try to conductTransaction with funds we know are available
+		if(availableFunds >= price){
+			returnCode = conductTransactionFromAvailableFunds(price);
+			giveChange(availableFunds - price);
+		}
+		else{
+			// try with credit card and paypal
+			int remainingBalance = price - availableFunds;
+			returnCodeCC_PP = conductTransactionFromCC_PP(remainingBalance);
+			if(returnCodeCC_PP == TransactionReturnCode.SUCCESSFUL){
+				returnCode = conductTransactionFromAvailableFunds(availableFunds);
+			}
+			else{
+				returnCode = returnCodeCC_PP;
+			}
+		}
+		return returnCode;
+		
+	}
+	
+	
+	private void giveChange(int amount){
+		if(amount > 0 && coinsPresent && !noChangeDueToPrepaidExceed){
+			coinsController.provideChange(amount);
+		}
+	}
+	
+	private TransactionReturnCode conductTransactionFromCC_PP(int price){
+		TransactionReturnCode creditCardReturn = TransactionReturnCode.INSUFFICIENTFUNDS;
+		TransactionReturnCode payPalReturn = TransactionReturnCode.INSUFFICIENTFUNDS;
+		
+		if(creditCardPresent){
+			creditCardReturn = creditCardController.ConductTransaction(price);
+		}
+		if(creditCardReturn != TransactionReturnCode.SUCCESSFUL && payPalPresent){
+			payPalReturn = payPalController.ConductTransaction(price);
+			return payPalReturn;
+		}
+		return creditCardReturn;
+		
+	}
+	
+	private TransactionReturnCode conductTransactionFromAvailableFunds(int price){
+		TransactionReturnCode returnCodePP = TransactionReturnCode.SUCCESSFUL;
+		TransactionReturnCode returnCodeC = TransactionReturnCode.SUCCESSFUL;
+		TransactionReturnCode returnCodeBN = TransactionReturnCode.SUCCESSFUL;
+		
+		int balance = price;
+		int amount = 0;
+		
+		if(prepaidPresent && balance > 0){
+			int ppFunds = prepaidController.getAvailableBalance();
+			if(ppFunds > balance){
+				noChangeDueToPrepaidExceed = true;// set to tell if change should be provided
+			}
+			amount = Math.min(ppFunds, balance);
+			returnCodePP = prepaidController.ConductTransaction(amount);
+			balance -= amount;
+		}
+		if(billsPresent && balance > 0){
+			int billsFunds = bankNoteController.getAvailableBalance();
+			amount = Math.min(billsFunds, balance);
+			returnCodeC = bankNoteController.ConductTransaction(amount);
+			balance -= amount;
+		}
+		if(coinsPresent && balance > 0){
+			int coinsFunds = coinsController.getAvailableBalance();
+			amount = Math.min(coinsFunds, balance);
+			returnCodeC = coinsController.ConductTransaction(amount);
+			balance -= amount;
+		}
+		
+		if(returnCodePP == TransactionReturnCode.SUCCESSFUL &&
+				returnCodeBN == TransactionReturnCode.SUCCESSFUL &&
+				returnCodeC == TransactionReturnCode.SUCCESSFUL){
+			return TransactionReturnCode.SUCCESSFUL;
+		}
+		else{
+			return TransactionReturnCode.UNSUCCESSFUL;
+		}
+		
+	}
+	
 
 	/**
 	 * No error Handling
@@ -291,5 +385,33 @@ public class Funds {
 	 */
 	public CoinRackController[] getCoinRackControllers() {
 		return null;
+	}
+	
+	public void ONLY_FOR_TESTING_setControllerState(boolean present, Object object, Class<?> classType ){
+		if(classType == PrepaidController.class){
+			prepaidPresent = present;
+			prepaidController = (PrepaidController) object;
+			return;
+		}
+		if(classType == BanknoteController.class){
+			billsPresent = present;
+			bankNoteController = (BanknoteController) object;
+			return;
+		}
+		if(classType == CoinsController.class){
+			coinsPresent = present;
+			coinsController = (CoinsController) object;
+			return;
+		}
+		if(classType == CreditCardController.class){
+			creditCardPresent = present;
+			creditCardController = (CreditCardController) object;
+			return;
+		}
+		if(classType == PayPalController.class){
+			payPalPresent = present;
+			payPalController = (PayPalController) object;
+			return;
+		}
 	}
 }

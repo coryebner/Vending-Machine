@@ -3,11 +3,13 @@ package hardware.ui;
 import hardware.AbstractHardware;
 import hardware.acceptors.AbstractCoinAcceptor;
 import hardware.acceptors.AbstractPopCanAcceptor;
+import hardware.acceptors.AbstractProductAcceptor;
 import hardware.exceptions.CapacityExceededException;
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.SimulationException;
 import hardware.funds.Coin;
 import hardware.products.PopCan;
+import hardware.products.Product;
 
 import java.util.Vector;
 
@@ -18,7 +20,7 @@ import java.util.Vector;
  */
 public class DeliveryChute extends
         AbstractHardware<DeliveryChuteListener> implements
-        AbstractCoinAcceptor, AbstractPopCanAcceptor {
+        AbstractCoinAcceptor, AbstractPopCanAcceptor, AbstractProductAcceptor {
     private Vector<Object> chute = new Vector<Object>();
     private int maxCapacity;
 
@@ -186,5 +188,35 @@ public class DeliveryChute extends
 	        new Class<?>[] { DeliveryChute.class };
 	Object[] args = new Object[] { this };
 	notifyListeners(DeliveryChuteListener.class, "chuteFull", parameterTypes, args);
+    }
+
+	
+    /**
+     * Tells this delivery chute to deliver the indicated pop can. If the
+     * delivery is successful, an "itemDelivered" event is announced to its
+     * listeners. If the successful delivery causes the chute to become full, a
+     * "chuteFull" event is announced to its listeners.
+     * 
+     * @throws CapacityExceededException
+     *             if the chute is already full and the pop can cannot be
+     *             delivered.
+     * @throws DisabledException
+     *             if the chute is currently disabled.
+     */
+    @Override
+    public void acceptProduct(Product product) throws CapacityExceededException,
+	    DisabledException {
+	if(isDisabled())
+	    throw new DisabledException();
+
+	if(chute.size() >= maxCapacity)
+	    throw new CapacityExceededException();
+
+	chute.add(product);
+
+	notifyItemDelivered();
+
+	if(chute.size() >= maxCapacity)
+	    notifyChuteFull();
     }
 }

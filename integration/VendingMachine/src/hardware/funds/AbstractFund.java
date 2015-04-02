@@ -44,6 +44,5 @@ public abstract class AbstractFund implements IFund {
 		}
 		return ret;
 	}
-   
-    
+     
 }
