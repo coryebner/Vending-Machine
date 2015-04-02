@@ -22,7 +22,12 @@ import business.funds.Currency;
 
 
 public class PrepaidControllerTest {
+	int[] coinValues = {5, 10, 25, 100, 200};
+	int[] popCosts = {100, 200, 150, 250, 175};
+	String[] popNames = {"Coke", "Pepsi", "7up", "Sprite", "Crush"};
+	
 	CardSlot cs;
+	
 	Card prepaidCard;
 	PrepaidController pc;
 	Currency curr;
@@ -31,9 +36,10 @@ public class PrepaidControllerTest {
 	@Before
 	public void setUp() throws Exception {
 		curr = new Currency(Locale.CANADA);
-		hw = new Hardware(null, null, null);
+		hw = new Hardware(coinValues, popCosts, popNames);
 		pc = new PrepaidController(curr);
 		cs = hw.getCardSlot();
+		cs.register(pc);
 		prepaidCard = new Card(Card.CardType.PREPAID, "7373737373", "Defualt Prepaid" , "", "00/0000", Locale.CANADA, 10000);
 	}
 
@@ -140,7 +146,7 @@ public class PrepaidControllerTest {
 		try {
 			cs.insertCard(prepaidCard);
 			
-			assertEquals("Insuffcient funds", TransactionReturnCode.UNSUCCESSFUL, pc.ConductTransaction(9999));
+			assertEquals("Insuffcient funds", TransactionReturnCode.INSUFFICIENTFUNDS, pc.ConductTransaction(99999));
 			pc.disablePrepaidController();
 			assertEquals("Returns card error when prepaid controller disabled", TransactionReturnCode.CREDITCARDERROR, pc.ConductTransaction(200));
 			
