@@ -1,6 +1,7 @@
 package hardware;
 
 import java.net.Socket;
+import java.util.Locale;
 
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.funds.BanknoteReceptacle;
@@ -20,7 +21,7 @@ import hardware.ui.PushButtonCodeInterpreter;
 public abstract class AbstractVendingMachine {
 
 	protected boolean safetyOn = false;
-	
+	protected Locale locale;
 	/**
 	 * Returns the out of order light.
 	 * 
@@ -150,7 +151,7 @@ public abstract class AbstractVendingMachine {
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	public CoinReceptacle getBanknoteStorageBin() throws NoSuchHardwareException {
+	public BanknoteReceptacle getBanknoteStorageBin() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 	
@@ -221,6 +222,10 @@ public abstract class AbstractVendingMachine {
 	// public ConfigurationPanel getConfigurationPanel() throws NoSuchHardwareException {
 	public Object getConfigurationPanel() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
+	}
+	
+	public Locale getLocale() {
+		return locale;
 	}
 	
 	/**
