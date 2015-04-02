@@ -2,34 +2,40 @@ package hardware;
 
 import hardware.channels.CoinChannel;
 import hardware.channels.PopCanChannel;
+import hardware.channels.ProductChannel;
+import hardware.exceptions.NoSuchHardwareException;
 import hardware.exceptions.SimulationException;
 import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinSlot;
 import hardware.racks.CoinRack;
 import hardware.racks.PopCanRack;
+import hardware.racks.ProductRack;
 import hardware.ui.DeliveryChute;
 import hardware.ui.Display;
 import hardware.ui.IndicatorLight;
 import hardware.ui.PushButton;
 
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Configuration 1 of the Vending Machine
+ * @deprecated This machine is not ready yet
+ * Configuration 2 of the Vending Machine
  */
-public class VendingMachine1 extends AbstractVendingMachine {
+public class VMRUS_SFF_P_CI extends AbstractVendingMachine {
 	private CoinSlot coinSlot;
-	private CoinReceptacle coinReceptacle, storageBin;
+	private CoinReceptacle coinReceptacle, coinStorageBin;
 	private DeliveryChute deliveryChute;
 	private CoinRack[] coinRacks;
 	private Map<Integer, CoinChannel> coinRackChannels;
-	private PopCanRack[] productRacks; // PopCanRack should be ProductRack
+	private ProductRack[] productRacks;
 	private Display display;
 	private PushButton[] selectionButtons;
 	private PushButton returnButton;
 	private IndicatorLight exactChangeLight, outOfOrderLight;
 	private IndicatorLight[] outOfProductLights;
+	private Socket socket; // to be changed to VMSocket
 	// still missing ConfigurationPanel
 
 	protected static int deliveryChuteCapacity = 20;
@@ -40,7 +46,7 @@ public class VendingMachine1 extends AbstractVendingMachine {
 	protected static int displayCharacters = 30;
 
 	// CONSTRUCTOR
-	public VendingMachine1(int[] coinValues, int[] popCosts, String[] popNames) {
+	public VMRUS_SFF_P_CI(int[] coinValues, int[] popCosts, String[] popNames) {
 
 		int numOfProducts = 6;
 		// int[] coinValues = { 5, 10, 25, 100, 200 };
@@ -58,7 +64,7 @@ public class VendingMachine1 extends AbstractVendingMachine {
 
 		coinSlot = new CoinSlot(coinValues);
 		coinReceptacle = new CoinReceptacle(coinReceptacleCapacity);
-		storageBin = new CoinReceptacle(storageBinCapacity);
+		coinStorageBin = new CoinReceptacle(storageBinCapacity);
 		deliveryChute = new DeliveryChute(deliveryChuteCapacity);
 		coinRacks = new CoinRack[coinValues.length];
 		coinRackChannels = new HashMap<Integer, CoinChannel>();
@@ -71,14 +77,12 @@ public class VendingMachine1 extends AbstractVendingMachine {
 		coinSlot.connect(new CoinChannel(coinReceptacle), new CoinChannel(
 				deliveryChute));
 		coinReceptacle.connect(coinRackChannels,
-				new CoinChannel(deliveryChute), new CoinChannel(storageBin));
+				new CoinChannel(deliveryChute), new CoinChannel(coinStorageBin));
 
-		productRacks = new PopCanRack[numOfProducts];
+		productRacks = new ProductRack[numOfProducts];
 		for (int i = 0; i < numOfProducts; i++) {
-			productRacks[i] = new PopCanRack(popRackCapacity);
-			productRacks[i].connect(new PopCanChannel(deliveryChute));
-			// NEEDED: set price for productRacks[i]
-			// NEEDED: set name for productRacks[i]
+			productRacks[i] = new ProductRack(popRackCapacity);
+			productRacks[i].connect(new ProductChannel(deliveryChute));
 		}
 
 		selectionButtons = new PushButton[numOfProducts];
@@ -93,6 +97,7 @@ public class VendingMachine1 extends AbstractVendingMachine {
 			outOfProductLights[i] = new IndicatorLight();
 
 		display = new Display();
+		socket = new Socket(); // to be changed to VMSocket
 		// NEEDED: instantiate configuration panel
 
 	}
@@ -164,7 +169,7 @@ public class VendingMachine1 extends AbstractVendingMachine {
 	}
 
 	@Override
-	public PopCanRack getProductRack(int index) {
+	public ProductRack getProductRack(int index) {
 		return productRacks[index];
 	}
 
@@ -177,10 +182,15 @@ public class VendingMachine1 extends AbstractVendingMachine {
 	public PushButton getSelectionButton(int index) {
 		return selectionButtons[index];
 	}
+	
+	@Override
+	public Socket getSocket() throws NoSuchHardwareException {
+		return socket;
+	}
 
 	@Override
-	public CoinReceptacle getStorageBin() {
-		return storageBin;
+	public CoinReceptacle getCoinStorageBin() {
+		return coinStorageBin;
 	}
 
 	@Override
