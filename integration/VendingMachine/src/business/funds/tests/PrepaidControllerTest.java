@@ -17,20 +17,20 @@ import org.junit.Test;
 
 import business.funds.PrepaidController;
 import business.funds.TransactionReturnCode;
-import business.funds.VMCurrencies;
+import business.funds.Currency;
 
 
 
-public class PaypalControllerTest {
+public class PrepaidControllerTest {
 	CardSlot cs;
 	Card prepaidCard;
 	PrepaidController pc;
-	VMCurrencies curr;
+	Currency curr;
 	Hardware hw;
 	
 	@Before
 	public void setUp() throws Exception {
-		curr = new VMCurrencies(Locale.CANADA);
+		curr = new Currency(Locale.CANADA);
 		hw = new Hardware(null, null, null);
 		pc = new PrepaidController(curr);
 		cs = hw.getCardSlot();
