@@ -91,6 +91,13 @@ public class BanknoteControllerTest {
 		assertEquals(20, banknoteController.getAvailableBalance());
 	}
 	
+	@Test
+	public void BankNoteAddedFullReceptacleTest(){
+		banknoteReceptacle = new BanknoteReceptacle(1);
+		banknoteController.banknoteAdded(banknoteReceptacle, banknoteTwenty);	
+		banknoteController.banknoteAdded(banknoteReceptacle, banknoteFive);
+		assertEquals(20, banknoteController.getAvailableBalance());
+	}
 
 	/**
 	 * Test banknoteRemoved) method for removing all available balance 

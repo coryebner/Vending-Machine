@@ -2,8 +2,6 @@ package business.funds;
 
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
-import hardware.exceptions.CapacityExceededException;
-import hardware.exceptions.DisabledException;
 import hardware.exceptions.EmptyException;
 import hardware.funds.Coin;
 import hardware.funds.CoinReceptacle;
@@ -23,11 +21,9 @@ import hardware.racks.CoinRack;
 public class CoinsController implements CoinReceptacleListener {
 
 	private CoinRackController[] coinRackControllers;
-	private int[] productPrices;
 	private int availableBalance; // value of coins in cents in the receptacle.
 	private boolean exactChangeStatus;
 	private boolean fullOfChangeStatus;
-	private boolean bestEffortChange;
 
 	/**
 	 * Public constructor.
@@ -42,17 +38,14 @@ public class CoinsController implements CoinReceptacleListener {
 	 * @param productPrices
 	 *            prices of each product.
 	 */
-	public CoinsController(boolean bestEffortChange, CoinRack[] coinRacks,
-			int[] coinRackDenominations, int[] coinRackQuantities,
-			int[] productPrices) {
-		this.bestEffortChange = bestEffortChange;
-		this.productPrices = productPrices;
+	public CoinsController(CoinRack[] coinRacks, int[] coinRackDenominations,
+			int[] coinRackQuantities) {
 
 		// Initialize all coin rack controllers.
 		coinRackControllers = new CoinRackController[coinRacks.length];
 		for (int i = 0; i < coinRacks.length; i++) {
 			coinRackControllers[i] = new CoinRackController(coinRacks[i],
-					coinRackDenominations[i], coinRackDenominations[i]);
+					coinRackDenominations[i], coinRackQuantities[i]);
 		}
 	}
 
@@ -83,73 +76,34 @@ public class CoinsController implements CoinReceptacleListener {
 	 * @return The code of the success of change being provided
 	 */
 	public TransactionReturnCode provideChange(int amount) {
-		boolean exactChangePossible = isChangePossible(amount);
 
 		// Return change if best-effort change mode is on or if exact change
 		// is possible. Otherwise, don't return change.
-		if (bestEffortChange || exactChangePossible) {
-			int sum = 0;
-			// Start dispensing coins from highest denomination with coins
-			// in its respective racks.
-			for (int i = coinRackControllers.length - 1; i >= 0; i--) {
-				int rackDenomination = coinRackControllers[i]
-						.getCoinRackDenomination();
-
-				// Dispense coin at this denomination if there are coins
-				// in the rack and dispensing another coin of this
-				// denomination is less or equal to the amount of total change.
-				while (coinRackControllers[i].getQuantity() > 0
-						&& sum + rackDenomination <= amount) {
-					// Dispense coin.
-					try {
-						coinRackControllers[i].releaseCoin();
-					} catch (EmptyException e) {
-						break;
-					}
-					sum += rackDenomination;
-				}
-				if (sum == amount)
-					break;
-			}
-
-			return TransactionReturnCode.SUCCESSFUL;
-		}
-		// Cannot return exact change.
-		return TransactionReturnCode.UNSUCCESSFUL;
-	}
-
-	/**
-	 * Returns a boolean indicating whether or not a specific amount can be
-	 * returned as change.
-	 * 
-	 * @param amount
-	 *            the amount of money to be returned change.
-	 * @return boolean indicating whether or not the amount can be returned.
-	 */
-	private boolean isChangePossible(int amount) {
-		boolean changePossible;
 		int sum = 0;
-
+		// Start dispensing coins from highest denomination with coins
+		// in its respective racks.
 		for (int i = coinRackControllers.length - 1; i >= 0; i--) {
-			int numCoinsUsed = 0;
 			int rackDenomination = coinRackControllers[i]
 					.getCoinRackDenomination();
-			int rackQuantity = coinRackControllers[i].getQuantity();
-			while (rackQuantity - numCoinsUsed > 0
+
+			// Dispense coin at this denomination if there are coins
+			// in the rack and dispensing another coin of this
+			// denomination is less or equal to the amount of total change.
+			while (coinRackControllers[i].getQuantity() > 0
 					&& sum + rackDenomination <= amount) {
-				numCoinsUsed++;
+				// Dispense coin.
+				try {
+					coinRackControllers[i].releaseCoin();
+				} catch (EmptyException e) {
+					break;
+				}
 				sum += rackDenomination;
 			}
+			if (sum == amount)
+				break;
 		}
 
-		changePossible = sum == amount;
-
-		if (changePossible) {
-			// TODO: Turn on exact change light.
-		} else {
-			// TODO: Turn off exact change light if it's on.
-		}
-		return changePossible;
+		return TransactionReturnCode.SUCCESSFUL;
 	}
 
 	/**
@@ -201,7 +155,11 @@ public class CoinsController implements CoinReceptacleListener {
 	@Override
 	public void coinAdded(CoinReceptacle receptacle, Coin coin) {
 		// Add value of coins to the available balance.
-		availableBalance += coin.getValue();
+		if (receptacle.hasSpace())
+			availableBalance += coin.getValue();
+		else {
+			System.err.println("Coin Receptacle full");
+		}
 	}
 
 	@Override

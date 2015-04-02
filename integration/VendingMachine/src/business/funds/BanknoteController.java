@@ -48,7 +48,7 @@ public class BanknoteController implements BanknoteReceptacleListener {
 
 	@Override
 	public void banknoteAdded(BanknoteReceptacle receptacle, Banknote banknote) {
-		availableBalance += banknote.getValue();
+			availableBalance += banknote.getValue();
 	}
 
 	@Override

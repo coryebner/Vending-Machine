@@ -20,7 +20,6 @@ public class CoinsControllerTest {
 	CoinRack [] coinRacks;
 	int [] coinRackDenominations;
 	int [] coinRackQuantities;
-	int [] productPrices;
 	String [] productNames;
 	CoinReceptacle receptacle;
 	
@@ -42,12 +41,6 @@ public class CoinsControllerTest {
 		coinRackQuantities[3] = 2;
 		coinRackQuantities[4] = 2;
 		
-		productPrices = new int[3];
-		productPrices[0] = 75;
-		productPrices[1] = 100;
-		productPrices[2] = 215;
-
-		
 		coinRacks = new CoinRack[5];
 		coinRacks[0] = new CoinRack(100);
 		coinRacks[1] = new CoinRack(100);
@@ -56,7 +49,7 @@ public class CoinsControllerTest {
 		coinRacks[4] = new CoinRack(100);
 		
 		
-		coinsController = new CoinsController(false, coinRacks, coinRackDenominations, coinRackQuantities, productPrices);
+		coinsController = new CoinsController(coinRacks, coinRackDenominations, coinRackQuantities);
 		coinsController.coinAdded(receptacle, new Coin(100));
 		coinsController.coinAdded(receptacle, new Coin(25));
 		coinsController.coinAdded(receptacle, new Coin(25));
@@ -66,6 +59,9 @@ public class CoinsControllerTest {
 	public void tearDown() throws Exception {
 		coinsController = null;
 		coinRacks = null;
+		receptacle = null;
+		coinRacks = null;
+		coinRackQuantities = null;
 	}
 	
 	/**
@@ -92,20 +88,6 @@ public class CoinsControllerTest {
 		assertEquals(TransactionReturnCode.INSUFFICIENTFUNDS, coinsController.ConductTransaction(200));
 	}
 	
-	/**
-	 * Test provideChange() method for success
-	 */
-	@Test
-	public void provideChangeSuccess() {
-		assertEquals(TransactionReturnCode.SUCCESSFUL, coinsController.provideChange(150));
-	}
-	/**
-	 * Test provideChange() method for failure
-	 */
-	@Test
-	public void provideChangeFail() {
-		assertEquals(TransactionReturnCode.UNSUCCESSFUL, coinsController.provideChange(1500));
-	}
 	
 	/**
 	 * Test coinAdded() method for updated balance

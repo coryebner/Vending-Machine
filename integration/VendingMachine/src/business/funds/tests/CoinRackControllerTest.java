@@ -92,7 +92,7 @@ public class CoinRackControllerTest {
 			fail("Exception thrown, so test failed");
 		}
 		
-		assertEquals(quantity, coinRackController.getQuantity());
+		assertEquals(quantity-1, coinRackController.getQuantity());
 		
 
 	}
