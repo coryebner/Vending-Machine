@@ -2,10 +2,8 @@ package business.selection_delivery;
 
 import hardware.products.Product;
 import hardware.racks.ProductRack;
-import config.ConfigurationListener;
 
 import business.config.ConfigurationListener;
-
 
 public class InventoryController implements ConfigurationListener
 {
