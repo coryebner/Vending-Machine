@@ -18,6 +18,10 @@ import hardware.ui.PushButtonCodeInterpreter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @deprecated This machine is not ready yet
+ * Configuration 9 of the Vending Machine
+ */
 public class VMRUS_COM_C_M extends AbstractVendingMachine{
 	private CoinSlot coinSlot;
 	private BanknoteSlot banknoteSlot;
