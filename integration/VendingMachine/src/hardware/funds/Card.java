@@ -99,6 +99,13 @@ public class Card {
     public Currency getCurrency(){
     	return cardCurrency;
     }
+    
+    /**
+     * Returns the current card balance.
+     */
+    public int getCardBalance(){
+    	return maxAmount;
+    }
 
     /**
      * Tests whether a given PIN conforms to what is stored on the card.
