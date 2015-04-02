@@ -113,4 +113,6 @@ public class ConfigurationTest extends Configuration {
 		assertArrayEquals("Correct billracks found", expectedBillRacks, billRackQuantities);
 		assertArrayEquals("Correct billstorage found", expectedBillStorage, billStorageQuantities);
 	}
+	
+	
 }

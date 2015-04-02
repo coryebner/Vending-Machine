@@ -48,6 +48,8 @@ public class Configuration {
 	protected CodeSelectionController codeSelectionController; // Maria: Added CodeSelectionController object
 	protected DisplayController displayController; // Maria: added for the displayController
 	protected ButtonSelectionController buttonSelectionController;
+	
+
 	public Configuration()
 	{}
 
@@ -236,10 +238,9 @@ public class Configuration {
 	 * Create a ButtonController, and register it with all the buttons it needs
 	 *  to be registered with.
 	 */
-	protected void createButtonSelectionController()
+	public void createButtonSelectionController()
 	{
 		// TODO Maria: Work in progress
-
 		try {
 		int numberOfButtons = this.machine.getNumberOfSelectionButtons();
 		PushButton [] pushButtons = new PushButton[numberOfButtons];
@@ -255,7 +256,6 @@ public class Configuration {
 			pushButtons[i].register(buttonSelectionController);
 		}
 			} catch (NoSuchHardwareException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		
@@ -465,5 +465,15 @@ public class Configuration {
 		String [] strings = stripFirst(components);
 		
 		return toIntArray(strings);
+	}
+	
+	// Getters and setters
+	
+	public ButtonSelectionController getButtonSelectionController() {
+		return buttonSelectionController;
+	}
+	
+	public void setButtonSelectionController(ButtonSelectionController controller){
+		this.buttonSelectionController = controller;
 	}
 }
