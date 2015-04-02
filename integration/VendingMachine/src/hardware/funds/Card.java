@@ -6,6 +6,10 @@ import java.util.Currency;
 import java.util.Date;
 import java.util.Locale;
 
+
+
+import org.apache.commons.lang.LocaleUtils;
+
 import hardware.exceptions.SimulationException;
 
 /**
@@ -70,6 +74,16 @@ public class Card {
      */
     public CardType getType() {
 	return type;
+    }
+    
+    /**
+     * getCardLocale
+     * @return
+     * 		Locale instance based on the instance defined for current Card
+     * @see commons-lang 
+     */
+    public Locale getCardLocale() {
+    	return LocaleUtils.toLocale(this.cardCurrency.toString());
     }
 
     /**
