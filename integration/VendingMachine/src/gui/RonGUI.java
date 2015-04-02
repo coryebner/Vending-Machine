@@ -139,14 +139,14 @@ public class GUI implements ProductRackListener,IndicatorLightListener {
 		initialize(vm, true, true, true, true, true);
 	}
 	
-	public GUI(Object machine, ArrayList<Boolean> parts) {
+	public GUI(AbstractVendingMachine machine, ArrayList<Boolean> parts) {
 		initialize(machine, parts.get(0), parts.get(1), parts.get(2), parts.get(3), parts.get(4));
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(Object machine, boolean coinSlot, boolean billSlot, boolean cardSlot, boolean popBtns, boolean candyBtns) {
+	private void initialize(AbstractVendingMachine machine, boolean coinSlot, boolean billSlot, boolean cardSlot, boolean popBtns, boolean candyBtns) {
 		coinButtons = new ArrayList();
 		billButtons = new ArrayList();
 		cardButtons = new ArrayList();
@@ -288,12 +288,17 @@ public class GUI implements ProductRackListener,IndicatorLightListener {
 		candyNumberButtons.add(btn0);
 		pnlNumberCandyButtons.add(btn0);
 		
+		int key = 6;
 		for (JButton btn : candyNumberButtons) {
 			btn1.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					if (codeInProgress) {
 						enableInteractivity(false);
-						// TODO add button press method call
+						try {
+							machine.getSelectionButton(key).press();
+						} catch (NoSuchHardwareException e) {						
+							e.printStackTrace();
+						}
 					}
 				}
 			});
@@ -874,7 +879,6 @@ public class GUI implements ProductRackListener,IndicatorLightListener {
 					break;
 				}
 			} catch (NoSuchHardwareException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -900,7 +904,6 @@ public class GUI implements ProductRackListener,IndicatorLightListener {
 					break;
 				}
 			} catch (NoSuchHardwareException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
