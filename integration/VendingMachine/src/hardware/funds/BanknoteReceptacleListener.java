@@ -21,7 +21,7 @@ public interface BanknoteReceptacleListener extends AbstractHardwareListener {
     /**
      * An event that announces that the indicated receptacle is now full.
      */
-    void banknoteFull(BanknoteReceptacle receptacle);
+    void BanknotesFull(BanknoteReceptacle receptacle);
 
     /**
      * An event that announces that the indicated receptacle is now enabled.

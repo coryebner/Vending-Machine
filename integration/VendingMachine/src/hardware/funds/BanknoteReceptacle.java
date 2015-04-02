@@ -93,7 +93,7 @@ public class BanknoteReceptacle extends AbstractHardware<BanknoteReceptacleListe
     private void notifyBanknotesFull() {
 		Class<?>[] parameterTypes = new Class<?>[] { BanknoteReceptacle.class };
 		Object[] args = new Object[] { this };
-		notifyListeners(BanknoteReceptacleListener.class, "BanknotesFull", parameterTypes, args);
+		notifyListeners(BanknoteReceptacleListener.class, "banknoteFull", parameterTypes, args);
     }
 
 

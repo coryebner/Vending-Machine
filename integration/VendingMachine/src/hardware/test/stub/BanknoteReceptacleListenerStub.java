@@ -29,8 +29,8 @@ public class BanknoteReceptacleListenerStub extends AbstractStub implements
 	}
 
 	@Override
-	public void banknoteFull(BanknoteReceptacle receptacle) {
-		recordCallTo("banknoteFull");
+	public void BanknotesFull(BanknoteReceptacle receptacle) {
+		recordCallTo("BanknoteFull");
 		
 	}
 }
