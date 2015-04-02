@@ -21,17 +21,8 @@ public class InventoryControllerTest {
 	@Before
 	public void setUp() throws Exception {
 		
-<<<<<<< HEAD
-		//**need to wait for hardware to change their popcan rack into something more abstract like productrack before doing anything else 
-		ProductRack[] rack;
-		rack[0] = new ProductRack();
-		rack[1] = new ProductRack();
-		rack[0] = new ProductRack(0);
-		rack[1] = new ProductRack(0);
-=======
 		rack[0] = new ProductRack(10);
 		rack[1] = new ProductRack(10);
->>>>>>> SelectionDelivery
 
 
 		rackcount = 2;

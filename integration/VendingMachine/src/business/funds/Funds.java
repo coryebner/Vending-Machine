@@ -52,7 +52,8 @@ public class Funds {
 	 * controller constructors
 	 */
 	public Funds(Locale locale, boolean bestEffortChange, CoinRack[] coinRacks,
-			int[] coinRackDenominations, int[] coinRackQuantities, List<PaymentMethods> availablePaymentMethods, InventoryController inventoryController) {
+			int[] coinRackDenominations, int[] coinRackQuantities, 
+			List<PaymentMethods> availablePaymentMethods, InventoryController inventoryController) {
 		//this.prepaidPresent = this.billsPresent = this.coinsPresent = this.creditCardPresent = this.payPalPresent = this.conductTransactionIsCalled = false;
 
 		this.machineCurrencies = new VMCurrencies(locale);

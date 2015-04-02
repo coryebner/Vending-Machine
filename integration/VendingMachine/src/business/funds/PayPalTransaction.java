@@ -90,7 +90,7 @@ public class PayPalTransaction {
 		// Brower will automatically close
 		final String url = approval_url;
 		
-		SwingBrowser browser = new SwingBrowser();
+		final SwingBrowser browser = new SwingBrowser();
 		SwingUtilities.invokeLater(new Runnable () {
 			public void run () {
 				browser.setVisible(true);

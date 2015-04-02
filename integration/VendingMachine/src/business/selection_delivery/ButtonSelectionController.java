@@ -8,22 +8,6 @@ import hardware.exceptions.DisabledException;
 import hardware.ui.PushButton;
 import hardware.ui.PushButtonListener;
 
-//Imports for logging
-import productController.MockDisplayController;
-import productController.MockFundsController;
-//import rifffish.Error;
-//import rifffish.Rifffish;
-//import rifffish.Rifffish.PaymentMethod;
-//import rifffish.Transaction;
-import hardware.AbstractHardware;
-import hardware.AbstractHardwareListener;
-import hardware.exceptions.DisabledException;
-import hardware.exceptions.EmptyException;
-import hardware.ui.PushButton;
-import hardware.ui.PushButtonListener;
-
-
-
 /**
  * @class PopSelectionController
  * 
@@ -44,10 +28,6 @@ public class ButtonSelectionController
 	 * Registers us with the PopVendingMachine's PushButtons to listen for
 	 *  pressed() events.
 	 */
-	public ButtonSelectionController(InventoryManager inv, DisplayController disp, FundsController f, PushButton[] butts, int numButts)
-
-	public ButtonSelectionController(InventoryController inv, MockDisplayController disp, MockFundsController f, PushButton[] butts, int numButts)
-
 	public ButtonSelectionController(InventoryController inv, DisplayController disp, FundsController f, PushButton[] butts, int numButts)
 	{
 		super(inv, disp, f);
@@ -55,10 +35,6 @@ public class ButtonSelectionController
 		buttons = butts;
 		numButtons= numButts;
 		
-		for (int i = 0; i < numButts; ++i)
-		{//Register the buttons.
-			buttons[i].register(this);
-		}
 		/* Configuration is handling this.
 		for (int i = 0; i < numButts; ++i)
 		{//Register the buttons.
@@ -79,9 +55,6 @@ public class ButtonSelectionController
 
 		if (index == -1)
 		{//Index of -1 is thrown by getIndex as an error.
-			display.setDisplay("Error: Invalid code", 5000);
-			notifyInvalidSelection();
-			//display.setDisplay("Error: Invalid selection", 5000);
 			notifyInvalidSelection();
 			//display.setDisplay("Error: Invalid selection", 5000);
 			return;
@@ -89,11 +62,6 @@ public class ButtonSelectionController
 		
 		if (inventory.isEmpty(index))
 		{//We are out of stock. Output message and leave function.
-			display.setDisplay("The product selected is empty", 5000);
-			return;
-		}
-			
-		if (funds.conductTransaction(cost)){
 			notifyEmptySelection();
 			//display.setDisplay("The product selected is empty", 5000);
 			return;
@@ -119,17 +87,11 @@ public class ButtonSelectionController
 		}
 		else
 		{//We cannot afford to pay
-			display.setDisplay("Insufficient funds for product: $"
-														+ Double.toString( cost / 100)
-														+ " required"
-														, 4000);
-
 			notifyInsufficientFunds();
 			/*display.setDisplay("Insufficient funds for product: $"
 														+ Double.toString( cost / 100)
 														+ " required"
 														, 4000);*/
-
 		}
 	}
 	
@@ -159,4 +121,5 @@ public class ButtonSelectionController
 	public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {}
 	@Override
     public void enabled(AbstractHardware<AbstractHardwareListener> hardware) {}
+
 }
