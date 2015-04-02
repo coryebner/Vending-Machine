@@ -17,6 +17,7 @@ import hardware.AbstractVendingMachine;
 import hardware.VendingMachine1;
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.racks.ProductRack;
+import hardware.ui.PushButton;
 import hardware.ui.PushButtonCodeInterpreter;
 
 public class Configuration {
