@@ -15,6 +15,7 @@ import hardware.ui.IndicatorLight;
 import hardware.ui.PushButton;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -45,8 +46,10 @@ public class VMRUS_SFF_P_C extends AbstractVendingMachine {
 	protected static int displayCharacters = 30;
 
 	// CONSTRUCTOR
-	public VMRUS_SFF_P_C(int[] coinValues) {
+	public VMRUS_SFF_P_C(Locale locale, int[] coinValues) {
 
+		this.locale = locale;
+		
 		int numOfProducts = 6;
 		// int[] coinValues = { 5, 10, 25, 100, 200 };
 
