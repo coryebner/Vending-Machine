@@ -171,48 +171,45 @@ public class ProductRack extends AbstractRack<ProductRackListener, Product, Prod
 	/**
 	 * notifyProductAdded
 	 * 
-	 * @synopsis
-	 * 			Notification method used to custom tailor AbstractHardware associated reflection call
-	 * 			- with the assumption that listeners registered to the affected ProductRack as defined in 
-	 * 		 	ProductRackListener class will be notified (triggering a method invocation to productAdded).
+	 * Notification method used to custom tailor AbstractHardware associated reflection call
+	 * - with the assumption that listeners registered to the affected ProductRack as defined in 
+	 * ProductRackListener class will be notified (triggering a method invocation to productAdded).
 	 * 
-	 * @param 	product
+	 * @param product
 	 * 
-	 * @see		AbstractHardware, ProductRackListener, AbstractStub
+	 * @see	AbstractHardware, ProductRackListener, AbstractStub
 	 */
 	private void notifyProductAdded(Product product) {
 		Class<?>[] parameterTypes =
 				new Class<?>[] { ProductRack.class, Product.class };
 		Object[] args = new Object[] { this, product };
-		notifyListeners(PopCanRackListener.class, "productAdded", parameterTypes, args);
+		notifyListeners(ProductRackListener.class, "productAdded", parameterTypes, args);
 	}
 
 	/**
 	 * notifyProductFull
 	 * 
-	 * @synopsis
-	 * 			Notification method used via AbstractHardware reflection API (notifyListeners)
-	 * 			to signal that the associated product rack is full of products.
+	 * 	Notification method used via AbstractHardware reflection API (notifyListeners)
+	 *  to signal that the associated product rack is full of products.
 	 * 
 	 * 
-	 * @see		AbstractHardware, ProductRackListener, AbstractStub
+	 * @see	AbstractHardware, ProductRackListener, AbstractStub
 	 */
 	private void notifyProductFull() {
 		Class<?>[] parameterTypes =
 				new Class<?>[] { ProductRack.class };
 		Object[] args = new Object[] { this };
-		notifyListeners(PopCanRackListener.class, "productFull", parameterTypes, args);
+		notifyListeners(ProductRackListener.class, "productFull", parameterTypes, args);
 	}
 
 	/**
 	 * notifyProductEmpty
 	 * 
-	 * @synopsis
-	 * 			Notification method used via AbstractHardware reflection API (notifyListeners)
-	 * 			to signal that the associated product rack is empty of products.
+	 * 	Notification method used via AbstractHardware reflection API (notifyListeners)
+	 * 	to signal that the associated product rack is empty of products.
 	 * 
 	 * 
-	 * @see		AbstractHardware, CoinRackListener, CoinRackListenerStub, AbstractStub
+	 * @see	AbstractHardware, CoinRackListener, CoinRackListenerStub, AbstractStub
 	 */
 	private void notifyProductEmpty() {
 		Class<?>[] parameterTypes =
@@ -224,14 +221,13 @@ public class ProductRack extends AbstractRack<ProductRackListener, Product, Prod
 	/**
 	 * notifyProductRemoved
 	 * 
-	 * @synopsis
-	 * 			Notification method used to custom tailor AbstractHardware associated reflection call
-	 * 			- with the assumption that listeners registered to the affected CoinRack as defined in 
-	 * 		 	ProductRackListener class will be notified (triggering a method invocation to productRemoved).
+	 * 	Notification method used to custom tailor AbstractHardware associated reflection call
+	 * 	- with the assumption that listeners registered to the affected ProductRack as defined in 
+	 * 	ProductRackListener class will be notified (triggering a method invocation to productRemoved).
 	 * 
-	 * @param 	product
+	 * @param product
 	 * 
-	 * @see		AbstractHardware, ProductRackListener, AbstractStub
+	 * @see	AbstractHardware, ProductRackListener, AbstractStub
 	 */
 	private void notifyProductRemoved(Product product) {
 		Class<?>[] parameterTypes =
