@@ -17,7 +17,7 @@ import hardware.AbstractVendingMachine;
 import hardware.VendingMachine1;
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.racks.ProductRack;
-import hardware.ui.PushButton;
+import hardware.ui.PushButtonCodeInterpreter;
 
 public class Configuration {
 	
@@ -146,6 +146,14 @@ public class Configuration {
 		else {
 			throw new ConfigurationException("Invalid machine type!");
 		}
+		
+	/**
+	 * This will take the values of all prices racks and quantities from the controllers
+	 * and update the Configuration values
+	 */
+	}
+	protected void updateValues(){
+		//TODO Anish: Working on this
 	}
 	
 	/**
@@ -206,7 +214,8 @@ public class Configuration {
 	
 	protected void writeConfigFile(BufferedWriter output)
 	{
-		// Do basically the opposite of what we do in readConfigFile()
+		//TODO Anish:Working on this
+		//Do basically the opposite of what we do in readConfigFile()
 	}
 	
 	protected void loadMachine()
@@ -309,12 +318,6 @@ public class Configuration {
 			
 			//Inventory controller creation with information known from machine.
 			this.inventoryController = new InventoryController(racks,numberOfRacks,this.names,this.prices,this.quantities);
-			
-			// Register
-			// Still figuring out which listener is supposed to be registered.
-			//for(int i=0; i <numberOfRacks; i++){
-				//this.machine.getProductRack(i).r
-			//}
 			
 		} catch (NoSuchHardwareException e) {
 			e.printStackTrace();
