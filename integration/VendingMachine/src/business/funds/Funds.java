@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import business.selection_delivery.InventoryController;
+
 /**
  * Description of PrepaidController
  * 
@@ -31,31 +33,33 @@ public class Funds {
 	private CoinsController coinsController;
 	private CreditCardController creditCardController;
 	private PayPalController payPalController;
+	private ExactChangeController exactChangeController;
 
 	private VMCurrencies machineCurrencies;
 
 	private HashMap<String, String> LOG;
 
-	/*
-	 * CoinRack[] coinRacks, int[] coinRackDenominations, int[]
-	 * coinRackQuantities, int[] productPrices are needed for CoinsController
-	 * constructor
+	/**
+	 * @param locale - the locale of the machine Locale.US, Locale.CANADA, Locale.UK only supported
+	 * @param bestEffortChange - if the machine dispenses change or not when exact change is active
+	 * @param coinRacks - CounRack[] of available coin racks
+	 * @param coinRackDenominations - the denominations stored in each coin rack
+	 * @param availablePaymentMethods - List<PaymentMethods> a list of enumerated payment types supported
+	 * @param inventoryController - InventoryController reference (must have current product state for machine due to event handling)
 	 * 
 	 * No arguments needed for BankNotController, PayPal controller. creditCard
 	 * controller constructors
-	 * 
-	 * Only Locale is needed for PrePaid controller constructor
 	 */
-
-	// Public Constructor for Funds
 	public Funds(Locale locale, boolean bestEffortChange, CoinRack[] coinRacks,
-			int[] coinRackDenominations, int[] coinRackQuantities,
-			int[] productPrices, List<PaymentMethods> availablePaymentMethods) {
+			int[] coinRackDenominations, int[] coinRackQuantities, List<PaymentMethods> availablePaymentMethods, InventoryController inventoryController) {
 		//this.prepaidPresent = this.billsPresent = this.coinsPresent = this.creditCardPresent = this.payPalPresent = this.conductTransactionIsCalled = false;
 
 		this.machineCurrencies = new VMCurrencies(locale);
 
 		this.LOG = new HashMap<String, String>();
+		
+		/* Setup the Exact Change Object */
+		exactChangeController = new ExactChangeController(inventoryController);
 
 		/* Set the payment methods for this machine */
 		if (availablePaymentMethods.contains(PaymentMethods.PREPAID)) {
@@ -69,7 +73,7 @@ public class Funds {
 		if (availablePaymentMethods.contains(PaymentMethods.COINS)) {
 			this.coinsPresent = true;
 			this.coinsController = new CoinsController(bestEffortChange, coinRacks,
-					coinRackDenominations, coinRackQuantities, productPrices);
+					coinRackDenominations, coinRackQuantities, null);///////////////////////////////////////////Needs to be fixed
 		}
 		if (availablePaymentMethods.contains(PaymentMethods.CREDITCARD)) {
 			this.creditCardPresent = true;
@@ -90,50 +94,7 @@ public class Funds {
 	 * @return The return code based on success of the transaction Assumption,
 	 *         returnValue of ConductTransaction
 	 */
-	public TransactionReturnCode ConductTransaction(int price) {
-		boolean transactionSuccess = false;
-		TransactionReturnCode returnCodeOne;
-		TransactionReturnCode returnCodeTwo;
-
-		// Payment Flow is as follow, PrePaid, Bills, Coins, Credit Card, PayPal
-		this.conductTransactionIsCalled = true;
-		int totalBalance = getTotalBalanceInPreBilCoin();
-
-		// There is enough balance with (PrePaid and/or Bills and/or Coins)
-		if (totalBalance >= price) {
-			// conduct transaction accordingly
-			conductPrePBillCoinTransaction(price);
-			this.LOG.putIfAbsent("STATUS", "SUCCESS");
-			return TransactionReturnCode.SUCCESSFUL;
-		}
-		// Try to conduct CreditCard and/or PayPal transaction with (price -
-		// totalBalance)
-		else {
-			returnCodeOne = this.creditCardController.ConductTransaction(price
-					- totalBalance);
-			if (returnCodeOne == TransactionReturnCode.SUCCESSFUL) {
-				transactionSuccess = true;
-			}
-			if (!transactionSuccess) {
-				returnCodeTwo = this.payPalController.ConductTransaction(price
-						- totalBalance);
-				if (returnCodeTwo == TransactionReturnCode.SUCCESSFUL) {
-					transactionSuccess = true;
-				}
-			}
-		}
-
-		if (transactionSuccess) {
-			conductPrePBillCoinTransaction(totalBalance);
-			this.LOG.putIfAbsent("STATUS", "SUCCESS");
-			return TransactionReturnCode.SUCCESSFUL;
-		} else {
-			this.LOG.putIfAbsent("STATUS", "FAIL");
-			return TransactionReturnCode.INSUFFICIENTFUNDS;
-		}
-	}
-	
-	public TransactionReturnCode ConductTransaction2(int price){
+	public TransactionReturnCode ConductTransaction(int price){
 		TransactionReturnCode returnCode = TransactionReturnCode.INSUFFICIENTFUNDS;
 		TransactionReturnCode returnCodeCC_PP = TransactionReturnCode.INSUFFICIENTFUNDS;
 		
@@ -223,31 +184,6 @@ public class Funds {
 			return TransactionReturnCode.UNSUCCESSFUL;
 		}
 		
-	}
-	
-
-	/**
-	 * No error Handling
-	 * 
-	 * @param price
-	 */
-	private void conductPrePBillCoinTransaction(int price) {
-		// TODO Auto-generated method stub
-		int prepaidBalance = this.prepaidController.getAvailableBalance();
-		int billBalance = this.bankNoteController.getAvailableBalance();
-
-		if (prepaidBalance >= price) {
-			this.prepaidController.ConductTransaction(price);
-		} else if ((prepaidBalance + billBalance) >= price) {
-			this.prepaidController.ConductTransaction(prepaidBalance);
-			this.bankNoteController.ConductTransaction(price - prepaidBalance);
-		} else {
-			this.prepaidController.ConductTransaction(prepaidBalance);
-			this.bankNoteController.ConductTransaction(price - prepaidBalance);
-			this.coinsController.ConductTransaction(price - prepaidBalance
-					- billBalance);
-		}
-
 	}
 
 	/**
@@ -414,4 +350,70 @@ public class Funds {
 			return;
 		}
 	}
+	
+	
+	
+	/**
+	public TransactionReturnCode ConductTransaction(int price) {
+		boolean transactionSuccess = false;
+		TransactionReturnCode returnCodeOne;
+		TransactionReturnCode returnCodeTwo;
+
+		// Payment Flow is as follow, PrePaid, Bills, Coins, Credit Card, PayPal
+		this.conductTransactionIsCalled = true;
+		int totalBalance = getTotalBalanceInPreBilCoin();
+
+		// There is enough balance with (PrePaid and/or Bills and/or Coins)
+		if (totalBalance >= price) {
+			// conduct transaction accordingly
+			conductPrePBillCoinTransaction(price);
+			this.LOG.putIfAbsent("STATUS", "SUCCESS");
+			return TransactionReturnCode.SUCCESSFUL;
+		}
+		// Try to conduct CreditCard and/or PayPal transaction with (price -
+		// totalBalance)
+		else {
+			returnCodeOne = this.creditCardController.ConductTransaction(price
+					- totalBalance);
+			if (returnCodeOne == TransactionReturnCode.SUCCESSFUL) {
+				transactionSuccess = true;
+			}
+			if (!transactionSuccess) {
+				returnCodeTwo = this.payPalController.ConductTransaction(price
+						- totalBalance);
+				if (returnCodeTwo == TransactionReturnCode.SUCCESSFUL) {
+					transactionSuccess = true;
+				}
+			}
+		}
+
+		if (transactionSuccess) {
+			conductPrePBillCoinTransaction(totalBalance);
+			this.LOG.putIfAbsent("STATUS", "SUCCESS");
+			return TransactionReturnCode.SUCCESSFUL;
+		} else {
+			this.LOG.putIfAbsent("STATUS", "FAIL");
+			return TransactionReturnCode.INSUFFICIENTFUNDS;
+		}
+	}
+	
+		private void conductPrePBillCoinTransaction(int price) {
+		// TODO Auto-generated method stub
+		int prepaidBalance = this.prepaidController.getAvailableBalance();
+		int billBalance = this.bankNoteController.getAvailableBalance();
+
+		if (prepaidBalance >= price) {
+			this.prepaidController.ConductTransaction(price);
+		} else if ((prepaidBalance + billBalance) >= price) {
+			this.prepaidController.ConductTransaction(prepaidBalance);
+			this.bankNoteController.ConductTransaction(price - prepaidBalance);
+		} else {
+			this.prepaidController.ConductTransaction(prepaidBalance);
+			this.bankNoteController.ConductTransaction(price - prepaidBalance);
+			this.coinsController.ConductTransaction(price - prepaidBalance
+					- billBalance);
+		}
+
+	}
+	*/
 }
