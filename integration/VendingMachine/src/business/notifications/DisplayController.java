@@ -43,18 +43,19 @@ public class DisplayController implements SelectionControllerListener{
     void emptySelection() {
 		eventTimer.setInitialDelay(4000);
 		eventTimer.restart();
-		this.display("Empty");
+		this.display("Product empty");
 		eventTimer.start();
     }
     
 
     void invalidSelection() {	
-    }
+    	this.display("Invalid product selected");
+	}
 
     void insufficientFunds(int fundsRequired) {
 		eventTimer.setInitialDelay(5000);
 		eventTimer.restart();
-		this.display(Integer.toString(fundsRequired));
+		this.display("Insufficient funds. Product costs: " + Integer.toString(fundsRequired));
 		eventTimer.start();
     }
 }
