@@ -359,6 +359,11 @@ public class StandardMachineGUI extends VendingMachineGUI {
 		pnlMoney.add(pnlAdminBtn, BorderLayout.SOUTH);
 		
 		JButton btnAdmin = new JButton("Admin");
+		btnAdmin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ControlPanelGUI configPanel = new ControlPanelGUI(getMainFrame());				
+			}
+		});
 		pnlAdminBtn.add(btnAdmin);
 
 		billEject = new JButton("Remove bill");

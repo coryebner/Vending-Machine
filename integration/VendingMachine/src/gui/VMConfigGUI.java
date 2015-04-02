@@ -2,6 +2,7 @@ package gui;
 
 //import hardware.VendingMachine1;
 
+import java.awt.Container;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
