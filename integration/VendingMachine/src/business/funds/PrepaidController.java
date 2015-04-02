@@ -84,7 +84,7 @@ public class PrepaidController implements CardSlotListener {
 	public int getAvailableBalance(){
 		if(isCardInserted()) {
 			//Exchanges prepaid currency to vending machine currency
-			return (int) Math.ceil(vmCurrency.ExchangeToMachineCurrency(prepaidCard.getCardLocale(), prepaidCard.getCardBalance()));
+			return (int) vmCurrency.ExchangeToMachineCurrency(prepaidCard.getCardLocale(), prepaidCard.getCardBalance());
 		}
 		return 0;
 		
