@@ -31,8 +31,9 @@ public class VMRUS_TOC_P_MI extends AbstractVendingMachine{
 	private PushButton[] selectionButtons;
 	private PushButton returnButton;
 	
-	//private IndicatorLight exactChangeLight, outOfOrderLight;
-	//private IndicatorLight[] outOfProductLights;
+	private IndicatorLight exactChangeLight, outOfOrderLight;
+	private IndicatorLight[] outOfProductLights;
+	private IndicatorLight noInternetConnectionLight;
 	// still missing ConfigurationPanel
 
 	protected static int banknoteReceptacleCapacity = 20;
@@ -79,14 +80,12 @@ public class VMRUS_TOC_P_MI extends AbstractVendingMachine{
 		for (int i = 0; i < numOfProducts; i++)
 			selectionButtons[i] = new PushButton();
 		returnButton = new PushButton();
-
-		/*
+		
 		exactChangeLight = new IndicatorLight();
 		outOfOrderLight = new IndicatorLight();
 		outOfProductLights = new IndicatorLight[numOfProducts];
 		for (int i = 0; i < numOfProducts; i++)
 			outOfProductLights[i] = new IndicatorLight();
-		*/
 
 		display = new Display();
 		// NEEDED: instantiate configuration panel
@@ -191,7 +190,7 @@ public class VMRUS_TOC_P_MI extends AbstractVendingMachine{
 		for (int i = 0; i < coinRacks.length; i++)
 			coinRacks[i].disable();
 
-		//outOfOrderLight.activate();
+		outOfOrderLight.activate();
 	}
 
 	@Override
@@ -206,7 +205,21 @@ public class VMRUS_TOC_P_MI extends AbstractVendingMachine{
 		for (int i = 0; i < coinRacks.length; i++)
 			coinRacks[i].enable();
 
-		//outOfOrderLight.deactivate();
+		outOfOrderLight.deactivate();
 	}
 
+	@Override
+	public IndicatorLight getNoInternetConnectionLight(){
+		return noInternetConnectionLight;
+	}
+	
+	@Override
+	public IndicatorLight getOutOfProductLight(int index) {
+		return outOfProductLights[index];
+	}
+	
+	@Override
+	public IndicatorLight getOutOfOrderLight() {
+		return outOfOrderLight;
+	}
 }
