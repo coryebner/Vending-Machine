@@ -127,7 +127,7 @@ public class BanknoteReceptacleTest {
 		listener.assertProtocol();
 		
 		//Insert bill now that it is full
-		listener.expect("BanknotesFull");
+		listener.expect("banknoteFull");
 		try{
 			receptacle.acceptBanknote(new Banknote(5));
 		}catch(Exception e){
