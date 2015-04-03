@@ -9,8 +9,6 @@ import java.util.Locale;
 
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
-import hardware.AbstractVendingMachine;
-import hardware.VMRUS_SFF_P_C;
 import hardware.exceptions.CapacityExceededException;
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.NoSuchHardwareException;
@@ -21,6 +19,8 @@ import hardware.racks.CoinRack;
 import hardware.racks.PopCanRack;
 import hardware.racks.ProductRack;
 import hardware.racks.ProductRackListener;
+import hardware.simulators.AbstractVendingMachine;
+import hardware.simulators.VMRUS_SFF_P_C;
 import hardware.test.stub.CoinRackListenerStub;
 import hardware.test.stub.CoinReceptacleListenerStub;
 import hardware.test.stub.CoinSlotListenerStub;
