@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import hardware.AbstractVendingMachine;
-import hardware.VendingMachine1;
 
 public class Configuration {
 	static class InventoryManager {}
@@ -95,7 +94,7 @@ public class Configuration {
 		throws ConfigurationException
 	{
 		if (type.equals("VMRUS-SFF-P/C")) {
-			machine = createSFFPC();
+			//machine = createSFFPC();
 		}
 //		else if (type.equals("VMRUS-SFF-P/CI")) {
 //			machine = createSFFPCI();
@@ -287,10 +286,10 @@ public class Configuration {
 	 *   - createInventoryController()
 	 *  in the correct order. Note that this does NOT include createLogger()
 	 */
-	protected AbstractVendingMachine createSFFPC()
-	{
-		return new VendingMachine1(new int [] {5, 10, 25, 100, 200}, prices, names);
-	}
+//	protected AbstractVendingMachine createSFFPC()
+//	{
+//		return new VendingMachine1(new int [] {5, 10, 25, 100, 200}, prices, names);
+//	}
 //
 //	protected AbstractVendingMachine createSFFPCI()
 //	{
