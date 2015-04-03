@@ -55,7 +55,10 @@ public class VendingMachine1Test {
 
 	@Before
 	public void setup() throws NoSuchHardwareException {
-		hardware = new VMRUS_SFF_P_C(new int[] { 5, 10, 25, 100, 200 });
+		
+		fail("Broken test");
+		
+		// hardware = new VMRUS_SFF_P_C(new int[] { 5, 10, 25, 100, 200 });
 
 		coin = new Coin(100);
 
@@ -139,7 +142,9 @@ public class VendingMachine1Test {
 
 	@Test(expected = SimulationException.class)
 	public void testNullCoinValues() {
-		hardware = new VMRUS_SFF_P_C(null);
+		fail("Fixme");
+		
+		//hardware = new VMRUS_SFF_P_C(null);
 	}
 
 	@Test
