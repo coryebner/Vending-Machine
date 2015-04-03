@@ -23,6 +23,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 
 public class VirtualKeyboard extends JFrame {
     private JFrame frame = new JFrame("Virtual Keyboard");
@@ -30,6 +32,9 @@ public class VirtualKeyboard extends JFrame {
     private JPanel[] panel;
     private JButton[][] button = new JButton[6][14];
     private boolean shiftOn = false;
+    private boolean SIM_Mode = false;
+    private JTextField textField;
+    private String display;
     private final static String[][] key = {
     	
     	// Row 0
@@ -56,6 +61,32 @@ public class VirtualKeyboard extends JFrame {
         super("Virtual Keyboard");
         panel = new JPanel[6];	// Number of Array elements is the number of rows on keyboard
         
+        textField = new JTextField();
+		textField.setFont(new Font("Tahoma", Font.BOLD, 16));
+		textField.setForeground(Color.YELLOW);
+		textField.setBackground(Color.DARK_GRAY);
+		textField.setBounds(30, 11, 355, 50);
+		parent.add(textField);
+		textField.setColumns(10);
+		textField.setVisible(true);
+		
+		display = textField.getText();
+		
+		JToggleButton toggleSimMode = new JToggleButton("Toggle SIM Mode");
+		toggleSimMode.setBounds(338, 83, 121, 23);
+		parent.add(toggleSimMode);
+		toggleSimMode.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				SIM_Mode = !SIM_Mode;
+				if (SIM_Mode){
+					SIM_Mode = true;
+					textField.setText("SIM_Mode on");
+				}
+				else 
+					textField.setText("SIM_Mode off");
+			}
+		});
+        
         for (int row = 0; row < key.length; row++) {
             panel[row] = new JPanel();
             
@@ -69,6 +100,7 @@ public class VirtualKeyboard extends JFrame {
             }
             parent.add(panel[row]);
         }
+		
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         add(parent);
@@ -86,7 +118,15 @@ public class VirtualKeyboard extends JFrame {
     	}
     	
         public void actionPerformed(ActionEvent e) {
-            JButton btn = (JButton) e.getSource();
+            final JButton btn = (JButton) e.getSource();
+            btn.addActionListener(new ActionListener() {
+    			public void actionPerformed(ActionEvent arg0) {
+    				display = textField.getText();
+    				textField.setText(display+ btn.getClientProperty("key"));
+    				//textField.setText(display+ stringToSend);
+    				System.out.println("In button listener");
+    			}
+    		});
             
             System.out.println("Clicked Column: --> " + btn.getClientProperty("column")
                     + ", Clicked Row: --> " + btn.getClientProperty("row")
@@ -94,15 +134,25 @@ public class VirtualKeyboard extends JFrame {
             
             if (btn.getClientProperty("key").equals("           Space            ")) {
             	updateString("/0");
+            	textField.setText(display+ " ");
             }
             else if (btn.getClientProperty("key").equals("Enter")) {
             	updateString("/n");
             }
             else if (btn.getClientProperty("key").equals("Tab")) {
             	updateString("/t");
+            	textField.setText(display+ "	");
             }
             else if (btn.getClientProperty("key").equals("Backspace")) {
             	updateString("/b");
+            	if (display != null) {
+					display = textField.getText();
+					String newdisplay = display.substring(0, display.length() - 1);
+					textField.setText(newdisplay);
+				}
+				else{
+					btn.setEnabled(false);
+				}
             }
             
             else if (btn.getClientProperty("key").equals("Caps") && key[3][1].equals("a")) {

@@ -197,7 +197,9 @@ public class ControlPanelGUI {
 			}
 		});
 		
-
+		JToggleButton tglbtnToggleSimMode = new JToggleButton("Toggle SIM Mode");
+		tglbtnToggleSimMode.setBounds(338, 83, 121, 23);
+		myFrame.getContentPane().add(tglbtnToggleSimMode);
 		
 		myFrame.setVisible(true);
     }
