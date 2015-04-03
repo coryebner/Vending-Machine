@@ -133,12 +133,6 @@ public class GUI implements ProductRackListener,IndicatorLightListener {
         initialize(null, true, true, true, true, true);
     }
     
-    /**
-     *  For Testing purpose
-     */
-    public GUI(AbstractVendingMachine vm){
-        initialize(vm, true, true, true, true, true);
-    }
     
     public GUI(AbstractVendingMachine machine, ArrayList<Boolean> parts) {
         initialize(machine, parts.get(0), parts.get(1), parts.get(2), parts.get(3), parts.get(4));
@@ -147,7 +141,8 @@ public class GUI implements ProductRackListener,IndicatorLightListener {
     /**
      * Initialize the contents of the frame.
      */
-    private void initialize(AbstractVendingMachine machine, boolean coinSlot, boolean billSlot, boolean cardSlot, boolean popBtns, boolean candyBtns) {
+    private void initialize(AbstractVendingMachine vm, boolean coinSlot, boolean billSlot, boolean cardSlot, boolean popBtns, boolean candyBtns) {
+        machine = vm;
         coinButtons = new ArrayList();
         billButtons = new ArrayList();
         cardButtons = new ArrayList();
@@ -255,6 +250,10 @@ public class GUI implements ProductRackListener,IndicatorLightListener {
         pnlCandyButtons.add(pnlNumberCandyButtons);
         pnlNumberCandyButtons.setLayout(new GridLayout(0, 3, 0, 0));
         
+        JButton btn0 = new JButton("0");
+        candyNumberButtons.add(btn0);
+        pnlNumberCandyButtons.add(btn0);
+        
         JButton btn1 = new JButton("1");
         candyNumberButtons.add(btn1);
         pnlNumberCandyButtons.add(btn1);
@@ -294,10 +293,6 @@ public class GUI implements ProductRackListener,IndicatorLightListener {
         
         JPanel pnlCndyNumSpaceing = new JPanel();
         pnlNumberCandyButtons.add(pnlCndyNumSpaceing);
-        
-        JButton btn0 = new JButton("0");
-        candyNumberButtons.add(btn0);
-        pnlNumberCandyButtons.add(btn0);
         
         int key = 6;
         for (JButton btn : candyNumberButtons) {
@@ -385,12 +380,23 @@ public class GUI implements ProductRackListener,IndicatorLightListener {
                 //				machine.getBanknoteSlot();
             }
         });
+        // Registering GUI to listen to parts of the vending machine
+        try {
+            machine.getOutOfOrderLight().register(this);
+            machine.getExactChangeLight().register(this);
+            if(popBtns == true){
+                for(int i = 0; i< machine.getNumberOfProductRacks(); i++){
+                    machine.getProductRack(i).register(this);
+                }
+            }
+        } catch (NoSuchHardwareException e2) {
+            e2.printStackTrace();
+        }
         
         canadaSetup();
     }
     
-    //	--------------------------------------------------------------------------------------------------------------
-    //  TODO
+    
     //	Get Methods, mainly used for testing
     public JFrame getfrmVendingMachines(){
         return frmVendingMachines;
@@ -440,9 +446,6 @@ public class GUI implements ProductRackListener,IndicatorLightListener {
     public JButton getEjectBillButton(){
         return billEject;
     }
-    
-    //	--------------------------------------------------------------------------------------------------------------
-    
     
     /**
      * Sets what currency buttons are shown based on the currency type selected
@@ -668,6 +671,7 @@ public class GUI implements ProductRackListener,IndicatorLightListener {
      * @return the button being asked for
      */
     public JButton createCoinButton(int amount, String currType) {
+        
         DecimalFormat df = new DecimalFormat("0.00");
         Double amountInDollars = (double) amount / 100;
         String buttonText = currType + df.format(amountInDollars);
@@ -677,9 +681,9 @@ public class GUI implements ProductRackListener,IndicatorLightListener {
                 Coin coin = new Coin(amount);
                 try {
                     machine.getCoinSlot().addCoin(coin);
-                } catch (DisabledException e1) {
-                    e1.printStackTrace();
                 } catch (NoSuchHardwareException e) {
+                    e.printStackTrace();
+                } catch (DisabledException e) {
                     e.printStackTrace();
                 }
             }
