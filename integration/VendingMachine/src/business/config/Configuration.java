@@ -17,6 +17,7 @@ import hardware.AbstractVendingMachine;
 import hardware.VendingMachine1;
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.racks.ProductRack;
+import hardware.test.VendingMachine1Test;
 import hardware.ui.PushButton;
 import hardware.ui.PushButtonCodeInterpreter;
 
@@ -52,7 +53,9 @@ public class Configuration {
 	
 
 	public Configuration()
-	{}
+	{
+
+	}
 
 	/**
 	 * Loads a vending machine from a given configuration file.
@@ -239,16 +242,16 @@ public class Configuration {
 									     boolean card,
 									     boolean paypal)
 	{
-		// funds = new FundsController(locale, coin, card, paypal);
-		// machine.getCoinSlot().register(funds.getCoinController());
-		// machine.getCardSlot().register...
+		//funds = new FundsController(locale, coin, card, paypal);
+		//machine.getCoinSlot().register(funds.getCoinController());
+		//machine.getCardSlot().register...
 	}
 	
 	/**
 	 * Create a ButtonController, and register it with all the buttons it needs
 	 *  to be registered with.
 	 */
-	public void createButtonSelectionController()
+	protected void createButtonSelectionController()
 	{
 		// TODO Maria: Work in progress
 		try {
@@ -480,4 +483,5 @@ public class Configuration {
 	public void setButtonSelectionController(ButtonSelectionController controller){
 		this.buttonSelectionController = controller;
 	}
+	
 }

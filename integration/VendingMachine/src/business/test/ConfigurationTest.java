@@ -2,13 +2,22 @@ package business.test;
 
 import static org.junit.Assert.*;
 
+import org.jmock.Expectations;
+import org.jmock.Mockery;
 import org.junit.Test;
+import org.jmock.integration.junit4.JUnit4Mockery;
+import org.jmock.lib.legacy.ClassImposteriser;
+
+import hardware.exceptions.NoSuchHardwareException;
+import hardware.ui.PushButton;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
 
 import business.config.Configuration;
 import business.config.ConfigurationException;
+import business.selection_delivery.InventoryController;
+import business.stub.DisplayController;
 
 public class ConfigurationTest extends Configuration {
 	public ConfigurationTest()
@@ -114,5 +123,51 @@ public class ConfigurationTest extends Configuration {
 		assertArrayEquals("Correct billstorage found", expectedBillStorage, billStorageQuantities);
 	}
 	
-	
+	/**Test for createButtonSelectionController
+	 * */
+	@Test
+	public void testCreateButtonSelectionController(){
+		
+		/**Create a  MockAbstractVendingMachine*/ 
+		Mockery context = new Mockery(){{
+			setImposteriser(ClassImposteriser.INSTANCE); 
+			// Alows JMock to mock concrete classes, and not only interfaces
+		}};
+		
+		//Assign mock vending machine to a context in the Mockery.
+		final MockAbstractVendingMachine mockMachine = context.mock(MockAbstractVendingMachine.class);
+		 try {
+			 // Setting up the expectations for the mock object.
+			context.checking(new Expectations() {{
+				 oneOf(mockMachine).getNumberOfSelectionButtons(); will(returnValue(1));
+				 PushButton button = new PushButton();
+				 exactly(2).of(mockMachine).getSelectionButton(0); will(returnValue(button));
+				 
+			 }});
+		} catch (NoSuchHardwareException e) {
+			e.printStackTrace();
+		}
+		 // mocking other required objects for when the method is called
+		final InventoryController inventory = context.mock(InventoryController.class);
+		final DisplayController display = context.mock(DisplayController.class); 
+		this.machine= mockMachine;
+		this.inventoryController = inventory;
+		this.displayController = display;
+		
+		// Assertion that the Button Selection Controller is null as it was not initialized before
+		assertNull("Button Selection Controller doesn't exist",this.buttonSelectionController);
+		createButtonSelectionController();
+		// Assertion that this buttonSelectionController object was created after the previous call
+		assertNotNull("Button Selection Controller created", this.buttonSelectionController);
+		try {
+			// Only idea I had to test the listener registered was to deregister the object.
+			// When deregistering a listener, it returns true if the listener passed as argument
+			// was found and it was successfully deregistered
+			boolean wasListenerDeregistered = this.machine.getSelectionButton(0).deregister(buttonSelectionController);
+			assertTrue("The listener was found and deregistered", wasListenerDeregistered);
+		} catch (NoSuchHardwareException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
