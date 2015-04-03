@@ -4,6 +4,9 @@ package hardware.test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.util.Locale;
+
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
 import hardware.AbstractVendingMachine;
@@ -34,11 +37,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class VendingMachine1Test {
-	
-	private final int NO_COINRACKS=5;
-	private final int NO_PRODUCTRACKS=6;
-	private final int NO_SELECTIONBUTTONS=6;
-	
+
+	private final int NO_COINRACKS = 5;
+	private final int NO_PRODUCTRACKS = 6;
+	private final int NO_SELECTIONBUTTONS = 6;
+
 	private AbstractVendingMachine hardware;
 	private Coin coin;
 
@@ -55,10 +58,11 @@ public class VendingMachine1Test {
 
 	@Before
 	public void setup() throws NoSuchHardwareException {
-		
-		fail("Broken test");
-		
-		// hardware = new VMRUS_SFF_P_C(new int[] { 5, 10, 25, 100, 200 });
+
+		// fail("Broken test");
+
+		hardware = new VMRUS_SFF_P_C(Locale.CANADA, new int[] { 5, 10, 25, 100,
+				200 });
 
 		coin = new Coin(100);
 
@@ -72,21 +76,21 @@ public class VendingMachine1Test {
 			coinRackListeners[i] = new CoinRackListenerStub();
 			hardware.getCoinRack(i).register(coinRackListeners[i]);
 		}
-		
+
 		popRackListeners = new ProductRackListenerStub[6];
 		for (int i = 0; i < NO_PRODUCTRACKS; i++) {
 			popRackListeners[i] = new ProductRackListenerStub();
 			hardware.getProductRack(i).register(popRackListeners[i]);
 		}
-		
-		pushButtonListeners=new PushButtonListenerStub[NO_SELECTIONBUTTONS];
-		for(int i=0; i<NO_SELECTIONBUTTONS; i++){
+
+		pushButtonListeners = new PushButtonListenerStub[NO_SELECTIONBUTTONS];
+		for (int i = 0; i < NO_SELECTIONBUTTONS; i++) {
 			hardware.getSelectionButton(i).register(pushButtonListeners[i]);
 		}
-		
-		returnButtonListener=new PushButtonListenerStub();
+
+		returnButtonListener = new PushButtonListenerStub();
 		hardware.getReturnButton().register(returnButtonListener);
-		
+
 		outOfOrderListener = new IndicatorLightListenerStub();
 		exactChangeListener = new IndicatorLightListenerStub();
 
@@ -118,14 +122,14 @@ public class VendingMachine1Test {
 			hardware.getProductRack(i).deregister(popRackListeners[i]);
 			popRackListeners[i] = null;
 		}
-		
-		for(int i=0; i<NO_SELECTIONBUTTONS; i++){
+
+		for (int i = 0; i < NO_SELECTIONBUTTONS; i++) {
 			hardware.getSelectionButton(i).deregisterAll();
-			pushButtonListeners[i]=null;
+			pushButtonListeners[i] = null;
 		}
-		
+
 		hardware.getReturnButton().deregisterAll();
-		returnButtonListener=null;
+		returnButtonListener = null;
 
 		hardware = null;
 		coin = null;
@@ -142,9 +146,8 @@ public class VendingMachine1Test {
 
 	@Test(expected = SimulationException.class)
 	public void testNullCoinValues() {
-		fail("Fixme");
 		
-		//hardware = new VMRUS_SFF_P_C(null);
+		 hardware = new VMRUS_SFF_P_C(Locale.CANADA, null);
 	}
 
 	@Test
@@ -360,6 +363,7 @@ public class VendingMachine1Test {
 
 		outOfOrderListener.assertProtocol();
 	}
+
 	@Test
 	public void testExactChangeLight() throws NoSuchHardwareException {
 		IndicatorLight exactChangeLight = hardware.getExactChangeLight();
@@ -418,57 +422,60 @@ public class VendingMachine1Test {
 	public void testGetDisplay() throws NoSuchHardwareException {
 		assertFalse(hardware.getDisplay() == null);
 	}
-	
-	//test dispense pop
+
+	// test dispense pop
 	@Test
-	public void testDispensePopRacks() throws NoSuchHardwareException{
+	public void testDispensePopRacks() throws NoSuchHardwareException {
 		ProductRack rack;
-		Object[] chuteContents=hardware.getDeliveryChute().removeItems();
-		assertTrue(chuteContents.length==0);
-		for(int i=0; i<hardware.getNumberOfProductRacks(); i++){
-			rack=hardware.getProductRack(i);
+		Object[] chuteContents = hardware.getDeliveryChute().removeItems();
+		assertTrue(chuteContents.length == 0);
+		for (int i = 0; i < hardware.getNumberOfProductRacks(); i++) {
+			rack = hardware.getProductRack(i);
 			deliveryChuteListener.expect("itemDelivered");
-			try{
-				rack.addProduct(new PopCan());;
+			try {
+				rack.addProduct(new PopCan());
+				;
 				rack.dispenseProduct();
-			}catch(Exception e){
-				fail("Unexpected Exception: "+e);
+			} catch (Exception e) {
+				fail("Unexpected Exception: " + e);
 			}
 			deliveryChuteListener.assertProtocol();
-			chuteContents=hardware.getDeliveryChute().removeItems();
-			assertTrue(chuteContents.length==1);
-			assertTrue(chuteContents[0].getClass()==PopCan.class);
+			chuteContents = hardware.getDeliveryChute().removeItems();
+			assertTrue(chuteContents.length == 1);
+			assertTrue(chuteContents[0].getClass() == PopCan.class);
 		}
-			
+
 	}
-	//test dispense coin
+
+	// test dispense coin
 	@Test
-	public void testReleaseCoinRacks() throws NoSuchHardwareException{
+	public void testReleaseCoinRacks() throws NoSuchHardwareException {
 		CoinRack rack;
-		Object[] chuteContents=hardware.getDeliveryChute().removeItems();
-		assertTrue(chuteContents.length==0);
-		for(int i=0; i<hardware.getNumberOfCoinRacks(); i++){
-			rack=hardware.getCoinRack(i);
+		Object[] chuteContents = hardware.getDeliveryChute().removeItems();
+		assertTrue(chuteContents.length == 0);
+		for (int i = 0; i < hardware.getNumberOfCoinRacks(); i++) {
+			rack = hardware.getCoinRack(i);
 			deliveryChuteListener.expect("itemDelivered");
-			try{
+			try {
 				rack.acceptCoin(new Coin(2));
 				rack.releaseCoin();
-			}catch(Exception e){
-				fail("Unexpected Exception: "+e);
+			} catch (Exception e) {
+				fail("Unexpected Exception: " + e);
 			}
 		}
 		deliveryChuteListener.assertProtocol();
-		chuteContents=hardware.getDeliveryChute().removeItems();
-		assertTrue(chuteContents.length==1);
-		assertTrue(chuteContents[0].getClass()==Coin.class);
-	} 
-	//test return button
+		chuteContents = hardware.getDeliveryChute().removeItems();
+		assertTrue(chuteContents.length == 1);
+		assertTrue(chuteContents[0].getClass() == Coin.class);
+	}
+
+	// test return button
 	@Test
-	public void testReturnButton() throws NoSuchHardwareException{
+	public void testReturnButton() throws NoSuchHardwareException {
 		returnButtonListener.expect("pressed");
 		hardware.getReturnButton().press();
 		returnButtonListener.assertProtocol();
-		
+
 	}
-	
+
 }
