@@ -14,14 +14,34 @@ public class ControlPanelGUI {
 	private JButton Pin1, Pin2, Pin3, Pin4, Pin5, Pin6, Pin7, Pin8, Pin9, Pin0, PinC, PinX, PinCheck;
 	private JTextArea[] textPaneArray;
 	private JTextField textField;
+	private Container callerContainer;
 	
 	private String display;
 	private boolean SIM_Mode = false;
 	
+	/**
+	 * Disables the passed containers components on launch, enables on close
+	 * @param caller should be the container who created this GUI
+	 */
+	public ControlPanelGUI(Container caller) {
+		this();
+		callerContainer = caller;
+		GUIHelper.enableComponents(caller, false);
+		myFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			/**
+			 * Renables caller window's components on close
+			 */
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				GUIHelper.enableComponents(callerContainer, true);
+			}
+		});
+	}
+	
     public ControlPanelGUI() {
 		myFrame = new JFrame("CONTROL PANEL");
     	myFrame.setSize(500, 400);
-        myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        myFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		myFrame.setBackground(Color.LIGHT_GRAY);
 		myFrame.setForeground(Color.BLACK);
 		myFrame.setResizable(false);

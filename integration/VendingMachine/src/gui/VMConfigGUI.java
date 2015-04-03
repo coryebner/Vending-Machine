@@ -2,6 +2,7 @@ package gui;
 
 //import hardware.VendingMachine1;
 
+import java.awt.Container;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -262,17 +263,28 @@ public class VMConfigGUI implements ActionListener{
 		JButton btnLaunch = new JButton("Launch");
 		btnLaunch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(reportConfig!=null && machineConfig!=null){
+				
+				// Vending Machine # 1
+				if(machineConfig.equals("VMRUS-SFF-P/C") && reportConfig!=null){
 					//Here use the two selected configurations to create the Vending Machine	
 					int []coinvalue = { 5, 10, 25, 100, 200 };
 					int [] popcost	= {200,200,200,200,200,200 };
 					String [] popname = {"Coke","DietCode","RootBeer", "asdf", "qwer","zxcv"};
 //					VendingMachine1 popmachine = new VendingMachine1(coinvalue,popcost,popname);
 //					GUI window = new GUI(popmachine);
-					GUI window = new GUI();
-					window.frmVendingMachines.setVisible(true);
+					VendingMachineGUI window = new StandardMachineGUI();
+					window.getMainFrame().setVisible(true);
 					frmVendingMachinesRUS.setVisible(false);
-				}else{
+				}
+				
+				// Vending Machine # 6
+				else if(machineConfig.equals("VMRUS-TOC-P/MI") && reportConfig!=null){
+					VendingMachineGUI window = new StandardTouchMachineGUI();
+					window.getMainFrame().setVisible(true);
+					frmVendingMachinesRUS.setVisible(false);
+				}
+				
+				else{
 					System.out.println("Please choose the configuration for the vending machine and the report");
 				}
 			}
@@ -285,14 +297,12 @@ public class VMConfigGUI implements ActionListener{
 
 
 	class VendingMachineConfig implements ActionListener{
-		@Override
 		public void actionPerformed(ActionEvent e) {
 			machineConfig = machineConfigRadioGroup.getSelection().getActionCommand();
 			System.out.println("The selected Configuration is: "+ machineConfig);		
 		}
 	}
 	class ReportConfigListener implements ActionListener{
-		@Override
 		public void actionPerformed(ActionEvent e) {
 			reportConfig = reportConfigRadioGroup.getSelection().getActionCommand();	
 			System.out.println("The selected report configuration is: "+ reportConfig);
@@ -300,7 +310,6 @@ public class VMConfigGUI implements ActionListener{
 	}
 	
 	
-	@Override
 	public void actionPerformed(ActionEvent e) {
 	
 	}

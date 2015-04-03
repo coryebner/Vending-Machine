@@ -11,14 +11,12 @@
 
 package gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.Font;
-import java.util.AbstractMap;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -27,6 +25,18 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
 public class VirtualKeyboard extends JFrame {
+
+    //---Methods to do with registering and deregistering listeners to the virtual keyboard.
+    ArrayList<VirtualKeyboardListener> listeners = new ArrayList<VirtualKeyboardListener>();
+    public void Register(VirtualKeyboardListener listener) {listeners.add(listener);}
+    public boolean DeRegister(VirtualKeyboardListener listener) {return listeners.remove(listener);}
+    void notifyKeyDown(char key)
+    {
+        for (VirtualKeyboardListener listener : listeners)
+            listener.OnKeyDown(key);
+    }
+
+
     private JFrame frame = new JFrame("Virtual Keyboard");
     private JPanel parent = new JPanel(new GridLayout(0, 1));
     private JPanel[] panel;
@@ -57,7 +67,8 @@ public class VirtualKeyboard extends JFrame {
      
     };
 
-    public VirtualKeyboard() {
+    public VirtualKeyboard()
+    {
         super("Virtual Keyboard");
         panel = new JPanel[6];	// Number of Array elements is the number of rows on keyboard
         
@@ -95,7 +106,7 @@ public class VirtualKeyboard extends JFrame {
                 button[row][column].putClientProperty("column", column);
                 button[row][column].putClientProperty("row", row);
                 button[row][column].putClientProperty("key", key[row][column]);
-                button[row][column].addActionListener(new VirtualKeyboardListener());
+                button[row][column].addActionListener(new KeyboardActionListener());
                 panel[row].add(button[row][column]);
             }
             parent.add(panel[row]);
@@ -108,13 +119,13 @@ public class VirtualKeyboard extends JFrame {
         setVisible(true);
     }
 
-    public class VirtualKeyboardListener implements ActionListener {
-    	public String stringToSend;
-    	public void updateString(String newValue){
-    		this.stringToSend=newValue;
-    		System.out.println("We are sending this string: "+stringToSend);
-    		//TODO 
-    		//Spencer you will do the action raising depending on key typed here
+    public class KeyboardActionListener implements ActionListener {
+    	public char charToSend;
+    	public void updateString(char newValue){
+    		this.charToSend = newValue;
+    		System.out.println("We are sending this char: "+ charToSend);
+
+            notifyKeyDown(charToSend);
     	}
     	
         public void actionPerformed(ActionEvent e) {
@@ -133,13 +144,18 @@ public class VirtualKeyboard extends JFrame {
                     + ", Key Typed: --> " + btn.getClientProperty("key"));
             
             if (btn.getClientProperty("key").equals("           Space            ")) {
+<<<<<<< HEAD
             	updateString("/0");
             	textField.setText(display+ " ");
+=======
+            	updateString(' ');
+>>>>>>> adca7ca1847ad4eeb9df47146789b886f1e819a5
             }
             else if (btn.getClientProperty("key").equals("Enter")) {
-            	updateString("/n");
+            	updateString('\n');
             }
             else if (btn.getClientProperty("key").equals("Tab")) {
+<<<<<<< HEAD
             	updateString("/t");
             	textField.setText(display+ "	");
             }
@@ -153,6 +169,12 @@ public class VirtualKeyboard extends JFrame {
 				else{
 					btn.setEnabled(false);
 				}
+=======
+            	updateString('\t');
+            }
+            else if (btn.getClientProperty("key").equals("Backspace")) {
+            	updateString('\b');
+>>>>>>> adca7ca1847ad4eeb9df47146789b886f1e819a5
             }
             
             else if (btn.getClientProperty("key").equals("Caps") && key[3][1].equals("a")) {
@@ -178,7 +200,7 @@ public class VirtualKeyboard extends JFrame {
             }
             
             else
-            	updateString(btn.getClientProperty("key").toString());
+            	updateString(btn.getClientProperty("key").toString().charAt(0));
         }
     }
 
