@@ -3,7 +3,6 @@ package hardware.test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
 import hardware.Hardware;
@@ -24,6 +23,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("deprecation")
 public class HardwareTest {
     private Hardware hardware;
     private Coin coin;
@@ -37,7 +37,7 @@ public class HardwareTest {
     private PopCanRackListenerStub[] popRackListeners;
     private IndicatorLightListenerStub outOfOrderListener, exactChangeListener;
 
-    @Before
+	@Before
     public void setup() {
 	hardware =
 	        new Hardware(new int[] { 5, 10, 25, 100, 200 }, new int[] {

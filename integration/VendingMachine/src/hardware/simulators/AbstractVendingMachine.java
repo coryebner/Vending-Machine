@@ -10,7 +10,6 @@ import hardware.funds.CardSlot;
 import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinSlot;
 import hardware.racks.CoinRack;
-import hardware.racks.PopCanRack;
 import hardware.racks.ProductRack;
 import hardware.ui.DeliveryChute;
 import hardware.ui.Display;

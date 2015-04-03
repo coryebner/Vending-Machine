@@ -10,10 +10,7 @@ import hardware.exceptions.DisabledException;
 import hardware.exceptions.SimulationException;
 import hardware.funds.*;
 import hardware.test.stub.*;
-import hardware.acceptors.*;
 import hardware.channels.BanknoteChannel;
-
-import org.junit.*;
 
 public class BanknoteSlotTest {
 	public BanknoteSlot slot;

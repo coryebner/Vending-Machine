@@ -1,14 +1,12 @@
 package hardware.simulators;
 
 import hardware.channels.CoinChannel;
-import hardware.channels.PopCanChannel;
 import hardware.channels.ProductChannel;
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.exceptions.SimulationException;
 import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinSlot;
 import hardware.racks.CoinRack;
-import hardware.racks.PopCanRack;
 import hardware.racks.ProductRack;
 import hardware.ui.DeliveryChute;
 import hardware.ui.Display;
