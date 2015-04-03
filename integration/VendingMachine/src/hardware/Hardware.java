@@ -19,6 +19,8 @@ import java.util.Map;
 
 /**
  * Represents a standard configuration of the vending machine hardware:
+ * 
+ * @deprecated This is not a real configuration of the hardware.
  * <ul>
  * <li>one coin slot;</li>
  * <li>one coin receptacle (called the coin receptacle) to temporarily store
