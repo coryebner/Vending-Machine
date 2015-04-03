@@ -1,15 +1,23 @@
 package hardware.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.util.Currency;
+import java.util.Locale;
+
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
 import hardware.Hardware;
 import hardware.exceptions.CapacityExceededException;
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.SimulationException;
+import hardware.funds.Card;
+import hardware.funds.Card.CardType;
 import hardware.funds.Coin;
+import hardware.racks.ProductRack;
 import hardware.test.stub.CardSlotListenerStub;
 import hardware.test.stub.CoinRackListenerStub;
 import hardware.test.stub.CoinReceptacleListenerStub;
@@ -25,7 +33,8 @@ import org.junit.Test;
 
 @SuppressWarnings("deprecation")
 public class HardwareTest {
-    private Hardware hardware;
+    private static final CardType PREPAID = null;
+	private Hardware hardware;
     private Coin coin;
 
     private CoinSlotListenerStub coinSlotListener;
@@ -393,5 +402,39 @@ public class HardwareTest {
     @Test
     public void testGetDisplay() {
 	assertFalse(hardware.getDisplay() == null);
+    }
+    
+    @Test
+    public void testGetSet(){
+    //setup and tests for Card Class
+    CardType type = PREPAID;
+    String number = "1234567890";
+    String cardName = "John Smith";
+    String pin = "1234";
+    String expiry = "05/2017";
+    Locale cardCurrency = null;
+    int maxAmount = 10000;
+    Card card = new Card(type, number, cardName, pin, expiry, cardCurrency, maxAmount);
+    assertEquals(type, card.getType());
+    assertEquals(number , card.getNumber());
+    assertEquals(cardName , card.getName());
+    assertEquals(expiry , card.getExpiryDate());
+    assertTrue(card.checkPin(pin));
+    assertTrue(card.requestFunds(100, pin));
+    //setup and tests for ProductRack Class
+    int capacity = 12;
+    String rackName = "candyRack";
+    int price = 100;
+    String image = "some image";
+    ProductRack productRack = new ProductRack(capacity, rackName , price, image);
+    assertEquals(rackName , productRack.getName());
+    assertEquals(price , productRack.getPrice());
+    assertEquals(image , productRack.getImage());
+    productRack.setName("candyRack2");
+    productRack.setPrice(50);
+    productRack.setImage("some other image");
+    assertEquals("candyRack2" , productRack.getName());
+    assertEquals(50 , productRack.getPrice());
+    assertEquals("some other image" , productRack.getImage());
     }
 }
