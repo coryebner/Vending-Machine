@@ -1,20 +1,12 @@
 package business.selection_delivery;
 
+import business.stub.*;
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
-// TODO: Should the rest of these use hardware.* instead of com.vendingmachinesareus.*?
-// The exceptions thrown by the hardware are of the hardware.* type, which is why I had
-//  to remove these and import the hardware versions... this seems like something that
-//  should probably be consistent - Liam Mar 31
-//import com.vendingmachinesareus.DisabledException;
-//import com.vendingmachinesareus.EmptyException;
-import hardware.ui.PushButton;
-import hardware.ui.PushButtonListener;
-
-import business.stub.*;
-
 import hardware.exceptions.EmptyException;
 import hardware.exceptions.DisabledException;
+import hardware.ui.PushButton;
+import hardware.ui.PushButtonListener;
 
 /**
  * @class PopSelectionController
@@ -56,7 +48,7 @@ public class ButtonSelectionController
 	 *  
 	 *  @param button			button that generated the event
 	 */
-	public void pressed(PushButton button) //Amy: This is sent a string in hardware now ; Jon: In the GUI anyway. As long as hardware still sends us the button it's fine.
+	public void pressed(PushButton button)
 	{
 		int index = getIndex(button);
 		int cost = inventory.getCost(index);
