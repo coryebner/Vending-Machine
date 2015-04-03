@@ -286,7 +286,7 @@ public class StandardMachineGUI extends VendingMachineGUI {
 			btn1.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					if (codeInProgress) {
-						enableInteractivity(false);
+						GUIHelper.enableComponents(getMainFrame(), false);
 						// TODO add button press method call
 					}
 				}
@@ -374,6 +374,13 @@ public class StandardMachineGUI extends VendingMachineGUI {
 
 		billEject = new JButton("Remove bill");
 		billEject.setEnabled(false);
+		billEject.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO: add remove bill method call
+				enableBillButtons(true);
+				billEject.setEnabled(false);
+			}
+		});
 
 		canadaSetup();
 	}
@@ -693,45 +700,11 @@ public class StandardMachineGUI extends VendingMachineGUI {
 				// pushing a pop button starts a "transaction"
 				// components are disabled as the hardware will
 				// not be handling thread type behavior
-				enableInteractivity(false);
+				GUIHelper.enableComponents(getMainFrame(), false);
 				// TODO add buttonPressed method call here
 			}
 		});
 		return btn;
-	}
-
-	/**
-	 * Enables or disables all interactable components in the GUI based on the
-	 * passed parameter
-	 * 
-	 * @param status
-	 *            is true if the components will be enabled, false if the
-	 *            components will be disabled
-	 */
-	public void enableInteractivity(boolean status) {
-		for (JButton btn : coinButtons) {
-			btn.setEnabled(status);
-		}
-
-		enableBillButtons(status);
-
-		for (JButton btn : cardButtons) {
-			btn.setEnabled(status);
-		}
-
-		for (JButton btn : popButtons) {
-			btn.setEnabled(status);
-		}
-		
-		for (JButton btn : candyLetterButtons) {
-			btn.setEnabled(status);
-		}
-		
-		for (JButton btn : candyNumberButtons) {
-			btn.setEnabled(status);
-		}
-
-		cmbCurr.setEnabled(status);
 	}
 
 	/**
@@ -764,7 +737,7 @@ public class StandardMachineGUI extends VendingMachineGUI {
 	public void messageChange(Object display, String oldMsg, String newMsg) {
 		// prevents wrong enabling cases for timed messages
 		if (!oldMsg.equals(newMsg)) {
-			enableInteractivity(true);
+			GUIHelper.enableComponents(getMainFrame(), true);
 			Display_text.setText(newMsg);
 		}
 	}
@@ -781,5 +754,10 @@ public class StandardMachineGUI extends VendingMachineGUI {
 		 *	lblInternetLight.setBackground(Color.RED);
 		 * }
 		 */
+	}
+	
+	public void billRejected(Object billSlot, Object bill) {
+		enableBillButtons(false);
+		billEject.setEnabled(true);
 	}
 }
