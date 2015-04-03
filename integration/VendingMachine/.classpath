@@ -12,9 +12,6 @@
 	<classpathentry kind="lib" path="lib/jmock-2.6.0/jmock-legacy-2.6.0.jar"/>
 	<classpathentry kind="lib" path="lib/jmock-2.6.0/bsh-core-2.0b4.jar"/>
 	<classpathentry kind="lib" path="lib/cglib-nodep-2.2.3.jar"/>
-	<classpathentry kind="lib" path="lib/jmock-2.6.0.jar"/>
-	<classpathentry kind="lib" path="lib/jmock-junit4-2.6.0.jar"/>
-	<classpathentry kind="lib" path="lib/jmock-legacy-2.6.0.jar"/>
 	<classpathentry kind="lib" path="lib/objenesis-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
