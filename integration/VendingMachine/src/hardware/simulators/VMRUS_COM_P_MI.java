@@ -96,15 +96,10 @@ public class VMRUS_COM_P_MI extends AbstractVendingMachine{
 				deliveryChute));
 		coinReceptacle.connect(coinRackChannels,
 				new CoinChannel(deliveryChute), new CoinChannel(coinStorageBin));
-		
-		coinSlot.connect(new CoinChannel(coinReceptacle), new CoinChannel(
-				deliveryChute));
-		coinReceptacle.connect(coinRackChannels,
-				new CoinChannel(deliveryChute), new CoinChannel(coinStorageBin));
 
 		/* NEEDED: Banknote Hardware Connections
-		banknoteSlot.connect(new BanknoteChannel(banknoteReceptacle);
-		banknoteReceptacle.connect
+		banknoteSlot.connect(new BanknoteChannel(banknoteReceptacle new CoinChannel(coinStorageBin));
+		banknoteReceptacle.connect(new CoinChannel(deliveryChute), new CoinChannel(coinStorageBin));
 		*/
 		
 		productRacks = new ProductRack[numOfProducts];
@@ -198,6 +193,11 @@ public class VMRUS_COM_P_MI extends AbstractVendingMachine{
 	}
 
 	@Override
+	public int getNumberOfOutOfProductLights() {
+		return outOfProductLights.length;
+	}
+	
+	@Override
 	public int getNumberOfProductRacks() {
 		return productRacks.length;
 	}
@@ -245,7 +245,9 @@ public class VMRUS_COM_P_MI extends AbstractVendingMachine{
 	@Override
 	public void enableSafety() {
 		super.enableSafety();
+		cardSlot.disable();
 		coinSlot.disable();
+		banknoteSlot.disable();
 		deliveryChute.disable();
 
 		for (int i = 0; i < productRacks.length; i++)
@@ -260,7 +262,9 @@ public class VMRUS_COM_P_MI extends AbstractVendingMachine{
 	@Override
 	public void disableSafety() {
 		super.disableSafety();
+		cardSlot.enable();
 		coinSlot.enable();
+		banknoteSlot.enable();
 		deliveryChute.enable();
 
 		for (int i = 0; i < productRacks.length; i++)

@@ -55,7 +55,7 @@ public class VMRUS_SFF_P_CI extends AbstractVendingMachine {
 	protected static int coinReceptacleCapacity = 50;
 	protected static int storageBinCapacity = 1000;
 	protected static int coinRackCapacity = 20;
-	protected static int popRackCapacity = 15;
+	protected static int productRackCapacity = 15;
 	protected static int displayCharacters = 30;
 
 	// CONSTRUCTOR
@@ -87,7 +87,7 @@ public class VMRUS_SFF_P_CI extends AbstractVendingMachine {
 
 		productRacks = new ProductRack[numOfProducts];
 		for (int i = 0; i < numOfProducts; i++) {
-			productRacks[i] = new ProductRack(popRackCapacity);
+			productRacks[i] = new ProductRack(productRackCapacity);
 			productRacks[i].connect(new ProductChannel(deliveryChute));
 		}
 
