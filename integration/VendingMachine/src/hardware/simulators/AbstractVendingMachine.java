@@ -1,4 +1,4 @@
-package hardware;
+package hardware.simulators;
 
 import java.net.Socket;
 import java.util.Locale;

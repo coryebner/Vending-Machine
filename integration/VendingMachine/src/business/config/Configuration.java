@@ -8,8 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import hardware.AbstractVendingMachine;
-import hardware.VendingMachine1;
+import hardware.simulators.AbstractVendingMachine;
 
 public class Configuration {
 	static class InventoryManager {}
@@ -289,7 +288,8 @@ public class Configuration {
 	 */
 	protected AbstractVendingMachine createSFFPC()
 	{
-		return new VendingMachine1(new int [] {5, 10, 25, 100, 200}, prices, names);
+		return machine;
+	//	return new VendingMachine1(new int [] {5, 10, 25, 100, 200}, prices, names);
 	}
 //
 //	protected AbstractVendingMachine createSFFPCI()
