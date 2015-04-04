@@ -45,6 +45,7 @@ public class Configuration {
 	// eg. FundsController needs to tell us how many coins in each rack
 	
 	protected FundsController funds;
+	protected Funds fundsController;
 	//protected InventoryManager inventory;
 	protected InventoryController inventoryController; // Maria: added as InventoryManager was commented.
 	protected CodeSelectionController codeSelectionController; // Maria: Added CodeSelectionController object
@@ -167,6 +168,11 @@ public class Configuration {
 		for(int i=0;i<rackcount;i++){
 				prices[i]=inventoryController.getCost(i);
 		}
+		int CRackcount=fundsController.getCoinRackControllers().length;
+		for(int i=0;i<CRackcount;i++){
+				coinRackQuantities[i]=fundsController.getCoinRackControllers()[i].getQuantity();
+		}
+		
 		//TODO Anish: Working on this
 		//Add funds controller stuff here
 	}
@@ -259,7 +265,7 @@ public class Configuration {
 			BRQString+=" "+Integer.toString(billStorageQuantities[i]);
 		}
 		LQString="logfrequency "+logFrequency;
-		LocaleString="locale "+locale.getISO3Country();
+		LocaleString="locale "+locale.getCountry();
 		output.write(type);
 		output.newLine();
 		output.write(namestring);
@@ -277,6 +283,8 @@ public class Configuration {
 		output.write(BSQString);
 		output.newLine();
 		output.write(LQString);
+		output.newLine();
+		output.write(LocaleString);
 		//TODO Anish:Working on this
 		//Do basically the opposite of what we do in readConfigFile()
 	}
