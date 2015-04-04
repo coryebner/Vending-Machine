@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import business.funds.Funds;
 import business.selection_delivery.ButtonSelectionController;
 import business.selection_delivery.CodeSelectionController;
 import business.selection_delivery.InventoryController;
@@ -44,7 +45,7 @@ public class Configuration {
 	// eg. FundsController needs to tell us how many coins in each rack
 	
 	protected FundsController funds;
-	//protected InventoryManager inventory; 
+	//protected InventoryManager inventory;
 	protected InventoryController inventoryController; // Maria: added as InventoryManager was commented.
 	protected CodeSelectionController codeSelectionController; // Maria: Added CodeSelectionController object
 	protected DisplayController displayController; // Maria: added for the displayController
@@ -228,7 +229,7 @@ public class Configuration {
 	
 	protected void writeConfigFile(BufferedWriter output) throws IOException
 	{
-		String namestring,pricesstring,Qstring,CRQString,CSQString,BRQString,BSQString;
+		String namestring,pricesstring,Qstring,CRQString,CSQString,BRQString,BSQString,LQString;
 		namestring="names";
 		for(int i=0;i<names.length;i++){
 			namestring+=" "+names[i];
@@ -257,6 +258,9 @@ public class Configuration {
 		for(int i=0;i<billStorageQuantities.length;i++){
 			BRQString+=" "+Integer.toString(billStorageQuantities[i]);
 		}
+		LQString="logfrequency "+logFrequency;
+		output.write(type);
+		output.newLine();
 		output.write(namestring);
 		output.newLine();
 		output.write(pricesstring);
@@ -270,6 +274,8 @@ public class Configuration {
 		output.write(BRQString);
 		output.newLine();
 		output.write(BSQString);
+		output.newLine();
+		output.write(LQString);
 		//TODO Anish:Working on this
 		//Do basically the opposite of what we do in readConfigFile()
 	}
