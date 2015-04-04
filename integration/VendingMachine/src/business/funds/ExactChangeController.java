@@ -145,13 +145,19 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 	@Override
 	public void productAdded(ProductRack productRack, Product product) {
 		TrackedProduct tempProduct = rackToProductMap.get(productRack);
-		tempProduct.isEmpty = inventoryController.isEmpty(tempProduct.rackIndex);
-	}
+		if(tempProduct.isEmpty != inventoryController.isEmpty(tempProduct.rackIndex)) {
+			tempProduct.isEmpty = !tempProduct.isEmpty;
+			calculateChangeToMake();
+			}	
+		}
 	
 	@Override
 	public void productEmpty(ProductRack productRack) {
 		TrackedProduct tempProduct = rackToProductMap.get(productRack);
-		tempProduct.isEmpty = inventoryController.isEmpty(tempProduct.rackIndex);
+		if(tempProduct.isEmpty != inventoryController.isEmpty(tempProduct.rackIndex)) {
+			tempProduct.isEmpty = !tempProduct.isEmpty;
+			calculateChangeToMake();
+		}
 		
 	}
 	
