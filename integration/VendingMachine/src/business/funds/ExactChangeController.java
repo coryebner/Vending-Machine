@@ -12,6 +12,12 @@ import business.selection_delivery.InventoryController;
 
 public class ExactChangeController implements ConfigurationListener, ProductRackListener {
 
+	private class TrackedProduct{
+		private boolean isEmpty = false;
+		private int price = 0;
+	}
+	
+	
 	private TrackedProduct[] products;
 	private InventoryController inventoryController;
 	
@@ -27,7 +33,7 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 		
 		products = new TrackedProduct[numRacks];
 		for(int index = 0; index < numRacks; index++){
-			products[index].notEmpty = !ic.isEmpty(index);
+			products[index].isEmpty = ic.isEmpty(index);
 			products[index].price = ic.getCost(index);
 		}
 	}
@@ -43,6 +49,13 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 	 * Recalculates the exact change status after a transaction has taken place (pop dispensed)
 	 */
 	private void recalculateExactChange(){
+		
+	}
+	
+	/**
+	 * Recalculates possible amounts of change to make
+	 */
+	private void calculateChangeToMake(){
 		
 	}
 	
@@ -63,8 +76,8 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 		
 		for(int index = 0; index < products.length; index++){
 			//Just Re-check the empty products
-			if(!products[index].notEmpty){
-				products[index].notEmpty = !inventoryController.isEmpty(index);
+			if(products[index].isEmpty){
+				products[index].isEmpty = inventoryController.isEmpty(index);
 			}
 		}
 	}
@@ -73,8 +86,8 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 	public void productEmpty(ProductRack productRack) {
 		for(int index = 0; index < products.length; index++){
 			//Just Re-check the non-empty products
-			if(products[index].notEmpty){
-				products[index].notEmpty = !inventoryController.isEmpty(index);
+			if(products[index].isEmpty){
+				products[index].isEmpty = inventoryController.isEmpty(index);
 			}
 		}
 		
@@ -86,10 +99,5 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 	@Override public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {}
 	
 	@Override public void productFull(ProductRack productRack) {}
-
-	private class TrackedProduct{
-		private boolean notEmpty = false;
-		private int price = 0;
-	}
 
 }
