@@ -229,7 +229,7 @@ public class Configuration {
 	
 	protected void writeConfigFile(BufferedWriter output) throws IOException
 	{
-		String namestring,pricesstring,Qstring,CRQString,CSQString,BRQString,BSQString,LQString;
+		String namestring,pricesstring,Qstring,CRQString,CSQString,BRQString,BSQString,LQString,LocaleString;
 		namestring="names";
 		for(int i=0;i<names.length;i++){
 			namestring+=" "+names[i];
@@ -259,6 +259,7 @@ public class Configuration {
 			BRQString+=" "+Integer.toString(billStorageQuantities[i]);
 		}
 		LQString="logfrequency "+logFrequency;
+		LocaleString="locale "+locale.getISO3Country();
 		output.write(type);
 		output.newLine();
 		output.write(namestring);
