@@ -2,15 +2,15 @@ package hardware.ui;
 
 import hardware.AbstractHardware;
 import hardware.acceptors.AbstractCoinAcceptor;
-import hardware.acceptors.AbstractPopCanAcceptor;
 import hardware.acceptors.AbstractProductAcceptor;
 import hardware.exceptions.CapacityExceededException;
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.SimulationException;
 import hardware.funds.Coin;
-import hardware.products.PopCan;
+import hardware.products.IRackable;
 import hardware.products.Product;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Vector;
 
 /**
@@ -20,7 +20,7 @@ import java.util.Vector;
  */
 public class DeliveryChute extends
         AbstractHardware<DeliveryChuteListener> implements
-        AbstractCoinAcceptor, AbstractPopCanAcceptor, AbstractProductAcceptor {
+        AbstractCoinAcceptor, AbstractProductAcceptor {
     private Vector<Object> chute = new Vector<Object>();
     private int maxCapacity;
 
@@ -39,41 +39,13 @@ public class DeliveryChute extends
     }
 
     /**
-     * Returns the maximum capacity of this delivery chute in number of pop cans
+     * Returns the maximum capacity of this delivery chute in number of products
      * and/or coins that it can hold. Causes no events.
      */
     public int getCapacity() {
 	return maxCapacity;
     }
 
-    /**
-     * Tells this delivery chute to deliver the indicated pop can. If the
-     * delivery is successful, an "itemDelivered" event is announced to its
-     * listeners. If the successful delivery causes the chute to become full, a
-     * "chuteFull" event is announced to its listeners.
-     * 
-     * @throws CapacityExceededException
-     *             if the chute is already full and the pop can cannot be
-     *             delivered.
-     * @throws DisabledException
-     *             if the chute is currently disabled.
-     */
-    @Override
-    public void acceptPop(PopCan pop) throws CapacityExceededException,
-	    DisabledException {
-	if(isDisabled())
-	    throw new DisabledException();
-
-	if(chute.size() >= maxCapacity)
-	    throw new CapacityExceededException();
-
-	chute.add(pop);
-
-	notifyItemDelivered();
-
-	if(chute.size() >= maxCapacity)
-	    notifyChuteFull();
-    }
 
     /**
      * Tells this delivery chute to deliver the indicated coin. If the delivery
@@ -112,7 +84,7 @@ public class DeliveryChute extends
      * 
      * @return The items that were in the delivery chute.
      */
-    public Object[] removeItems() {
+    public Object[] removeItems() throws InvocationTargetException {
 	notifyDoorOpened();
 	Object[] items = chute.toArray();
 	chute.clear();
@@ -129,38 +101,15 @@ public class DeliveryChute extends
 	return chute.size() < maxCapacity;
     }
 
-    /**
-     * Permits the delivery chute to be loaded with items without causing events
-     * to be announced.
-     * 
-     * @throws SimulationException
-     *             if the coins added exceed the capacity of the delivery chute.
-     */
-    public void loadWithoutEvents(Coin... coins) throws SimulationException {
-	if(maxCapacity < chute.size() + coins.length)
-	    throw new SimulationException("Capacity exceeded by attempt to load");
+	public void loadWithoutEvents(IRackable... rackables) throws SimulationException {
+	if(maxCapacity < chute.size() + rackables.length)
+	    throw new SimulationException("Capacity of rack is exceeded by load");
 
-	for(Coin coin : coins) {
-	    chute.add(coin);
-	}
+	/* Type cast is safe given we've used bounded parameter types and have initialized the queue based on U */
+	for(IRackable rackable : rackables)
+	    chute.add(rackable);
     }
 
-    /**
-     * Permits the delivery chute to be loaded with items without causing events
-     * to be announced.
-     * 
-     * @throws SimulationException
-     *             if the pop cans added exceed the capacity of the delivery
-     *             chute.
-     */
-    public void loadWithoutEvents(PopCan... pops) throws SimulationException {
-	if(maxCapacity < chute.size() + pops.length)
-	    throw new SimulationException("Capacity exceeded by attempt to load");
-
-	for(PopCan pop : pops) {
-	    chute.add(pop);
-	}
-    }
 
     private void notifyItemDelivered() {
 	Class<?>[] parameterTypes =
@@ -169,14 +118,14 @@ public class DeliveryChute extends
 	notifyListeners(DeliveryChuteListener.class, "itemDelivered", parameterTypes, args);
     }
 
-    private void notifyDoorOpened() {
+    private void notifyDoorOpened() throws InvocationTargetException {
 	Class<?>[] parameterTypes =
 	        new Class<?>[] { DeliveryChute.class };
 	Object[] args = new Object[] { this };
 	notifyListeners(DeliveryChuteListener.class, "doorOpened", parameterTypes, args);
     }
 
-    private void notifyDoorClosed() {
+    private void notifyDoorClosed() throws InvocationTargetException {
 	Class<?>[] parameterTypes =
 	        new Class<?>[] { DeliveryChute.class };
 	Object[] args = new Object[] { this };

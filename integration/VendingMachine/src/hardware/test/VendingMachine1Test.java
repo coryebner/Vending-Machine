@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
 import hardware.AbstractHardware;
@@ -47,15 +48,13 @@ public class VendingMachine1Test {
 	// private CardSlotListenerStub cardSlotListener;
 	private DeliveryChuteListenerStub deliveryChuteListener;
 	private CoinRackListenerStub[] coinRackListeners;
-	private ProductRackListenerStub[] popRackListeners;
+	private ProductRackListenerStub[] productRackListeners;
 	private IndicatorLightListenerStub outOfOrderListener, exactChangeListener;
 	private PushButtonListenerStub[] pushButtonListeners;
 	private PushButtonListenerStub returnButtonListener;
 
 	@Before
 	public void setup() throws NoSuchHardwareException {
-
-		// fail("Broken test");
 
 		hardware = new VMRUS_SFF_P_C(Locale.CANADA, new int[] { 5, 10, 25, 100,
 				200 });
@@ -73,10 +72,10 @@ public class VendingMachine1Test {
 			hardware.getCoinRack(i).register(coinRackListeners[i]);
 		}
 
-		popRackListeners = new ProductRackListenerStub[6];
+		productRackListeners = new ProductRackListenerStub[6];
 		for (int i = 0; i < NO_PRODUCTRACKS; i++) {
-			popRackListeners[i] = new ProductRackListenerStub();
-			hardware.getProductRack(i).register(popRackListeners[i]);
+			productRackListeners[i] = new ProductRackListenerStub();
+			hardware.getProductRack(i).register(productRackListeners[i]);
 		}
 
 		pushButtonListeners = new PushButtonListenerStub[NO_SELECTIONBUTTONS];
@@ -115,8 +114,8 @@ public class VendingMachine1Test {
 		}
 
 		for (int i = 0; i < NO_PRODUCTRACKS; i++) {
-			hardware.getProductRack(i).deregister(popRackListeners[i]);
-			popRackListeners[i] = null;
+			hardware.getProductRack(i).deregister(productRackListeners[i]);
+			productRackListeners[i] = null;
 		}
 
 		for (int i = 0; i < NO_SELECTIONBUTTONS; i++) {
@@ -135,7 +134,7 @@ public class VendingMachine1Test {
 		deliveryChuteListener = null;
 		storageBinListener = null;
 		coinRackListeners = null;
-		popRackListeners = null;
+		productRackListeners = null;
 		exactChangeListener = null;
 		outOfOrderListener = null;
 	}
@@ -148,7 +147,7 @@ public class VendingMachine1Test {
 
 	@Test
 	public void testCoinEntry() throws CapacityExceededException,
-			DisabledException, NoSuchHardwareException {
+			DisabledException, NoSuchHardwareException, InvocationTargetException {
 		coinReceptacleListener.expect("coinAdded");
 		coinSlotListener.expect("validCoinInserted");
 		hardware.getCoinSlot().addCoin(coin);
@@ -231,15 +230,15 @@ public class VendingMachine1Test {
 
 	@Test
 	public void testCoinEntryWhenDisabled() throws CapacityExceededException,
-			DisabledException, NoSuchHardwareException {
+			DisabledException, NoSuchHardwareException, InvocationTargetException {
 		coinSlotListener.expect("disabled");
 		// cardSlotListener.expect("disabled");
 		deliveryChuteListener.expect("disabled");
 		outOfOrderListener.expect("activated");
 		for (int i = 0; i < coinRackListeners.length; i++)
 			coinRackListeners[i].expect("disabled");
-		for (int i = 0; i < popRackListeners.length; i++)
-			popRackListeners[i].expect("disabled");
+		for (int i = 0; i < productRackListeners.length; i++)
+			productRackListeners[i].expect("disabled");
 
 		hardware.enableSafety();
 
@@ -249,15 +248,15 @@ public class VendingMachine1Test {
 		deliveryChuteListener.assertProtocol();
 		for (int i = 0; i < coinRackListeners.length; i++)
 			coinRackListeners[i].assertProtocol();
-		for (int i = 0; i < popRackListeners.length; i++)
-			popRackListeners[i].assertProtocol();
+		for (int i = 0; i < productRackListeners.length; i++)
+			productRackListeners[i].assertProtocol();
 
 		outOfOrderListener.init();
 		coinSlotListener.init();
 		for (int i = 0; i < coinRackListeners.length; i++)
 			coinRackListeners[i].init();
-		for (int i = 0; i < popRackListeners.length; i++)
-			popRackListeners[i].init();
+		for (int i = 0; i < productRackListeners.length; i++)
+			productRackListeners[i].init();
 		try {
 			hardware.getCoinSlot().addCoin(coin);
 			fail();
@@ -284,8 +283,8 @@ public class VendingMachine1Test {
 		outOfOrderListener.expect("activated");
 		for (int i = 0; i < coinRackListeners.length; i++)
 			coinRackListeners[i].expect("disabled");
-		for (int i = 0; i < popRackListeners.length; i++)
-			popRackListeners[i].expect("disabled");
+		for (int i = 0; i < productRackListeners.length; i++)
+			productRackListeners[i].expect("disabled");
 
 		hardware.enableSafety();
 
@@ -294,15 +293,15 @@ public class VendingMachine1Test {
 		deliveryChuteListener.assertProtocol();
 		for (int i = 0; i < coinRackListeners.length; i++)
 			coinRackListeners[i].assertProtocol();
-		for (int i = 0; i < popRackListeners.length; i++)
-			popRackListeners[i].assertProtocol();
+		for (int i = 0; i < productRackListeners.length; i++)
+			productRackListeners[i].assertProtocol();
 
 		coinSlotListener.init();
 		outOfOrderListener.init();
 		for (int i = 0; i < coinRackListeners.length; i++)
 			coinRackListeners[i].init();
-		for (int i = 0; i < popRackListeners.length; i++)
-			popRackListeners[i].init();
+		for (int i = 0; i < productRackListeners.length; i++)
+			productRackListeners[i].init();
 
 		hardware.getCoinReceptacle().storeCoins();
 	}
@@ -327,8 +326,8 @@ public class VendingMachine1Test {
 		outOfOrderListener.expect("activated", "deactivated");
 		for (int i = 0; i < coinRackListeners.length; i++)
 			coinRackListeners[i].expect("disabled", "enabled");
-		for (int i = 0; i < popRackListeners.length; i++)
-			popRackListeners[i].expect("disabled", "enabled");
+		for (int i = 0; i < productRackListeners.length; i++)
+			productRackListeners[i].expect("disabled", "enabled");
 
 		assertFalse(hardware.isSafetyEnabled());
 		hardware.enableSafety();
@@ -341,8 +340,8 @@ public class VendingMachine1Test {
 		deliveryChuteListener.assertProtocol();
 		for (int i = 0; i < coinRackListeners.length; i++)
 			coinRackListeners[i].assertProtocol();
-		for (int i = 0; i < popRackListeners.length; i++)
-			popRackListeners[i].assertProtocol();
+		for (int i = 0; i < productRackListeners.length; i++)
+			productRackListeners[i].assertProtocol();
 	}
 
 	@Test
@@ -421,7 +420,7 @@ public class VendingMachine1Test {
 
 	// test dispense pop
 	@Test
-	public void testDispensePopRacks() throws NoSuchHardwareException {
+	public void testDispensePopRacks() throws NoSuchHardwareException, InvocationTargetException {
 		ProductRack rack;
 		Object[] chuteContents = hardware.getDeliveryChute().removeItems();
 		assertTrue(chuteContents.length == 0);
@@ -430,7 +429,6 @@ public class VendingMachine1Test {
 			deliveryChuteListener.expect("itemDelivered");
 			try {
 				rack.addProduct(new PopCan());
-				;
 				rack.dispenseProduct();
 			} catch (Exception e) {
 				fail("Unexpected Exception: " + e);
@@ -445,7 +443,7 @@ public class VendingMachine1Test {
 
 	// test dispense coin
 	@Test
-	public void testReleaseCoinRacks() throws NoSuchHardwareException {
+	public void testReleaseCoinRacks() throws NoSuchHardwareException, InvocationTargetException {
 		CoinRack rack;
 		Object[] chuteContents = hardware.getDeliveryChute().removeItems();
 		assertTrue(chuteContents.length == 0);

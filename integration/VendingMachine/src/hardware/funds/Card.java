@@ -45,12 +45,12 @@ public class Card {
      * 		  the card pin number
      * @param expiry
      * 		  the card expiration date in the form of MM/YYYY
-     * @param locale
+     * @param cardLocale
      * 		  the card locale
      * @param maxAmount
      *		   the maximum amount the card can carry.
      */
-    public Card(CardType type, String number, String name, String pin, String expiry, Locale locale, int maxAmount) {
+    public Card(CardType type, String number, String name, String pin, String expiry, Locale cardLocale, int maxAmount) {
 	if(type == null || number == null || name == null || pin == null || expiry == null)
 	    throw new SimulationException("The arguments may not be null");
 
@@ -64,10 +64,10 @@ public class Card {
 	this.expiry = expiry;
 	this.maxAmount = maxAmount;
 	
-	if(locale == null)
+	if(cardLocale == null)
 		this.cardLocale = Locale.CANADA;
     else
-    	this.cardLocale = locale;
+    	this.cardLocale = cardLocale;
     }
 
     /**

@@ -2,6 +2,7 @@ package hardware;
 
 import hardware.exceptions.SimulationException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Vector;
 
@@ -92,7 +93,9 @@ public abstract class AbstractHardware<T extends AbstractHardwareListener> {
 	    for(T listener : listeners) {
 		m.invoke(listener, args);
 	    }
-	}
+    } catch(InvocationTargetException e) {
+    	throw new SimulationException(e.getCause().toString());
+    }
 	catch(Exception e) {
 	    throw new SimulationException(e);
 	}
