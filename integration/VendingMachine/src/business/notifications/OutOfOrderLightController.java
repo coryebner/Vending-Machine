@@ -1,4 +1,4 @@
-package notifications;
+package business.notifications;
 
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
@@ -16,7 +16,7 @@ public class OutOfOrderLightController implements hardware.funds.CoinReceptacleL
 		 * this could be done in two ways:
 		 * 1) we are given the state: inconvenient for a user!
 		 * 2) we calculate the state: we need to know about how many coins are in the 
-		 * storagebin 
+		 * storagebin
 		 */
 	}
 	

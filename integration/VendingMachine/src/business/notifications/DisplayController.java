@@ -1,4 +1,4 @@
- package notifications;
+ package business.notifications;
 
  import java.awt.event.ActionEvent;
  import java.awt.event.ActionListener;
@@ -40,7 +40,7 @@ public class DisplayController implements SelectionControllerListener{
 		return currentMsg;
 	}
 	
-    void emptySelection() {
+    public void emptySelection() {
 		eventTimer.setInitialDelay(4000);
 		eventTimer.restart();
 		this.display("Product empty");
@@ -48,11 +48,11 @@ public class DisplayController implements SelectionControllerListener{
     }
     
 
-    void invalidSelection() {	
+    public void invalidSelection() {	
     	this.display("Invalid product selected");
 	}
 
-    void insufficientFunds(int fundsRequired) {
+    public void insufficientFunds(int fundsRequired) {
 		eventTimer.setInitialDelay(5000);
 		eventTimer.restart();
 		this.display("Insufficient funds. Product costs: " + Integer.toString(fundsRequired));

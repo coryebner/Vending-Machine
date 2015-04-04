@@ -1,4 +1,4 @@
-package notifications;
+package business.notifications;
 
 import java.util.HashMap;
 
