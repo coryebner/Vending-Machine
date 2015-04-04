@@ -15,6 +15,18 @@ import business.selection_delivery.InventoryController;
 import business.stub.DisplayController;
 import business.stub.FundsController;
 import hardware.AbstractVendingMachine;
+import hardware.VMRUS_COM_C_M;
+import hardware.VMRUS_COM_C_MI;
+import hardware.VMRUS_COM_P_M;
+import hardware.VMRUS_COM_P_MI;
+import hardware.VMRUS_SFF_P_C;
+import hardware.VMRUS_SFF_P_CI;
+import hardware.VMRUS_SFF_P_PI;
+import hardware.VMRUS_TOC_CP;
+import hardware.VMRUS_TOC_CP_I;
+import hardware.VMRUS_TOC_C_MI;
+import hardware.VMRUS_TOC_P_I;
+import hardware.VMRUS_TOC_P_MI;
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.racks.ProductRack;
 import hardware.test.VendingMachine1Test;
@@ -113,7 +125,7 @@ public class Configuration {
 		throws ConfigurationException
 	{
 		if (type.equals("VMRUS-SFF-P/C")) {
-			//machine = createSFFPC();
+			machine = createSFFPC();
 		}
 //		else if (type.equals("VMRUS-SFF-P/CI")) {
 //			machine = createSFFPCI();
@@ -430,64 +442,256 @@ public class Configuration {
 	 *   - createInventoryController()
 	 *  in the correct order. Note that this does NOT include createLogger()
 	 */
-//	protected AbstractVendingMachine createSFFPC()
-//	{
-//		//return new VendingMachine1(new int [] {5, 10, 25, 100, 200}, prices, names);
-//	}
+	
+	//These are all marked deprecated, and the first few have inconsistent constructors. This is intentional, of course, but I made the constructors as close to
+	//finished as was reasonable. I had to do instantiate the machine object here, instead of waiting for createMachine() to resolve, because the controllers need
+	//the machine to be instantiated to work properly.
+	
+	protected AbstractVendingMachine createSFFPC()
+	{
+		machine = new VMRUS_SFF_P_C(new int [] {5, 10, 25, 100, 200});
+		
+		//Create a funds controller for coins only
+		createFundsController(true, false, false);
+		
+		//Create a selection button controller
+		createButtonSelectionController();
+		
+		//Create the inventory manager
+		createInventoryController();
+		
+		//Create the logger
+		createLogger(logFrequency);
+		
+		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(False),
+		
+		return machine;
+	}
 //
 //	protected AbstractVendingMachine createSFFPCI()
 //	{
-//		return new AbstractVendingMachine();	
+//		machine = new VMRUS_SFF_P_CI(new int [] {5, 10, 25, 100, 200}, popCosts, popNames);	
+//		
+//		//Create a funds controller for coins only
+//		createFundsController(true, false, false);
+//		
+//		//Create a selection button controller
+//		createButtonSelectionController();
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//		
+//		//Create the logger
+//		createLogger(logFrequency);
+//		
+//		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(True)
+//		return machine;
 //	}
 //
 //	protected AbstractVendingMachine createSFFPPI()
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_SFF_P_PI(popCosts, popNames);
+//	
+//		//Create a funds controller for prepaid cards only
+//		createFundsController(false, true, false);
+//		
+//		//Create a selection button controller
+//		createButtonSelectionController();
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//		
+//		//Create the logger
+//		createLogger(logFrequency);
+//		
+//		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(True)
+//		return machine;
 //	}
 //
 //	protected AbstractVendingMachine createCOMPMI()
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_COM_P_MI(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
+//	
+//		//Create a funds controller for all payment options
+//		createFundsController(true, true, true);
+//		
+//		//Create a selection button controller
+//		createButtonSelectionController();
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//		
+//		//Create the logger
+//		createLogger(logFrequency);
+//		
+//		//TODO: Displaycontroller(Basic), keyboardController(Physical), internetController(True)
+//		return machine;
 //	}
 //
 //	protected AbstractVendingMachine createCOMPM()
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_COM_P_M(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
+//	
+//		//Create a funds controller for all payment options except Paypal
+//		createFundsController(true, true, false);
+//		
+//		//Create a selection button controller
+//		createButtonSelectionController();
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//		
+//		//Create the logger
+//		createLogger(logFrequency);
+//	
+//		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(False)
+//		return machine;
 //	}
 //
 //	protected AbstractVendingMachine createCOMCMI()
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_COM_C_MI(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
+//	
+//		//Create a funds controller for all payment options
+//		createFundsController(true, true, true);
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//	
+//		//Create Code selection controller
+//		createCodeController(0);
+//		
+//		//Create the logger
+//		createLogger(logFrequency);
+//		
+//		//TODO: Displaycontroller(basic), keyboardController(Physical), internetController(True)
+//		return machine;
 //	}
 //
 //	protected AbstractVendingMachine createCOMCM()
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_COM_C_M(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
+//	
+//		//Create a funds controller for all options except Paypal
+//		createFundsController(true, true, false);
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//
+//		//Create Code selection controller
+//		createCodeController(0);
+//		
+//		//Create the logger
+//		createLogger(logFrequency);
+//		
+//		//TODO: Displaycontroller(basic), keyboardController(none), internetController(false)
+//		return machine;
 //	}
 //	
 //	protected AbstractVendingMachine createTOCPMI()
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_TOC_P_MI(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
+//	
+//		//Create a funds controller for all payment options
+//		createFundsController(true, true, true);
+//	
+//		//Create a selection button controller
+//		createButtonSelectionController();
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//	
+//		//Create the logger
+//		createLogger(logFrequency);
+//		
+//		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(True)
+//		return machine;
 //	}
 //	
 //	protected AbstractVendingMachine createTOCPI()
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_TOC_P_I(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});
+//	
+//		//Create a funds controller for all payment options except Paypal
+//		createFundsController(true, true, false);
+//
+//		//Create a selection button controller
+//		createButtonSelectionController();
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//
+//		//Create the logger
+//		createLogger(logFrequency);
+//	
+//		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(False)
+//		return machine;		
 //	}
 //
 //	protected AbstractVendingMachine createTOCCMI()
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_TOC_C_MI(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
+//	
+//		//Create a funds controller for all payment options
+//		createFundsController(true, true, true);
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//	
+//		//Create Code selection controller
+//		createCodeController(0);
+//	
+//		//Create the logger
+//		createLogger(logFrequency);
+//	
+//		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(True)
+//		return machine;
 //	}
 //
-//	protected AbstractVendingMachine createTOCCp()
+//	protected AbstractVendingMachine createTOCCp() throws NoSuchHardwareException
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_TOC_CP(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
+//	
+//		//Create a funds controller for all payment options except Paypal
+//		createFundsController(true, true, false);
+//	
+//		//Create a selection button controller
+//		createButtonSelectionController();
+//	
+//		//Create the inventory manager
+//		createInventoryController();
+//
+//		//Create Code selection controller
+//		createCodeController(this.machine.getNumberOfSelectionButtons());
+//
+//		//Create the logger
+//		createLogger(logFrequency);
+//
+//		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(false)
+//		return machine;
 //	}
 //
-//	protected AbstractVendingMachine createTOCCpI()
+//	protected AbstractVendingMachine createTOCCpI() throws NoSuchHardwareException
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_TOC_CP_I(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});
+//	
+//		//Create a funds controller for all payment options
+//		createFundsController(true, true, true);
+//
+//		//Create a selection button controller
+//		createButtonSelectionController();
+//
+//		//Create the inventory manager
+//		createInventoryController();
+//
+//		//Create Code selection controller
+//		createCodeController(this.machine.getNumberOfSelectionButtons());
+//
+//		//Create the logger
+//		createLogger(logFrequency);
+//
+//		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(true)
+//		return machine;		
 //	}
 	
 	/**
