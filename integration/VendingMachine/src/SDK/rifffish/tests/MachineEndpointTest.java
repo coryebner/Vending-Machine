@@ -14,8 +14,11 @@ public class MachineEndpointTest {
 	private Machine m = null;
 	@Before
 	public void setUp() throws Exception {
-		// Local dev testing, API Key will need to be regenerated
-		r = new Rifffish("rsh_Wv9Q58YtKQBh7v7C0fzTvQtt", "http://localhost:3000/api");  //generate a ton of junk data!
+		// This passes now (it was using a local database which I didn't have on my machine,
+		//  nor did the build server) - but I'm pretty sure our tests are actually adding
+		//  things to the real DB which isn't super cool
+		// Could use a testing DB, maybe discuss with Thomas?
+		r = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt", "http://rifffish.com/api");  //generate a ton of junk data!
 		m = new Machine("Candy Pop", "vmrs_sff_p_c", "in_service", "CAD");
 
 	}
