@@ -2,6 +2,10 @@ package business.funds;
 
 import java.security.InvalidParameterException;
 import java.util.HashMap;
+import java.util.Stack;
+import java.util.Vector;
+
+import com.sun.jndi.url.corbaname.corbanameURLContextFactory;
 
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
@@ -22,18 +26,22 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 	private HashMap<ProductRack, TrackedProduct> rackToProductMap;
 	private TrackedProduct[] products;
 	private InventoryController inventoryController;
+	private CoinRackController coinRacks[];
+	private Vector<Integer> returnValues;
 	
 	private boolean exactChangeStatusActive = false;
 
-	public ExactChangeController(InventoryController ic){
+	//ASSUME COIN RACKS ARE IN ASSENDING ORDER
+	public ExactChangeController(InventoryController ic, CoinRackController coinRacks[]){
 		if(ic == null){
 			throw new InvalidParameterException();
 		}
 		
 		inventoryController = ic;
 		int numRacks = ic.getRackCount();
-		
+		this.coinRacks = coinRacks;
 		products = new TrackedProduct[numRacks];
+		
 		for(int i = 0; i < numRacks; i++){
 			products[i].isEmpty = ic.isEmpty(i);
 			products[i].price = ic.getCost(i);
@@ -60,7 +68,40 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 	 * Recalculates possible amounts of change to make
 	 */
 	private void calculateChangeToMake(){
+		//DepthfirstSearch
+		Stack<Integer> trail = new Stack<Integer>();
+		int sum = 0;
+		int productPrice;
+		int prevPop;
 		
+		for(int i = 0; i < products.length; i++) {
+			if(products[i].isEmpty)
+				continue;
+			productPrice = products[i].price;
+			trail.push(coinRacks.length - 1);
+			sum = coinRacks[coinRacks.length - 1].getCoinRackDenomination();
+			prevPop = coinRacks.length;
+			while(!trail.isEmpty()) {
+				if(prevPop == 0) {
+					prevPop = trail.pop();
+					sum-= coinRacks[prevPop].getCoinRackDenomination();
+					continue;
+				}
+				
+				if(sum>productPrice) {
+					if(!returnValues.contains(new Integer(sum-productPrice)))
+						returnValues.add(new Integer(sum-productPrice));
+					prevPop = trail.pop();
+					sum-= coinRacks[prevPop].getCoinRackDenomination();
+				} else if(sum == productPrice) {
+					prevPop = trail.pop();
+					sum-= coinRacks[prevPop].getCoinRackDenomination();
+				} else {
+					trail.push(prevPop - 1);
+					sum+= coinRacks[prevPop - 1].getCoinRackDenomination();
+				}
+			}
+		}
 	}
 	
 	
