@@ -98,7 +98,7 @@ public abstract class AbstractHardware<T extends AbstractHardwareListener> {
     } catch(InvocationTargetException e) {
         Throwable targetException = e.getTargetException();
         if (!(targetException instanceof NullPointerException)) {
-         ;  // Hack until a better means of dealing with InvocationTargetExceptions 
+         ;  // Hack until a better means of dealing with InvocationTargetExceptions is
         }
         else throw new SimulationException(targetException.toString());
     }

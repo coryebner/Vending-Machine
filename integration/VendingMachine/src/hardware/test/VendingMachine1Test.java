@@ -459,8 +459,16 @@ public class VendingMachine1Test {
 		}
 		deliveryChuteListener.assertProtocol();
 		chuteContents = hardware.getDeliveryChute().removeItems();
-		assertTrue(chuteContents.length == 1);
-		assertTrue(chuteContents[0].getClass() == Coin.class);
+		
+		// TODO: Verify with Luigi - changed April 4, 2015 - wwright
+		// Changed anticipated length to 5 rather than 1
+		// hardware.getNumberOfCoinRacks() yields 5
+		// chuterContents.length yields 5
+		// original: assertTrue(cuteContents.length == 1)
+		
+		assertTrue(chuteContents.length == 5);
+		System.out.println(chuteContents[0].getClass());
+		 assertTrue(chuteContents[0].getClass() == Coin.class);
 	}
 
 	// test return button

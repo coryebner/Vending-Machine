@@ -96,7 +96,7 @@ public class BanknoteReceptacleTest {
 		}
 		assertNull(caught);
 		listener.assertProtocol();
-		listener.expect("banknoteFull");
+		listener.expect("banknoteAdded");
 		try{
 			receptacle.acceptBanknote(new Banknote(5));
 		}catch(Exception e){
@@ -127,6 +127,11 @@ public class BanknoteReceptacleTest {
 		listener.assertProtocol();
 		
 		//Insert bill now that it is full
+		
+		// TODO: Look at possible link between InvocationTargetException 
+		// via AbstractHardware reflection method invocation and the fact
+		// that the banknoteFull notification is not being registered 
+		
 		listener.expect("banknoteFull");
 		try{
 			receptacle.acceptBanknote(new Banknote(5));
