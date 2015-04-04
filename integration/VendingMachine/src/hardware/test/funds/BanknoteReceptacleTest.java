@@ -106,41 +106,32 @@ public class BanknoteReceptacleTest {
 		listener.assertProtocol();
 		assertTrue(receptacle.hasSpace()==false);
 	}
-	@Test
-	public void acceptBillFullTest(){
-		//Fill the receptacle
-		listener.expect("banknoteAdded");
-		try{
-			receptacle.acceptBanknote(new Banknote(5));
-		}catch(Exception e){
-			caught=e;
-		}
-		assertNull(caught);
-		listener.assertProtocol();
-		listener.expect("banknoteAdded");
-		try{
-			receptacle.acceptBanknote(new Banknote(5));
-		}catch(Exception e){
-			caught=e;
-		}
-		assertNull(caught);
-		listener.assertProtocol();
-		
-		//Insert bill now that it is full
-		
-		// TODO: Look at possible link between InvocationTargetException 
-		// via AbstractHardware reflection method invocation and the fact
-		// that the banknoteFull notification is not being registered 
-		
-		listener.expect("banknoteFull");
-		try{
-			receptacle.acceptBanknote(new Banknote(5));
-		}catch(Exception e){
-			caught=e;
-		}
-		assertTrue(caught.getClass()==CapacityExceededException.class);
-		listener.assertProtocol();
+	
+    @Test
+    public void testBanknoteStoreBecomingFull() throws CapacityExceededException, DisabledException {
+	receptacle.loadWithoutEvents(banknote);
+	listener.expect("banknoteAdded", "banknoteFull");
+
+	assertTrue(receptacle.hasSpace());
+	receptacle.acceptBanknote(banknote);
+	assertFalse(receptacle.hasSpace());
+
+	listener.assertProtocol();
+    }
+    
+    @Test
+    public void testBanknoteReceptacleStoreFull() throws DisabledException {
+	receptacle.loadWithoutEvents(banknote, banknote);
+
+	try {
+	    receptacle.acceptBanknote(banknote);
+	    fail();
 	}
+	catch(CapacityExceededException e) {
+	}
+	listener.assertProtocol();
+    }
+    
 	@Test
 	public void isDisabledTest(){
 		receptacle.disable();

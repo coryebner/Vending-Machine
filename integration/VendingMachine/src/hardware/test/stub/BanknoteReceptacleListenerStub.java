@@ -18,19 +18,17 @@ public class BanknoteReceptacleListenerStub extends AbstractStub implements
 
 	@Override
 	public void banknoteAdded(BanknoteReceptacle receptacle, Banknote banknote) {
-		recordCallTo("banknoteAdded");
-		
+		recordCallTo("banknoteAdded");		
 	}
 
 	@Override
 	public void banknoteRemoved(BanknoteReceptacle receptacle) {
-		recordCallTo("BanknoteRemoved");
-		
+		recordCallTo("banknoteRemoved");		
 	}
 
 	@Override
 	public void banknoteFull(BanknoteReceptacle receptacle) {
-		recordCallTo("BanknoteFull");
-		
+		recordCallTo("banknoteFull");		
 	}
+
 }

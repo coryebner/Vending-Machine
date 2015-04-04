@@ -15,14 +15,14 @@ public interface BanknoteReceptacleListener extends AbstractHardwareListener {
 	 * @param banknote
 	 * 			   the bank note that was added to the associated bank note receptacle 
 	 */
-    void banknoteAdded(BanknoteReceptacle receptacle, Banknote banknote);
+    public void banknoteAdded(BanknoteReceptacle receptacle, Banknote banknote);
 
     /**
      * An event that announces that all bank notes have been removed from the indicated receptacle
      * @param receptacle
      * 			the indicated receptacle where all bank notes have been removed.
      */
-    void banknoteRemoved(BanknoteReceptacle receptacle);
+    public void banknoteRemoved(BanknoteReceptacle receptacle);
     
     /**
      * An event that announces that the indicated receptacle is now full.
@@ -30,7 +30,7 @@ public interface BanknoteReceptacleListener extends AbstractHardwareListener {
      * @param receptacle
      * 		   the receptacle that is now full.
      */
-    void banknoteFull(BanknoteReceptacle receptacle);
+    public void banknoteFull(BanknoteReceptacle receptacle);
     
     /**
      * An event that announces that the indicated receptacle is now enabled.
@@ -38,7 +38,7 @@ public interface BanknoteReceptacleListener extends AbstractHardwareListener {
      * @param receptacle
      * 		   the receptacle that is now enabled.
      */
-    void enabled(BanknoteReceptacle receptacle);
+    public void enabled(BanknoteReceptacle receptacle);
 
     /**
      * An event that announces that the indicated receptacle is now disabled.

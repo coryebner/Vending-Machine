@@ -91,14 +91,13 @@ public abstract class AbstractHardware<T extends AbstractHardwareListener> {
 	try {
 	    Method m =
 		    listenerClass.getMethod(eventNotificationMethodName, parameterTypes);
-	    m.setAccessible(true);
 	    for(T listener : listeners) {
 		m.invoke(listener, args);
 	    }
     } catch(InvocationTargetException e) {
         Throwable targetException = e.getTargetException();
         if (!(targetException instanceof NullPointerException)) {
-         ;  // Hack until a better means of dealing with InvocationTargetExceptions is
+         ;
         }
         else throw new SimulationException(targetException.toString());
     }

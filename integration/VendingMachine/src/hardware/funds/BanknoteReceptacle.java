@@ -73,11 +73,12 @@ public class BanknoteReceptacle extends AbstractHardware<BanknoteReceptacleListe
 		    throw new CapacityExceededException();
 	
 		banknotesEntered.add(banknote);
-	
+		
 		notifyBanknoteAdded(banknote);
-	
-		if(banknotesEntered.size() >= maxCapacity)
+
+		if(banknotesEntered.size() >= maxCapacity) {
 		    notifyBanknotesFull();
+		}
     }
     
     /**
