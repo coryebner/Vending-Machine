@@ -1,6 +1,7 @@
 package business.funds;
 
 import java.security.InvalidParameterException;
+import java.util.HashMap;
 
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
@@ -15,9 +16,10 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 	private class TrackedProduct{
 		private boolean isEmpty = false;
 		private int price = 0;
+		private int rackIndex;
 	}
 	
-	
+	private HashMap<ProductRack, TrackedProduct> rackToProductMap;
 	private TrackedProduct[] products;
 	private InventoryController inventoryController;
 	
@@ -32,9 +34,11 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 		int numRacks = ic.getRackCount();
 		
 		products = new TrackedProduct[numRacks];
-		for(int index = 0; index < numRacks; index++){
-			products[index].isEmpty = ic.isEmpty(index);
-			products[index].price = ic.getCost(index);
+		for(int i = 0; i < numRacks; i++){
+			products[i].isEmpty = ic.isEmpty(i);
+			products[i].price = ic.getCost(i);
+			products[i].rackIndex = i;
+			rackToProductMap.put(ic.getRack(i), products[i]);
 		}
 	}
 	
@@ -73,23 +77,14 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 
 	@Override
 	public void productAdded(ProductRack productRack, Product product) {
-		
-		for(int index = 0; index < products.length; index++){
-			//Just Re-check the empty products
-			if(products[index].isEmpty){
-				products[index].isEmpty = inventoryController.isEmpty(index);
-			}
-		}
+		TrackedProduct tempProduct = rackToProductMap.get(productRack);
+		tempProduct.isEmpty = inventoryController.isEmpty(tempProduct.rackIndex);
 	}
 	
 	@Override
 	public void productEmpty(ProductRack productRack) {
-		for(int index = 0; index < products.length; index++){
-			//Just Re-check the non-empty products
-			if(products[index].isEmpty){
-				products[index].isEmpty = inventoryController.isEmpty(index);
-			}
-		}
+		TrackedProduct tempProduct = rackToProductMap.get(productRack);
+		tempProduct.isEmpty = inventoryController.isEmpty(tempProduct.rackIndex);
 		
 	}
 	
