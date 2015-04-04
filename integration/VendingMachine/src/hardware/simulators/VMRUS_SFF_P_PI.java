@@ -1,5 +1,7 @@
 package hardware.simulators;
 
+import java.util.Locale;
+
 import hardware.channels.ProductChannel;
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.exceptions.SimulationException;
@@ -10,11 +12,25 @@ import hardware.ui.Display;
 import hardware.ui.IndicatorLight;
 import hardware.ui.PushButton;
 
-import java.net.Socket;
-
 /**
- * @deprecated This machine is not ready yet
+ * [Ready for integration testing]
  * Configuration 3 of the Vending Machine
+ * Product: Pop
+ * ProductRacks: 6
+ * SelectionButtons: 6 (One per ProductRack)
+ * CoinSlot: N
+ * BillSlot: N
+ * CardSlot: Y
+ * PayPal: N
+ * TouchScreen: N
+ * VMSocket (Internet): Y
+ * OutOfOrderLight: Y
+ * ExactChangeLight: N
+ * NoInternetConnectionLight: N (might be added later)
+ * OutOfProductLights: 6
+ * ReturnButton: Y
+ * 
+ * Still Missing: ConfigurationPanel
  */
 public class VMRUS_SFF_P_PI extends AbstractVendingMachine {
 	private DeliveryChute deliveryChute;
@@ -25,31 +41,22 @@ public class VMRUS_SFF_P_PI extends AbstractVendingMachine {
 	private PushButton returnButton;
 	private IndicatorLight outOfOrderLight;
 	private IndicatorLight[] outOfProductLights;
-	private Socket socket; // to be changed to VMSocket
+	private VMSocket socket;
 	// still missing ConfigurationPanel
 
 	protected static int deliveryChuteCapacity = 20;
-	protected static int coinReceptacleCapacity = 50;
-	protected static int storageBinCapacity = 1000;
-	protected static int coinRackCapacity = 20;
 	protected static int popRackCapacity = 15;
 	protected static int displayCharacters = 30;
 
 	// CONSTRUCTOR
-	public VMRUS_SFF_P_PI(int[] popCosts, String[] popNames) {
+	public VMRUS_SFF_P_PI(Locale locale) {
 
+		this.locale = locale;
+		
 		int numOfProducts = 6;
 		
-		if (popCosts == null || popNames == null)
+		if (locale == null)
 			throw new SimulationException("Arguments may not be null");
-
-		if (popCosts.length != numOfProducts)
-			throw new SimulationException("Pop costs must have length of "
-					+ numOfProducts);
-
-		if (popNames.length != numOfProducts)
-			throw new SimulationException("Pop names must have length of "
-					+ numOfProducts);
 
 		cardSlot = new CardSlot();
 		deliveryChute = new DeliveryChute(deliveryChuteCapacity);
@@ -71,7 +78,7 @@ public class VMRUS_SFF_P_PI extends AbstractVendingMachine {
 			outOfProductLights[i] = new IndicatorLight();
 
 		display = new Display();
-		socket = new Socket(); // to be changed to VMSocket
+		socket = new VMSocket();
 		// NEEDED: instantiate configuration panel
 
 	}
@@ -138,7 +145,7 @@ public class VMRUS_SFF_P_PI extends AbstractVendingMachine {
 	}
 	
 	@Override
-	public Socket getSocket() throws NoSuchHardwareException {
+	public VMSocket getSocket() throws NoSuchHardwareException {
 		return socket;
 	}
 

@@ -1,6 +1,5 @@
 package hardware.simulators;
 
-import java.net.Socket;
 import java.util.Locale;
 
 import hardware.exceptions.NoSuchHardwareException;
@@ -209,7 +208,7 @@ public abstract class AbstractVendingMachine {
 	 * 
 	 * @throws NoSuchHardwareException
 	 */
-	public Socket getSocket() throws NoSuchHardwareException {
+	public VMSocket getSocket() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 	

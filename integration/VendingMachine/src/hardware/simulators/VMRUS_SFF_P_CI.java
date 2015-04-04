@@ -2,7 +2,6 @@ package hardware.simulators;
 
 import hardware.channels.CoinChannel;
 import hardware.channels.ProductChannel;
-import hardware.exceptions.NoSuchHardwareException;
 import hardware.exceptions.SimulationException;
 import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinSlot;
@@ -13,13 +12,29 @@ import hardware.ui.Display;
 import hardware.ui.IndicatorLight;
 import hardware.ui.PushButton;
 
-import java.net.Socket;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
- * @deprecated This machine is not ready yet
+ * [Ready for integration testing]
  * Configuration 2 of the Vending Machine
+ * Product: Pop
+ * ProductRacks: 6
+ * SelectionButtons: 6 (One per ProductRack)
+ * CoinSlot: Y
+ * BillSlot: N
+ * CardSlot: N
+ * PayPal: N
+ * TouchScreen: N
+ * VMSocket (Internet): Y
+ * OutOfOrderLight: Y
+ * ExactChangeLight: Y
+ * NoInternetConnectionLight: N (might be added later)
+ * OutOfProductLights: 6
+ * ReturnButton: Y
+ * 
+ * Still Missing: ConfigurationPanel
  */
 public class VMRUS_SFF_P_CI extends AbstractVendingMachine {
 	private CoinSlot coinSlot;
@@ -33,7 +48,7 @@ public class VMRUS_SFF_P_CI extends AbstractVendingMachine {
 	private PushButton returnButton;
 	private IndicatorLight exactChangeLight, outOfOrderLight;
 	private IndicatorLight[] outOfProductLights;
-	private Socket socket; // to be changed to VMSocket
+	private VMSocket socket;
 	// still missing ConfigurationPanel
 
 	protected static int deliveryChuteCapacity = 20;
@@ -44,21 +59,14 @@ public class VMRUS_SFF_P_CI extends AbstractVendingMachine {
 	protected static int displayCharacters = 30;
 
 	// CONSTRUCTOR
-	public VMRUS_SFF_P_CI(int[] coinValues, int[] popCosts, String[] popNames) {
+	public VMRUS_SFF_P_CI(Locale locale, int[] coinValues) {
 
+		this.locale = locale;
+		
 		int numOfProducts = 6;
-		// int[] coinValues = { 5, 10, 25, 100, 200 };
 
-		if (coinValues == null || popCosts == null || popNames == null)
+		if (locale == null || coinValues == null)
 			throw new SimulationException("Arguments may not be null");
-
-		if (popCosts.length != numOfProducts)
-			throw new SimulationException("Pop costs must have length of "
-					+ numOfProducts);
-
-		if (popNames.length != numOfProducts)
-			throw new SimulationException("Pop names must have length of "
-					+ numOfProducts);
 
 		coinSlot = new CoinSlot(coinValues);
 		coinReceptacle = new CoinReceptacle(coinReceptacleCapacity);
@@ -95,7 +103,7 @@ public class VMRUS_SFF_P_CI extends AbstractVendingMachine {
 			outOfProductLights[i] = new IndicatorLight();
 
 		display = new Display();
-		socket = new Socket(); // to be changed to VMSocket
+		socket = new VMSocket(); // to be changed to VMSocket
 		// NEEDED: instantiate configuration panel
 
 	}
@@ -182,7 +190,7 @@ public class VMRUS_SFF_P_CI extends AbstractVendingMachine {
 	}
 	
 	@Override
-	public Socket getSocket() throws NoSuchHardwareException {
+	public VMSocket getSocket() {
 		return socket;
 	}
 

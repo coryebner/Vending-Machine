@@ -17,10 +17,24 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
+ * [Ready for integration testing]
  * Configuration 1 of the Vending Machine
- * No ConfigurationPanel yet
- * Has 6 Racks
- * Use this for integration testing
+ * Product: Pop
+ * ProductRacks: 6
+ * SelectionButtons: 6 (One per ProductRack)
+ * CoinSlot: Y
+ * BillSlot: N
+ * CardSlot: N
+ * PayPal: N
+ * TouchScreen: N
+ * VMSocket (Internet): N
+ * OutOfOrderLight: Y
+ * ExactChangeLight: Y
+ * NoInternetConnectionLight: N
+ * OutOfProductLights: 6
+ * ReturnButton: Y
+ * 
+ * Still Missing: ConfigurationPanel
  */
 public class VMRUS_SFF_P_C extends AbstractVendingMachine {
 	private CoinSlot coinSlot;
@@ -49,9 +63,8 @@ public class VMRUS_SFF_P_C extends AbstractVendingMachine {
 		this.locale = locale;
 		
 		int numOfProducts = 6;
-		// int[] coinValues = { 5, 10, 25, 100, 200 };
 
-		if (coinValues == null)
+		if (locale == null || coinValues == null)
 			throw new SimulationException("Arguments may not be null");
 
 		coinSlot = new CoinSlot(coinValues);
