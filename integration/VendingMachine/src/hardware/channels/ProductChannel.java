@@ -14,6 +14,9 @@ public class ProductChannel extends AbstractChannel<AbstractProductAcceptor> {
 
     /**
      * Creates a new product channel whose output will go to the indicated sink.
+     * 
+	 * @param sink
+	 * 			the output to be associated to the new product channel
      */
     public ProductChannel(AbstractProductAcceptor sink) {
     	super(sink);
@@ -22,6 +25,8 @@ public class ProductChannel extends AbstractChannel<AbstractProductAcceptor> {
     /**
      * This method should only be called from simulated hardware devices.
      * 
+     * @param product
+     * 			   the product to be moved to the associated channel sink.
      * @throws CapacityExceededException
      *             if the output sink cannot accept the product.
      * @throws DisabledException

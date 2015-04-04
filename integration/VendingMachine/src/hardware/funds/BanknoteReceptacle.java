@@ -20,8 +20,10 @@ public class BanknoteReceptacle extends AbstractHardware<BanknoteReceptacleListe
     private int maxCapacity;
 
     /**
-     * Creates a banknote receptacle with the indicated capacity.
+     * Creates a bank note receptacle with the indicated capacity.
      * 
+     * @param capacity
+     * 			   the initial capacity of the bank note receptacle 
      * @throws SimulationException
      *             if the capacity is not a positive integer.
      */
@@ -33,13 +35,14 @@ public class BanknoteReceptacle extends AbstractHardware<BanknoteReceptacleListe
     }
 
 
-
     /**
-     * Loads the indicated coins into the receptacle without causing events to
+     * Loads the indicated bank notes into the receptacle without causing events to
      * be announced.
      * 
+     * @param banknotes
+     * 			the bank notes (variable length parameter) to be loaded into the receptacle
      * @throws SimulationException
-     *             if the loading exceeds the capacity of the receptacle.
+     * 		   if the loading exceeds the capacity of the receptacle.
      */
     public void loadWithoutEvents(Banknote... banknotes) throws SimulationException {
 		if(maxCapacity < banknotesEntered.size() + banknotes.length)
@@ -55,6 +58,8 @@ public class BanknoteReceptacle extends AbstractHardware<BanknoteReceptacleListe
      * listeners. If a successful addition causes the receptacle to become full,
      * it will also announce a "banknotesFull" event to its listeners.
      * 
+     * @param banknote
+     * 			   the bank note to be accepted by the bank note receptacle
      * @throws CapacityExceededException
      *             if the receptacle has no space.
      * @throws DisabledException
@@ -84,12 +89,21 @@ public class BanknoteReceptacle extends AbstractHardware<BanknoteReceptacleListe
     	return banknotesEntered.size() < maxCapacity;
     }
 
+    /**
+     * Notify listeners that a bank note has been added to the receptacle.
+     * 
+     * @param banknote
+     * 		   the bank note being added to the receptacle (acceptor)
+     */
     private void notifyBanknoteAdded(Banknote banknote) {
 		Class<?>[] parameterTypes = new Class<?>[] { BanknoteReceptacle.class, Banknote.class };
 		Object[] args = new Object[] { this, banknote };
 		notifyListeners(BanknoteReceptacleListener.class, "banknoteAdded", parameterTypes, args);
 	}
     
+    /**
+     * Notify listeners the bank note acceptor is full
+     */
     private void notifyBanknotesFull() {
 		Class<?>[] parameterTypes = new Class<?>[] { BanknoteReceptacle.class };
 		Object[] args = new Object[] { this };

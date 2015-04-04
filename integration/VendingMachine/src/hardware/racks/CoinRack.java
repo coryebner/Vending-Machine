@@ -16,9 +16,10 @@ import hardware.funds.Coin;
  * responsibility to ensure the correct routing of coins.
  */
 public class CoinRack extends AbstractRack<CoinRackListener, Coin, CoinChannel> implements AbstractCoinAcceptor {
-
 	/**
 	 * Creates a coin rack with the indicated maximum capacity.
+	 * @param capacity
+	 * 		  the indicated maximum capacity of the rack.
 	 */
 	public CoinRack(int capacity) {
 		super(capacity);

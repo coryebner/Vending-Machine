@@ -15,22 +15,33 @@ public class BanknoteSlot extends AbstractHardware<BanknoteSlotListener> {
 	private Banknote noteReturned;
 
 	/**
-	* Creates a slot to accept banknotes of the indicated denominations
-	*/
+	 * Creates a new bank note slot - that is used to accept bank notes of the indicated denominations 
+	 * @param validValues
+	 * 		   the accepted denominations of the new bank note slot 
+	 */
 	public BanknoteSlot(int[] validValues) {
-	this.validValues = validValues;
-	noteReturned = null;
+		this.validValues = validValues;
+		noteReturned = null;
 	}
 	/**
 	* Connects the slot to the proper storage device.
 	* 
 	* @param valid
-	* 		The channel that connects the slot to the storage device
+	* 		The bank note channel that connects the slot to the storage device
 	*/
 	public void connect(BanknoteChannel valid) {
-	this.valid = valid;
+		this.valid = valid;
 	}
 	
+	/**
+	 * Determine the validity of a bank note 
+	 * 
+	 * @param banknote
+	 * 		   the bank note to check
+	 * @return
+	 * 		   true if the bank note is one of the accepted denomination values 
+	 * 		   false otherwise
+	 */
 	private boolean isValid(Banknote banknote) {
 		for(int vv : validValues) {
 			if(vv == banknote.getValue())
@@ -41,17 +52,19 @@ public class BanknoteSlot extends AbstractHardware<BanknoteSlotListener> {
 	}
 
 	/**
-	 * Tells the banknote slot that the indicated banknote is being inserted. If the
-	 * banknote is valid and there is space in the machine to store it, a
-	 * "validBanknoteInserted" event is announced to its listeners and the banknote is
+	 * Tells the bank note slot that the indicated bank note is being inserted. If the
+	 * bank note is valid and there is space in the machine to store it, a
+	 * "validBanknoteInserted" event is announced to its listeners and the bank note is
 	 * delivered to the storage device. If there is no space in the machine to
-	 * store it or the banknote is invalid, a "coinRejected" event is announced to
-	 * its listeners and the banknote is returned through the slot.
+	 * store it or the bank note is invalid, a "coinRejected" event is announced to
+	 * its listeners and the bank note is returned through the slot.
+	 * 
+	 * 
 	 * @param banknote
+	 * 			The bank note to be added to the associated bank note slot. 
 	 * @throws DisabledException
 	 * 		The current slot is disabled
 	 */
-
 	 public void addBanknote(Banknote banknote) throws DisabledException {
 		if(isDisabled())
 		    throw new DisabledException();
@@ -79,6 +92,10 @@ public class BanknoteSlot extends AbstractHardware<BanknoteSlotListener> {
 			throw new SimulationException("Unable to route banknote: All channels full");
 	}
 
+	 /**
+	  * Remove a bank note from the bank note slot
+	  * @return the bank note removed from the bank note slot
+	  */
 	    public Banknote removeBanknote(){
 	    	Banknote temp = noteReturned;
 	    	noteReturned = null;
@@ -86,6 +103,12 @@ public class BanknoteSlot extends AbstractHardware<BanknoteSlotListener> {
 	    }
 	    
 	    
+	    /**
+	     * An event that notifies listeners a valid bank note has been inserted
+	     * 
+	     * @param banknote
+	     * 		   the bank note that has been validated and inserted into the bank note slot.
+	     */
 	    private void notifyValidBanknoteInserted(Banknote banknote) {
 			Class<?>[] parameterTypes =
 			        new Class<?>[] { BanknoteSlot.class, Banknote.class };
@@ -93,6 +116,12 @@ public class BanknoteSlot extends AbstractHardware<BanknoteSlotListener> {
 			notifyListeners(BanknoteSlotListener.class, "validBanknoteInserted", parameterTypes, args);
 	    }
 
+	    /**
+	     * An event that notifies listeners a bank note has been rejected.
+	     * 
+	     * @param banknote
+	     * 		   the bank note that has been rejected from the bank note slot.
+	     */
 	    private void notifyBanknoteRejected(Banknote banknote) {
 			Class<?>[] parameterTypes =
 			        new Class<?>[] { BanknoteSlot.class, Banknote.class };

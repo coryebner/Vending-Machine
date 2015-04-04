@@ -18,6 +18,8 @@ public class CoinSlot extends AbstractHardware<CoinSlotListener> {
 
     /**
      * Creates a coin slot that recognizes coins of the specified values.
+	 * @param validValues
+	 * 		   the accepted denominations of the coin slot 
      */
     public CoinSlot(int[] validValues) {
 	this.validValues = validValues;
@@ -54,6 +56,8 @@ public class CoinSlot extends AbstractHardware<CoinSlotListener> {
      * store it or the coin is invalid, a "coinRejected" event is announced to
      * its listeners and the coin is returned.
      * 
+     * @param coin
+     * 			  the coin to be added to the coin slot.
      * @throws DisabledException
      *             if the coin slot is currently disabled.
      */
