@@ -88,7 +88,7 @@ public class BanknoteReceptacle extends AbstractHardware<BanknoteReceptacleListe
     public boolean hasSpace() {
     	return banknotesEntered.size() < maxCapacity;
     }
-
+    
     /**
      * Notify listeners that a bank note has been added to the receptacle.
      * 

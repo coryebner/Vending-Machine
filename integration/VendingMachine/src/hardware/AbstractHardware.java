@@ -81,6 +81,7 @@ public abstract class AbstractHardware<T extends AbstractHardwareListener> {
      * @param args
      *            The arguments to be passed to the event notification method;
      *            the first must be this device.
+     * @throws InvocationTargetException 
      * @throws SimulationException
      *             If the notification does not succeed for any reason.
      */
@@ -90,11 +91,16 @@ public abstract class AbstractHardware<T extends AbstractHardwareListener> {
 	try {
 	    Method m =
 		    listenerClass.getMethod(eventNotificationMethodName, parameterTypes);
+	    m.setAccessible(true);
 	    for(T listener : listeners) {
 		m.invoke(listener, args);
 	    }
     } catch(InvocationTargetException e) {
-    	throw new SimulationException(e.getCause().toString());
+        Throwable targetException = e.getTargetException();
+        if (!(targetException instanceof NullPointerException)) {
+         ;  // Hack until a better means of dealing with InvocationTargetExceptions 
+        }
+        else throw new SimulationException(targetException.toString());
     }
 	catch(Exception e) {
 	    throw new SimulationException(e);

@@ -10,7 +10,6 @@ import hardware.funds.Coin;
 import hardware.products.IRackable;
 import hardware.products.Product;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Vector;
 
 /**
@@ -84,7 +83,7 @@ public class DeliveryChute extends
      * 
      * @return The items that were in the delivery chute.
      */
-    public Object[] removeItems() throws InvocationTargetException {
+    public Object[] removeItems() {
 	notifyDoorOpened();
 	Object[] items = chute.toArray();
 	chute.clear();
@@ -118,14 +117,14 @@ public class DeliveryChute extends
 	notifyListeners(DeliveryChuteListener.class, "itemDelivered", parameterTypes, args);
     }
 
-    private void notifyDoorOpened() throws InvocationTargetException {
+    private void notifyDoorOpened() {
 	Class<?>[] parameterTypes =
 	        new Class<?>[] { DeliveryChute.class };
 	Object[] args = new Object[] { this };
 	notifyListeners(DeliveryChuteListener.class, "doorOpened", parameterTypes, args);
     }
 
-    private void notifyDoorClosed() throws InvocationTargetException {
+    private void notifyDoorClosed() {
 	Class<?>[] parameterTypes =
 	        new Class<?>[] { DeliveryChute.class };
 	Object[] args = new Object[] { this };
