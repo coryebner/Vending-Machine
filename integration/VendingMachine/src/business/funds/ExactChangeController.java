@@ -9,6 +9,7 @@ import com.sun.jndi.url.corbaname.corbanameURLContextFactory;
 
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
+import hardware.exceptions.EmptyException;
 import hardware.products.Product;
 import hardware.racks.ProductRack;
 import hardware.racks.ProductRackListener;
@@ -23,14 +24,13 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 		private int rackIndex;
 	}
 	
+	private boolean exactChangePossible = false;
 	private HashMap<ProductRack, TrackedProduct> rackToProductMap;
 	private TrackedProduct[] products;
 	private InventoryController inventoryController;
 	private CoinRackController coinRacks[];
 	private Vector<Integer> returnValues;
 	
-	private boolean exactChangeStatusActive = false;
-
 	//ASSUME COIN RACKS ARE IN ASSENDING ORDER
 	public ExactChangeController(InventoryController ic, CoinRackController coinRacks[]){
 		if(ic == null){
@@ -54,13 +54,36 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 	 * @exactChangeStatus - indicates if the exact change status is active or not
 	 */
 	public boolean isExactChangeActive(){
-		return exactChangeStatusActive;
+		return exactChangePossible;
 	}
 	
 	/**
 	 * Recalculates the exact change status after a transaction has taken place (pop dispensed)
 	 */
 	private void recalculateExactChange(){
+		int sum;
+		int amountUsed;
+		
+		exactChangePossible = true;
+
+		for(int i = 0; i < returnValues.size(); i++) {
+			sum = 0;
+			for(int j = coinRacks.length - 1; j >= 0; j--) {
+				amountUsed = 0;
+				while((coinRacks[j].getQuantity() - amountUsed > 0) &&
+						(sum < returnValues.elementAt(i).intValue())) {
+					amountUsed++;
+					sum+=coinRacks[j].getCoinRackDenomination();
+				}
+				if(sum > returnValues.elementAt(i).intValue()) {
+					sum-=coinRacks[j].getCoinRackDenomination();
+				}
+			}
+			if(sum != returnValues.elementAt(i).intValue()) {
+				exactChangePossible = false;
+				break;
+			}
+		}		
 		
 	}
 	
@@ -73,6 +96,9 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 		int sum = 0;
 		int productPrice;
 		int prevPop;
+		
+		
+		returnValues.clear();
 		
 		for(int i = 0; i < products.length; i++) {
 			if(products[i].isEmpty)
