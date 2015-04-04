@@ -1,9 +1,11 @@
 package business.funds;
 
-import com.paypal.base.rest.PayPalRESTException;
+import java.util.Locale;
 
 import hardware.funds.Card;
 import hardware.funds.Card.CardType;
+
+import javax.swing.JOptionPane;
 
 /** Description of PayPayController
  * @author Dianna Yim
@@ -17,10 +19,18 @@ public class PayPalController {
 	 * @param price 	The price in cents of the transaction attempted
 	 * @return 			The return code based on success of the transaction
 	 */
-	public TransactionReturnCode ConductTransaction(int price)
-	{
+	
+	public static TransactionReturnCode ConductTransaction(int price)
+	{			
 		try {
 			PayPalTransaction p = new PayPalTransaction();
+			int reply = JOptionPane.showConfirmDialog(null, "Insufficient Funds. Would you like to pay with PayPal?", "Insufficient Funds", JOptionPane.YES_NO_OPTION);
+			
+			if (reply != JOptionPane.YES_OPTION)
+			{
+				return TransactionReturnCode.INSUFFICIENTFUNDS;
+			}
+			
 			return p.processPayPalPayment(price);
 		} 
 		
@@ -33,40 +43,45 @@ public class PayPalController {
 	 * @param price 	The price in cents of the transaction attempted
 	 * @return 			The return code based on success of the transaction
 	 */
-	protected TransactionReturnCode ConductCreditCardTransaction(int price, Card creditCard){
+	public static TransactionReturnCode ConductCreditCardTransaction(int price, Card creditCard){
 		CardType type = creditCard.getType();
 		String t = type.toString();
-//			if(type != CardType.VISA && type != CardType.MASTERCARD){--------------------> To be implemented by hardware
-//				return null;	// Replace with specific error return code
-//			}
+		
+		if (!type.equals(CardType.VISA) && !type.equals(CardType.MASTERCARD))
+		{
+			return TransactionReturnCode.CREDITCARDERROR;
+		}
 			
 		String name = creditCard.getName();
 		
 		if(name == null)
+		{
 			return TransactionReturnCode.CREDITCARDERROR; //Replace with specific error return code
+		}
 			
 		String substrings[] = name.split(" ");
 			
 		if(name.length() < 2 )	
+		{
 			return TransactionReturnCode.CREDITCARDERROR; //Replace with specific error return code
+		}
 		
 		String firstName = substrings[0], lastName = substrings[substrings.length-1];
 		
 		String number = creditCard.getNumber();
 			
-		String expiryAsString = null; //creditCard.getExpiry(); --------> To be implemented by hardware
+		String expiryAsString = creditCard.getExpiryDate();
 			
 		String expirySubStrings[] = expiryAsString.split("/");
 			
 		if(expirySubStrings.length != 2)
+		{
 			return TransactionReturnCode.CREDITCARDERROR; // Replace with specific error return code
+		}
 		
-		int month = Integer.getInteger(expirySubStrings[0],0).intValue();	
+		int month = Integer.parseInt(expirySubStrings[0]);	
 		
-		int year = Integer.getInteger(expirySubStrings[1],0).intValue();
-			
-		if(month > 12 || month < 1 || year > 9999 || year < 1900)
-			return TransactionReturnCode.CREDITCARDERROR; //Replace with specific error return code
+		int year = Integer.parseInt(expirySubStrings[1]);
 		
 		try {
 			PayPalTransaction p = new PayPalTransaction();
@@ -79,4 +94,10 @@ public class PayPalController {
 		}
 	}
 	
+	public static void main (String [] args)
+	{
+		Card cc = new Card(CardType.VISA, "4214021408540409", "Tim Johnson","1234", "03/2020", Locale.US, 1000);
+		ConductCreditCardTransaction(300, cc);
+	}
+
 }

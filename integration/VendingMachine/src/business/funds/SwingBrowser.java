@@ -6,6 +6,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
@@ -27,7 +28,8 @@ import static javafx.concurrent.Worker.State.FAILED;
 
 public class SwingBrowser extends JFrame {
  
-    private final JFXPanel jfxPanel = new JFXPanel();
+	private static final long serialVersionUID = 1L;
+	private final JFXPanel jfxPanel = new JFXPanel();
     private WebEngine engine;
  
     private final JPanel panel = new JPanel(new BorderLayout());
@@ -161,8 +163,14 @@ public class SwingBrowser extends JFrame {
                                 }
                             }
                         });
+                
+                VirtualKeyboard k = new VirtualKeyboard();                
+                final VBox root = new VBox(5);
+                
+                root.getChildren().addAll(view, k.view());
 
-                jfxPanel.setScene(new Scene(view));
+                jfxPanel.setScene(new Scene(root));
+                
             }
         });
     }

@@ -1,6 +1,4 @@
 package business.funds;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.*;
 
 import javax.swing.SwingUtilities;
@@ -34,7 +32,7 @@ public class PayPalTransaction {
 	
 	// Constructor with arguments
 	public PayPalTransaction (String cID, String cS) throws PayPalRESTException
-	{
+	{		
 		// Create the sdkConfig for transaction
 		Map<String, String> sdkConfig = new HashMap<String, String>();
 		sdkConfig.put("mode", "sandbox");
@@ -163,7 +161,7 @@ public class PayPalTransaction {
 	{
 		// Create credit card object from PayPal
 		CreditCard cc = new CreditCard();
-		cc.setType(type);
+		cc.setType(type.toLowerCase());
 		cc.setNumber(number);
 		cc.setExpireMonth(month);
 		cc.setExpireYear(year);
@@ -207,7 +205,9 @@ public class PayPalTransaction {
 			return TransactionReturnCode.SUCCESSFUL;
 		
 		else
+		{
 			return TransactionReturnCode.CREDITCARDERROR;
+		}
 	}
 	
 	// Create a transaction with amount of product
@@ -271,10 +271,4 @@ public class PayPalTransaction {
 		
 		return newPayment;
 	}
-	
-	public static void main (String [] args) throws IOException, URISyntaxException, InterruptedException, PayPalRESTException
-	{
-		PayPalTransaction t = new PayPalTransaction();
-		TransactionReturnCode a = t.processPayPalPayment(300);
-	} 
 }
