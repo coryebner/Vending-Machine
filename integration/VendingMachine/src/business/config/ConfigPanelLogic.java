@@ -40,7 +40,6 @@ public class ConfigPanelLogic extends AbstractController<ConfigurationListener> 
 		case 1:
 			switch(secondaryState){
 			case 0:
-				System.out.println(tempProdId + "dd");
 				if(isNumeric(keyCode)){
 					tempProdId = tempProdId + keyCode;
 				}
@@ -55,17 +54,11 @@ public class ConfigPanelLogic extends AbstractController<ConfigurationListener> 
 					tempPrice = tempPrice + keyCode;
 				}
 				else if(keyCode.equals("ENTER")){
-					System.out.println("Enter pressed");
 					newPrice = Integer.parseInt(tempPrice);
 					tempPrice = "";
 					secondaryState = 0;
 					state = 0;
-					System.out.println("Notifying Listeners: " + productId + "  " + newPrice);
-					//notify hardware through listener
-					//transmitter.enterCommand("newPrice" + " " + productId + " " + newPrice);  Not sure what to send back
-					//																			to hardware or how they want the display message
-					//																			pushed back to them
-					notifyNameChange();
+					notifyPriceChange();
 				}
 				break;
 			}
@@ -92,9 +85,6 @@ public class ConfigPanelLogic extends AbstractController<ConfigurationListener> 
 					tempName = "";
 					secondaryState = 0;
 					state = 0;
-					System.out.println("Notifying Listeners: " + productId + "  " + newName);
-					//notify hardware through listener
-					//transmitter.enterCommand("newName" + " " + productId + " " + newPrice); Same as the comment above
 					notifyNameChange();
 				}
 				break;
@@ -104,14 +94,18 @@ public class ConfigPanelLogic extends AbstractController<ConfigurationListener> 
 	}
 	
 	
+	public void TestPriceChange(int index, int price)
+	{
+		productId = index;
+		newPrice = price;
+		notifyPriceChange();
+	}
+	
 	public static boolean isNumeric(String str)  
 	{  
-	  try  
-	  {  
+	  try  {  
 	    Integer.parseInt(str);  
-	  }  
-	  catch(NumberFormatException nfe)  
-	  {  
+	  }  catch(NumberFormatException nfe) {  
 	    return false;  
 	  }  
 	  return true;  
@@ -120,15 +114,16 @@ public class ConfigPanelLogic extends AbstractController<ConfigurationListener> 
 	protected void notifyPriceChange()
 	{
 		Class<?>[] parameterTypes =
-		        new Class<?>[] { };
-		Object[] args = new Object[] { this,productId,newPrice };
+		        new Class<?>[] { Integer.TYPE, Integer.TYPE};
+		Object[] args = new Object[] { productId,newPrice };
 		notifyListeners(ConfigurationListener.class, "priceChanged", parameterTypes, args);
 	}
 	protected void notifyNameChange()
 	{
 		Class<?>[] parameterTypes =
-		        new Class<?>[] { };
-		Object[] args = new Object[] { this,productId,newName };
+		        new Class<?>[] { Integer.TYPE, String.class };
+		Object[] args = new Object[] { productId,newName };
+		System.out.println("New Name: " + newName);
 		notifyListeners(ConfigurationListener.class, "nameChanged", parameterTypes, args);
 	}
 
