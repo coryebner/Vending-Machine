@@ -557,14 +557,4 @@ public class BusinessTouchScreen {
 	
 	
 	
-//	public static void main(String[] args) throws InterruptedException {
-//		BusinessTouchScreen sick = new BusinessTouchScreen();
-//		String byrone = "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG \n0123456789 the quick brown fox jumps over the lazy dog !@#$%^&*()-_=+[{]}\\|;:'\",<.>/?";
-//		Thread.sleep(2000);
-//		for (int i = 0; i < byrone.length(); i++)
-//		{
-//			sick.keyPress(String.valueOf(byrone.charAt(i)));
-//		}
-//	}
-	
 }
