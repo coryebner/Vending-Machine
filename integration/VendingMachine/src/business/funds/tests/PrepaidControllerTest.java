@@ -34,6 +34,7 @@ public class PrepaidControllerTest {
 	Currency curr;
 	Hardware hw;
 
+	
 	@Before
 	public void setUp() throws Exception {
 		curr = new Currency(Locale.CANADA);
@@ -301,5 +302,17 @@ public class PrepaidControllerTest {
 		} catch (DisabledException e) {
 			fail("Hardware disabled.");
 		} 
+	}
+	
+	/**
+	 * Test null constructor
+	 */
+	@Test 
+	public void isDisableTest() {
+		// Test using default constructor
+		pc = new PrepaidController();
+		assertTrue(pc.isDisabled());
+		assertEquals("Should be zero", 0, pc.getAvailableBalance());
+		assertFalse("No card should be inserted", pc.isCardInserted());
 	}
 }
