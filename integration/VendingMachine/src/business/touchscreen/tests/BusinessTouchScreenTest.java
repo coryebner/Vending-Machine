@@ -16,33 +16,31 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import business.touchscreen.BusinessTouchScreen;
+import business.touchscreen.BusinessTouchScreenListener;
 
 public class BusinessTouchScreenTest {
 
-	class KeyboardListener implements KeyListener{
+	class ScreenListener implements BusinessTouchScreenListener {
 
+		char pressed = ' ';
+		boolean notified = false;
 		
 		@Override
-		public void keyPressed(KeyEvent arg0) {
-			System.out.println("Something was pressed!");
-			
+		public void userKeyboardInput(char userInput) {
+			pressed = userInput;
+			notified = true;
 		}
-
-		@Override
-		public void keyReleased(KeyEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void keyTyped(KeyEvent arg0) {
-			// TODO Auto-generated method stub
-			
+		
+		public String getKeyPress(){
+			if(notified)
+				return (String.valueOf(pressed));
+			else 
+				return ("Nothing");
 		}
 		
 	}
 	
-	KeyboardListener theListener = null;
+	ScreenListener screenListener = null;
 	BusinessTouchScreen touchScreen = null;
 	
 	@BeforeClass
@@ -55,21 +53,279 @@ public class BusinessTouchScreenTest {
 
 	@Before
 	public void setUp() throws Exception {
-		theListener = new KeyboardListener();
+		screenListener = new ScreenListener();
 		touchScreen = new BusinessTouchScreen();
+		
+		touchScreen.register(screenListener);
 	}
 
 	@After
 	public void tearDown() throws Exception {
 	}
 	
+	
+	
 	@Test
-	public final void testStuff() {
-		touchScreen.OnKeyDown('A');
-		System.out.println("Hello");
+	public final void testListener_a() {
+		touchScreen.OnKeyDown('a');
+		assertTrue(screenListener.getKeyPress().equals("a"));
+	}
+	@Test
+	public final void testListener_b() {
+		touchScreen.OnKeyDown('b');
+		assertTrue(screenListener.getKeyPress().equals("b"));
+	}
+	@Test
+	public final void testListener_c() {
+		touchScreen.OnKeyDown('c');
+		assertTrue(screenListener.getKeyPress().equals("c"));
+	}
+	@Test
+	public final void testListener_d() {
+		touchScreen.OnKeyDown('d');
+		assertTrue(screenListener.getKeyPress().equals("d"));
+	}
+	@Test
+	public final void testListener_e() {
+		touchScreen.OnKeyDown('e');
+		assertTrue(screenListener.getKeyPress().equals("e"));
+	}
+	@Test
+	public final void testListener_f() {
+		touchScreen.OnKeyDown('f');
+		assertTrue(screenListener.getKeyPress().equals("f"));
+	}
+	@Test
+	public final void testListener_g() {
+		touchScreen.OnKeyDown('g');
+		assertTrue(screenListener.getKeyPress().equals("g"));
+	}
+	@Test
+	public final void testListener_h() {
+		touchScreen.OnKeyDown('h');
+		assertTrue(screenListener.getKeyPress().equals("h"));
+	}
+	@Test
+	public final void testListener_i() {
+		touchScreen.OnKeyDown('i');
+		assertTrue(screenListener.getKeyPress().equals("i"));
+	}
+	@Test
+	public final void testListener_j() {
+		touchScreen.OnKeyDown('j');
+		assertTrue(screenListener.getKeyPress().equals("j"));
+	}
+	@Test
+	public final void testListener_k() {
+		touchScreen.OnKeyDown('k');
+		assertTrue(screenListener.getKeyPress().equals("k"));
+	}
+	@Test
+	public final void testListener_l() {
+		touchScreen.OnKeyDown('l');
+		assertTrue(screenListener.getKeyPress().equals("l"));
+	}
+	@Test
+	public final void testListener_m() {
+		touchScreen.OnKeyDown('m');
+		assertTrue(screenListener.getKeyPress().equals("m"));
+	}
+	@Test
+	public final void testListener_n() {
+		touchScreen.OnKeyDown('n');
+		assertTrue(screenListener.getKeyPress().equals("n"));
+	}
+	@Test
+	public final void testListener_o() {
+		touchScreen.OnKeyDown('o');
+		assertTrue(screenListener.getKeyPress().equals("o"));
+	}
+	@Test
+	public final void testListener_p() {
+		touchScreen.OnKeyDown('p');
+		assertTrue(screenListener.getKeyPress().equals("p"));
+	}
+	@Test
+	public final void testListener_q() {
+		touchScreen.OnKeyDown('q');
+		assertTrue(screenListener.getKeyPress().equals("q"));
+	}
+	@Test
+	public final void testListener_r() {
+		touchScreen.OnKeyDown('r');
+		assertTrue(screenListener.getKeyPress().equals("r"));
+	}
+	@Test
+	public final void testListener_s() {
+		touchScreen.OnKeyDown('s');
+		assertTrue(screenListener.getKeyPress().equals("s"));
+	}
+	@Test
+	public final void testListener_t() {
+		touchScreen.OnKeyDown('t');
+		assertTrue(screenListener.getKeyPress().equals("t"));
+	}
+	@Test
+	public final void testListener_u() {
+		touchScreen.OnKeyDown('u');
+		assertTrue(screenListener.getKeyPress().equals("u"));
+	}
+	@Test
+	public final void testListener_v() {
+		touchScreen.OnKeyDown('v');
+		assertTrue(screenListener.getKeyPress().equals("v"));
+	}
+	@Test
+	public final void testListener_w() {
+		touchScreen.OnKeyDown('w');
+		assertTrue(screenListener.getKeyPress().equals("w"));
+	}
+	@Test
+	public final void testListener_x() {
+		touchScreen.OnKeyDown('x');
+		assertTrue(screenListener.getKeyPress().equals("x"));
+	}
+	@Test
+	public final void testListener_y() {
+		touchScreen.OnKeyDown('y');
+		assertTrue(screenListener.getKeyPress().equals("y"));
+	}
+	@Test
+	public final void testListener_z() {
+		touchScreen.OnKeyDown('z');
+		assertTrue(screenListener.getKeyPress().equals("z"));
 	}
 
-	
+	@Test
+	public final void testListener_A() {
+		touchScreen.OnKeyDown('A');
+		assertTrue(screenListener.getKeyPress().equals("A"));
+	}
+	@Test
+	public final void testListener_B() {
+		touchScreen.OnKeyDown('B');
+		assertTrue(screenListener.getKeyPress().equals("B"));
+	}
+	@Test
+	public final void testListener_C() {
+		touchScreen.OnKeyDown('C');
+		assertTrue(screenListener.getKeyPress().equals("C"));
+	}
+	@Test
+	public final void testListener_D() {
+		touchScreen.OnKeyDown('D');
+		assertTrue(screenListener.getKeyPress().equals("D"));
+	}
+	@Test
+	public final void testListener_E() {
+		touchScreen.OnKeyDown('E');
+		assertTrue(screenListener.getKeyPress().equals("E"));
+	}
+	@Test
+	public final void testListener_F() {
+		touchScreen.OnKeyDown('F');
+		assertTrue(screenListener.getKeyPress().equals("F"));
+	}
+	@Test
+	public final void testListener_G() {
+		touchScreen.OnKeyDown('G');
+		assertTrue(screenListener.getKeyPress().equals("G"));
+	}
+	@Test
+	public final void testListener_H() {
+		touchScreen.OnKeyDown('H');
+		assertTrue(screenListener.getKeyPress().equals("H"));
+	}
+	@Test
+	public final void testListener_I() {
+		touchScreen.OnKeyDown('I');
+		assertTrue(screenListener.getKeyPress().equals("I"));
+	}
+	@Test
+	public final void testListener_J() {
+		touchScreen.OnKeyDown('J');
+		assertTrue(screenListener.getKeyPress().equals("J"));
+	}
+	@Test
+	public final void testListener_K() {
+		touchScreen.OnKeyDown('K');
+		assertTrue(screenListener.getKeyPress().equals("K"));
+	}
+	@Test
+	public final void testListener_L() {
+		touchScreen.OnKeyDown('L');
+		assertTrue(screenListener.getKeyPress().equals("L"));
+	}
+	@Test
+	public final void testListener_M() {
+		touchScreen.OnKeyDown('M');
+		assertTrue(screenListener.getKeyPress().equals("M"));
+	}
+	@Test
+	public final void testListener_N() {
+		touchScreen.OnKeyDown('N');
+		assertTrue(screenListener.getKeyPress().equals("N"));
+	}
+	@Test
+	public final void testListener_O() {
+		touchScreen.OnKeyDown('O');
+		assertTrue(screenListener.getKeyPress().equals("O"));
+	}
+	@Test
+	public final void testListener_P() {
+		touchScreen.OnKeyDown('P');
+		assertTrue(screenListener.getKeyPress().equals("P"));
+	}
+	@Test
+	public final void testListener_Q() {
+		touchScreen.OnKeyDown('Q');
+		assertTrue(screenListener.getKeyPress().equals("Q"));
+	}
+	@Test
+	public final void testListener_R() {
+		touchScreen.OnKeyDown('R');
+		assertTrue(screenListener.getKeyPress().equals("R"));
+	}
+	@Test
+	public final void testListener_S() {
+		touchScreen.OnKeyDown('S');
+		assertTrue(screenListener.getKeyPress().equals("S"));
+	}
+	@Test
+	public final void testListener_T() {
+		touchScreen.OnKeyDown('T');
+		assertTrue(screenListener.getKeyPress().equals("T"));
+	}
+	@Test
+	public final void testListener_U() {
+		touchScreen.OnKeyDown('U');
+		assertTrue(screenListener.getKeyPress().equals("U"));
+	}
+	@Test
+	public final void testListener_V() {
+		touchScreen.OnKeyDown('V');
+		assertTrue(screenListener.getKeyPress().equals("V"));
+	}
+	@TestABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+	public final void testListener_W() {
+		touchScreen.OnKeyDown('W');
+		assertTrue(screenListener.getKeyPress().equals("W"));
+	}
+	@Test
+	public final void testListener_X() {
+		touchScreen.OnKeyDown('X');
+		assertTrue(screenListener.getKeyPress().equals("X"));
+	}
+	@Test
+	public final void testListener_Y() {
+		touchScreen.OnKeyDown('Y');
+		assertTrue(screenListener.getKeyPress().equals("Y"));
+	}
+	@Test
+	public final void testListener_Z() {
+		touchScreen.OnKeyDown('Z');
+		assertTrue(screenListener.getKeyPress().equals("Z"));
+	}	
 	
 	
 }
