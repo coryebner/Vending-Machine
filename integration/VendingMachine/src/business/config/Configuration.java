@@ -332,7 +332,7 @@ public class Configuration {
 	 */
 	protected void createButtonSelectionController()
 	{
-		// TODO Maria: Work in progress
+		
 		try {
 		int numberOfButtons = this.machine.getNumberOfSelectionButtons();
 		PushButton [] pushButtons = new PushButton[numberOfButtons];
@@ -363,9 +363,9 @@ public class Configuration {
 	protected void createCodeController(int offset)
 	{
 		
-		// TODO Maria: Work in progress
+		
 		try {
-			// Creating the codeselection controller.
+			// Creating the code selection controller.
 			this.codeSelectionController = new CodeSelectionController(
 					this.inventoryController, 
 					this.displayController, 
@@ -389,7 +389,6 @@ public class Configuration {
 	 */
 	protected void createInventoryController()
 	{
-		// TODO Maria: Work in progress
 		
 		try {
 			int numberOfRacks = this.machine.getNumberOfProductRacks();
