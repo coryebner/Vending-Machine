@@ -19,9 +19,9 @@ import business.selection_delivery.InventoryController;
 public class ExactChangeController implements ConfigurationListener, ProductRackListener {
 
 	private class TrackedProduct{
-		private boolean isEmpty = false;
-		private int price = 0;
-		private int rackIndex;
+		public boolean isEmpty;
+		public int price;
+		public int rackIndex;
 	}
 	
 	private boolean exactChangePossible = false;
@@ -41,13 +41,17 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 		int numRacks = ic.getRackCount();
 		this.coinRacks = coinRacks;
 		products = new TrackedProduct[numRacks];
+		returnValues = new Vector<Integer>();
+		rackToProductMap = new HashMap<ProductRack, ExactChangeController.TrackedProduct>();
 		
 		for(int i = 0; i < numRacks; i++){
+			products[i] = new TrackedProduct();
 			products[i].isEmpty = ic.isEmpty(i);
 			products[i].price = ic.getCost(i);
 			products[i].rackIndex = i;
 			rackToProductMap.put(ic.getRack(i), products[i]);
 		}
+		calculateChangeToMake();	
 	}
 	
 	/**
@@ -55,6 +59,14 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 	 */
 	public boolean isExactChangeActive(){
 		return exactChangePossible;
+	}
+	
+	/**
+	 * @getReturnValues - returns all the possible coin return values based
+	 * on the current product costs, product availability and coin denominations.
+	 */
+	public Vector<Integer> getReturnValues(){
+		return returnValues;
 	}
 	
 	/**
@@ -107,7 +119,7 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 			trail.push(coinRacks.length - 1);
 			sum = coinRacks[coinRacks.length - 1].getCoinRackDenomination();
 			prevPop = coinRacks.length;
-			while(!trail.isEmpty()) {
+			while(!trail.isEmpty() || prevPop != 0) {
 				if(prevPop == 0) {
 					prevPop = trail.pop();
 					sum-= coinRacks[prevPop].getCoinRackDenomination();
@@ -140,6 +152,7 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 	@Override
 	public void priceChanged(int index, int newPrice) {
 		products[index].price = newPrice;	
+		calculateChangeToMake();
 	}
 
 	@Override
