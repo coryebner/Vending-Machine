@@ -6,7 +6,8 @@ import java.util.ArrayList;
 
 import gui.*;
 
-public class BusinessTouchScreen implements VirtualKeyboardListener{
+public class BusinessTouchScreen {
+//implements VirtualKeyboardListener{
 
 	private ArrayList<BusinessTouchScreenListener> listeners = new ArrayList<BusinessTouchScreenListener>();
 	Robot robot;
