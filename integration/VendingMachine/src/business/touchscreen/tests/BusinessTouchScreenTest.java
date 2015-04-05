@@ -306,7 +306,7 @@ public class BusinessTouchScreenTest {
 		touchScreen.OnKeyDown('V');
 		assertTrue(screenListener.getKeyPress().equals("V"));
 	}
-	@TestABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+	@Test
 	public final void testListener_W() {
 		touchScreen.OnKeyDown('W');
 		assertTrue(screenListener.getKeyPress().equals("W"));
@@ -326,6 +326,280 @@ public class BusinessTouchScreenTest {
 		touchScreen.OnKeyDown('Z');
 		assertTrue(screenListener.getKeyPress().equals("Z"));
 	}	
+	@Test
+	public final void testlistener_1(){
+		touchScreen.OnKeyDown('1');
+		assertTrue(screenListener.getKeyPress().equals("1"));
+	}	
+	@Test
+	public final void testlistener_2(){
+		touchScreen.OnKeyDown('2');
+		assertTrue(screenListener.getKeyPress().equals("2"));
+	}
+	@Test
+	public final void testlistener_3(){
+		touchScreen.OnKeyDown('3');
+		assertTrue(screenListener.getKeyPress().equals("3"));
+	}
+	@Test
+	public final void testlistener_4(){
+		touchScreen.OnKeyDown('4');
+		assertTrue(screenListener.getKeyPress().equals("4"));
+	}
+	@Test
+	public final void testlistener_5(){
+		touchScreen.OnKeyDown('5');
+		assertTrue(screenListener.getKeyPress().equals("5"));
+	}
+	@Test
+	public final void testlistener_6(){
+		touchScreen.OnKeyDown('6');
+		assertTrue(screenListener.getKeyPress().equals("6"));
+	}
+	@Test
+	public final void testlistener_7(){
+		touchScreen.OnKeyDown('7');
+		assertTrue(screenListener.getKeyPress().equals("7"));
+	}
+	@Test
+	public final void testlistener_8(){
+		touchScreen.OnKeyDown('8');
+		assertTrue(screenListener.getKeyPress().equals("8"));
+	}
+	@Test
+	public final void testlistener_9(){
+		touchScreen.OnKeyDown('9');
+		assertTrue(screenListener.getKeyPress().equals("9"));
+	}
+
+	@Test
+	public final void testlistener_rightBracket(){
+		touchScreen.OnKeyDown(')');
+		assertTrue(screenListener.getKeyPress().equals(")"));
+	}
 	
+	@Test
+	public final void testlistener_exclamation(){
+		touchScreen.OnKeyDown('!');
+		assertTrue(screenListener.getKeyPress().equals("!"));
+	}
+	
+	@Test
+	public final void testlistener_atSymbol(){
+		touchScreen.OnKeyDown('@');
+		assertTrue(screenListener.getKeyPress().equals("@"));
+	}
+	
+	@Test
+	public final void testlistener_hash(){
+		touchScreen.OnKeyDown('#');
+		assertTrue(screenListener.getKeyPress().equals("#"));
+	}
+	
+	@Test
+	public final void testlistener_dollarSign(){
+		touchScreen.OnKeyDown('$');
+		assertTrue(screenListener.getKeyPress().equals("$"));
+	}
+	
+	@Test
+	public final void testlistener_modulo(){
+		touchScreen.OnKeyDown('%');
+		assertTrue(screenListener.getKeyPress().equals("%"));
+	}
+	
+	@Test
+	public final void testlistener_caret(){
+		touchScreen.OnKeyDown('^');
+		assertTrue(screenListener.getKeyPress().equals("^"));
+	}
+	
+	@Test
+	public final void testlistener_amperstamp(){
+		touchScreen.OnKeyDown('&');
+		assertTrue(screenListener.getKeyPress().equals("&"));
+	}
+	
+	@Test
+	public final void testlistener_star(){
+		touchScreen.OnKeyDown('*');
+		assertTrue(screenListener.getKeyPress().equals("*"));
+	}
+	
+	@Test
+	public final void testlistener_leftBracket(){
+		touchScreen.OnKeyDown('(');
+		assertTrue(screenListener.getKeyPress().equals("("));
+	}
+	
+	
+	// RANDOM OTHER CHARACTERS
+	
+	@Test
+	public final void testlistener_tick(){
+		touchScreen.OnKeyDown('`');
+		assertTrue(screenListener.getKeyPress().equals("`"));
+	}
+	
+	@Test
+	public final void testlistener_Squigly(){
+		touchScreen.OnKeyDown('~');
+		assertTrue(screenListener.getKeyPress().equals("~"));
+	}
+	
+	@Test
+	public final void testlistener_dash(){
+		touchScreen.OnKeyDown('-');
+		assertTrue(screenListener.getKeyPress().equals("-"));
+	}
+	
+	@Test
+	public final void testlistener_underscore(){
+		touchScreen.OnKeyDown('_');
+		assertTrue(screenListener.getKeyPress().equals("_"));
+	}
+	
+	@Test
+	public final void testlistener_equals(){
+		touchScreen.OnKeyDown('=');
+		assertTrue(screenListener.getKeyPress().equals("="));
+	}
+	
+	@Test
+	public final void testlistener_plus(){
+		touchScreen.OnKeyDown('+');
+		assertTrue(screenListener.getKeyPress().equals("+"));
+	}
+	
+	@Test
+	public final void testlistener_leftSquareBracket(){
+		touchScreen.OnKeyDown('[');
+		assertTrue(screenListener.getKeyPress().equals("["));
+	}
+	
+	@Test
+	public final void testlistener_leftParenthesis(){
+		touchScreen.OnKeyDown('{');
+		assertTrue(screenListener.getKeyPress().equals("{"));
+	}
+	
+	@Test
+	public final void testlistener_rightSquareBracket(){
+		touchScreen.OnKeyDown(']');
+		assertTrue(screenListener.getKeyPress().equals("]"));
+	}
+	
+	@Test
+	public final void testlistener_rightParenthesis(){
+		touchScreen.OnKeyDown('}');
+		assertTrue(screenListener.getKeyPress().equals("}"));
+	}
+	
+	@Test
+	public final void testlistener_backslash(){
+		touchScreen.OnKeyDown('\\');
+		assertTrue(screenListener.getKeyPress().equals("\\"));
+	}
+	
+	@Test
+	public final void testlistener_pipe(){
+		touchScreen.OnKeyDown('|');
+		assertTrue(screenListener.getKeyPress().equals("|"));
+	}
+	
+	@Test
+	public final void testlistener_semicolon(){
+		touchScreen.OnKeyDown(';');
+		assertTrue(screenListener.getKeyPress().equals(";"));
+	}
+	
+	@Test
+	public final void testlistener_colon(){
+		touchScreen.OnKeyDown(':');
+		assertTrue(screenListener.getKeyPress().equals(":"));
+	}
+	
+	@Test
+	public final void testlistener_singlequote(){
+		touchScreen.OnKeyDown('\'');
+		assertTrue(screenListener.getKeyPress().equals("\'"));
+	}
+	
+	@Test
+	public final void testlistener_quotation(){
+		touchScreen.OnKeyDown('"');
+		assertTrue(screenListener.getKeyPress().equals("\""));
+	}
+	
+	@Test
+	public final void testlistener_comma(){
+		touchScreen.OnKeyDown(',');
+		assertTrue(screenListener.getKeyPress().equals(","));
+	}
+	
+	@Test
+	public final void testlistener_leftAngleBracket(){
+		touchScreen.OnKeyDown('<');
+		assertTrue(screenListener.getKeyPress().equals("<"));
+	}
+	
+	@Test
+	public final void testlistener_period(){
+		touchScreen.OnKeyDown('.');
+		assertTrue(screenListener.getKeyPress().equals("."));
+	}
+	
+	@Test
+	public final void testlistener_rightAngleBracket(){
+		touchScreen.OnKeyDown('>');
+		assertTrue(screenListener.getKeyPress().equals(">"));
+	}
+	
+	@Test
+	public final void testlistener_slash(){
+		touchScreen.OnKeyDown('/');
+		assertTrue(screenListener.getKeyPress().equals("/"));
+	}
+	
+	@Test
+	public final void testlistener_questionMark(){
+		touchScreen.OnKeyDown('?');
+		assertTrue(screenListener.getKeyPress().equals("?"));
+	}
+	
+		
+	// NEED TO FIX
+	@Test
+	public final void testlistener_backspace(){
+		touchScreen.OnKeyDown('\b');
+		assertTrue(screenListener.getKeyPress().equals("\b"));
+	}
+	
+	@Test
+	public final void testlistener_newline(){
+		touchScreen.OnKeyDown('\n');
+		assertTrue(screenListener.getKeyPress().equals("\n"));
+	}
+	
+	@Test
+	public final void testlistener_enter(){
+		touchScreen.OnKeyDown('\r');
+		assertTrue(screenListener.getKeyPress().equals("\r"));
+	}
+	
+	@Test
+	public final void testlistener_tab(){
+		touchScreen.OnKeyDown('\t');
+		assertTrue(screenListener.getKeyPress().equals("\t"));
+	}
+	
+	@Test
+	public final void testlistener_space(){
+		touchScreen.OnKeyDown(' ');
+		assertTrue(screenListener.getKeyPress().equals(" "));
+	}
 	
 }
+	
+	
+
