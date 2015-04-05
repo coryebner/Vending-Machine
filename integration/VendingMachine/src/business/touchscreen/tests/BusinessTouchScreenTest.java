@@ -6,6 +6,7 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Scanner;
 
 import javax.swing.JTextField;
 
@@ -43,8 +44,14 @@ public class BusinessTouchScreenTest {
 	ScreenListener screenListener = null;
 	BusinessTouchScreen touchScreen = null;
 	
+	//The tests will imitate keyboard presses, so if your cursor is not on the console
+	//the test will start printing random things all over your code or wherever your 
+	//cursor is focused on.
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Please Click the Console and press Enter to begin test!");
+		scan.nextLine();
 	}
 
 	@AfterClass
