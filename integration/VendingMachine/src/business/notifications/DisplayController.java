@@ -30,6 +30,7 @@ public class DisplayController implements SelectionControllerListener, CoinRecep
 		this.coinsController = coinsController;
 		
 		sc.register(this);
+		receptacle.register(this);
 		display(Integer.toString(this.coinsController.getAvailableBalance()));
 	}
 	
