@@ -1,6 +1,7 @@
 package business.funds;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.Vector;
@@ -24,6 +25,7 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 		public int rackIndex;
 	}
 	
+	private ArrayList<ExactChangeControllerListener> listeners = new ArrayList<ExactChangeControllerListener>();
 	private boolean exactChangePossible = false;
 	private HashMap<ProductRack, TrackedProduct> rackToProductMap;
 	private TrackedProduct[] products;
@@ -51,14 +53,15 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 			products[i].rackIndex = i;
 			rackToProductMap.put(ic.getRack(i), products[i]);
 		}
-		calculateChangeToMake();	
+		calculateChangeToMake();
+		recalculateExactChange();
 	}
 	
 	/**
 	 * @exactChangeStatus - indicates if the exact change status is active or not
 	 */
 	public boolean isExactChangeActive(){
-		return exactChangePossible;
+		return !exactChangePossible;
 	}
 	
 	/**
@@ -97,6 +100,10 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 			}
 		}		
 		
+		if(exactChangePossible)
+			notifyExactChangeAvailable();
+		else
+			notifyExactChangeUnavailable();
 	}
 	
 	/**
@@ -171,7 +178,20 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 			tempProduct.isEmpty = !tempProduct.isEmpty;
 			calculateChangeToMake();
 		}
-		
+	}
+
+	public void register(ExactChangeControllerListener listener) {
+		listeners.add(listener);
+	}
+
+	protected void notifyExactChangeAvailable() {
+		for (ExactChangeControllerListener l : listeners)
+			l.exactChangeAvailable(this);
+	}
+	
+	protected void notifyExactChangeUnavailable() {
+		for (ExactChangeControllerListener l : listeners)
+			l.exactChangeUnavailable(this);
 	}
 	
 	// DO NOT NEED TO LISTEN TO THESE :D
