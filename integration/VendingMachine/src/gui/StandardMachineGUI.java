@@ -16,6 +16,7 @@ import java.awt.GridLayout;
 
 import javax.swing.JButton;
 
+import java.awt.ComponentOrientation;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -49,7 +50,7 @@ import hardware.ui.*;
 import gui.test.*;
 // TODO */
 
-" For eclipse, use hot key "control + /" can quickly comment out and uncomment lines
+// " For eclipse, use hot key "control + /" can quickly comment out and uncomment lines
 
 /**
  * Initial setup will involve being passed an abstract vending machine as well
@@ -80,6 +81,7 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 	private JPanel pnlMachineButtons;
 	private JPanel pnlPopButtons;
 	private JPanel pnlCandyButtons;
+	private JPanel pnlTouchScreen;
 	private JPanel pnlCandyLetterButtons;
 	private JPanel pnlMoneySelection;
 	private JPanel pnlCoins;
@@ -104,6 +106,7 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 	private ArrayList<JButton> popButtons;
 	private ArrayList<JButton> candyLetterButtons;
 	private ArrayList<JButton> candyNumberButtons;
+	private ArrayList<JButton> touchScreenButtons;
 	private ArrayList<JLabel> outOfProductLabels;
 
 	// defaults to true
@@ -162,7 +165,7 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 		String [] popname = {"Coke","DietCode","RootBeer", "asdf", "qwer","zxcv"};
 //		AbstractVendingMachine vm = new PopVendingMachine(coinvalue,banknote);
 //		initialize(vm, true, true, true, true, true, true);
-		initialize(null, true, true, true, true, true, true, false);
+		initialize(null, true, true, true, true, true, true, true);
 	}
 
 	public StandardMachineGUI(Object machine, ArrayList<Boolean> parts) {
@@ -185,6 +188,7 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 		popButtons = new ArrayList();
 		candyLetterButtons = new ArrayList();
 		candyNumberButtons = new ArrayList();
+		touchScreenButtons = new ArrayList();
 
 		hasCoinSlot = coinSlot;
 		hasBillSlot = billSlot;
@@ -341,6 +345,14 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
             key++;
 		}
 
+		pnlTouchScreen = new JPanel();
+		pnlTouchScreen.setLayout(new GridLayout(3, 4, 5, 10));
+		pnlTouchScreen.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		pnlTouchScreen.setBorder(new LineBorder(new Color(0, 0, 0)));
+		if (hasTouchScreen) {
+			pnlMachineButtons.add(pnlTouchScreen);
+		}
+		
 		machine1Setup();
 
 		JPanel pnlMoney = new JPanel();
@@ -499,6 +511,36 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 		return billEject;
 	}
 	
+	
+	public void reloadTouchScreen() {
+		for (JButton btn : touchScreenButtons) {
+			pnlTouchScreen.add(btn);
+		}
+		pnlTouchScreen.revalidate();
+		pnlTouchScreen.repaint();
+	}
+	
+	/**
+	 * Creates a new button to be used with the touch screen
+	 * 
+	 * @param name
+	 *            is what will be displayed on the button
+	 * @return the button being asked for
+	 */
+	public JButton createTouchScreenButton(String name, ImageIcon image) {
+		JButton btn = new JButton(name);
+		btn.setIcon(image);
+		return btn;
+	}
+	
+	public void createTouchScreenButtons(ArrayList<String> names, ArrayList<ImageIcon> images) {
+		for (int i = 0; i < names.size(); i++) {
+            JButton popbtn = createTouchScreenButton(names.get(i), images.get(i));
+            touchScreenButtons.add(popbtn);
+//            TODO Uncomment the following line to enable to the event
+//            addButtonAction(popbtn,i);
+		}
+	}
 	
 	/**
 	 * Sets what currency buttons are shown based on the currency type selected
@@ -701,19 +743,27 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 	 */
 	public void machine1Setup() {
 		ArrayList<String> names = new ArrayList();
-
+		ArrayList<ImageIcon> images = new ArrayList();
+		
 		names.add("Coke");
 		names.add("Diet Coke");
 		names.add("Coke Zero");
 		names.add("Sprite");
 		names.add("Root Beer");
 		names.add("Water");
+		
+		for (int i = 0; i < names.size(); i++) {
+			images.add(coke);
+		}
 
 		createPopButtons(names);
 		reloadPopButtons();
 
 		createCandyLetterButtons(6);
 		reloadCandyLetterButtons();
+		
+		createTouchScreenButtons(names, images);
+		reloadTouchScreen();
 	}
 
 	/**
@@ -882,7 +932,7 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    enableInteractivity(false);
+                    GUIHelper.enableComponents(getMainFrame(),false);
                     machine.getSelectionButton(key).press();
                 } catch (NoSuchHardwareException e1) {			
                     e1.printStackTrace();
