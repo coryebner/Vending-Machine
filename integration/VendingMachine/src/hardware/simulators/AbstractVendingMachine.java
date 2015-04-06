@@ -20,10 +20,14 @@ public abstract class AbstractVendingMachine {
 
 	protected boolean safetyOn = false;
 	protected Locale locale;
+
 	/**
 	 * Returns the out of order light.
 	 * 
+	 * @return the out of order light.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
 	public IndicatorLight getOutOfOrderLight() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
@@ -32,7 +36,10 @@ public abstract class AbstractVendingMachine {
 	/**
 	 * Returns the exact change light.
 	 * 
+	 * @return the exact change light.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
 	public IndicatorLight getExactChangeLight() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
@@ -41,20 +48,28 @@ public abstract class AbstractVendingMachine {
 	/**
 	 * Returns the no Internet connection light.
 	 * 
+	 * @return the no Internet connection light.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
-	public IndicatorLight getNoInternetConnectionLight() throws NoSuchHardwareException {
+	public IndicatorLight getNoInternetConnectionLight()
+			throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
-	
+
 	/**
 	 * Returns an out of product light at the indicated index.
 	 * 
 	 * @param index
 	 *            The index of the desired out of product light.
+	 * @return the out of product light at the indicated index.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
-	public IndicatorLight getOutOfProductLight(int index) throws NoSuchHardwareException {
+	public IndicatorLight getOutOfProductLight(int index)
+			throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 
@@ -63,9 +78,13 @@ public abstract class AbstractVendingMachine {
 	 * 
 	 * @param index
 	 *            The index of the desired selection button.
+	 * @return the selection button at the indicated index.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
-	public PushButton getSelectionButton(int index) throws NoSuchHardwareException {
+	public PushButton getSelectionButton(int index)
+			throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 
@@ -74,53 +93,71 @@ public abstract class AbstractVendingMachine {
 	 * 
 	 * @param index
 	 *            The index of the desired product rack.
-	 * @throws NoSuchHardwareException 
+	 * @return the product rack at the indicated index.
+	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
-	// public ProductRack getProductRack(int index) throws NoSuchHardwareException {
 	public ProductRack getProductRack(int index) throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
-	
+
 	/**
 	 * Returns the return button.
 	 * 
+	 * @return the return button.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
 	public PushButton getReturnButton() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
-	
+
 	/**
 	 * Returns the push button code interpreter.
 	 * 
+	 * @return the push button code interpreter.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
-	public PushButtonCodeInterpreter getPushButtonCodeInterpreter() throws NoSuchHardwareException {
+	public PushButtonCodeInterpreter getPushButtonCodeInterpreter()
+			throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
-	
+
 	/**
 	 * Returns the coin slot.
 	 * 
+	 * @return the coin slot.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
 	public CoinSlot getCoinSlot() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
-	
+
 	/**
 	 * Returns the banknote slot.
 	 * 
+	 * @return the banknote slot.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
 	public BanknoteSlot getBanknoteSlot() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
-	
+
 	/**
 	 * Returns the slot for magnetic stripe cards.
 	 * 
+	 * @return the card slot.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
 	public CardSlot getCardSlot() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
@@ -129,7 +166,10 @@ public abstract class AbstractVendingMachine {
 	/**
 	 * Returns the coin receptacle.
 	 * 
+	 * @return the coin receptacle.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
 	public CoinReceptacle getCoinReceptacle() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
@@ -138,25 +178,36 @@ public abstract class AbstractVendingMachine {
 	/**
 	 * Returns the banknote receptacle.
 	 * 
+	 * @return the banknote receptacle.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
-	public BanknoteReceptacle getBanknoteReceptacle() throws NoSuchHardwareException {
+	public BanknoteReceptacle getBanknoteReceptacle()
+			throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 
 	/**
 	 * Returns the banknote storage bin.
 	 * 
+	 * @return the banknote storage bin.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
-	public BanknoteReceptacle getBanknoteStorageBin() throws NoSuchHardwareException {
+	public BanknoteReceptacle getBanknoteStorageBin()
+			throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
-	
+
 	/**
 	 * Returns the coin storage bin.
 	 * 
+	 * @return the coin storage bin.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
 	public CoinReceptacle getCoinStorageBin() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
@@ -165,7 +216,10 @@ public abstract class AbstractVendingMachine {
 	/**
 	 * Returns the delivery chute.
 	 * 
+	 * @return the delivery chute.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
 	public DeliveryChute getDeliveryChute() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
@@ -176,7 +230,10 @@ public abstract class AbstractVendingMachine {
 	 * 
 	 * @param index
 	 *            The index of the desired coin rack.
+	 * @return the coin rack at the indicated index.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 * @throws IndexOutOfBoundsException
 	 *             if the index < 0 or the index >= number of coin racks.
 	 */
@@ -185,9 +242,12 @@ public abstract class AbstractVendingMachine {
 	}
 
 	/**
-	 * Returns the 1-line textual display.
+	 * Returns the textual display.
 	 * 
+	 * @return the display.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
 	public Display getDisplay() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
@@ -196,7 +256,10 @@ public abstract class AbstractVendingMachine {
 	/**
 	 * Returns the keyboard.
 	 * 
+	 * @return the keyboard.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
 	// public Keyboard getKeyboard() throws NoSuchHardwareException {
 	public Object getKeyboard() throws NoSuchHardwareException {
@@ -206,39 +269,60 @@ public abstract class AbstractVendingMachine {
 	/**
 	 * Returns the socket.
 	 * 
+	 * @return the socket.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
 	public VMSocket getSocket() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
-	
+
 	/**
 	 * Returns the configuration panel.
 	 * 
+	 * @return the configuration panel.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
-	// public ConfigurationPanel getConfigurationPanel() throws NoSuchHardwareException {
+	// public ConfigurationPanel getConfigurationPanel() throws
+	// NoSuchHardwareException {
 	public Object getConfigurationPanel() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
-	
+
+	/**
+	 * Returns the locale.
+	 * 
+	 * @return the locale.
+	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
+	 */
 	public Locale getLocale() {
 		return locale;
 	}
-	
+
 	/**
 	 * Returns the number of product racks.
 	 * 
+	 * @return the number of product racks.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
 	public int getNumberOfProductRacks() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
-	
+
 	/**
 	 * Returns the number of selection buttons.
 	 * 
+	 * @return the number of selection buttons.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
 	public int getNumberOfSelectionButtons() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
@@ -247,21 +331,27 @@ public abstract class AbstractVendingMachine {
 	/**
 	 * Returns the number of out of product lights.
 	 * 
+	 * @return the number of out of product lights.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
 	public int getNumberOfOutOfProductLights() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
-	
+
 	/**
 	 * Returns the number of coin racks.
 	 * 
+	 * @return the number of coin racks.
 	 * @throws NoSuchHardwareException
+	 *             if this hardware component does not exist in the
+	 *             configuration of the vending machine.
 	 */
 	public int getNumberOfCoinRacks() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
-	
+
 	/**
 	 * Disables all the components of the hardware that involve physical
 	 * movements.
@@ -282,6 +372,9 @@ public abstract class AbstractVendingMachine {
 
 	/**
 	 * Returns whether the safety is currently engaged.
+	 * 
+	 * @return <code>true</code> if safety is enabled; <code>false</code>
+	 *         otherwise.
 	 */
 	public boolean isSafetyEnabled() {
 		return safetyOn;

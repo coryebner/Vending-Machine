@@ -16,25 +16,25 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * @deprecated This machine is not ready yet
- * Configuration 10 of the Vending Machine
- * Product: Candy
- * ProductRacks: 24
- * SelectionButtons: 24 (One per ProductRack)
- * CoinSlot: Y
- * BillSlot: Y
- * CardSlot: Y
- * PayPal: Y
- * TouchScreen: Y
- * VMSocket (Internet): Y
- * OutOfOrderLight: Y
- * ExactChangeLight: Y
- * NoInternetConnectionLight: Y
- * OutOfProductLights: 24
- * ReturnButton: Y
+ * @deprecated This machine is not ready yet<br>
+ * Configuration 10 of the Vending Machine<br>
+ * Product: Candy<br>
+ * ProductRacks: 24<br>
+ * SelectionButtons: 24 (One per ProductRack)<br>
+ * CoinSlot: Y<br>
+ * BillSlot: Y<br>
+ * CardSlot: Y<br>
+ * PayPal: Y<br>
+ * TouchScreen: Y<br>
+ * VMSocket (Internet): Y<br>
+ * OutOfOrderLight: Y<br>
+ * ExactChangeLight: Y<br>
+ * NoInternetConnectionLight: Y<br>
+ * OutOfProductLights: 24<br>
+ * ReturnButton: Y<br>
  * 
- * Still Missing: ConfigurationPanel
- * Still Missing: Banknote Hardware Connections
+ * Still Missing: ConfigurationPanel<br>
+ * Still Missing: Banknote Hardware Connections<br>
  */
 public class VMRUS_TOC_C_MI extends AbstractVendingMachine{
 	private CoinSlot coinSlot;
