@@ -116,8 +116,8 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 	private boolean hasInternetLight = true;
 	private boolean hasPopButtons = true;
 	private boolean hasCandyButtons = true;
-	
 	private boolean hasTouchScreen = false;
+	private boolean hasPayPal = false;
 
 	/**
 	 * Needed for Image generation. Used for testing purposes,
@@ -165,12 +165,13 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 		String [] popname = {"Coke","DietCode","RootBeer", "asdf", "qwer","zxcv"};
 //		AbstractVendingMachine vm = new PopVendingMachine(coinvalue,banknote);
 //		initialize(vm, true, true, true, true, true, true);
-		initialize(null, true, true, true, true, true, true, true);
+		initialize(null, true, true, true, true, true, true, true, true);
 	}
 
 	public StandardMachineGUI(Object machine, ArrayList<Boolean> parts) {
 		initialize(machine, parts.get(0), parts.get(1), parts.get(2),
-				parts.get(3), parts.get(4), parts.get(5), parts.get(6));
+				parts.get(3), parts.get(4), parts.get(5), parts.get(6),
+				parts.get(7));
 	}
 
 	/**
@@ -178,7 +179,7 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 	 */
 	private void initialize(Object machine, boolean coinSlot, boolean billSlot,
 			boolean cardSlot, boolean internetLight, boolean popBtns,
-			boolean candyBtns, boolean touchScreen) {
+			boolean candyBtns, boolean touchScreen, boolean payPal) {
 //		TODO Uncomment the follow line 
 //		this.machine = (AbstractVendingMachine)machine;
 		coinButtons = new ArrayList();
@@ -197,6 +198,7 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 		hasPopButtons = popBtns;
 		hasCandyButtons = candyBtns;
 		hasTouchScreen = touchScreen;
+		hasPayPal = payPal;
 
 		JFrame mainFrame = new JFrame();
 		mainFrame.setTitle("Vending Machines");
@@ -270,6 +272,17 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 		lblInternetLight.setBackground(Color.LIGHT_GRAY);
 		if (hasInternetLight) {
 			pnlMisc.add(lblInternetLight);
+		}
+		
+		JButton btnPayPal = new JButton("PayPal");
+		btnPayPal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO: launch PayPal somehow...
+				
+			}
+		});
+		if (hasPayPal) {
+			pnlMisc.add(btnPayPal);
 		}
 
 		pnlPopButtons = new JPanel();
