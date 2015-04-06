@@ -753,5 +753,10 @@ public class Configuration {
 	public void setButtonSelectionController(ButtonSelectionController controller){
 		this.buttonSelectionController = controller;
 	}
-	
+	public Funds getFunds(){
+		return fundsController;
+	}
+	public InventoryController getInventory(){
+		return inventoryController;
+	}
 }
