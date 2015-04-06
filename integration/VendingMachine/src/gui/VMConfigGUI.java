@@ -1,6 +1,7 @@
 package gui;
 
-//import hardware.VendingMachine1;
+
+//import hardware.AbstractVendingMachine;
 
 import java.awt.Container;
 import java.awt.EventQueue;
@@ -25,7 +26,7 @@ import java.awt.Font;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 
-public class VMConfigGUI implements ActionListener{
+public class VMConfigGUI {
 	private JFrame frmVendingMachinesRUS;
 	private ButtonGroup machineConfigRadioGroup;
 	private ButtonGroup reportConfigRadioGroup;
@@ -262,7 +263,20 @@ public class VMConfigGUI implements ActionListener{
 		//Launch button
 		JButton btnLaunch = new JButton("Launch");
 		btnLaunch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) { 
+				/* Gets vending machine from other place and send it as an argument to the GUI
+				if(reportConfig!=null && machineConfig!=null){	
+					AbstractVendingMachine machine = loadVendingMachine();
+					if(machine.getTouchScreen != null){
+						Launch the touchscreen GUI
+					
+					}else{
+						GUI window = new GUI(machine, parts);
+						window.frmVendingMachines.setVisible(true);
+						frmVendingMachinesRUS.setVisible(false);	
+					}
+				 }
+				 */
 				
 				// Vending Machine # 1
 				if(machineConfig.equals("VMRUS-SFF-P/C") && reportConfig!=null){
@@ -308,9 +322,5 @@ public class VMConfigGUI implements ActionListener{
 			System.out.println("The selected report configuration is: "+ reportConfig);
 		}
 	}
-	
-	
-	public void actionPerformed(ActionEvent e) {
-	
-	}
+
 }

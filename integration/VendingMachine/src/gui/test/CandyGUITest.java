@@ -28,8 +28,8 @@ public class CandyGUITest {
 		int [] coinValue = {5,10,25,100,200};
 		int [] billValue = {500,1000,2000};
 		ArrayList<Boolean> parts = new ArrayList();//{true,true,true,false,true};
-		for(int i = 0; i< 5; i++){			
-			if(i==3){
+		for(int i = 0; i< 6; i++){			
+			if(i==4){
 				parts.add(false);
 			}else{
 				parts.add(true);
@@ -86,17 +86,17 @@ public class CandyGUITest {
 	
 	@Test
 	public void Insert5DollarBilltest() {
-		window.getcardButtons(0).doClick();
+		window.getbillButtons(0).doClick();
 	}
 	
 	@Test
 	public void Insert10DollarBilltest() {
-		window.getcardButtons(1).doClick();
+		window.getbillButtons(1).doClick();
 	}
 	
 	@Test
 	public void Insert20DollarBilltest() {
-		window.getcardButtons(2).doClick();
+		window.getbillButtons(2).doClick();
 	}
 	
 	@Test

@@ -31,11 +31,23 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.BevelBorder;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JTextPane;
 import javax.swing.JList;
 
+/* TODO packages need for event
+import hardware.*;
+import hardware.exceptions.*;
+import hardware.funds.*;
+import hardware.funds.Card.*;
+import hardware.products.Product;
+import hardware.racks.*;
+import hardware.ui.*;
+import gui.test.*;
+// TODO */
 /**
  * Initial setup will involve being passed an abstract vending machine as well
  * as a list of booleans (may not be final) representing what parts the machine
@@ -46,8 +58,8 @@ import javax.swing.JList;
  * @author Shayne
  * 
  */
-
-public class StandardMachineGUI extends VendingMachineGUI {
+																// TODO
+public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductRackListener,IndicatorLightListener  {
 
 	// unicode for the euro symbol
 	private final String EURO = "\u20ac";
@@ -55,6 +67,8 @@ public class StandardMachineGUI extends VendingMachineGUI {
 		"H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
 		"U", "V", "W", "X", "Y", "Z" };
 	
+//	 TODO Uncomment the following line  
+//	private AbstractVendingMachine machine;
 	private boolean codeInProgress = false;
 
 	private JPanel pnlMachineButtons;
@@ -71,7 +85,7 @@ public class StandardMachineGUI extends VendingMachineGUI {
 
 	private JComboBox cmbCurr;
 	private JButton billEject;
-
+	private JButton btnReturn;
 	private JTextPane Display_text;
 	
 	private JLabel lblExactChange;
@@ -114,7 +128,12 @@ public class StandardMachineGUI extends VendingMachineGUI {
 	 * Create the application.
 	 */
 	public StandardMachineGUI() {
-		initialize(null, true, true, true, true, true, true);
+		int []coinvalue = { 5, 10, 25, 100, 200 };
+		int []banknote = {500,1000,2000};
+		int [] popcost	= {200,200,200,200,200,200 };
+		String [] popname = {"Coke","DietCode","RootBeer", "asdf", "qwer","zxcv"};
+//		AbstractVendingMachine vm = new PopVendingMachine(coinvalue,banknote);
+//		initialize(vm, true, true, true, true, true, true);
 	}
 	
 	public StandardMachineGUI(Object machine, ArrayList<Boolean> parts) {
@@ -125,6 +144,8 @@ public class StandardMachineGUI extends VendingMachineGUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(Object machine, boolean coinSlot, boolean billSlot, boolean cardSlot, boolean internetLight, boolean popBtns, boolean candyBtns) {
+//		TODO Uncomment the follow line 
+//		this.machine = (AbstractVendingMachine)machine;
 		coinButtons = new ArrayList();
 		billButtons = new ArrayList();
 		cardButtons = new ArrayList();
@@ -193,22 +214,22 @@ public class StandardMachineGUI extends VendingMachineGUI {
 		pnlMachineButtons.add(pnlMisc);
 		pnlMisc.setLayout(new GridLayout(0, 1, 0, 3));
 
-		JButton btnReturn = new JButton("Return");
+		btnReturn = new JButton("Return");
 		pnlMisc.add(btnReturn);
 
-		lblExactChange = new JLabel("     ");
+		lblExactChange = new JLabel("ExactChange");
 		lblExactChange.setBackground(Color.LIGHT_GRAY);
 		lblExactChange.setForeground(Color.LIGHT_GRAY);
 		lblExactChange.setOpaque(true);
 		pnlMisc.add(lblExactChange);
 
-		lblOutOfOrder = new JLabel("     ");
+		lblOutOfOrder = new JLabel("Out of Order");
 		lblOutOfOrder.setOpaque(true);
 		lblOutOfOrder.setForeground(Color.LIGHT_GRAY);
 		lblOutOfOrder.setBackground(Color.LIGHT_GRAY);
 		pnlMisc.add(lblOutOfOrder);
 		
-		lblInternetLight = new JLabel("     ");
+		lblInternetLight = new JLabel("InternetLight");
 		lblInternetLight.setOpaque(true);
 		lblInternetLight.setForeground(Color.LIGHT_GRAY);
 		lblInternetLight.setBackground(Color.LIGHT_GRAY);
@@ -282,15 +303,12 @@ public class StandardMachineGUI extends VendingMachineGUI {
 		candyNumberButtons.add(btn0);
 		pnlNumberCandyButtons.add(btn0);
 		
+		// First 6 keys are the A-F
+		int key = 6;
 		for (JButton btn : candyNumberButtons) {
-			btn1.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					if (codeInProgress) {
-						enableInteractivity(false);
-						// TODO add button press method call
-					}
-				}
-			});
+//		TODO Uncomment the following line to enable event
+//			addButtonAction(btn, key);
+            key++;
 		}
 
 		machine1Setup();
@@ -374,10 +392,82 @@ public class StandardMachineGUI extends VendingMachineGUI {
 
 		billEject = new JButton("Remove bill");
 		billEject.setEnabled(false);
-
+		/* TODO Comment out this for enabling the event
+        billEject.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO ask the Bill slot to eject bill
+                //				machine.getBanknoteSlot();
+            }
+        });
+//		TODO Comment out this line for enabling the event */
+       
+		/* TODO Comment out this line when running with hardware
+		// Registering GUI to listen to parts of the vending machine
+        try {
+        // Added type cast to the machine because the class type of the machine is Object
+            ((AbstractVendingMachine) machine).getOutOfOrderLight().register(this);
+            ((AbstractVendingMachine) machine).getExactChangeLight().register(this);
+            if(popBtns == true){
+                for(int i = 0; i< ((AbstractVendingMachine) machine).getNumberOfProductRacks(); i++){
+                    ((AbstractVendingMachine) machine).getProductRack(i).register(this);
+                }
+            }
+        } catch (NoSuchHardwareException e2) {
+            e2.printStackTrace();
+        }
+//        TODO Comment out this line when running with hardware*/
+     
 		canadaSetup();
 	}
-
+	
+//	Get Methods, mainly used for testing
+	public JButton getCoinBtn(int index){
+		return coinButtons.get(index);		
+	}
+	
+	public JButton getbillButtons(int index){
+		return billButtons.get(index);
+	}
+	
+	public JButton getcardButtons(int index){
+		return cardButtons.get(index);
+	}
+	
+	
+	public JButton getPopBtn(int index){
+		return popButtons.get(index);
+	}
+	
+	public JButton getLetterBtn(int index){
+		return candyLetterButtons.get(index);
+	}
+	
+	public JButton getNumButtons(int index){
+		return candyNumberButtons.get(index);
+	}
+	
+	public JLabel getOutOfProductLabels(int index){
+		return outOfProductLabels.get(index);
+	}	
+	
+	public JLabel getOutOfOrderLight(){
+		return lblOutOfOrder;
+	}
+	
+	public JLabel getExactChangeLight(){
+		return lblExactChange;
+	}
+	
+	public JButton getReturnButton(){
+		return btnReturn;
+	}
+	
+	public JButton getEjectBillButton(){
+		return billEject;
+	}
+	
+	
 	/**
 	 * Sets what currency buttons are shown based on the currency type selected
 	 * in the combo box Mainly used by combo box action listener
@@ -408,9 +498,14 @@ public class StandardMachineGUI extends VendingMachineGUI {
 	 *            for
 	 */
 	private void createPopButtons(ArrayList<String> names) {
+		int i = 0;
 		for (String name : names) {
 			outOfProductLabels.add(createOutOfProductLight());
-			popButtons.add(createPopButton(name));
+            JButton popbtn = createPopButton(name);
+            popButtons.add(popbtn);
+//            TODO Uncomment the following line to enable to the event
+//            addButtonAction(popbtn,i);
+            i++;
 		}
 	}
 
@@ -424,17 +519,9 @@ public class StandardMachineGUI extends VendingMachineGUI {
 	private void createCandyLetterButtons(int num) {
 		for (int i = 0; i < num; i++) {
 			JButton btn = new JButton(ALPHABET[i]);
-			btn.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					if (!codeInProgress) {
-						codeInProgress = true;
-					} else {
-						codeInProgress = false;
-					}
-					// TODO add press button method call here
-				}
-			});
 			candyLetterButtons.add(btn);
+//			TODO Uncomment the following line to enable event
+//			addLetterButtonAction(btn, i);
 		}
 	}
 
@@ -611,11 +698,20 @@ public class StandardMachineGUI extends VendingMachineGUI {
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
 		JButton btn = new JButton(buttonText);
+        /* TODO Comment out this line for enabling the event
 		btn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO add insertCoin method call here
-			}
-		});
+            public void actionPerformed(ActionEvent arg0) {
+                Coin coin = new Coin(amount);
+                try {
+                    machine.getCoinSlot().addCoin(coin);
+                } catch (NoSuchHardwareException e) {
+                    e.printStackTrace();
+                } catch (DisabledException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+//        TODO Comment out this line for enabling the event */
 		return btn;
 	}
 
@@ -634,11 +730,19 @@ public class StandardMachineGUI extends VendingMachineGUI {
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
 		JButton btn = new JButton(buttonText);
+        /* TODO Comment out this line for enabling the event
 		btn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO add insertBill method call here
-			}
-		});
+            public void actionPerformed(ActionEvent arg0) {
+                Banknote bill = new Banknote(amount);
+                try {
+                    machine.getBanknoteSlot().addBanknote(bill);
+                } catch (DisabledException | NoSuchHardwareException e) {
+                    
+                    e.printStackTrace();
+                }
+            }
+        });
+//       TODO Comment out this line for enabling the event */
 		return btn;
 	}
 
@@ -657,11 +761,20 @@ public class StandardMachineGUI extends VendingMachineGUI {
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
 		JButton btn = new JButton(buttonText);
+ /* TODO Comment out this line to enable event 
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO add insertCard method call here
+				CardType cardtype = Card.CardType.PREPAID; 
+				Card card = new Card (cardtype,"123456","prepaidcard","","03/2020",null,amount);
+	                try {
+	                    machine.getCardSlot().insertCard(card);
+	                } catch (CardSlotNotEmptyException | DisabledException
+	                         | NoSuchHardwareException e) {
+	                    e.printStackTrace();
+	                }
 			}
 		});
+//	TODO Comment out this line to enable event*/
 		return btn;
 	}
 
@@ -671,11 +784,10 @@ public class StandardMachineGUI extends VendingMachineGUI {
 	 * @return the label being asked for
 	 */
 	public JLabel createOutOfProductLight() {
-		JLabel label = new JLabel("     ");
+		JLabel label = new JLabel("OutOfProduct");
 		label.setOpaque(true);
 		label.setForeground(Color.LIGHT_GRAY);
 		label.setBackground(Color.LIGHT_GRAY);
-		
 		return label;
 	}
 
@@ -688,15 +800,6 @@ public class StandardMachineGUI extends VendingMachineGUI {
 	 */
 	public JButton createPopButton(String name) {
 		JButton btn = new JButton(name);
-		btn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				// pushing a pop button starts a "transaction"
-				// components are disabled as the hardware will
-				// not be handling thread type behavior
-				enableInteractivity(false);
-				// TODO add buttonPressed method call here
-			}
-		});
 		return btn;
 	}
 
@@ -769,17 +872,125 @@ public class StandardMachineGUI extends VendingMachineGUI {
 		}
 	}
 
-	/**
-	 * Listens to the indicator lights and changes the color of 
-	 * the appropriate label to red
-	 * @param light
-	 */
-	public void activated(Object light) {
-		/*
-		 * if (light.equals(machine.getOutOfOrderLight()) {
-		 * 	lblInternetLight.setForeground(Color.RED);
-		 *	lblInternetLight.setBackground(Color.RED);
-		 * }
-		 */
-	}
+	
+	  /**
+     * Add Listener to the JButtons on the GUI
+     * @param name of the JButton
+     * @param key to the product rack
+     */
+	/* TODO------------------------------ Comment out this Line to enable the Events
+    public void addButtonAction(JButton button, int key){
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    enableInteractivity(false);
+                    machine.getSelectionButton(key).press();
+                } catch (NoSuchHardwareException e1) {			
+                    e1.printStackTrace();
+                }
+            }
+        });
+    }
+    
+    public void addLetterButtonAction(JButton button, int key){
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                	if (!codeInProgress) {
+						codeInProgress = true;
+					} else {
+						codeInProgress = false;
+					}
+                    machine.getSelectionButton(key).press();
+                } catch (NoSuchHardwareException e1) {			
+                    e1.printStackTrace();
+                }
+            }
+        });
+    }
+    
+    @Override
+    public void enabled(AbstractHardware<AbstractHardwareListener> hardware) {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void activated(IndicatorLight light) {
+        try {
+            if(light == machine.getExactChangeLight()){
+                lblExactChange.setForeground(Color.BLACK);
+            }else{
+                lblOutOfOrder.setForeground(Color.BLACK);
+            }
+        } catch (NoSuchHardwareException e) {			
+            e.printStackTrace();
+        }
+        
+    }
+    
+    @Override
+    public void deactivated(IndicatorLight light) {
+        try {
+            if(light == machine.getExactChangeLight()){
+                lblExactChange.setForeground(Color.RED);
+            }else{
+                lblOutOfOrder.setForeground(Color.LIGHT_GRAY);
+            }
+        } catch (NoSuchHardwareException e) {
+            e.printStackTrace();
+        }	
+    }
+    
+    @Override
+    public void productAdded(ProductRack productRack, Product product) {
+        int productIndex;
+        for(productIndex = 0; ;productIndex++){
+            try {
+                if(machine.getProductRack(productIndex) == productRack){
+                    break;
+                }
+            } catch (NoSuchHardwareException e) {
+                e.printStackTrace();
+            }
+        }
+        outOfProductLabels.get(productIndex).setForeground(Color.LIGHT_GRAY);	
+    }
+    
+    @Override
+    public void productRemoved(ProductRack productRack, Product product) {
+        // No need to do anything
+    }
+    
+    @Override
+    public void productFull(ProductRack productRack) {
+        // No need to do anything
+    }
+    
+    @Override
+    public void productEmpty(ProductRack productRack) {
+        int productIndex;
+        for(productIndex = 0; ;productIndex++){
+            try {
+                if(machine.getProductRack(productIndex) == productRack){
+                    break;
+                }
+            } catch (NoSuchHardwareException e) {
+                e.printStackTrace();
+            }
+        }
+        outOfProductLabels.get(productIndex).setForeground(Color.BLACK);
+        
+    }
+    
+// 	TODO ------------------------------ Comment out this Line to enable the Events*/
+	
 }
