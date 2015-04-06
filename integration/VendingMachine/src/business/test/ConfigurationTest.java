@@ -234,7 +234,7 @@ public class ConfigurationTest extends Configuration {
 		this.quantities = new int[1];
 
 		/**Create a  MockAbstractVendingMachine*/ 
-		Mockery context = new Mockery(){{
+		final Mockery context = new Mockery(){{
 			setImposteriser(ClassImposteriser.INSTANCE); 
 			// Allows JMock to mock concrete classes, and not only interfaces
 		}};
