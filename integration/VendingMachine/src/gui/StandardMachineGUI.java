@@ -16,7 +16,6 @@ import java.awt.GridLayout;
 
 import javax.swing.JButton;
 
-import java.awt.ComponentOrientation;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -39,7 +38,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextPane;
 import javax.swing.JList;
 
-/* TODO packages need for event
 import hardware.*;
 import hardware.exceptions.*;
 import hardware.funds.*;
@@ -48,9 +46,8 @@ import hardware.products.Product;
 import hardware.racks.*;
 import hardware.ui.*;
 import gui.test.*;
-// TODO */
 
-// " For eclipse, use hot key "control + /" can quickly comment out and uncomment lines
+//" For eclipse, use hot key "control + /" can quickly comment out and uncomment lines
 
 /**
  * Initial setup will involve being passed an abstract vending machine as well
@@ -62,16 +59,15 @@ import gui.test.*;
  * @author Shayne
  * 
  */
-																// TODO
-public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductRackListener,IndicatorLightListener  {
+																
+public class StandardMachineGUI extends VendingMachineGUI implements ProductRackListener,IndicatorLightListener,DisplayListener, DeliveryChuteListener  {
 
 	// AP : This image is just a placeholder, config will give us resources (?)
 	ImageIcon coke = createImageIcon("img/coca_cola.png", "Coke Logo");
 
 	// unicode for the euro symbol
-	private final String EURO = "\u20ac";
-//	 TODO Uncomment the following line  
-//	private AbstractVendingMachine machine;
+	private final String EURO = "\u20ac";  
+	private AbstractVendingMachine machine;
 	private static final String[] ALPHABET = { "A", "B", "C", "D", "E", "F",
 			"G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
 			"T", "U", "V", "W", "X", "Y", "Z" };
@@ -81,7 +77,6 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 	private JPanel pnlMachineButtons;
 	private JPanel pnlPopButtons;
 	private JPanel pnlCandyButtons;
-	private JPanel pnlTouchScreen;
 	private JPanel pnlCandyLetterButtons;
 	private JPanel pnlMoneySelection;
 	private JPanel pnlCoins;
@@ -106,7 +101,6 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 	private ArrayList<JButton> popButtons;
 	private ArrayList<JButton> candyLetterButtons;
 	private ArrayList<JButton> candyNumberButtons;
-	private ArrayList<JButton> touchScreenButtons;
 	private ArrayList<JLabel> outOfProductLabels;
 
 	// defaults to true
@@ -116,8 +110,8 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 	private boolean hasInternetLight = true;
 	private boolean hasPopButtons = true;
 	private boolean hasCandyButtons = true;
+	
 	private boolean hasTouchScreen = false;
-	private boolean hasPayPal = false;
 
 	/**
 	 * Needed for Image generation. Used for testing purposes,
@@ -163,25 +157,24 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 		int []banknote = {500,1000,2000};
 		int [] popcost	= {200,200,200,200,200,200 };
 		String [] popname = {"Coke","DietCode","RootBeer", "asdf", "qwer","zxcv"};
-//		AbstractVendingMachine vm = new PopVendingMachine(coinvalue,banknote);
-//		initialize(vm, true, true, true, true, true, true);
-		initialize(null, true, true, true, true, true, true, true, true);
+		AbstractVendingMachine vm = new PopVendingMachine(coinvalue,banknote);
+		initialize(vm, true, true, true, true, true, true, false);
+		
+		//initialize(null, true, true, true, true, true, true, false);
 	}
 
-	public StandardMachineGUI(Object machine, ArrayList<Boolean> parts) {
+	public StandardMachineGUI(AbstractVendingMachine machine, ArrayList<Boolean> parts) {
 		initialize(machine, parts.get(0), parts.get(1), parts.get(2),
-				parts.get(3), parts.get(4), parts.get(5), parts.get(6),
-				parts.get(7));
+				parts.get(3), parts.get(4), parts.get(5), parts.get(6));
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(Object machine, boolean coinSlot, boolean billSlot,
+	private void initialize(AbstractVendingMachine machine, boolean coinSlot, boolean billSlot,
 			boolean cardSlot, boolean internetLight, boolean popBtns,
-			boolean candyBtns, boolean touchScreen, boolean payPal) {
-//		TODO Uncomment the follow line 
-//		this.machine = (AbstractVendingMachine)machine;
+			boolean candyBtns, boolean touchScreen) {
+		this.machine = machine;
 		coinButtons = new ArrayList();
 		billButtons = new ArrayList();
 		cardButtons = new ArrayList();
@@ -189,7 +182,6 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 		popButtons = new ArrayList();
 		candyLetterButtons = new ArrayList();
 		candyNumberButtons = new ArrayList();
-		touchScreenButtons = new ArrayList();
 
 		hasCoinSlot = coinSlot;
 		hasBillSlot = billSlot;
@@ -198,7 +190,6 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 		hasPopButtons = popBtns;
 		hasCandyButtons = candyBtns;
 		hasTouchScreen = touchScreen;
-		hasPayPal = payPal;
 
 		JFrame mainFrame = new JFrame();
 		mainFrame.setTitle("Vending Machines");
@@ -273,17 +264,6 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 		if (hasInternetLight) {
 			pnlMisc.add(lblInternetLight);
 		}
-		
-		JButton btnPayPal = new JButton("PayPal");
-		btnPayPal.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO: launch PayPal somehow...
-				
-			}
-		});
-		if (hasPayPal) {
-			pnlMisc.add(btnPayPal);
-		}
 
 		pnlPopButtons = new JPanel();
 		if (hasPopButtons) {
@@ -353,19 +333,14 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 		// First 6 keys are the A-F
 		int key = 6;
 		for (JButton btn : candyNumberButtons) {
-//		TODO Uncomment the following line to enable event
-//			addButtonAction(btn, key);
+			if(key ==15){
+				addNumButtonAction(btn,6);
+			}else{
+				addNumButtonAction(btn, key+1);
+			}
             key++;
 		}
 
-		pnlTouchScreen = new JPanel();
-		pnlTouchScreen.setLayout(new GridLayout(3, 4, 5, 10));
-		pnlTouchScreen.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-		pnlTouchScreen.setBorder(new LineBorder(new Color(0, 0, 0)));
-		if (hasTouchScreen) {
-			pnlMachineButtons.add(pnlTouchScreen);
-		}
-		
 		machine1Setup();
 
 		JPanel pnlMoney = new JPanel();
@@ -448,8 +423,6 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 
 		billEject = new JButton("Remove bill");
 		billEject.setEnabled(false);
-		
-		/* TODO Comment out this for enabling the event
         billEject.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -457,24 +430,22 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
                 //				machine.getBanknoteSlot();
             }
         });
-//		TODO Comment out this line for enabling the event */
        
-		/* TODO Comment out this line when running with hardware
 		// Registering GUI to listen to parts of the vending machine
         try {
         // Added type cast to the machine because the class type of the machine is Object
-            ((AbstractVendingMachine) machine).getOutOfOrderLight().register(this);
-            ((AbstractVendingMachine) machine).getExactChangeLight().register(this);
+            machine.getOutOfOrderLight().register(this);
+            machine.getExactChangeLight().register(this);
+            machine.getDisplay().register(this);
+            machine.getDeliveryChute().register(this);
             if(popBtns == true){
-                for(int i = 0; i< ((AbstractVendingMachine) machine).getNumberOfProductRacks(); i++){
-                    ((AbstractVendingMachine) machine).getProductRack(i).register(this);
+                for(int i = 0; i< machine.getNumberOfProductRacks(); i++){
+                	machine.getProductRack(i).register(this);
                 }
             }
         } catch (NoSuchHardwareException e2) {
             e2.printStackTrace();
         }
-//        TODO Comment out this line when running with hardware*/
-     
 		canadaSetup();
 	}
 	
@@ -525,36 +496,6 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 	}
 	
 	
-	public void reloadTouchScreen() {
-		for (JButton btn : touchScreenButtons) {
-			pnlTouchScreen.add(btn);
-		}
-		pnlTouchScreen.revalidate();
-		pnlTouchScreen.repaint();
-	}
-	
-	/**
-	 * Creates a new button to be used with the touch screen
-	 * 
-	 * @param name
-	 *            is what will be displayed on the button
-	 * @return the button being asked for
-	 */
-	public JButton createTouchScreenButton(String name, ImageIcon image) {
-		JButton btn = new JButton(name);
-		btn.setIcon(image);
-		return btn;
-	}
-	
-	public void createTouchScreenButtons(ArrayList<String> names, ArrayList<ImageIcon> images) {
-		for (int i = 0; i < names.size(); i++) {
-            JButton popbtn = createTouchScreenButton(names.get(i), images.get(i));
-            touchScreenButtons.add(popbtn);
-//            TODO Uncomment the following line to enable to the event
-//            addButtonAction(popbtn,i);
-		}
-	}
-	
 	/**
 	 * Sets what currency buttons are shown based on the currency type selected
 	 * in the combo box Mainly used by combo box action listener
@@ -590,8 +531,7 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 			outOfProductLabels.add(createOutOfProductLight());
             JButton popbtn = createPopButton(name);
             popButtons.add(popbtn);
-//            TODO Uncomment the following line to enable to the event
-//            addButtonAction(popbtn,i);
+            addButtonAction(popbtn,i);
             i++;
 		}
 	}
@@ -607,8 +547,7 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 		for (int i = 0; i < num; i++) {
 			JButton btn = new JButton(ALPHABET[i]);
 			candyLetterButtons.add(btn);
-//			TODO Uncomment the following line to enable event
-//			addLetterButtonAction(btn, i);
+			addLetterButtonAction(btn, i);
 		}
 	}
 
@@ -756,27 +695,19 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 	 */
 	public void machine1Setup() {
 		ArrayList<String> names = new ArrayList();
-		ArrayList<ImageIcon> images = new ArrayList();
-		
+
 		names.add("Coke");
 		names.add("Diet Coke");
 		names.add("Coke Zero");
 		names.add("Sprite");
 		names.add("Root Beer");
 		names.add("Water");
-		
-		for (int i = 0; i < names.size(); i++) {
-			images.add(coke);
-		}
 
 		createPopButtons(names);
 		reloadPopButtons();
 
 		createCandyLetterButtons(6);
 		reloadCandyLetterButtons();
-		
-		createTouchScreenButtons(names, images);
-		reloadTouchScreen();
 	}
 
 	/**
@@ -793,12 +724,15 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
 		JButton btn = new JButton(buttonText);
-        /* TODO Comment out this line for enabling the event
 		btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                Coin coin = new Coin(amount);
+            	Coin coin = new Coin(amount);
                 try {
-                    machine.getCoinSlot().addCoin(coin);
+        			System.out.println("Before Inseting coin");
+                    machine.getCoinSlot().addCoin(coin);                    
+        			System.out.println("After inserted coin------------");
+        			String msg = "$"+(double)(coin.getValue())/100;
+        			machine.getDisplay().display(msg);
                 } catch (NoSuchHardwareException e) {
                     e.printStackTrace();
                 } catch (DisabledException e) {
@@ -806,7 +740,6 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
                 }
             }
         });
-//        TODO Comment out this line for enabling the event */
 		return btn;
 	}
 
@@ -825,7 +758,6 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
 		JButton btn = new JButton(buttonText);
-        /* TODO Comment out this line for enabling the event
 		btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 Banknote bill = new Banknote(amount);
@@ -837,7 +769,6 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
                 }
             }
         });
-//       TODO Comment out this line for enabling the event */
 		return btn;
 	}
 
@@ -856,7 +787,6 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
 		JButton btn = new JButton(buttonText);
- /* TODO Comment out this line to enable event 
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				CardType cardtype = Card.CardType.PREPAID; 
@@ -869,7 +799,6 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 	                }
 			}
 		});
-//	TODO Comment out this line to enable event*/
 		return btn;
 	}
 
@@ -908,9 +837,12 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 			btn.setEnabled(status);
 		}
 	}
+	
+	public void billRejected(Object billSlot, Object bill) {
+		enableBillButtons(false);
+		billEject.setEnabled(true);
+	}
 
-	// TODO replace method signature with proper one from listener
-	// implementation
 	/**
 	 * Listens to the display of the machine and updates the display text shown
 	 * on the GUI Also enables components on the machine This event is being
@@ -925,7 +857,7 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
 	 * @param newMsg
 	 *            is the message that is currently displayed on the display
 	 */
-	public void messageChange(Object display, String oldMsg, String newMsg) {
+	public void messageChange(Display display, String oldMsg, String newMsg) {
 		// prevents wrong enabling cases for timed messages
 		if (!oldMsg.equals(newMsg)) {
 			GUIHelper.enableComponents(getMainFrame(), true);
@@ -939,14 +871,29 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
      * @param name of the JButton
      * @param key to the product rack
      */
-	/* TODO------------------------------ Comment out this Line to enable the Events
     public void addButtonAction(JButton button, int key){
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    GUIHelper.enableComponents(getMainFrame(),false);
+                	GUIHelper.enableComponents(getMainFrame(), false);
                     machine.getSelectionButton(key).press();
+                } catch (NoSuchHardwareException e1) {			
+                    e1.printStackTrace();
+                }
+            }
+        });
+    }
+    
+    public void addNumButtonAction(JButton button, int key){
+    	button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                	if (codeInProgress) {
+                		GUIHelper.enableComponents(getMainFrame(), false);
+                		machine.getSelectionButton(key).press();
+                	}
                 } catch (NoSuchHardwareException e1) {			
                     e1.printStackTrace();
                 }
@@ -1049,13 +996,29 @@ public class StandardMachineGUI extends VendingMachineGUI{ //implements ProductR
             }
         }
         outOfProductLabels.get(productIndex).setForeground(Color.BLACK);
-        
     }
-    
-// 	TODO ------------------------------ Comment out this Line to enable the Events*/
-	
-	public void billRejected(Object billSlot, Object bill) {
-		enableBillButtons(false);
-		billEject.setEnabled(true);
+
+	@Override
+	public void itemDelivered(DeliveryChute chute) {
+		GUIHelper.enableComponents(getMainFrame(), true);
+		// TODO should display contents of the DevliveryChute
+	}
+
+	@Override
+	public void doorOpened(DeliveryChute chute) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void doorClosed(DeliveryChute chute) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void chuteFull(DeliveryChute chute) {
+		// TODO Auto-generated method stub
+		
 	}
 }

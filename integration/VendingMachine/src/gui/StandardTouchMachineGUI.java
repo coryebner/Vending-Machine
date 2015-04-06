@@ -56,7 +56,7 @@ import javax.swing.JTextPane;
 import javax.swing.JList;
 
 
-  /* TODO packages need for event
+
 import hardware.*;
 import hardware.exceptions.*;
 import hardware.funds.*;
@@ -65,7 +65,7 @@ import hardware.products.Product;
 import hardware.racks.*;
 import hardware.ui.*;
 import gui.test.*;
-//TODO  */
+
 
 /**
  * Initial setup will involve being passed an abstract vending machine as well
@@ -81,8 +81,8 @@ import gui.test.*;
  * 
  * 
  */		
-																		// TODO
-public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements ProductRackListener,IndicatorLightListener{
+
+public class StandardTouchMachineGUI extends VendingMachineGUI implements ProductRackListener,IndicatorLightListener{
 	
 	// AP : This image is just a placeholder, config will give us resources (?)
 	ImageIcon coke = createImageIcon("img/coca_cola.png", "Coke Logo");
@@ -93,7 +93,6 @@ public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements Pr
 		"H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
 		"U", "V", "W", "X", "Y", "Z" };
 	
-	// TODO Uncomment the following line  
 	private AbstractVendingMachine machine;
 	private boolean codeInProgress = false;
 
@@ -159,11 +158,11 @@ public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements Pr
 		int []banknote = {500,1000,2000};
 		int [] popcost	= {200,200,200,200,200,200 };
 		String [] popname = {"Coke","DietCode","RootBeer", "asdf", "qwer","zxcv"};
-//		AbstractVendingMachine vm = new PopVendingMachine(coinvalue,banknote);
-//		initialize(vm, true, true, true, true, true, false);
+		AbstractVendingMachine vm = new PopVendingMachine(coinvalue,banknote);
+		initialize(vm, true, true, true, true, true, false);
 	}
 	
-	public StandardTouchMachineGUI(Object machine, ArrayList<Boolean> parts) {
+	public StandardTouchMachineGUI(AbstractVendingMachine machine, ArrayList<Boolean> parts) {
 		initialize(machine, parts.get(0), parts.get(1), parts.get(2), parts.get(3), parts.get(4), parts.get(5));
 	}
 	
@@ -188,9 +187,8 @@ public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements Pr
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(Object machine, boolean coinSlot, boolean billSlot, boolean cardSlot, boolean internetLight, boolean popBtns, boolean candyBtns) {
-//		TODO Uncomment the follow line
-//		this.machine = (AbstractVendingMachine)machine;
+	private void initialize(AbstractVendingMachine machine, boolean coinSlot, boolean billSlot, boolean cardSlot, boolean internetLight, boolean popBtns, boolean candyBtns) {
+		this.machine = machine;
 		coinButtons = new ArrayList();
 		billButtons = new ArrayList();
 		cardButtons = new ArrayList();
@@ -352,8 +350,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements Pr
 		// First 6 keys are the A-F
 		int key = 6;
 		for (JButton btn : candyNumberButtons) {
-//			TODO Uncomment the following line to enable event
-//				addButtonAction(btn, key);
+				addButtonAction(btn, key);
 	            key++;
 		}
 
@@ -438,7 +435,6 @@ public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements Pr
 
 		billEject = new JButton("Remove bill");
 		billEject.setEnabled(false);
-		/* TODO Comment out this for enabling the event
         billEject.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -446,9 +442,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements Pr
                 //				machine.getBanknoteSlot();
             }
         });
-//		TODO Comment out this line for enabling the event */
        
-		/* TODO Comment out this line when running with hardware
 		// Registering GUI to listen to parts of the vending machine
         try {
         	// Added type cast to the machine because the class type of the machine is Object
@@ -462,7 +456,6 @@ public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements Pr
         } catch (NoSuchHardwareException e2) {
             e2.printStackTrace();
         }
-//        TODO Comment out this line when running with hardware*/
 		canadaSetup();
 	}
 	
@@ -548,8 +541,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements Pr
 			outOfProductLabels.add(createOutOfProductLight());
             JButton popbtn = createPopButton(name);
             popButtons.add(popbtn);
-//            TODO Uncomment the following line to enable to the event
-//            addButtonAction(popbtn,i);
+            addButtonAction(popbtn,i);
 		}
 	}
 
@@ -563,8 +555,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements Pr
 	private void createCandyLetterButtons(int num) {
 		for (int i = 0; i < num; i++) {
 			JButton btn = new JButton(ALPHABET[i]);
-//			TODO Uncomment the following line to enable event
-//			addLetterButtonAction(btn, i);
+			addLetterButtonAction(btn, i);
 			candyLetterButtons.add(btn);
 		}
 	}
@@ -748,7 +739,6 @@ public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements Pr
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
 		JButton btn = new JButton(buttonText);
-      /* TODO Comment out this line for enabling the event
 		btn.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent arg0) {
               Coin coin = new Coin(amount);
@@ -761,7 +751,6 @@ public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements Pr
               }
           }
       });
-//      TODO Comment out this line for enabling the event */
 		return btn;
 	}
 
@@ -780,7 +769,6 @@ public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements Pr
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
 		JButton btn = new JButton(buttonText);
-      /* TODO Comment out this line for enabling the event
 		btn.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent arg0) {
               Banknote bill = new Banknote(amount);
@@ -792,7 +780,6 @@ public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements Pr
               }
           }
       });
-//     TODO Comment out this line for enabling the event */
 		return btn;
 	}
 
@@ -811,7 +798,6 @@ public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements Pr
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
 		JButton btn = new JButton(buttonText);
-		 /* TODO Comment out this line to enable event 
 				btn.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						CardType cardtype = Card.CardType.PREPAID; 
@@ -824,8 +810,6 @@ public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements Pr
 			                }
 					}
 				});
-//			TODO Comment out this line to enable event*/
-
 		return btn;
 	}
 
@@ -931,7 +915,6 @@ public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements Pr
    * @param name of the JButton
    * @param key to the product rack
    */
-	/* TODO------------------------------ Comment out this Line to enable the Events
   public void addButtonAction(JButton button, int key){
       button.addActionListener(new ActionListener() {
           @Override
@@ -1044,6 +1027,5 @@ public class StandardTouchMachineGUI extends VendingMachineGUI{ // implements Pr
       
   }
   
-//	TODO ------------------------------ Comment out this Line to enable the Events*/
 
 }
