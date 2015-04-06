@@ -48,7 +48,6 @@ public class Configuration {
 
 	protected int [] coinRackQuantities;
 	protected int [] coinStorageQuantities;
-	protected int [] billRackQuantities;
 	protected int [] billStorageQuantities;
 
 	protected String logFrequency;
@@ -228,22 +227,18 @@ public class Configuration {
 			else if (line.startsWith("coinstorage")) {
 				coinStorageQuantities = readIntArray(line);
 			}
-			else if (line.startsWith("billracks")) {
-				billRackQuantities = readIntArray(line);
-			}
 			else if (line.startsWith("billstorage")) {
 				billStorageQuantities = readIntArray(line);
 			}
 		}
 
 		if (type == null
-				|| names == null
-				|| prices == null
-				|| quantities == null
-				|| coinRackQuantities == null
-				|| coinStorageQuantities == null
-				|| billRackQuantities == null
-				|| billStorageQuantities == null)
+			|| names == null
+			|| prices == null
+			|| quantities == null
+			|| coinRackQuantities == null
+			|| coinStorageQuantities == null
+			|| billStorageQuantities == null)
 		{
 			throw new ConfigurationException("Missing line in config file!");
 		}
@@ -251,7 +246,7 @@ public class Configuration {
 
 	protected void writeConfigFile(BufferedWriter output) throws IOException
 	{
-		String namestring,pricesstring,Qstring,CRQString,CSQString,BRQString,BSQString,LQString,LocaleString;
+		String namestring,pricesstring,Qstring,CRQString,CSQString,BSQString,LFString,LocaleString;
 		namestring="names";
 		for(int i=0;i<names.length;i++){
 			namestring+=" "+names[i];
@@ -270,17 +265,13 @@ public class Configuration {
 		}
 		CSQString="coinstorage";
 		for(int i=0;i<coinStorageQuantities.length;i++){
-			CRQString+=" "+Integer.toString(coinStorageQuantities[i]);
-		}
-		BRQString="billracks";
-		for(int i=0;i<billRackQuantities.length;i++){
-			BRQString+=" "+Integer.toString(billRackQuantities[i]);
+			CSQString+=" "+Integer.toString(coinStorageQuantities[i]);
 		}
 		BSQString="billstorage";
 		for(int i=0;i<billStorageQuantities.length;i++){
-			BRQString+=" "+Integer.toString(billStorageQuantities[i]);
+			BSQString+=" "+Integer.toString(billStorageQuantities[i]);
 		}
-		LQString="logfrequency "+logFrequency;
+		LFString="logfrequency "+logFrequency;
 		LocaleString="locale "+locale.getCountry();
 		output.write(type);
 		output.newLine();
@@ -294,11 +285,9 @@ public class Configuration {
 		output.newLine();
 		output.write(CSQString);
 		output.newLine();
-		output.write(BRQString);
-		output.newLine();
 		output.write(BSQString);
 		output.newLine();
-		output.write(LQString);
+		output.write(LFString);
 		output.newLine();
 		output.write(LocaleString);
 		//TODO Anish:Working on this
@@ -793,5 +782,10 @@ public class Configuration {
 	public void setButtonSelectionController(ButtonSelectionController controller){
 		this.buttonSelectionController = controller;
 	}
-
+	public Funds getFunds(){
+		return fundsController;
+	}
+	public InventoryController getInventory(){
+		return inventoryController;
+	}
 }
