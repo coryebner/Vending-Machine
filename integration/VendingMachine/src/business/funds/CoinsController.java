@@ -9,6 +9,8 @@ import hardware.funds.Coin;
 import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinReceptacleListener;
 import hardware.racks.CoinRack;
+import hardware.ui.PushButton;
+import hardware.ui.PushButtonListener;
 
 /**
  * Description of PrepaidController
@@ -20,13 +22,14 @@ import hardware.racks.CoinRack;
  * 
  *         Class to interact with hardware to conduct a coins Transaction
  */
-public class CoinsController implements CoinReceptacleListener {
+public class CoinsController implements CoinReceptacleListener, PushButtonListener{
 
 	private CoinReceptacle coinReceptacle;
 	private CoinRackController[] coinRackControllers;
 	private int availableBalance; // value of coins in cents in the receptacle.
 	private boolean exactChangeStatus;
 	private boolean fullOfChangeStatus;
+	private CoinStorageBinTracker storageBinTracker;
 
 	/**
 	 * Public constructor.
@@ -42,8 +45,8 @@ public class CoinsController implements CoinReceptacleListener {
 	 *            prices of each product.
 	 */
 	public CoinsController(CoinReceptacle coinReceptacle, CoinRack[] coinRacks,
-			int[] coinRackDenominations, int[] coinRackQuantities) {
-		
+			int[] coinRackDenominations, int[] coinRackQuantities, CoinStorageBinTracker storageBinTracker) {
+		this.storageBinTracker = storageBinTracker;
 		this.coinReceptacle = coinReceptacle;
 
 		// Initialize all coin rack controllers.
@@ -67,6 +70,7 @@ public class CoinsController implements CoinReceptacleListener {
 			try {
 				// Store coins.
 				coinReceptacle.storeCoins();
+				//TODO: reset balance?
 			} catch (CapacityExceededException e) {
 				return TransactionReturnCode.UNSUCCESSFUL;
 			} catch (DisabledException e) {
@@ -200,5 +204,28 @@ public class CoinsController implements CoinReceptacleListener {
 
 	@Override
 	public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {
+	}
+	
+	/**
+	 * Handles the case when the Return Funds Button is Pressed
+	 * NOT SYNCRONIZATION SAFE
+	 * @param button - button pushed
+	 */
+	@Override
+	public void pressed(PushButton button) {
+		// If the overflow is FULL then some funds will have been stored in the temp Recepticle
+		if(storageBinTracker.isFull()){
+			return;
+		}
+		try {
+			coinReceptacle.returnCoins();
+		} catch (CapacityExceededException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DisabledException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

@@ -1,5 +1,6 @@
 package business.funds;
 
+import hardware.funds.BanknoteReceptacle;
 import hardware.funds.CoinReceptacle;
 import hardware.racks.CoinRack;
 
@@ -19,7 +20,7 @@ import business.selection_delivery.InventoryController;
  *         subcomponents 1. Prepaid 2. Bills 3. Coins - change provided 4.
  *         PayPal 5. Credit Card - Through PayPal
  */
-public class Funds {
+public class FundsController {
 	private boolean prepaidPresent = false;
 	private boolean billsPresent = false;
 	private boolean coinsPresent = false;
@@ -36,8 +37,9 @@ public class Funds {
 	private CreditCardController creditCardController;
 	private PayPalController payPalController;
 	private ExactChangeController exactChangeController;
-	private StorageBinTracker storageBinTracker;
-
+	private CoinStorageBinTracker coinStorageBinTracker;
+	private BankNoteStorageBinTracker banknoteStorageBinTracker;
+	
 	private Currency machineCurrencies;
 
 	private HashMap<String, String> LOG;
@@ -53,6 +55,10 @@ public class Funds {
 	 *            - CounRack[] of available coin racks
 	 * @param coinRackDenominations
 	 *            - the denominations stored in each coin rack
+	 * @param BanknoteReceptacle bnReceptacle
+	 * 			  - the reference to the machines recepticle
+	 * @param banknoteDenominations 
+	 * 			  - int[] banknoteDenominations is the amounts of supported bank notes 
 	 * @param availablePaymentMethods
 	 *            - List<PaymentMethods> a list of enumerated payment types
 	 *            supported
@@ -63,9 +69,9 @@ public class Funds {
 	 *            No arguments needed for BankNotController, PayPal controller.
 	 *            creditCard controller constructors
 	 */
-	public Funds(Locale locale, boolean bestEffortChange,
+	public FundsController(Locale locale, boolean bestEffortChange,
 			CoinReceptacle coinReceptacle, CoinRack[] coinRacks,
-			int[] coinRackDenominations, int[] coinRackQuantities,
+			int[] coinRackDenominations, int[] coinRackQuantities,BanknoteReceptacle bnReceptacle, int[] banknoteDenominations,
 			List<PaymentMethods> availablePaymentMethods,
 			InventoryController inventoryController) {
 
@@ -83,13 +89,14 @@ public class Funds {
 		}
 		if (availablePaymentMethods.contains(PaymentMethods.BILLS)) {
 			this.billsPresent = true;
-			this.bankNoteController = new BanknoteController();
+			this.banknoteStorageBinTracker = new BankNoteStorageBinTracker(banknoteDenominations);
+			this.bankNoteController = new BanknoteController(bnReceptacle,this.banknoteStorageBinTracker);
 		}
 		if (availablePaymentMethods.contains(PaymentMethods.COINS)) {
 			this.coinsPresent = true;
-			this.storageBinTracker = new StorageBinTracker(coinRackDenominations);
+			this.coinStorageBinTracker = new CoinStorageBinTracker(coinRackDenominations);
 			this.coinsController = new CoinsController(coinReceptacle, coinRacks,
-					coinRackDenominations, coinRackQuantities);
+					coinRackDenominations, coinRackQuantities, this.coinStorageBinTracker);
 			// Can only set up exact change controller if there is a coinsController.
 			exactChangeController = new ExactChangeController(
 					inventoryController,
@@ -337,8 +344,11 @@ public class Funds {
 		return null;
 	}
 	
-	public StorageBinTracker getStorageBinTracker(){
-		return this.storageBinTracker;
+	public CoinStorageBinTracker getCoinStorageBinTracker(){
+		return this.coinStorageBinTracker;
+	}
+	public BankNoteStorageBinTracker getBankNoteStorageBinTracker(){
+		return this.banknoteStorageBinTracker;
 	}
 
 	public void ONLY_FOR_TESTING_setControllerState(boolean present,

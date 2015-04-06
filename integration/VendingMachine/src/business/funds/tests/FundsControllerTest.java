@@ -18,14 +18,14 @@ import org.junit.Test;
 import business.funds.BanknoteController;
 import business.funds.CoinsController;
 import business.funds.CreditCardController;
-import business.funds.Funds;
+import business.funds.FundsController;
 import business.funds.PayPalController;
 import business.funds.PaymentMethods;
 import business.funds.PrepaidController;
 import business.funds.TransactionReturnCode;
 import business.selection_delivery.InventoryController;
 
-public class FundsTest {
+public class FundsControllerTest {
 	
 	
 	private Mockery context = new Mockery() {{
@@ -57,13 +57,13 @@ public class FundsTest {
 		fail("Not yet implemented");
 	}
 	
-	private Funds setupControllers(boolean prepaid, boolean banknote, boolean coins,
+	private FundsController setupControllers(boolean prepaid, boolean banknote, boolean coins,
 			boolean creditCard, boolean payPal){
 		InventoryController inventoryController = null;
 		int [] nothing = null;
 		CoinRack[] coinRack = null;
 		List<PaymentMethods> availablePaymentMethods = new ArrayList<PaymentMethods>();
-		Funds funds = new Funds(Locale.CANADA, false, null, coinRack, nothing, nothing, availablePaymentMethods,inventoryController);
+		FundsController funds = new FundsController(Locale.CANADA, false, null, coinRack, nothing, nothing, null, null, availablePaymentMethods,inventoryController);
 		
 		prepaidController = context.mock(PrepaidController.class);
 		coinsController = context.mock(CoinsController.class);
@@ -96,7 +96,7 @@ public class FundsTest {
 	
 	@Test
 	public void testConductTransactionNotEnoughPrepaid_OnlyPrepaid() {
-		Funds funds = setupControllers(true, false, false, false, false);
+		FundsController funds = setupControllers(true, false, false, false, false);
 		context.checking(new Expectations(){
 			{
 			atLeast(1).of(prepaidController).getAvailableBalance();
@@ -110,7 +110,7 @@ public class FundsTest {
 	
 	@Test
 	public void testConductTransactiontExactPrepaid_OnlyPrepaid() {
-		Funds funds = setupControllers(true, false, false, false, false);
+		FundsController funds = setupControllers(true, false, false, false, false);
 		context.checking(new Expectations(){
 			{
 			atLeast(1).of(prepaidController).getAvailableBalance();
@@ -126,7 +126,7 @@ public class FundsTest {
 	
 	@Test
 	public void testConductTransactiontOverPrepaid_OnlyPrepaid() {
-		Funds funds = setupControllers(true, false, false, false, false);
+		FundsController funds = setupControllers(true, false, false, false, false);
 		context.checking(new Expectations(){
 			{
 			atLeast(1).of(prepaidController).getAvailableBalance();
@@ -146,7 +146,7 @@ public class FundsTest {
 	
 	@Test
 	public void testConductTransactionNotEnoughBills_OnlyBills() {
-		Funds funds = setupControllers(false, true, false, false, false);
+		FundsController funds = setupControllers(false, true, false, false, false);
 		context.checking(new Expectations(){
 			{
 			atLeast(1).of(bankNoteController).getAvailableBalance();
@@ -160,7 +160,7 @@ public class FundsTest {
 	
 	@Test
 	public void testConductTransactiontExactBills_OnlyBills() {
-		Funds funds = setupControllers(false, true, false, false, false);
+		FundsController funds = setupControllers(false, true, false, false, false);
 		context.checking(new Expectations(){
 			{
 			atLeast(1).of(bankNoteController).getAvailableBalance();
@@ -176,7 +176,7 @@ public class FundsTest {
 	
 	@Test
 	public void testConductTransactiontOverBankNote_OnlyBankNote() {
-		Funds funds = setupControllers(false, true, false, false, false);
+		FundsController funds = setupControllers(false, true, false, false, false);
 		context.checking(new Expectations(){
 			{
 			atLeast(1).of(bankNoteController).getAvailableBalance();
@@ -197,7 +197,7 @@ public class FundsTest {
 	
 	@Test
 	public void testConductTransactionNotEnoughCoins_OnlyCoinss() {
-		Funds funds = setupControllers(false, false, true, false, false);
+		FundsController funds = setupControllers(false, false, true, false, false);
 		context.checking(new Expectations(){
 			{
 			atLeast(1).of(coinsController).getAvailableBalance();
@@ -212,7 +212,7 @@ public class FundsTest {
 	
 	@Test
 	public void testConductTransactiontExactCoins_OnlyCoins() {
-		Funds funds = setupControllers(false, false, true, false, false);
+		FundsController funds = setupControllers(false, false, true, false, false);
 		context.checking(new Expectations(){
 			{
 			atLeast(1).of(coinsController).getAvailableBalance();
@@ -228,7 +228,7 @@ public class FundsTest {
 	
 	@Test
 	public void testConductTransactiontOverCoins_OnlyCoins() {
-		Funds funds = setupControllers(false, false, true, false, false);
+		FundsController funds = setupControllers(false, false, true, false, false);
 		context.checking(new Expectations(){
 			{
 			atLeast(1).of(coinsController).getAvailableBalance();
@@ -250,7 +250,7 @@ public class FundsTest {
 	
 	@Test
 	public void testConductTransactionNotEnoughCreditCard_OnlyCreditCard() {
-		Funds funds = setupControllers(false, false, false, true, false);
+		FundsController funds = setupControllers(false, false, false, true, false);
 		context.checking(new Expectations(){
 			{
 			atLeast(1).of(creditCardController).ConductTransaction(100);
@@ -264,7 +264,7 @@ public class FundsTest {
 	
 	@Test
 	public void testConductTransactiontEnoughCreditCard_OnlyCreditCard() {
-		Funds funds = setupControllers(false, false, false, true, false);
+		FundsController funds = setupControllers(false, false, false, true, false);
 		context.checking(new Expectations(){
 			{
 			atLeast(1).of(creditCardController).ConductTransaction(100);
@@ -281,7 +281,7 @@ public class FundsTest {
 	
 	@Test
 	public void testConductTransactionNotEnoughPayPal_OnlyPayPal() {
-		Funds funds = setupControllers(false, false, false, false, true);
+		FundsController funds = setupControllers(false, false, false, false, true);
 		context.checking(new Expectations(){
 			{
 			atLeast(1).of(payPalController).ConductTransaction(100);
@@ -295,7 +295,7 @@ public class FundsTest {
 	
 	@Test
 	public void testConductTransactioTimeOutPayPal_OnlyPayPal() {
-		Funds funds = setupControllers(false, false, false, false, true);
+		FundsController funds = setupControllers(false, false, false, false, true);
 		context.checking(new Expectations(){
 			{
 			atLeast(1).of(payPalController).ConductTransaction(100);
@@ -309,7 +309,7 @@ public class FundsTest {
 	
 	@Test
 	public void testConductTransactiontEnoughPayPal_OnlyPayPal() {
-		Funds funds = setupControllers(false, false, false, false, true);
+		FundsController funds = setupControllers(false, false, false, false, true);
 		context.checking(new Expectations(){
 			{
 			atLeast(1).of(payPalController).ConductTransaction(100);
@@ -327,61 +327,61 @@ public class FundsTest {
 
 	@Test
 	public void testIsPrepaidPresentTrue() {
-		Funds funds = setupControllers(true, false, false, false, false);
+		FundsController funds = setupControllers(true, false, false, false, false);
 		assertTrue(funds.isPrepaidPresent());
 	}
 
 	@Test
 	public void testIsPrepaidPresentFalse() {
-		Funds funds = setupControllers(false, false, false, false, false);
+		FundsController funds = setupControllers(false, false, false, false, false);
 		assertFalse(funds.isPrepaidPresent());
 	}
 	
 	@Test
 	public void testIsBillsPresentTrue() {
-		Funds funds = setupControllers(false, true, false, false, false);
+		FundsController funds = setupControllers(false, true, false, false, false);
 		assertTrue(funds.isBillsPresent());
 	}
 	
 	@Test
 	public void testIsBillsPresentFalse() {
-		Funds funds = setupControllers(false, false, false, false, false);
+		FundsController funds = setupControllers(false, false, false, false, false);
 		assertFalse(funds.isBillsPresent());
 	}
 
 	@Test
 	public void testIsCoinsPresentTrue() {
-		Funds funds = setupControllers(false, false, true, false, false);
+		FundsController funds = setupControllers(false, false, true, false, false);
 		assertTrue(funds.isCoinsPresent());
 	}
 	
 	@Test
 	public void testIsCoinsPresentFalse() {
-		Funds funds = setupControllers(false, false, false, false, false);
+		FundsController funds = setupControllers(false, false, false, false, false);
 		assertFalse(funds.isCoinsPresent());
 	}
 
 	@Test
 	public void testIsCreditCardPresentTrue() {
-		Funds funds = setupControllers(false, false, false, true, false);
+		FundsController funds = setupControllers(false, false, false, true, false);
 		assertTrue(funds.isCreditCardPresent());
 	}
 	
 	@Test
 	public void testIsCreditCardPresentFalse() {
-		Funds funds = setupControllers(false, false, false, false, false);
+		FundsController funds = setupControllers(false, false, false, false, false);
 		assertFalse(funds.isCreditCardPresent());
 	}
 
 	@Test
 	public void testIsPayPalPresentTrue() {
-		Funds funds = setupControllers(false, false, false, false, true);
+		FundsController funds = setupControllers(false, false, false, false, true);
 		assertTrue(funds.isPayPalPresent());
 	}
 	
 	@Test
 	public void testIsPayPalPresentFalse() {
-		Funds funds = setupControllers(false, false, false, false, false);
+		FundsController funds = setupControllers(false, false, false, false, false);
 		assertFalse(funds.isPayPalPresent());
 	}
 

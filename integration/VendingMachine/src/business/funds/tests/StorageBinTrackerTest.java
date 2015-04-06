@@ -7,11 +7,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import business.funds.StorageBinTracker;
+import business.funds.CoinStorageBinTracker;
 
 public class StorageBinTrackerTest {
 
-	StorageBinTracker tracker;
+	CoinStorageBinTracker tracker;
 	int[] rackDenominations;
 	
 	@Before
@@ -22,7 +22,7 @@ public class StorageBinTrackerTest {
 		rackDenominations[2] = 25;
 		rackDenominations[3] = 100;
 		rackDenominations[4] = 200;
-		tracker = new StorageBinTracker(rackDenominations);
+		tracker = new CoinStorageBinTracker(rackDenominations);
 	}
 
 	@After

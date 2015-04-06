@@ -2,9 +2,13 @@ package business.funds;
 
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
+import hardware.exceptions.CapacityExceededException;
+import hardware.exceptions.DisabledException;
 import hardware.funds.Banknote;
 import hardware.funds.BanknoteReceptacle;
 import hardware.funds.BanknoteReceptacleListener;
+import hardware.ui.PushButton;
+import hardware.ui.PushButtonListener;
 
 /**
  * Description of PrepaidController
@@ -16,9 +20,16 @@ import hardware.funds.BanknoteReceptacleListener;
  * 
  *         Class to interact with hardware to conduct a Bills Transaction
  */
-public class BanknoteController implements BanknoteReceptacleListener {
+public class BanknoteController implements BanknoteReceptacleListener, PushButtonListener {
 
 	private int availableBalance = 0;
+	private BankNoteStorageBinTracker banknoteStorageTracker;
+	private BanknoteReceptacle banknoteRecepticle;
+	
+	public BanknoteController(BanknoteReceptacle bnRecepticle, BankNoteStorageBinTracker tracker){
+		this.banknoteStorageTracker = tracker;
+		this.banknoteRecepticle = bnRecepticle;
+	}
 
 	/**
 	 * Description of ConductTransaction with bills
@@ -30,6 +41,7 @@ public class BanknoteController implements BanknoteReceptacleListener {
 	public TransactionReturnCode ConductTransaction(int price) {
 		// Return success if enough coins.
 		if (availableBalance >= price) {
+			//banknoteRecepticle.storeBanknotes();
 			return TransactionReturnCode.SUCCESSFUL;
 		} else { // Not enough money.
 			return TransactionReturnCode.INSUFFICIENTFUNDS;
@@ -76,6 +88,24 @@ public class BanknoteController implements BanknoteReceptacleListener {
 
 	@Override
 	public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {
+	}
+
+	@Override
+	public void pressed(PushButton button) {
+		// If the overflow is FULL then some funds will have been stored in the temp Recepticle
+		if(banknoteStorageTracker.isFull()){
+			return;
+		}
+//		try {
+//			banknoteRecepticle.returnBanknotes();
+//		} catch (CapacityExceededException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (DisabledException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
 	}
 
 

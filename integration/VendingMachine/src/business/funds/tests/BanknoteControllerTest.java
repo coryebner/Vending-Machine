@@ -36,7 +36,7 @@ public class BanknoteControllerTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		banknoteController = new BanknoteController();
+		banknoteController = new BanknoteController(null,null);
 		banknoteReceptacle = new BanknoteReceptacle(20);
 		banknoteFive = new Banknote(5);
 		banknoteTen = new Banknote(10);

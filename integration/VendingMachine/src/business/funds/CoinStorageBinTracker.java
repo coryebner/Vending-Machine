@@ -7,13 +7,14 @@ import hardware.funds.Coin;
 import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinReceptacleListener;
 
-public class StorageBinTracker implements CoinReceptacleListener{
+public class CoinStorageBinTracker implements CoinReceptacleListener{
 	
+	boolean full = false;
 	int [] coinsPresent;
 	int [] rackdenominations;
 	HashMap<Integer,Integer> valueToDenominationMap;
 	
-	public StorageBinTracker(int[] coinRackDenominations){
+	public CoinStorageBinTracker(int[] coinRackDenominations){
 		this.rackdenominations = coinRackDenominations;
 		coinsPresent = new int[coinRackDenominations.length];
 		valueToDenominationMap = new HashMap<Integer,Integer>();
@@ -38,6 +39,9 @@ public class StorageBinTracker implements CoinReceptacleListener{
 		}
 		return value;
 	}
+	public boolean isFull(){
+		return full;
+	}
 	
 	
 	@Override
@@ -47,8 +51,18 @@ public class StorageBinTracker implements CoinReceptacleListener{
 		coinsPresent[index]++;
 	}
 
-	@Override public void coinsRemoved(CoinReceptacle receptacle) {}
-	@Override public void coinsFull(CoinReceptacle receptacle) {}
+	@Override public void coinsFull(CoinReceptacle receptacle) {
+		full= true;
+	}
+	
+	@Override public void coinsRemoved(CoinReceptacle receptacle) {
+		// empties state of the overflow bin
+		full = false;
+		for(int i=0; i< coinsPresent.length ; i++){
+			coinsPresent[i]=0;
+		}
+	}
+	
 	@Override public void enabled(CoinReceptacle receptacle) {}
 	@Override public void disabled(CoinReceptacle receptacle) {}
 	@Override public void enabled(AbstractHardware<AbstractHardwareListener> hardware) {}
