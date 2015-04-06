@@ -105,8 +105,8 @@ public class PayPalTest {
 	@Test
 	public void testCreditCardPayment () {
 		Card cc = new Card(CardType.VISA, "4214021408540409", "Tim Johnson","1234", "03/2020", Locale.US, 1000);
-				
-		TransactionReturnCode c = PayPalController.ConductCreditCardTransaction(200, cc);
+		PayPalController controller = new PayPalController();
+		TransactionReturnCode c = controller.ConductCreditCardTransaction(200, cc);
 		
 		assertEquals("Transaction should be successful", TransactionReturnCode.SUCCESSFUL, c);
 	}
@@ -114,8 +114,8 @@ public class PayPalTest {
 	@Test
 	public void testInvalidCreditCardPayment () {
 		Card cc = new Card(CardType.VISA, "123", "Tim Johnson","1234", "03/2020", Locale.US, 1000);
-		
-		TransactionReturnCode c = PayPalController.ConductCreditCardTransaction(200, cc);
+		PayPalController controller = new PayPalController();
+		TransactionReturnCode c = controller.ConductCreditCardTransaction(200, cc);
 		
 		assertEquals("Transaction should be credit card error", TransactionReturnCode.CREDITCARDERROR, c);
 	}

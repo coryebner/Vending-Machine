@@ -1,13 +1,11 @@
 package business.funds;
 
-import hardware.funds.BanknoteReceptacle;
+import hardware.funds.CoinReceptacle;
 import hardware.racks.CoinRack;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
-import com.vendingmachinesareus.CoinReceptacle;
 
 import business.selection_delivery.InventoryController;
 
@@ -69,9 +67,6 @@ public class Funds {
 			int[] coinRackDenominations, int[] coinRackQuantities,
 			List<PaymentMethods> availablePaymentMethods,
 			InventoryController inventoryController) {
-		// this.prepaidPresent = this.billsPresent = this.coinsPresent =
-		// this.creditCardPresent = this.payPalPresent =
-		// this.conductTransactionIsCalled = false;
 
 		this.machineCurrencies = new Currency(locale);
 
@@ -91,10 +86,9 @@ public class Funds {
 		}
 		if (availablePaymentMethods.contains(PaymentMethods.COINS)) {
 			this.coinsPresent = true;
-			this.coinsController = new CoinsController(coinRacks,
+			this.coinsController = new CoinsController(coinReceptacle, coinRacks,
 					coinRackDenominations, coinRackQuantities);
-			// Can only set up exact change controller if there is a
-			// coinsController.
+			// Can only set up exact change controller if there is a coinsController.
 			exactChangeController = new ExactChangeController(
 					inventoryController,
 					coinsController.getCoinRackControllers());
@@ -217,7 +211,6 @@ public class Funds {
 	 * @return totalBalanceInPreBilCoin of(PrePaid and/or Bills and/or Coins)
 	 */
 	private int getTotalBalanceInPreBilCoin() {
-		// TODO Auto-generated method stub
 		int totalBalanceInPreBilCoin = 0;
 		if (this.prepaidPresent) {
 			totalBalanceInPreBilCoin += this.prepaidController
@@ -397,7 +390,7 @@ public class Funds {
 	 * TransactionReturnCode.SUCCESSFUL; } else { this.LOG.putIfAbsent("STATUS",
 	 * "FAIL"); return TransactionReturnCode.INSUFFICIENTFUNDS; } }
 	 * 
-	 * private void conductPrePBillCoinTransaction(int price) { // TODO
+	 * private void conductPrePBillCoinTransaction(int price) { 
 	 * Auto-generated method stub int prepaidBalance =
 	 * this.prepaidController.getAvailableBalance(); int billBalance =
 	 * this.bankNoteController.getAvailableBalance();

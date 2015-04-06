@@ -1,7 +1,6 @@
 package business.funds.tests;
 
 import hardware.racks.CoinRack;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -64,7 +63,7 @@ public class FundsTest {
 		int [] nothing = null;
 		CoinRack[] coinRack = null;
 		List<PaymentMethods> availablePaymentMethods = new ArrayList<PaymentMethods>();
-		Funds funds = new Funds(Locale.CANADA, false, coinRack, nothing, nothing, availablePaymentMethods,inventoryController);
+		Funds funds = new Funds(Locale.CANADA, false, null, coinRack, nothing, nothing, availablePaymentMethods,inventoryController);
 		
 		prepaidController = context.mock(PrepaidController.class);
 		coinsController = context.mock(CoinsController.class);

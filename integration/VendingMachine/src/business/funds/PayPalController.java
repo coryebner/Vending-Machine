@@ -20,7 +20,7 @@ public class PayPalController {
 	 * @return 			The return code based on success of the transaction
 	 */
 	
-	public static TransactionReturnCode ConductTransaction(int price)
+	public TransactionReturnCode ConductTransaction(int price)
 	{			
 		try {
 			PayPalTransaction p = new PayPalTransaction();
@@ -43,7 +43,7 @@ public class PayPalController {
 	 * @param price 	The price in cents of the transaction attempted
 	 * @return 			The return code based on success of the transaction
 	 */
-	public static TransactionReturnCode ConductCreditCardTransaction(int price, Card creditCard){
+	public TransactionReturnCode ConductCreditCardTransaction(int price, Card creditCard){
 		CardType type = creditCard.getType();
 		String t = type.toString();
 		
@@ -94,10 +94,10 @@ public class PayPalController {
 		}
 	}
 	
-	public static void main (String [] args)
-	{
-		Card cc = new Card(CardType.VISA, "4214021408540409", "Tim Johnson","1234", "03/2020", Locale.US, 1000);
-		ConductCreditCardTransaction(300, cc);
-	}
+//	public static void main (String [] args)
+//	{
+//		Card cc = new Card(CardType.VISA, "4214021408540409", "Tim Johnson","1234", "03/2020", Locale.US, 1000);
+//		ConductCreditCardTransaction(300, cc);
+//	}
 
 }
