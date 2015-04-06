@@ -45,15 +45,15 @@ public class ProductRackController implements ProductRackListener
 		
 		for (int i = 0; i < popNeeded; i++)
 		{
-			try {
-				rack.addProduct(new Product());
-			} catch (CapacityExceededException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (DisabledException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try {
+//				rack.addProduct(new Product());
+//			} catch (CapacityExceededException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (DisabledException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		}
 	}
 	
@@ -64,15 +64,15 @@ public class ProductRackController implements ProductRackListener
 		
 		for (int j = 0 ; j <= quantity; j++ )
 		{
-			try{
-			rack.addProduct(new Product());
-			} catch (CapacityExceededException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (DisabledException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try{
+//			rack.addProduct(new Product());
+//			} catch (CapacityExceededException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (DisabledException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		}
 		
 	}

@@ -2,6 +2,7 @@ package hardware.funds;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Currency;
 import java.util.Date;
 import java.util.Locale;
 
@@ -160,5 +161,13 @@ public class Card {
             return false;
         }
         return date != null;
+    }
+    
+    // Liam Apr 02: Compatibility hack - funds wasn't up to date with the fact
+    //  that this method was gone, this should be removed by someone who knows
+    //  what they're doing
+    public Currency getCurrency()
+    {
+    	return Currency.getInstance(getCardLocale().toString());
     }
 }
