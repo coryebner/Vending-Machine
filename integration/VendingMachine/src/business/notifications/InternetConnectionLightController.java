@@ -11,16 +11,5 @@ public class InternetConnectionLightController {
 			light.activate();
 		else
 			light.deactivate();
-	}
-	
-	//WHEN EVENTS ARE AVAILABLE
-	
-	//Listen for Internet turn ON
-			//turn on on
-	
-	//Listen for Internet turn OFF
-			//turn on off
-
-	
-	
+	}	
 }
