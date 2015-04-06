@@ -7,6 +7,7 @@ import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinSlot;
 import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
+import hardware.ui.ConfigurationPanelTransmitter;
 import hardware.ui.DeliveryChute;
 import hardware.ui.Display;
 import hardware.ui.IndicatorLight;
@@ -34,7 +35,6 @@ import java.util.Map;
  * OutOfProductLights: 6<br>
  * ReturnButton: Y<br>
  * 
- * Still Missing: ConfigurationPanel<br>
  */
 public class VMRUS_SFF_P_CI extends AbstractVendingMachine {
 	private CoinSlot coinSlot;
@@ -49,7 +49,7 @@ public class VMRUS_SFF_P_CI extends AbstractVendingMachine {
 	private IndicatorLight exactChangeLight, outOfOrderLight;
 	private IndicatorLight[] outOfProductLights;
 	private VMSocket socket;
-	// still missing ConfigurationPanel
+	private ConfigurationPanelTransmitter configurationPanelTransmitter;
 
 	protected static int deliveryChuteCapacity = 20;
 	protected static int coinReceptacleCapacity = 50;
@@ -103,8 +103,8 @@ public class VMRUS_SFF_P_CI extends AbstractVendingMachine {
 			outOfProductLights[i] = new IndicatorLight();
 
 		display = new Display();
-		socket = new VMSocket(); // to be changed to VMSocket
-		// NEEDED: instantiate configuration panel
+		socket = new VMSocket();
+		configurationPanelTransmitter = new ConfigurationPanelTransmitter();
 
 	}
 
@@ -123,11 +123,10 @@ public class VMRUS_SFF_P_CI extends AbstractVendingMachine {
 		return coinSlot;
 	}
 
-	// NEEDED: configuration panel
-	// @Override
-	// public Object getConfigurationPanel() throws NoSuchHardwareException {
-	// return configurationPanel;
-	// }
+	@Override
+	public ConfigurationPanelTransmitter getConfigurationPanelTransmitter() {
+		return configurationPanelTransmitter;
+	}
 
 	@Override
 	public DeliveryChute getDeliveryChute() {

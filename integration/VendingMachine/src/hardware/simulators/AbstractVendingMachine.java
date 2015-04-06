@@ -10,6 +10,7 @@ import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinSlot;
 import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
+import hardware.ui.ConfigurationPanelTransmitter;
 import hardware.ui.DeliveryChute;
 import hardware.ui.Display;
 import hardware.ui.IndicatorLight;
@@ -254,19 +255,6 @@ public abstract class AbstractVendingMachine {
 	}
 
 	/**
-	 * Returns the keyboard.
-	 * 
-	 * @return the keyboard.
-	 * @throws NoSuchHardwareException
-	 *             if this hardware component does not exist in the
-	 *             configuration of the vending machine.
-	 */
-	// public Keyboard getKeyboard() throws NoSuchHardwareException {
-	public Object getKeyboard() throws NoSuchHardwareException {
-		throw new NoSuchHardwareException();
-	}
-
-	/**
 	 * Returns the socket.
 	 * 
 	 * @return the socket.
@@ -279,16 +267,14 @@ public abstract class AbstractVendingMachine {
 	}
 
 	/**
-	 * Returns the configuration panel.
+	 * Returns the configuration panel transmitter.
 	 * 
-	 * @return the configuration panel.
+	 * @return the configuration panel transmitter.
 	 * @throws NoSuchHardwareException
 	 *             if this hardware component does not exist in the
 	 *             configuration of the vending machine.
 	 */
-	// public ConfigurationPanel getConfigurationPanel() throws
-	// NoSuchHardwareException {
-	public Object getConfigurationPanel() throws NoSuchHardwareException {
+	public ConfigurationPanelTransmitter getConfigurationPanelTransmitter() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
 
