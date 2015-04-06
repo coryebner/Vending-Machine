@@ -7,6 +7,7 @@
 import hardware.ui.Display;
 import business.selection_delivery.SelectionControllerListener;
 import business.selection_delivery.SelectionController;
+import business.funds.CoinsController;
 
 public class DisplayController implements SelectionControllerListener{
 
@@ -14,19 +15,20 @@ public class DisplayController implements SelectionControllerListener{
 	Display display;
 	String currentMsg;
 	Timer eventTimer;
+	CoinsController coinsController;
 
-
-	public DisplayController(Display display, SelectionController sc) {
+	public DisplayController(Display display, SelectionController sc, CoinsController coinsController) {
 		this.display = display;
 		eventTimer = new Timer(5000, listener);
+		this.coinsController = coinsController;
 		
 		sc.register(this);
-		display("TODO get coins available"); //TODO get coin credit
+		display(Integer.toString(this.coinsController.getAvailableBalance()));
 	}
 	
 	ActionListener listener = new ActionListener(){
 		  public void actionPerformed(ActionEvent event){
-			  display("TODO get coins available"); //TODO get coin credit
+			  display(Integer.toString(coinsController.getAvailableBalance()));
 			 eventTimer.stop();
 		  }
 	};
