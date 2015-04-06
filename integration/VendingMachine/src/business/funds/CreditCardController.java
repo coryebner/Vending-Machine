@@ -42,14 +42,6 @@ public class CreditCardController implements CardSlotListener{
 		return null;
 	}
 	
-//	/** Description of getAvailableBalance for a Prepaid Card
-//	 * @return 			The value of the prepaid card if inserted, otherwise zero
-//	 */
-//	protected int getAvailableBalance(){
-//		return 0;
-//		
-//	}
-	
 	/** Description of isCardInserted for a Prepaid Card
 	 * @return 			Indicates the presence of a card in the slot
 	 */

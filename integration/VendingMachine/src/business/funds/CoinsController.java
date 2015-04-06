@@ -2,6 +2,8 @@ package business.funds;
 
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
+import hardware.exceptions.CapacityExceededException;
+import hardware.exceptions.DisabledException;
 import hardware.exceptions.EmptyException;
 import hardware.funds.Coin;
 import hardware.funds.CoinReceptacle;
@@ -20,6 +22,7 @@ import hardware.racks.CoinRack;
  */
 public class CoinsController implements CoinReceptacleListener {
 
+	private CoinReceptacle coinReceptacle;
 	private CoinRackController[] coinRackControllers;
 	private int availableBalance; // value of coins in cents in the receptacle.
 	private boolean exactChangeStatus;
@@ -38,8 +41,10 @@ public class CoinsController implements CoinReceptacleListener {
 	 * @param productPrices
 	 *            prices of each product.
 	 */
-	public CoinsController(CoinRack[] coinRacks, int[] coinRackDenominations,
-			int[] coinRackQuantities) {
+	public CoinsController(CoinReceptacle coinReceptacle, CoinRack[] coinRacks,
+			int[] coinRackDenominations, int[] coinRackQuantities) {
+		
+		this.coinReceptacle = coinReceptacle;
 
 		// Initialize all coin rack controllers.
 		coinRackControllers = new CoinRackController[coinRacks.length];
@@ -50,7 +55,7 @@ public class CoinsController implements CoinReceptacleListener {
 	}
 
 	/**
-	 * Description of ConductTransaction with coins
+	 * Conducts a transaction using coins and stores the coins in the receptacle.
 	 * 
 	 * @param price
 	 *            The price in cents of the transaction attempted
@@ -59,6 +64,14 @@ public class CoinsController implements CoinReceptacleListener {
 	public TransactionReturnCode ConductTransaction(int price) {
 		// Return success if enough coins.
 		if (availableBalance >= price) {
+			try {
+				// Store coins.
+				coinReceptacle.storeCoins();
+			} catch (CapacityExceededException e) {
+				return TransactionReturnCode.UNSUCCESSFUL;
+			} catch (DisabledException e) {
+				return TransactionReturnCode.UNSUCCESSFUL;
+			}
 			return TransactionReturnCode.SUCCESSFUL;
 		} else { // Not enough money.
 			return TransactionReturnCode.INSUFFICIENTFUNDS;
