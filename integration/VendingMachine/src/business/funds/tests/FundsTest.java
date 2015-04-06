@@ -326,28 +326,63 @@ public class FundsTest {
 	}
 
 	@Test
-	public void testIsPrepaidPresent() {
-		fail("Not yet implemented");
+	public void testIsPrepaidPresentTrue() {
+		Funds funds = setupControllers(true, false, false, false, false);
+		assertTrue(funds.isPrepaidPresent());
 	}
 
 	@Test
-	public void testIsBillsPresent() {
-		fail("Not yet implemented");
+	public void testIsPrepaidPresentFalse() {
+		Funds funds = setupControllers(false, false, false, false, false);
+		assertFalse(funds.isPrepaidPresent());
+	}
+	
+	@Test
+	public void testIsBillsPresentTrue() {
+		Funds funds = setupControllers(false, true, false, false, false);
+		assertTrue(funds.isBillsPresent());
+	}
+	
+	@Test
+	public void testIsBillsPresentFalse() {
+		Funds funds = setupControllers(false, false, false, false, false);
+		assertFalse(funds.isBillsPresent());
 	}
 
 	@Test
-	public void testIsCoinsPresent() {
-		fail("Not yet implemented");
+	public void testIsCoinsPresentTrue() {
+		Funds funds = setupControllers(false, false, true, false, false);
+		assertTrue(funds.isCoinsPresent());
+	}
+	
+	@Test
+	public void testIsCoinsPresentFalse() {
+		Funds funds = setupControllers(false, false, false, false, false);
+		assertFalse(funds.isCoinsPresent());
 	}
 
 	@Test
-	public void testIsCreditCardPresent() {
-		fail("Not yet implemented");
+	public void testIsCreditCardPresentTrue() {
+		Funds funds = setupControllers(false, false, false, true, false);
+		assertTrue(funds.isCreditCardPresent());
+	}
+	
+	@Test
+	public void testIsCreditCardPresentFalse() {
+		Funds funds = setupControllers(false, false, false, false, false);
+		assertFalse(funds.isCreditCardPresent());
 	}
 
 	@Test
-	public void testIsPayPalPresent() {
-		fail("Not yet implemented");
+	public void testIsPayPalPresentTrue() {
+		Funds funds = setupControllers(false, false, false, false, true);
+		assertTrue(funds.isPayPalPresent());
+	}
+	
+	@Test
+	public void testIsPayPalPresentFalse() {
+		Funds funds = setupControllers(false, false, false, false, false);
+		assertFalse(funds.isPayPalPresent());
 	}
 
 	@Test

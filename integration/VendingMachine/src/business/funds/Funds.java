@@ -36,6 +36,7 @@ public class Funds {
 	private CreditCardController creditCardController;
 	private PayPalController payPalController;
 	private ExactChangeController exactChangeController;
+	private StorageBinTracker storageBinTracker;
 
 	private Currency machineCurrencies;
 
@@ -86,6 +87,7 @@ public class Funds {
 		}
 		if (availablePaymentMethods.contains(PaymentMethods.COINS)) {
 			this.coinsPresent = true;
+			this.storageBinTracker = new StorageBinTracker(coinRackDenominations);
 			this.coinsController = new CoinsController(coinReceptacle, coinRacks,
 					coinRackDenominations, coinRackQuantities);
 			// Can only set up exact change controller if there is a coinsController.
@@ -334,6 +336,10 @@ public class Funds {
 	public CoinRackController[] getCoinRackControllers() {
 		return null;
 	}
+	
+	public StorageBinTracker getStorageBinTracker(){
+		return this.storageBinTracker;
+	}
 
 	public void ONLY_FOR_TESTING_setControllerState(boolean present,
 			Object object, Class<?> classType) {
@@ -364,47 +370,4 @@ public class Funds {
 		}
 	}
 
-	/**
-	 * public TransactionReturnCode ConductTransaction(int price) { boolean
-	 * transactionSuccess = false; TransactionReturnCode returnCodeOne;
-	 * TransactionReturnCode returnCodeTwo;
-	 * 
-	 * // Payment Flow is as follow, PrePaid, Bills, Coins, Credit Card, PayPal
-	 * this.conductTransactionIsCalled = true; int totalBalance =
-	 * getTotalBalanceInPreBilCoin();
-	 * 
-	 * // There is enough balance with (PrePaid and/or Bills and/or Coins) if
-	 * (totalBalance >= price) { // conduct transaction accordingly
-	 * conductPrePBillCoinTransaction(price); this.LOG.putIfAbsent("STATUS",
-	 * "SUCCESS"); return TransactionReturnCode.SUCCESSFUL; } // Try to conduct
-	 * CreditCard and/or PayPal transaction with (price - // totalBalance) else
-	 * { returnCodeOne = this.creditCardController.ConductTransaction(price -
-	 * totalBalance); if (returnCodeOne == TransactionReturnCode.SUCCESSFUL) {
-	 * transactionSuccess = true; } if (!transactionSuccess) { returnCodeTwo =
-	 * this.payPalController.ConductTransaction(price - totalBalance); if
-	 * (returnCodeTwo == TransactionReturnCode.SUCCESSFUL) { transactionSuccess
-	 * = true; } } }
-	 * 
-	 * if (transactionSuccess) { conductPrePBillCoinTransaction(totalBalance);
-	 * this.LOG.putIfAbsent("STATUS", "SUCCESS"); return
-	 * TransactionReturnCode.SUCCESSFUL; } else { this.LOG.putIfAbsent("STATUS",
-	 * "FAIL"); return TransactionReturnCode.INSUFFICIENTFUNDS; } }
-	 * 
-	 * private void conductPrePBillCoinTransaction(int price) { 
-	 * Auto-generated method stub int prepaidBalance =
-	 * this.prepaidController.getAvailableBalance(); int billBalance =
-	 * this.bankNoteController.getAvailableBalance();
-	 * 
-	 * if (prepaidBalance >= price) {
-	 * this.prepaidController.ConductTransaction(price); } else if
-	 * ((prepaidBalance + billBalance) >= price) {
-	 * this.prepaidController.ConductTransaction(prepaidBalance);
-	 * this.bankNoteController.ConductTransaction(price - prepaidBalance); }
-	 * else { this.prepaidController.ConductTransaction(prepaidBalance);
-	 * this.bankNoteController.ConductTransaction(price - prepaidBalance);
-	 * this.coinsController.ConductTransaction(price - prepaidBalance -
-	 * billBalance); }
-	 * 
-	 * }
-	 */
 }
