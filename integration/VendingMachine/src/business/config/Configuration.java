@@ -96,7 +96,7 @@ public class Configuration {
 		BufferedReader input = new BufferedReader(new FileReader(filename));
 		readConfigFile(input);
 		createMachine();
-		createConfigurationController(configListeners);
+		createConfigurationController(machine, configListeners);
 		loadMachine();
 		return machine;
 	}
@@ -132,7 +132,7 @@ public class Configuration {
 			throws ConfigurationException
 	{
 		if (type.equals("VMRUS-SFF-P/C")) {
-			machine = createSFFPC();
+			machine = createSFFPC(machine);
 		}
 		//		else if (type.equals("VMRUS-SFF-P/CI")) {
 		//			machine = createSFFPCI();
@@ -316,7 +316,7 @@ public class Configuration {
 	 * @param card					does this machine accept card?
 	 * @param paypal				does this machine accept paypal?
 	 */
-	protected void createFundsController(boolean coin,
+	protected void createFundsController(AbstractVendingMachine m, boolean coin,
 			boolean card,
 			boolean paypal,
 			boolean bill)
@@ -328,9 +328,9 @@ public class Configuration {
 		//int[] coinRackDenominations, int[] coinRackQuantities, 
 		CoinRack[] cr;
 		try {
-			cr = new CoinRack[this.machine.getNumberOfCoinRacks()];
-			for(int i=0; i< this.machine.getNumberOfCoinRacks(); i++){
-				cr[i] = this.machine.getCoinRack(i);
+			cr = new CoinRack[m.getNumberOfCoinRacks()];
+			for(int i=0; i< m.getNumberOfCoinRacks(); i++){
+				cr[i] = m.getCoinRack(i);
 			}
 			List<PaymentMethods> availablePaymentMethods = new ArrayList<PaymentMethods>();
 			if(coin){
@@ -346,14 +346,14 @@ public class Configuration {
 				availablePaymentMethods.add(PaymentMethods.BILLS);
 			}
 			Funds fundsNew = new Funds(this.locale, bestEffortChange, cr, this.quantities,this.coinRackQuantities, availablePaymentMethods, inventoryController);
-			this.machine.getCoinReceptacle().register(fundsNew.getCoinsController());
-			this.machine.getBanknoteReceptacle().register(fundsNew.getBankNoteController());
+			m.getCoinReceptacle().register(fundsNew.getCoinsController());
+			m.getBanknoteReceptacle().register(fundsNew.getBankNoteController());
 			// Register the coinracks
 			CoinRackController[] crControllers = fundsNew.getCoinRackControllers();
 			for(int i =0; i < this.machine.getNumberOfCoinRacks(); i++){
-				this.machine.getCoinRack(i).register(crControllers[i]);
+				m.getCoinRack(i).register(crControllers[i]);
 			}
-			this.machine.getCardSlot().register(fundsNew.getPrepaidController());
+			m.getCardSlot().register(fundsNew.getPrepaidController());
 		} catch (NoSuchHardwareException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -365,15 +365,15 @@ public class Configuration {
 	 * Create a ButtonController, and register it with all the buttons it needs
 	 *  to be registered with.
 	 */
-	protected void createButtonSelectionController()
+	protected void createButtonSelectionController(AbstractVendingMachine m)
 	{
 
 		try {
-			int numberOfButtons = this.machine.getNumberOfSelectionButtons();
+			int numberOfButtons = m.getNumberOfSelectionButtons();
 			PushButton [] pushButtons = new PushButton[numberOfButtons];
 			for(int i = 0; i < numberOfButtons; i++){
 
-				pushButtons[i] = this.machine.getSelectionButton(i);
+				pushButtons[i] = m.getSelectionButton(i);
 			}
 			//Creation of controller
 			this.buttonSelectionController = new ButtonSelectionController(this.inventoryController,this.displayController,this.funds,pushButtons,numberOfButtons);
@@ -395,7 +395,7 @@ public class Configuration {
 	 * @param offset				beginning index of 'code' selection buttons
 	 * 								  (vs. normal push buttons)
 	 */
-	protected void createCodeController(int offset)
+	protected void createCodeController(AbstractVendingMachine m, int offset)
 	{
 
 
@@ -405,11 +405,11 @@ public class Configuration {
 					this.inventoryController, 
 					this.displayController, 
 					this.funds, 
-					this.machine.getPushButtonCodeInterpreter(), 
+					m.getPushButtonCodeInterpreter(), 
 					offset);
 
 			//Registering the PushButtonCodeInterpreter with the codeSelectionController
-			this.machine.getPushButtonCodeInterpreter().register(codeSelectionController);
+			m.getPushButtonCodeInterpreter().register(codeSelectionController);
 		} catch (NoSuchHardwareException e) {
 
 			e.printStackTrace();
@@ -422,15 +422,15 @@ public class Configuration {
 	 *  as the 'inventory' field of this class, so we have access to it again
 	 *  when we want to save.
 	 */
-	protected void createInventoryController()
+	protected void createInventoryController(AbstractVendingMachine m)
 	{
 
 		try {
-			int numberOfRacks = this.machine.getNumberOfProductRacks();
+			int numberOfRacks = m.getNumberOfProductRacks();
 			// An array of ProductRack is created and used to build an InventoryController object
 			ProductRack racks[] = new ProductRack[numberOfRacks];
-			for(int i=0; i < this.machine.getNumberOfProductRacks(); i++){
-				racks[i] = this.machine.getProductRack(i);
+			for(int i=0; i < m.getNumberOfProductRacks(); i++){
+				racks[i] = m.getProductRack(i);
 			}
 
 			//Inventory controller creation with information known from machine.
@@ -449,7 +449,7 @@ public class Configuration {
 	 * @param frequency				logging frequency
 	 * 								  (one of either "instant", "batch" or "daily")
 	 */
-	protected void createLogger(String frequency)
+	protected void createLogger(AbstractVendingMachine m, String frequency)
 	{
 
 	}
@@ -459,14 +459,14 @@ public class Configuration {
 	 *  as well as registering anything that needs to be listening to it.
 	 * @param machine
 	 */
-	protected void createConfigurationController(ArrayList<ConfigurationListener> configListeners)
+	protected void createConfigurationController(AbstractVendingMachine m, ArrayList<ConfigurationListener> configListeners)
 	{
 		try {
 			// Creating the ConfigPanelLogic object.
 			if(machine==null||configListeners == null){
 				return;
 			}
-			ConfigPanelLogic configPanelLogic = new ConfigPanelLogic(this.machine.getDisplay());
+			ConfigPanelLogic configPanelLogic = new ConfigPanelLogic(m.getDisplay());
 			
 			// Register configPanelLogic with this new listener just created
 			Iterator<ConfigurationListener> current = configListeners.iterator();
@@ -497,25 +497,29 @@ public class Configuration {
 	//finished as was reasonable. I had to do instantiate the machine object here, instead of waiting for createMachine() to resolve, because the controllers need
 	//the machine to be instantiated to work properly.
 
-	protected AbstractVendingMachine createSFFPC()
+	protected AbstractVendingMachine createSFFPC(AbstractVendingMachine m)
 	{
-		machine = new VMRUS_SFF_P_C(new int [] {5, 10, 25, 100, 200});
+		m = new VMRUS_SFF_P_C(new int [] {5, 10, 25, 100, 200});
 
+		controllerCreator(m);
+
+		return m;
+	}
+	
+	protected void controllerCreator(AbstractVendingMachine m)
+	{
 		//Create a funds controller for coins only
-		createFundsController(true, false, false, false);
+		createFundsController(m, true, false, false, false);
 
 		//Create a selection button controller
-		createButtonSelectionController();
+		createButtonSelectionController(m);
 
 		//Create the inventory manager
-		createInventoryController();
+		createInventoryController(m);
 
 		//Create the logger
-		createLogger(logFrequency);
-
-		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(False),
-
-		return machine;
+		createLogger(m, logFrequency);
+		
 	}
 	//
 	//	protected AbstractVendingMachine createSFFPCI()
