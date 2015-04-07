@@ -20,15 +20,17 @@ import hardware.ui.PushButtonListener;
  * 
  *         Class to interact with hardware to conduct a Bills Transaction
  */
-public class BanknoteController implements BanknoteReceptacleListener, PushButtonListener {
+public class BanknoteController implements BanknoteReceptacleListener,
+		PushButtonListener {
 
 	private int availableBalance = 0;
-	private BanknoteStorageBinController banknoteStorageTracker;
-	private BanknoteReceptacle banknoteRecepticle;
-	
-	public BanknoteController(BanknoteReceptacle bnRecepticle, BanknoteStorageBinController tracker){
-		this.banknoteStorageTracker = tracker;
-		this.banknoteRecepticle = bnRecepticle;
+	private BanknoteStorageBinController banknoteStorageController;
+	private BanknoteReceptacle banknoteReceptacle;
+
+	public BanknoteController(BanknoteReceptacle bnReceptacle,
+			BanknoteStorageBinController controller) {
+		this.banknoteStorageController = controller;
+		this.banknoteReceptacle = bnReceptacle;
 	}
 
 	/**
@@ -41,7 +43,7 @@ public class BanknoteController implements BanknoteReceptacleListener, PushButto
 	public TransactionReturnCode ConductTransaction(int price) {
 		// Return success if enough coins.
 		if (availableBalance >= price) {
-			//banknoteReceptacle.storeBanknotes();
+			// banknoteReceptacle.storeBanknotes();
 			return TransactionReturnCode.SUCCESSFUL;
 		} else { // Not enough money.
 			return TransactionReturnCode.INSUFFICIENTFUNDS;
@@ -60,7 +62,7 @@ public class BanknoteController implements BanknoteReceptacleListener, PushButto
 
 	@Override
 	public void banknoteAdded(BanknoteReceptacle receptacle, Banknote banknote) {
-			availableBalance += banknote.getValue();
+		availableBalance += banknote.getValue();
 	}
 
 	@Override
@@ -71,7 +73,7 @@ public class BanknoteController implements BanknoteReceptacleListener, PushButto
 	@Override
 	public void BanknotesFull(BanknoteReceptacle receptacle) {
 		// TODO: Returns the bank notes in the receptacle.
-		//receptacle.returnBanknotes();
+		// receptacle.returnBanknotes();
 	}
 
 	@Override
@@ -92,21 +94,20 @@ public class BanknoteController implements BanknoteReceptacleListener, PushButto
 
 	@Override
 	public void pressed(PushButton button) {
-		// If the overflow is FULL then some funds will have been stored in the temp Recepticle
-		if(banknoteStorageTracker.isFull()){
+		// If the overflow is FULL then some funds will have been stored in the
+		if (banknoteStorageController.isFull()) {
 			return;
 		}
-//		try {
-//			banknoteRecepticle.returnBanknotes();
-//		} catch (CapacityExceededException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (DisabledException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-	}
+		// try {
+		// banknoteRecepticle.returnBanknotes();
+		// } catch (CapacityExceededException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (DisabledException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 
+	}
 
 }
