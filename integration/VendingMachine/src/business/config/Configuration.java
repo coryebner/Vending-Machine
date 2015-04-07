@@ -14,19 +14,19 @@ import business.selection_delivery.CodeSelectionController;
 import business.selection_delivery.InventoryController;
 import business.stub.DisplayController;
 import business.stub.FundsController;
-import hardware.AbstractVendingMachine;
-import hardware.VMRUS_COM_C_M;
-import hardware.VMRUS_COM_C_MI;
-import hardware.VMRUS_COM_P_M;
-import hardware.VMRUS_COM_P_MI;
-import hardware.VMRUS_SFF_P_C;
-import hardware.VMRUS_SFF_P_CI;
-import hardware.VMRUS_SFF_P_PI;
-import hardware.VMRUS_TOC_CP;
-import hardware.VMRUS_TOC_CP_I;
-import hardware.VMRUS_TOC_C_MI;
-import hardware.VMRUS_TOC_P_I;
-import hardware.VMRUS_TOC_P_MI;
+import hardware.simulators.AbstractVendingMachine;
+import hardware.simulators.VMRUS_COM_C_M;
+import hardware.simulators.VMRUS_COM_C_MI;
+import hardware.simulators.VMRUS_COM_P_M;
+import hardware.simulators.VMRUS_COM_P_MI;
+import hardware.simulators.VMRUS_SFF_P_C;
+import hardware.simulators.VMRUS_SFF_P_CI;
+import hardware.simulators.VMRUS_SFF_P_PI;
+import hardware.simulators.VMRUS_TOC_CP;
+import hardware.simulators.VMRUS_TOC_CP_I;
+import hardware.simulators.VMRUS_TOC_C_MI;
+import hardware.simulators.VMRUS_TOC_P_I;
+import hardware.simulators.VMRUS_TOC_P_MI;
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.racks.ProductRack;
 import hardware.test.VendingMachine1Test;
@@ -231,6 +231,8 @@ public class Configuration {
 				billStorageQuantities = readIntArray(line);
 			}
 		}
+		
+		locale = new Locale("en", "CA"); // TODO: Read locale properly from config file
 		
 		if (type == null
 			|| names == null
@@ -452,7 +454,7 @@ public class Configuration {
 	
 	protected AbstractVendingMachine createSFFPC()
 	{
-		machine = new VMRUS_SFF_P_C(new int [] {5, 10, 25, 100, 200});
+		machine = new VMRUS_SFF_P_C(locale, new int [] {5, 10, 25, 100, 200});
 		
 		//Create a funds controller for coins only
 		createFundsController(true, false, false);
