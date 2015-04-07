@@ -55,9 +55,9 @@ public class BanknoteStorageBinControllerTest {
 	 * will add one note and check if controller quantity ++
 	 */
 	public void banknoteAddedTest() {
-		quantity = 2;
 		controller.banknoteAdded(null, new Banknote(5));
-		assertEquals(3, controller.getQuantity());
+		controller.banknoteAdded(null, new Banknote(5));
+		assertEquals(2, controller.getQuantity());
 	}
 
 	@Test
