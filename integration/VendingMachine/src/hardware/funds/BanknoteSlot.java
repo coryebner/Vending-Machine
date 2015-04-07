@@ -55,7 +55,13 @@ public class BanknoteSlot extends AbstractHardware<BanknoteSlotListener> {
 	}
 	
 	/**
-	 * Causes the bank note slot to reject all bank notes entered when set to TRUE.
+	 * Causes the bank note slot to reject all bank notes entered.
+	 * When set to <strong>true</strong>, all banknotes inserted are
+	 * physically spit back out (and never "enter" the machine); when
+	 * set to <strong>false</strong>, banknote insertion behaves as
+	 * normal.
+	 * 
+	 * @param bool Whether or not this banknote slot should reject all inputs.
 	 */
 	public void setRejectBanknote(boolean bool){
 		rejectAllNotes = bool;
