@@ -14,12 +14,17 @@ import hardware.exceptions.CapacityExceededException;
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.exceptions.SimulationException;
+import hardware.funds.Banknote;
 import hardware.funds.Coin;
 import hardware.products.PopCan;
 import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
 import hardware.simulators.AbstractVendingMachine;
-import hardware.simulators.VMRUS_SFF_P_C;
+import hardware.simulators.VMRUS_COM_P_MI;
+import hardware.simulators.VMRUS_SFF_P_CI;
+import hardware.test.stub.BanknoteReceptacleListenerStub;
+import hardware.test.stub.BanknoteSlotListenerStub;
+import hardware.test.stub.CardSlotListenerStub;
 import hardware.test.stub.CoinRackListenerStub;
 import hardware.test.stub.CoinReceptacleListenerStub;
 import hardware.test.stub.CoinSlotListenerStub;
@@ -33,11 +38,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class VendingMachine1Test {
+public class VMRUS_COM_P_MITest {
 
 	private final int NO_COINRACKS = 5;
-	private final int NO_PRODUCTRACKS = 6;
-	private final int NO_SELECTIONBUTTONS = 6;
+	private final int NO_PRODUCTRACKS = 12;
+	private final int NO_SELECTIONBUTTONS = 12;
 
 	private AbstractVendingMachine hardware;
 	private Coin coin;
@@ -45,34 +50,42 @@ public class VendingMachine1Test {
 	private CoinSlotListenerStub coinSlotListener;
 	private CoinReceptacleListenerStub coinReceptacleListener,
 			storageBinListener;
-	// private CardSlotListenerStub cardSlotListener;
+	private CardSlotListenerStub cardSlotListener;
+	private BanknoteSlotListenerStub banknoteSlotListener;
+	private BanknoteReceptacleListenerStub banknoteReceptacleListener;
 	private DeliveryChuteListenerStub deliveryChuteListener;
 	private CoinRackListenerStub[] coinRackListeners;
 	private ProductRackListenerStub[] productRackListeners;
 	private IndicatorLightListenerStub outOfOrderListener, exactChangeListener;
 	private PushButtonListenerStub[] pushButtonListeners;
 	private PushButtonListenerStub returnButtonListener;
+	private IndicatorLightListenerStub outOfProductListeners[];
+	private Banknote banknote;
+	
 
 	@Before
 	public void setup() throws NoSuchHardwareException {
 
-		hardware = new VMRUS_SFF_P_C(Locale.CANADA, new int[] { 5, 10, 25, 100,
-				200 });
+		hardware = new VMRUS_COM_P_MI(Locale.CANADA, new int[] { 5, 10, 25, 100,
+				200 }, new int[] {5, 10, 20, 50, 100});
 
 		coin = new Coin(100);
+		banknote = new Banknote(5);
 
 		coinSlotListener = new CoinSlotListenerStub();
 		coinReceptacleListener = new CoinReceptacleListenerStub();
 		storageBinListener = new CoinReceptacleListenerStub();
-		// cardSlotListener = new CardSlotListenerStub();
+		cardSlotListener = new CardSlotListenerStub();
 		deliveryChuteListener = new DeliveryChuteListenerStub();
+		banknoteReceptacleListener=new BanknoteReceptacleListenerStub();
+		banknoteSlotListener=new BanknoteSlotListenerStub();
 		coinRackListeners = new CoinRackListenerStub[NO_COINRACKS];
 		for (int i = 0; i < NO_COINRACKS; i++) {
 			coinRackListeners[i] = new CoinRackListenerStub();
 			hardware.getCoinRack(i).register(coinRackListeners[i]);
 		}
 
-		productRackListeners = new ProductRackListenerStub[6];
+		productRackListeners = new ProductRackListenerStub[NO_PRODUCTRACKS];
 		for (int i = 0; i < NO_PRODUCTRACKS; i++) {
 			productRackListeners[i] = new ProductRackListenerStub();
 			hardware.getProductRack(i).register(productRackListeners[i]);
@@ -88,11 +101,20 @@ public class VendingMachine1Test {
 
 		outOfOrderListener = new IndicatorLightListenerStub();
 		exactChangeListener = new IndicatorLightListenerStub();
+		
 
+		
+		outOfProductListeners = new IndicatorLightListenerStub[NO_SELECTIONBUTTONS];
+		for(int i=0; i<NO_SELECTIONBUTTONS; i++){
+			outOfProductListeners[i]=new IndicatorLightListenerStub();
+			hardware.getOutOfProductLight(i).register(outOfProductListeners[i]);
+		}
+		hardware.getBanknoteReceptacle().register(banknoteReceptacleListener);
+		hardware.getBanknoteSlot().register(banknoteSlotListener);
 		hardware.getCoinSlot().register(coinSlotListener);
 		hardware.getCoinReceptacle().register(coinReceptacleListener);
 		hardware.getCoinStorageBin().register(storageBinListener);
-		// hardware.getCardSlot().register(cardSlotListener);
+		hardware.getCardSlot().register(cardSlotListener);
 		hardware.getDeliveryChute().register(deliveryChuteListener);
 		hardware.getExactChangeLight().register(exactChangeListener);
 		hardware.getOutOfOrderLight().register(outOfOrderListener);
@@ -103,7 +125,7 @@ public class VendingMachine1Test {
 		hardware.getCoinSlot().deregister(coinSlotListener);
 		hardware.getCoinReceptacle().deregister(coinReceptacleListener);
 		hardware.getCoinStorageBin().deregister(storageBinListener);
-		// hardware.getCardSlot().deregister(cardSlotListener);
+		hardware.getCardSlot().deregister(cardSlotListener);
 		hardware.getDeliveryChute().deregister(deliveryChuteListener);
 		hardware.getExactChangeLight().deregister(exactChangeListener);
 		hardware.getOutOfOrderLight().deregister(outOfOrderListener);
@@ -122,6 +144,11 @@ public class VendingMachine1Test {
 			hardware.getSelectionButton(i).deregisterAll();
 			pushButtonListeners[i] = null;
 		}
+		
+		for (int i = 0; i < NO_SELECTIONBUTTONS; i++) {
+			hardware.getOutOfProductLight(i).deregisterAll();
+			outOfProductListeners[i] = null;
+		}
 
 		hardware.getReturnButton().deregisterAll();
 		returnButtonListener = null;
@@ -137,12 +164,14 @@ public class VendingMachine1Test {
 		productRackListeners = null;
 		exactChangeListener = null;
 		outOfOrderListener = null;
+		banknoteSlotListener=null;
+		banknoteReceptacleListener=null;
 	}
 
 	@Test(expected = SimulationException.class)
 	public void testNullCoinValues() {
 		
-		 hardware = new VMRUS_SFF_P_C(Locale.CANADA, null);
+		 hardware = new VMRUS_SFF_P_CI(Locale.CANADA, null);
 	}
 
 	@Test
@@ -390,7 +419,7 @@ public class VendingMachine1Test {
 	@Test
 	public void testGetPopRacks() throws NoSuchHardwareException {
 		int count = hardware.getNumberOfProductRacks();
-		assertTrue(count == 6);
+		assertTrue(count == NO_PRODUCTRACKS);
 		assertFalse(hardware.getProductRack(0) == null);
 		assertFalse(hardware.getProductRack(count - 1) == null);
 		try {
@@ -403,7 +432,7 @@ public class VendingMachine1Test {
 	@Test
 	public void testGetSelectionButtons() throws NoSuchHardwareException {
 		int count = hardware.getNumberOfSelectionButtons();
-		assertTrue(count == 6);
+		assertTrue(count == NO_PRODUCTRACKS);
 		assertFalse(hardware.getSelectionButton(0) == null);
 		assertFalse(hardware.getSelectionButton(count - 1) == null);
 		try {
@@ -479,5 +508,37 @@ public class VendingMachine1Test {
 		returnButtonListener.assertProtocol();
 
 	}
+	
+	//test out of product indicator light
+	@Test
+	public void testOutOfProductIndicatorLights() throws NoSuchHardwareException{
+		for(int i=0; i<NO_SELECTIONBUTTONS; i++){
+			outOfProductListeners[i].expect("activated");
+			hardware.getOutOfProductLight(i).activate();
+			outOfProductListeners[i].assertProtocol();
+		}
+		for(int i=0; i<NO_SELECTIONBUTTONS; i++){
+			outOfProductListeners[i].expect("deactivated");
+			hardware.getOutOfProductLight(i).deactivate();
+			outOfProductListeners[i].assertProtocol();
+		}
+	}
+	
+	//Test Banknotes
+	@Test
+	public void testInsertAndStoreBankNote(){
+		try {
+			banknoteSlotListener.expect("validBanknoteInserted");
+			banknoteReceptacleListener.expect("banknoteAdded");
+			hardware.getBanknoteSlot().addBanknote(banknote);
+			banknoteSlotListener.assertProtocol();
+			banknoteReceptacleListener.assertProtocol();
+		} catch (Exception e){
+			fail("Unexpected Exception: "+e);
+		}
+		
+	}
+	//Test Internet
+	
 
 }

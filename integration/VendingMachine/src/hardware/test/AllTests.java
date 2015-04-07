@@ -6,7 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses(
-		{ VendingMachine1Test.class, 
+		{ VMRUS_SFF_P_CTest.class, 
 			hardware.test.funds.CardSlotTest.class,
 			hardware.test.funds.CoinReceptacleTest.class,
 			hardware.test.funds.CoinSlotTest.class,
