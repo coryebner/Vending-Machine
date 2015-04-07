@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import business.funds.CoinStorageBinController;
 
-public class StorageBinControllerTest {
+public class CoinStorageBinControllerTest {
 
 	CoinStorageBinController controller;
 	IndicatorLight outOfOrderLight;
