@@ -1,8 +1,5 @@
 package gui;
 
-import hardware.AbstractHardware;
-import hardware.AbstractHardwareListener;
-import hardware.AbstractVendingMachine;
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.funds.Banknote;
@@ -43,6 +40,7 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
@@ -55,14 +53,13 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextPane;
 import javax.swing.JList;
 
-
-
 import hardware.*;
 import hardware.exceptions.*;
 import hardware.funds.*;
 import hardware.funds.Card.*;
 import hardware.products.Product;
 import hardware.racks.*;
+import hardware.simulators.*;
 import hardware.ui.*;
 import gui.test.*;
 
@@ -158,7 +155,8 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
 		int []banknote = {500,1000,2000};
 		int [] popcost	= {200,200,200,200,200,200 };
 		String [] popname = {"Coke","DietCode","RootBeer", "asdf", "qwer","zxcv"};
-		AbstractVendingMachine vm = new PopVendingMachine(coinvalue,banknote);
+		Locale locale = Locale.CANADA;
+		AbstractVendingMachine vm = new VMRUS_SFF_P_C(locale,coinvalue);
 		initialize(vm, true, true, true, true, true, false);
 	}
 	
