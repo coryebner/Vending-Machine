@@ -78,6 +78,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 			"G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
 			"T", "U", "V", "W", "X", "Y", "Z" };
 
+	private boolean buttonPressed;
 	private boolean codeInProgress = false;
 
 	private JPanel pnlMachineButtons;
@@ -248,6 +249,17 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 		pnlMisc.setLayout(new GridLayout(0, 1, 0, 3));
 
 		btnReturn = new JButton("Return");
+		btnReturn.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				buttonPressed = true;
+				try {
+					machine.getReturnButton().press();
+				} catch (NoSuchHardwareException e1) {
+					e1.printStackTrace();
+				}
+			}			
+		});
 		pnlMisc.add(btnReturn);
 
 		lblExactChange = new JLabel("ExactChange");
@@ -500,6 +512,18 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 		return billEject;
 	}
 	
+	public boolean getButtonPressStatus(){
+		return buttonPressed;
+	}
+	
+	public void resetButtonPressedStatus(){
+		buttonPressed = false;
+	}
+	
+	public JTextPane getDisplay(){
+		return Display_text;
+	}
+	
 	
 	/**
 	 * Sets what currency buttons are shown based on the currency type selected
@@ -734,10 +758,11 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
             	Coin coin = new Coin(amount);
                 try {
         			System.out.println("Before Inseting coin");
-                    machine.getCoinSlot().addCoin(coin);                    
-        			System.out.println("After inserted coin------------");
-        			String msg = "$"+(double)(coin.getValue())/100;
-        			machine.getDisplay().display(msg);
+        			buttonPressed = true;
+                    machine.getCoinSlot().addCoin(coin);                                        
+//        			System.out.println("After inserted coin------------");
+//        			String msg = "$"+(double)(coin.getValue())/100;
+//        			machine.getDisplay().display(msg);
                 } catch (NoSuchHardwareException e) {
                     e.printStackTrace();
                 } catch (DisabledException e) {
@@ -767,6 +792,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
             public void actionPerformed(ActionEvent arg0) {
                 Banknote bill = new Banknote(amount);
                 try {
+                	buttonPressed = true;
                     machine.getBanknoteSlot().addBanknote(bill);
                 } catch (DisabledException | NoSuchHardwareException e) {
                     
@@ -797,6 +823,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 				CardType cardtype = Card.CardType.PREPAID; 
 				Card card = new Card (cardtype,"123456","prepaidcard","","03/2020",null,amount);
 	                try {
+	                	buttonPressed = true;
 	                    machine.getCardSlot().insertCard(card);
 	                } catch (CardSlotNotEmptyException | DisabledException
 	                         | NoSuchHardwareException e) {
@@ -865,11 +892,11 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 	public void messageChange(Display display, String oldMsg, String newMsg) {
 		// prevents wrong enabling cases for timed messages
 		if (!oldMsg.equals(newMsg)) {
+			System.out.println(newMsg);
 			GUIHelper.enableComponents(getMainFrame(), true);
 			Display_text.setText(newMsg);
 		}
 	}
-
 	
 	  /**
      * Add Listener to the JButtons on the GUI
@@ -881,6 +908,8 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
+                	System.out.println("Inside Button Action");
+                	buttonPressed = true;
                 	GUIHelper.enableComponents(getMainFrame(), false);
                     machine.getSelectionButton(key).press();
                 } catch (NoSuchHardwareException e1) {			
@@ -895,6 +924,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
+                	buttonPressed = true;
                 	if (codeInProgress) {
                 		GUIHelper.enableComponents(getMainFrame(), false);
                 		machine.getSelectionButton(key).press();
@@ -911,6 +941,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
+                	buttonPressed = true;
                 	if (!codeInProgress) {
 						codeInProgress = true;
 					} else {
