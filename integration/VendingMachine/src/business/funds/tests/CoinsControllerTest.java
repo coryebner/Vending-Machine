@@ -107,5 +107,75 @@ public class CoinsControllerTest {
 		assertEquals(0, coinsController.getAvailableBalance());
 	}
 	
+	/**
+	 * Test getAvailableBalance
+	 */
+	@Test
+	public void getAvailableBalanceTest() {
+		assertEquals(150, coinsController.getAvailableBalance());
+	}
+	/**
+	 * Test getExactChangeStatus when not active
+	 */
+	@Test
+	public void getExactChangeStatusFalseTest() {
+		assertEquals(false, coinsController.getExactChangeStatus());
+	}
+	/**
+	 * Test getExactChangeStatus when active
+	 */
+	@Test
+	public void getExactChangeStatusTrueTest() {
+
+		for (int i = 0; i < coinsController.getCoinRackControllers().length; i++) {
+			coinsController.getCoinRackControllers()[i].coinRemoved(null, null);
+			coinsController.getCoinRackControllers()[i].coinRemoved(null, null);
+		}
+		assertEquals(true, coinsController.getExactChangeStatus());
+	}
+	/**
+	 * Test getCoinRackControllers by checking the length
+	 */
+	@Test
+	public void getCoinRackControllersTest() {
+		assertEquals(5, coinsController.getCoinRackControllers().length);
+	}
+	/**
+	 * Test isExactChangeActive when not active
+	 */
+	@Test
+	public void isExactChangeActiveFalseTest() {
+		assertEquals(false, coinsController.isExactChangeActive());
+	}
+	
+	/**
+	 * Test isExactChangeActive when it should be active
+	 */
+	@Test
+	public void isExactChangeActiveTrueTest() {
+		for (int i = 0; i < coinsController.getCoinRackControllers().length; i++) {
+			coinsController.getCoinRackControllers()[i].coinRemoved(null, null);
+			coinsController.getCoinRackControllers()[i].coinRemoved(null, null);
+		}
+		assertEquals(false, coinsController.isExactChangeActive());
+	}
+
+	/**
+	 * Test isFullOfChangeActive when not full (full should never happen)
+	 */
+	@Test
+	public void isFullOfChangeActiveNotFullTest() {
+		assertEquals(false, coinsController.isFullOfChangeActive());
+	}
+
+	/**
+	 * Test pressed to see if the receptacle is empty after
+	 */
+	@Test
+	public void pressedTest() {
+		coinsController.pressed(null);
+		assertEquals(0, coinsController.getAvailableBalance());
+	}
+	
 	
 }
