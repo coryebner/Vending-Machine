@@ -1,6 +1,6 @@
 package business.test;
 
-import hardware.AbstractVendingMachine;
+import hardware.simulators.AbstractVendingMachine;
 
 /**Mock of AbstractVendingMachine
  * */
