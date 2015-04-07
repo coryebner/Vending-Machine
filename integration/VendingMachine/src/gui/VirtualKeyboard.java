@@ -13,6 +13,7 @@ package gui;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -121,21 +122,19 @@ public class VirtualKeyboard extends JFrame {
 
     public class KeyboardActionListener implements ActionListener {
     	public char charToSend;
-    	public void updateString(char newValue){
+    	/*public void updateString(char newValue){
     		this.charToSend = newValue;
     		System.out.println("We are sending this char: "+ charToSend);
 
             notifyKeyDown(charToSend);
-    	}
+    	}*/
     	
         public void actionPerformed(ActionEvent e) {
+        	display = textField.getText();
             final JButton btn = (JButton) e.getSource();
             btn.addActionListener(new ActionListener() {
     			public void actionPerformed(ActionEvent arg0) {
-    				display = textField.getText();
-    				textField.setText(display+ btn.getClientProperty("key"));
-    				//textField.setText(display+ stringToSend);
-    				System.out.println("In button listener");
+
     			}
     		});
             
@@ -143,64 +142,49 @@ public class VirtualKeyboard extends JFrame {
                     + ", Clicked Row: --> " + btn.getClientProperty("row")
                     + ", Key Typed: --> " + btn.getClientProperty("key"));
             
-            if (btn.getClientProperty("key").equals("           Space            ")) {
-<<<<<<< HEAD
-            	updateString("/0");
-            	textField.setText(display+ " ");
-=======
-            	updateString(' ');
->>>>>>> adca7ca1847ad4eeb9df47146789b886f1e819a5
+           
+            if (btn.getClientProperty("key") != null){
+    				display = textField.getText();
+                	if (btn.getClientProperty("key").equals("Backspace")) {
+                    	display = textField.getText();	
+                    	textField.setText(display.substring(0, display.length() - 1));
+                	}
+                	else if (btn.getClientProperty("key").equals("           Space            ")) {
+                    	textField.setText(display+ " ");
+                    	//updateString(' ');
+                    }
+                    else if (btn.getClientProperty("key").equals("Enter")) {
+                    	//updateString('\n');
+                    }
+                    else if (btn.getClientProperty("key").equals("Tab")) {
+                    	display = textField.getText();
+                    	textField.setText(display+ "	");
+                    	//updateString('\t');
+                    }
+                    else if (btn.getClientProperty("key").equals("Caps") && key[3][1].equals("a")) {
+                    	setCapsOn();
+                    	button[3][0].setForeground(Color.RED);
+                    }
+                    
+                    else if (btn.getClientProperty("key").equals("Caps") && key[3][1].equals("A")){
+                    	setCapsOff();
+                    	button[3][0].setForeground(Color.black);
+                    }
+                    
+                    else if (btn.getClientProperty("key").equals("Shift") && key[3][1].equals("a")) {
+                    	setCapsOn();
+                    	button[4][0].setForeground(Color.RED);
+                    	shiftOn = true;
+                    }
+                    
+                    else if (shiftOn == true){
+                    	setCapsOff();
+                    	button[4][0].setForeground(Color.black);
+                    	shiftOn = false;
+                    }
+                	else 
+                		textField.setText(display + btn.getClientProperty("key"));
             }
-            else if (btn.getClientProperty("key").equals("Enter")) {
-            	updateString('\n');
-            }
-            else if (btn.getClientProperty("key").equals("Tab")) {
-<<<<<<< HEAD
-            	updateString("/t");
-            	textField.setText(display+ "	");
-            }
-            else if (btn.getClientProperty("key").equals("Backspace")) {
-            	updateString("/b");
-            	if (display != null) {
-					display = textField.getText();
-					String newdisplay = display.substring(0, display.length() - 1);
-					textField.setText(newdisplay);
-				}
-				else{
-					btn.setEnabled(false);
-				}
-=======
-            	updateString('\t');
-            }
-            else if (btn.getClientProperty("key").equals("Backspace")) {
-            	updateString('\b');
->>>>>>> adca7ca1847ad4eeb9df47146789b886f1e819a5
-            }
-            
-            else if (btn.getClientProperty("key").equals("Caps") && key[3][1].equals("a")) {
-            	setCapsOn();
-            	button[3][0].setForeground(Color.RED);
-            }
-            
-            else if (btn.getClientProperty("key").equals("Caps") && key[3][1].equals("A")){
-            	setCapsOff();
-            	button[3][0].setForeground(Color.black);
-            }
-            
-            else if (btn.getClientProperty("key").equals("Shift") && key[3][1].equals("a")) {
-            	setCapsOn();
-            	button[4][0].setForeground(Color.RED);
-            	shiftOn = true;
-            }
-            
-            else if (shiftOn == true){
-            	setCapsOff();
-            	button[4][0].setForeground(Color.black);
-            	shiftOn = false;
-            }
-            
-            else
-            	updateString(btn.getClientProperty("key").toString().charAt(0));
         }
     }
 
