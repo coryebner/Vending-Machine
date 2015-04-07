@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import business.funds.CoinRackController;
 import business.funds.Funds;
@@ -192,7 +193,6 @@ public class Configuration {
 			//coinRackQuantities[i]=funds.getCoinRackControllers()[i].getQuantity();
 		//}
 		//billStorageQuantities[0]=funds.getBankNoteStorageBinTracker().getQuantity();
-		
 
 		//TODO Anish: Working on this
 		//Add funds controller stuff here
@@ -236,6 +236,9 @@ public class Configuration {
 			else if (line.startsWith("billstorage")) {
 				billStorageQuantities = readIntArray(line);
 			}
+			else if (line.startsWith("locale")){
+				
+			}
 		}
 
 		if (type == null
@@ -244,7 +247,8 @@ public class Configuration {
 			|| quantities == null
 			|| coinRackQuantities == null
 			|| coinStorageQuantities == null
-			|| billStorageQuantities == null)
+			|| billStorageQuantities == null
+			|| locale == null)
 		{
 			throw new ConfigurationException("Missing line in config file!");
 		}
