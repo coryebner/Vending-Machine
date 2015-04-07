@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.util.Locale;
 
+import hardware.AbstractHardware;
+import hardware.AbstractHardwareListener;
 import hardware.Hardware;
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.EmptyException;
@@ -33,12 +35,17 @@ public class PrepaidControllerTest {
 	PrepaidController pc;
 	Currency curr;
 	Hardware hw;
+	AbstractHardware<AbstractHardwareListener> abstractHW;
 
+	class abHardwareStub extends AbstractHardware {
+		
+	}
 	
 	@Before
 	public void setUp() throws Exception {
 		curr = new Currency(Locale.CANADA);
 		hw = new Hardware(coinValues, popCosts, popNames);
+		abstractHW = new abHardwareStub();
 		pc = new PrepaidController(curr);
 		cs = hw.getCardSlot();
 		cs.register(pc);
@@ -177,10 +184,9 @@ public class PrepaidControllerTest {
 			// Test a successful transaction
 			cs.insertCard(prepaidCard);
 			assertEquals("Suffcient funds", TransactionReturnCode.SUCCESSFUL, pc.ConductTransaction(8000));
-			assertEquals("Balance should be 2000", 2000, pc.getAvailableBalance());
+			assertEquals("Balance should be 2000", 2000, prepaidCard.getCardBalance());
 			
 			// Test when no prepaid card is inserted.
-			cs.ejectCard();
 			assertEquals("Returns unsuccessful when prepaid is not inserted", TransactionReturnCode.UNSUCCESSFUL, pc.ConductTransaction(200));
 
 			// Test checks if transaction is possible with unknown card
@@ -194,8 +200,6 @@ public class PrepaidControllerTest {
 			fail("Card slot was not empty when trying to insert new card.");
 		} catch (DisabledException e) {
 			fail("Hardware disabled.");
-		} catch (EmptyException e) {
-			fail("Should not be empty.");
 		}
 	}
 
@@ -210,7 +214,7 @@ public class PrepaidControllerTest {
 			cs.insertCard(prepaidCard);
 			assertEquals("Balance should be 10000", 10000, pc.getAvailableBalance());
 			assertEquals("Suffcient funds", TransactionReturnCode.SUCCESSFUL, pc.ConductTransaction(10000));
-			assertEquals("Balance should be zero", 0, pc.getAvailableBalance());
+			assertEquals("Balance should be zero", 0, prepaidCard.getCardBalance());
 
 		} catch (CardSlotNotEmptyException e) {
 			fail("Card slot was not empty when trying to insert new card.");
@@ -228,7 +232,8 @@ public class PrepaidControllerTest {
 		try {
 			// exactExchange is equal to the product cost in foreign UK locale
 			int exactExchange = (int) Math.ceil(curr.ExchangeFromToCurrency(curr.getVendingMachineLocale(), Locale.UK, 200));
-			cs.insertCard(new Card(CardType.PREPAID, "12121212373", "Test prepaid" , "", "00/0000", Locale.UK, exactExchange));
+			prepaidCard = new Card(CardType.PREPAID, "12121212373", "Test prepaid" , "", "00/0000", Locale.UK, exactExchange);
+			cs.insertCard(prepaidCard);
 
 			// getAvailableBalance converts the balance from card locale to machine locale
 			assertEquals("Balance should be 200", 200, pc.getAvailableBalance());
@@ -237,7 +242,7 @@ public class PrepaidControllerTest {
 			assertEquals("Suffcient funds", TransactionReturnCode.SUCCESSFUL, pc.ConductTransaction(200));
 
 			// The balance should be zero after the transaction.
-			assertEquals("Balance should be zero", 0, pc.getAvailableBalance());
+			assertEquals("Balance should be zero", 0, prepaidCard.getCardBalance());
 
 		} catch (CardSlotNotEmptyException e) {
 			fail("Card slot was not empty when trying to insert new card.");
@@ -260,7 +265,8 @@ public class PrepaidControllerTest {
 
 			// exactExchange is equal to the product cost in foreign UK locale
 			int exactExchange = (int) Math.ceil(curr.ExchangeFromToCurrency(curr.getVendingMachineLocale(), Locale.US, 200));
-			cs.insertCard(new Card(CardType.PREPAID, "12121212373", "Test prepaid" , "", "00/0000", Locale.US, exactExchange));
+			prepaidCard = new Card(CardType.PREPAID, "12121212373", "Test prepaid" , "", "00/0000", Locale.US, exactExchange);
+			cs.insertCard(prepaidCard);
 
 			// getAvailableBalance converts the balance from card locale to machine locale
 			assertEquals("Balance should be 200", 200, pc.getAvailableBalance());
@@ -269,7 +275,7 @@ public class PrepaidControllerTest {
 			assertEquals("Suffcient funds", TransactionReturnCode.SUCCESSFUL, pc.ConductTransaction(200));
 
 			// The balance should be zero after the transaction.
-			assertEquals("Balance should be zero", 0, pc.getAvailableBalance());
+			assertEquals("Balance should be zero", 0, prepaidCard.getCardBalance());
 
 		} catch (CardSlotNotEmptyException e) {
 			fail("Card slot was not empty when trying to insert new card.");
@@ -314,5 +320,19 @@ public class PrepaidControllerTest {
 		assertTrue(pc.isDisabled());
 		assertEquals("Should be zero", 0, pc.getAvailableBalance());
 		assertFalse("No card should be inserted", pc.isCardInserted());
+	}
+	
+	/**
+	 * Test enabled and disabled methods
+	 */
+	@Test
+	public void checkHardwareDisabled() {
+		assertFalse(pc.isDisabled());
+		
+		pc.disabled(abstractHW);
+		assertTrue(pc.isDisabled());
+		
+		pc.enabled(abstractHW);
+		assertFalse(pc.isDisabled());
 	}
 }

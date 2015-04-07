@@ -2,6 +2,7 @@ package business.funds;
 
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
+import hardware.exceptions.DisabledException;
 import hardware.exceptions.EmptyException;
 import hardware.funds.Card;
 import hardware.funds.CardSlot;
@@ -21,6 +22,7 @@ public class PrepaidController implements CardSlotListener {
 	private boolean isDisabled;
 	private Card prepaidCard;
 	private Currency vmCurrency;
+	private CardSlot cardSlot;
 	
 	/**
 	 * Description of PrepaidController Contructor with no paramerers for a Prepaid Card
@@ -64,10 +66,19 @@ public class PrepaidController implements CardSlotListener {
 					exchangePrice = (int) Math.ceil(vmCurrency.ExchangeFromToCurrency(vmCurrency.getVendingMachineLocale(), prepaidCard.getCardLocale(), price));
 				}
 				if(price <= getAvailableBalance()) {
-					if(prepaidCard.requestFunds(exchangePrice, ""))
+					if(prepaidCard.requestFunds(exchangePrice, "")) {
+						try {
+							cardSlot.ejectCard();
+						} catch (EmptyException e) {
+							return TransactionReturnCode.UNSUCCESSFUL; //Should never happen
+						} catch (DisabledException e) {
+							return TransactionReturnCode.DISABLED;  //Should not happen
+						}
+						cardSlot = null;
 						return TransactionReturnCode.SUCCESSFUL; //Payment successful
+					}
 					else
-						return TransactionReturnCode.UNSUCCESSFUL; //Could not request funds, card failure.
+						return TransactionReturnCode.UNSUCCESSFUL; //Could not request funds, card failure. Should not be reached.
 				}
 				else
 					return TransactionReturnCode.INSUFFICIENTFUNDS; //Insufficient funds
@@ -127,6 +138,7 @@ public class PrepaidController implements CardSlotListener {
 	public void cardInserted(CardSlot slot) {
 		try {
 			if(slot.readCardData().getType() == CardType.PREPAID) { //Checks if card is of type PREPAID
+				cardSlot = slot;
 				prepaidCard = slot.readCardData();
 				prepaidCardInserted = true;
 			}
