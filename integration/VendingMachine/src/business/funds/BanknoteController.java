@@ -23,10 +23,10 @@ import hardware.ui.PushButtonListener;
 public class BanknoteController implements BanknoteReceptacleListener, PushButtonListener {
 
 	private int availableBalance = 0;
-	private BankNoteStorageBinTracker banknoteStorageTracker;
+	private BanknoteStorageBinController banknoteStorageTracker;
 	private BanknoteReceptacle banknoteRecepticle;
 	
-	public BanknoteController(BanknoteReceptacle bnRecepticle, BankNoteStorageBinTracker tracker){
+	public BanknoteController(BanknoteReceptacle bnRecepticle, BanknoteStorageBinController tracker){
 		this.banknoteStorageTracker = tracker;
 		this.banknoteRecepticle = bnRecepticle;
 	}
@@ -41,7 +41,7 @@ public class BanknoteController implements BanknoteReceptacleListener, PushButto
 	public TransactionReturnCode ConductTransaction(int price) {
 		// Return success if enough coins.
 		if (availableBalance >= price) {
-			//banknoteRecepticle.storeBanknotes();
+			//banknoteReceptacle.storeBanknotes();
 			return TransactionReturnCode.SUCCESSFUL;
 		} else { // Not enough money.
 			return TransactionReturnCode.INSUFFICIENTFUNDS;
@@ -70,8 +70,8 @@ public class BanknoteController implements BanknoteReceptacleListener, PushButto
 
 	@Override
 	public void BanknotesFull(BanknoteReceptacle receptacle) {
-		// TODO Auto-generated method stub
-		
+		// TODO: Returns the bank notes in the receptacle.
+		//receptacle.returnBanknotes();
 	}
 
 	@Override
