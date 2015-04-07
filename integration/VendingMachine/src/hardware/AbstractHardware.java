@@ -2,6 +2,7 @@ package hardware;
 
 import hardware.exceptions.SimulationException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Vector;
 
@@ -80,6 +81,8 @@ public abstract class AbstractHardware<T extends AbstractHardwareListener> {
      * @param args
      *            The arguments to be passed to the event notification method;
      *            the first must be this device.
+     * @throws InvocationTargetException 
+     * 			   if the notification is further embedded in a layered event notification.
      * @throws SimulationException
      *             If the notification does not succeed for any reason.
      */
@@ -92,7 +95,13 @@ public abstract class AbstractHardware<T extends AbstractHardwareListener> {
 	    for(T listener : listeners) {
 		m.invoke(listener, args);
 	    }
-	}
+    } catch(InvocationTargetException e) {
+        Throwable targetException = e.getTargetException();
+        if (!(targetException instanceof NullPointerException)) {
+         ;
+        }
+        else throw new SimulationException(targetException.toString());
+    }
 	catch(Exception e) {
 	    throw new SimulationException(e);
 	}
@@ -103,6 +112,7 @@ public abstract class AbstractHardware<T extends AbstractHardwareListener> {
     /**
      * Permits the disabled/enabled status of this hardware to be set without
      * causing events to be announced.
+     * @param disabled indicates the boolean state of the disabled state to set
      */
     public final void setDisabledWithoutEvents(boolean disabled) {
 	this.disabled = disabled;
@@ -133,6 +143,7 @@ public abstract class AbstractHardware<T extends AbstractHardwareListener> {
     /**
      * Returns whether this hardware is currently disabled from permitting
      * physical movements.
+     * @return true if the hardware is currently disabled, false otherwise.
      */
     public final boolean isDisabled() {
 	return disabled;

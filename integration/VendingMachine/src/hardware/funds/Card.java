@@ -34,18 +34,24 @@ public class Card {
     private Locale cardLocale;
 
     /**
-     * Basic constructor. All arguments must be provided to Card for an object to be created:
-     * <li>A CardType (PREPAID, VISA or MASTERCARD).</li>
-     * <li>A card number.</li>
-     * <li>A pin.</li>
-     * <li>An expiry date in the format "MM/YYYY".</li>
-     * <li>A Locale that serves as the country of the card's origin.</li>
-     * <li>A maximum amount that the card can carry.</li>
+     * Card constructor - All arguments must be provided to Card for an object to be created:
      * 
-     * @throws SimulationException
-     *             if any of the arguments is null.
+     * @param type
+     *		   the CardType (PREPAID, VISA or MASTERCARD)
+     * @param number
+     * 		   the card number
+     * @param name
+     * 		   the card name
+     * @param pin
+     * 		  the card pin number
+     * @param expiry
+     * 		  the card expiration date in the form of MM/YYYY
+     * @param cardLocale
+     * 		  the card locale
+     * @param maxAmount
+     *		   the maximum amount the card can carry.
      */
-    public Card(CardType type, String number, String name, String pin, String expiry, Locale cardCurrency, int maxAmount) {
+    public Card(CardType type, String number, String name, String pin, String expiry, Locale cardLocale, int maxAmount) {
 	if(type == null || number == null || name == null || pin == null || expiry == null)
 	    throw new SimulationException("The arguments may not be null");
 
@@ -59,10 +65,10 @@ public class Card {
 	this.expiry = expiry;
 	this.maxAmount = maxAmount;
 	
-	if(cardCurrency == null)
+	if(cardLocale == null)
 		this.cardLocale = Locale.CANADA;
     else
-    	this.cardLocale = cardCurrency;
+    	this.cardLocale = cardLocale;
     }
 
     /**
@@ -74,30 +80,32 @@ public class Card {
     
     /**
      * getCardLocale
-     * @return
-     * 		Locale instance based on the instance defined for current Card
-     * @see commons-lang 
+     * @return Locale instance based on the instance defined for current Card
      */
     public Locale getCardLocale() {
     	return cardLocale;
     }
 
     /**
-     * Returns the number recorded on the card.
+     * Return the number recorded on the card.
+     * @return the number string recorded on the card.
      */
     public String getNumber() {
 	return number;
     }
 
+
     /**
      * Returns the name recorded on the card.
+     * @return the name recorded on the card.
      */
     public String getName() {
 	return name;
     }
     
     /**
-     * Returns the expiry date recorded on the card.
+     * Returns the expiration date recorded on the card.
+     * @return the expiration date on the card.
      */
     public String getExpiryDate(){
     return expiry;
@@ -105,6 +113,7 @@ public class Card {
     
     /**
      * Returns the current card balance.
+     * @return the maximum amount of the card.
      */
     public int getCardBalance(){
     	return maxAmount;
@@ -112,6 +121,9 @@ public class Card {
 
     /**
      * Tests whether a given PIN conforms to what is stored on the card.
+     * @param pin
+     * 		   the pin to be checked
+     * @return true if the incoming pin to be checked equals the card's pin.
      */
     public boolean checkPin(String pin) {
 	if(this.pin.equals(pin))
@@ -120,6 +132,7 @@ public class Card {
 	return false;
     }
 
+    
     /**
      * Request the indicated amount from the card. If the card is a credit or
      * debit card, this simulates contacting the banking authority and
@@ -129,6 +142,8 @@ public class Card {
      * 
      * @param amountInCents
      *            The amount requested, in cents.
+     * @param pin
+     * 			  the pin associated to the card; used to verify access.
      * @return true if and only if the amount requested is available.
      */
     public boolean requestFunds(int amountInCents, String pin) {

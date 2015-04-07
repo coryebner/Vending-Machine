@@ -15,9 +15,7 @@ import java.util.Queue;
 
 /**
  * AbstractRack
- * 
- * @synopsis
- * 		Base class (abstract) for racks, ensures the base rack API as imposed by IRack is implemented.  
+ * Base class (abstract) for racks, ensures the base rack API as imposed by IRack is implemented.  
  * 
  * @param <T extends AbstractHardwareListener> 		associated Listener class for the rack (ie: ProductRackListener, CoinRackListener)
  * @param <U extends IRackable>						associated Type of rackable "items" (ie: Coin, Product, PopCan)
@@ -42,12 +40,10 @@ public abstract class AbstractRack<T extends AbstractHardwareListener, U extends
     private V sink;
       
     /**
-     * AbstractRack(int capacity) <Constructor>
-     * 
-     * @synopsis
-     * 		Instantiate rack, setting the maximum capacity of the rack to that of the supplied prim. int parameter
+     * Instantiate rack, setting the maximum capacity of the rack to that of the supplied prim. int parameter
      * 
      * @param capacity
+     * 		   the initial maximum capacity of the rack
      */
     public AbstractRack(int capacity) {
     	if(capacity <= 0)
@@ -79,12 +75,9 @@ public abstract class AbstractRack<T extends AbstractHardwareListener, U extends
     }
     
     /**
-     * getQueue
+	 * Getter for the rack queue
      * 
-     * @synopsis
-     * 		Getter for the rack queue
-     * 
-     * @return		Queue<U> 		where U extends IRackable as denoted in the class def.
+     * @return the queue of the current rack.
      */
     protected Queue<U> getQueue() {
     	return this.queue;
@@ -97,7 +90,7 @@ public abstract class AbstractRack<T extends AbstractHardwareListener, U extends
      *             if the number of rackables to be loaded exceeds the capacity of
      *             the rack.
      */
-	@SuppressWarnings("unchecked")
+   	@SuppressWarnings("unchecked")
 	public void loadWithoutEvents(IRackable... rackables) throws SimulationException {
 	if(maxCapacity < queue.size() + rackables.length)
 	    throw new SimulationException("Capacity of rack is exceeded by load");

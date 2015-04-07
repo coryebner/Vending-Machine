@@ -3,6 +3,9 @@ package hardware.test.ui;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.lang.reflect.InvocationTargetException;
+
 import hardware.exceptions.CapacityExceededException;
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.SimulationException;
@@ -47,11 +50,11 @@ public class DeliveryChuteTest {
     }
 
     @Test
-    public void testDeliverPopDisabled() throws CapacityExceededException {
+    public void testDeliverProductDisabled() throws CapacityExceededException {
 	chute.setDisabledWithoutEvents(true);
 	
 	try {
-	    chute.acceptPop(pop);
+	    chute.acceptProduct(pop);
 	    fail();
 	}
 	catch(DisabledException e) {}
@@ -75,7 +78,7 @@ public class DeliveryChuteTest {
 	assertTrue(chute.hasSpace());
 	chute.acceptCoin(coin);
 	assertTrue(chute.hasSpace());
-	chute.acceptPop(pop);
+	chute.acceptProduct(pop);
 	assertFalse(chute.hasSpace());
 	listener.assertProtocol();
     }
@@ -85,7 +88,7 @@ public class DeliveryChuteTest {
 	listener.expect("itemDelivered", "itemDelivered", "chuteFull");
 
 	assertTrue(chute.hasSpace());
-	chute.acceptPop(pop);
+	chute.acceptProduct(pop);
 	assertTrue(chute.hasSpace());
 	chute.acceptCoin(coin);
 	assertFalse(chute.hasSpace());
@@ -117,7 +120,7 @@ public class DeliveryChuteTest {
 
 	try {
 	    listener.init();
-	    chute.acceptPop(pop);
+	    chute.acceptProduct(pop);
 	    fail();
 	}
 	catch(CapacityExceededException e) {}
@@ -125,7 +128,7 @@ public class DeliveryChuteTest {
     }
 
     @Test
-    public void testDeliverEmptyButChecked() {
+    public void testDeliverEmptyButChecked() throws InvocationTargetException {
 	chute.loadWithoutEvents(coin);
 	chute.loadWithoutEvents(pop);
 

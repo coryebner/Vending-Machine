@@ -1,6 +1,6 @@
 package hardware.test.ui;
 
-import hardware.test.stub.SelectionButtonListenerStub;
+import hardware.test.stub.PushButtonListenerStub;
 import hardware.ui.PushButton;
 
 import org.junit.After;
@@ -9,12 +9,12 @@ import org.junit.Test;
 
 public class SelectionButtonTest {
     private PushButton button;
-    private SelectionButtonListenerStub listener;
+    private PushButtonListenerStub listener;
 
     @Before
     public void setup() {
 	button = new PushButton();
-	listener = new SelectionButtonListenerStub();
+	listener = new PushButtonListenerStub();
 	button.register(listener);
 
 	listener.init();

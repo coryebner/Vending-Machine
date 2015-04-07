@@ -14,6 +14,8 @@ public class PopCanChannel extends AbstractChannel<AbstractPopCanAcceptor> {
 
     /**
      * Creates a new pop can channel whose output will go to the indicated sink.
+	 * @param sink
+	 * 			the output to be associated to the new pop can channel
      */
     public PopCanChannel(AbstractPopCanAcceptor sink) {
 	super(sink);
@@ -22,6 +24,8 @@ public class PopCanChannel extends AbstractChannel<AbstractPopCanAcceptor> {
     /**
      * This method should only be called from simulated hardware devices.
      * 
+      * @param pop
+     * 			   the pop can to be moved to the associated channel sink.
      * @throws CapacityExceededException
      *             if the output sink cannot accept the pop.
      * @throws DisabledException
