@@ -60,7 +60,6 @@ public class Configuration {
 	// eg. FundsController needs to tell us how many coins in each rack
 
 	protected FundsController funds;
-	protected Funds fundsController;
 	//protected InventoryManager inventory;
 	protected InventoryController inventoryController; // Maria: added as InventoryManager was commented.
 	protected CodeSelectionController codeSelectionController; // Maria: Added CodeSelectionController object
@@ -183,10 +182,12 @@ public class Configuration {
 		for(int i=0;i<rackcount;i++){
 			prices[i]=inventoryController.getCost(i);
 		}
-		int CRackcount=fundsController.getCoinRackControllers().length;
-		for(int i=0;i<CRackcount;i++){
-			coinRackQuantities[i]=fundsController.getCoinRackControllers()[i].getQuantity();
-		}
+		//int CRackcount=funds.getCoinRackControllers().length;
+		//for(int i=0;i<CRackcount;i++){
+			//coinRackQuantities[i]=funds.getCoinRackControllers()[i].getQuantity();
+		//}
+		//billStorageQuantities[0]=funds.getBankNoteStorageBinTracker().getQuantity();
+		
 
 		//TODO Anish: Working on this
 		//Add funds controller stuff here
@@ -782,8 +783,8 @@ public class Configuration {
 	public void setButtonSelectionController(ButtonSelectionController controller){
 		this.buttonSelectionController = controller;
 	}
-	public Funds getFunds(){
-		return fundsController;
+	public FundsController getFunds(){
+		return funds;
 	}
 	public InventoryController getInventory(){
 		return inventoryController;
