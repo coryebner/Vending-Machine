@@ -1,12 +1,14 @@
 package business.selection_delivery;
 
+import java.security.InvalidParameterException;
+
+import business.funds.FundsController;
+import business.stub.DisplayController;
 import hardware.exceptions.CapacityExceededException;
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.EmptyException;
 
 
-import business.stub.DisplayController;
-import business.stub.FundsController;
 /*
  * The Selection Controller is the abstract shell for the CodeSelectionController
  * and ButtonSelectionController
@@ -23,6 +25,9 @@ public abstract class SelectionController extends
 	
 	public SelectionController(InventoryController inv, DisplayController disp, FundsController f)
 	{
+		if(inv == null || disp == null || f == null)
+			throw new InvalidParameterException();
+		
 		inventory = inv;
 		display = disp;
 		funds = f;
@@ -63,7 +68,7 @@ public abstract class SelectionController extends
 	{
 		Class<?>[] parameterTypes =
 		        new Class<?>[] { };
-		Object[] args = new Object[] { this };
+		Object[] args = new Object[] {};
 		notifyListeners(SelectionControllerListener.class, "emptySelection", parameterTypes, args);
 	}
 	
@@ -71,15 +76,15 @@ public abstract class SelectionController extends
 	{
 		Class<?>[] parameterTypes =
 		        new Class<?>[] { };
-		Object[] args = new Object[] { this };
+		Object[] args = new Object[] {};
 		notifyListeners(SelectionControllerListener.class, "invalidSelection", parameterTypes, args);
 	}
 	
-	protected void notifyInsufficientFunds()
+	protected void notifyInsufficientFunds(int fundsRequired)
 	{
 		Class<?>[] parameterTypes =
-		        new Class<?>[] { };
-		Object[] args = new Object[] { this };
+		        new Class<?>[] {int.class};
+		Object[] args = new Object[] {fundsRequired};
 		notifyListeners(SelectionControllerListener.class, "insufficientFunds", parameterTypes, args);
 	}
 }
