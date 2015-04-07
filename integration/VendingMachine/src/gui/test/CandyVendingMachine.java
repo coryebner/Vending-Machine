@@ -97,7 +97,7 @@ public class CandyVendingMachine extends AbstractVendingMachine{
 		for(int i = 0; i < 16; i++)
 		    characterButtons[i] = new PushButton();
 		
-		Map<PushButton, Character> map = new HashMap<>();
+		Map<PushButton, Character> map = new HashMap<PushButton, Character>();
 		map.put(characterButtons[0], 'A');
 		map.put(characterButtons[1], 'B');
 		map.put(characterButtons[2], 'C');
