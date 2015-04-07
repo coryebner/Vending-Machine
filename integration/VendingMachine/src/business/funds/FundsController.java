@@ -350,6 +350,13 @@ public class FundsController {
 	public BankNoteStorageBinTracker getBankNoteStorageBinTracker(){
 		return this.banknoteStorageBinTracker;
 	}
+	
+	public CreditCardController getCreditCardController(){
+		return this.creditCardController;
+	}
+	public PayPalController getPayPalController(){
+		return this.payPalController;
+	}
 
 	public void ONLY_FOR_TESTING_setControllerState(boolean present,
 			Object object, Class<?> classType) {

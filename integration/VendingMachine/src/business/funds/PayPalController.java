@@ -94,10 +94,11 @@ public class PayPalController {
 		}
 	}
 	
-//	public static void main (String [] args)
-//	{
-//		Card cc = new Card(CardType.VISA, "4214021408540409", "Tim Johnson","1234", "03/2020", Locale.US, 1000);
-//		ConductCreditCardTransaction(300, cc);
-//	}
+	public static void main (String [] args)
+	{
+		Card cc = new Card(CardType.VISA, "4214021408540409", "Tim Johnson","1234", "03/2020", Locale.US, 1000);
+		PayPalController controller = new PayPalController();
+		controller.ConductCreditCardTransaction(300, cc);
+	}
 
 }

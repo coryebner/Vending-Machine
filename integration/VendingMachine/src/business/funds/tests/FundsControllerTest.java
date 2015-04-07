@@ -1,6 +1,9 @@
 package business.funds.tests;
 
+import hardware.funds.BanknoteReceptacle;
+import hardware.funds.CoinReceptacle;
 import hardware.racks.CoinRack;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -37,6 +40,17 @@ public class FundsControllerTest {
 	BanknoteController bankNoteController ;
 	CreditCardController creditCardController;
 	PayPalController payPalController;
+	
+	Locale locale;
+	boolean bestEffortChange;
+	CoinReceptacle coinReceptacle;
+	CoinRack[] coinRacks;
+	CoinRack mockedRack;
+	int[] coinRackDenominations;
+	int[] coinRackQuantities;
+	BanknoteReceptacle bnReceptacle;
+	int[] banknoteDenominations;
+	InventoryController inventoryController;
 
 	@Before
 	public void setUp() throws Exception {
@@ -44,6 +58,16 @@ public class FundsControllerTest {
 
 	@After
 	public void tearDown() throws Exception {
+		locale = null;
+		bestEffortChange = false;
+		coinReceptacle = null;
+		coinRacks = null;
+		mockedRack = null;
+		coinRackDenominations = null;
+		coinRackQuantities = null;
+		bnReceptacle = null;
+		banknoteDenominations= null;
+		inventoryController = null;
 	}
 
 
@@ -51,10 +75,102 @@ public class FundsControllerTest {
 	public void testFunds() {
 		fail("Not yet implemented");
 	}
+	
+	@Test
+	public void testFundsConstructorOnlyPrepaid() {
+		List<PaymentMethods> availablePaymentMethods = new ArrayList<PaymentMethods>();
+		availablePaymentMethods.add(PaymentMethods.PREPAID);
+		FundsController funds = setupConstructorCall(availablePaymentMethods);
+		
+		assertNotNull(funds.getPrepaidController());
+		assertNull(funds.getCoinsController());
+		assertNull(funds.getCoinRackControllers());
+		assertNull(funds.getCoinStorageBinTracker());
+		assertNull(funds.getBankNoteController());
+		assertNull(funds.getBankNoteStorageBinTracker());
+		assertNull(funds.getCreditCardController());
+		assertNull(funds.getPayPalController());
+	}
 
+	@Test
+	public void testFundsConstructorPrepaidBills() {
+		List<PaymentMethods> availablePaymentMethods = new ArrayList<PaymentMethods>();
+		availablePaymentMethods.add(PaymentMethods.PREPAID);
+		availablePaymentMethods.add(PaymentMethods.BILLS);
+		FundsController funds = setupConstructorCall(availablePaymentMethods);
+		
+		assertNotNull(funds.getPrepaidController());
+		assertNull(funds.getCoinsController());
+		assertNull(funds.getCoinRackControllers());
+		assertNull(funds.getCoinStorageBinTracker());
+		assertNotNull(funds.getBankNoteController());
+		assertNotNull(funds.getBankNoteStorageBinTracker());
+		assertNull(funds.getCreditCardController());
+		assertNull(funds.getPayPalController());
+	}
+	
+	@Test
+	public void testFundsConstructorPrepaidBillsCoins() {
+		List<PaymentMethods> availablePaymentMethods = new ArrayList<PaymentMethods>();
+		availablePaymentMethods.add(PaymentMethods.PREPAID);
+		availablePaymentMethods.add(PaymentMethods.BILLS);
+		availablePaymentMethods.add(PaymentMethods.COINS);
+
+		FundsController funds = setupConstructorCall(availablePaymentMethods);
+		
+		assertNotNull(funds.getPrepaidController());
+		assertNotNull(funds.getCoinsController());
+		assertNotNull(funds.getCoinRackControllers());
+		assertNotNull(funds.getCoinStorageBinTracker());
+		assertNotNull(funds.getBankNoteController());
+		assertNotNull(funds.getBankNoteStorageBinTracker());
+		assertNull(funds.getCreditCardController());
+		assertNull(funds.getPayPalController());
+	}
+	
 	@Test
 	public void testConductTransaction() {
 		fail("Not yet implemented");
+	}
+	
+	private FundsController setupConstructorCall(List<PaymentMethods> availablePaymentMethods){
+		setupOnlyControllerMocks();
+		locale = Locale.CANADA;
+		bestEffortChange = false;
+		coinReceptacle = context.mock(CoinReceptacle.class);
+		coinRacks = new CoinRack[5];
+		mockedRack = context.mock(CoinRack.class);
+		for(int i = 0; i< 5; i++){
+			coinRacks[i] = mockedRack;
+		}
+		coinRackDenominations = new int[]{5,10,25,100,200};
+		coinRackQuantities = new int[]{5,5,5,5,5};
+		bnReceptacle = context.mock(BanknoteReceptacle.class);
+		banknoteDenominations = new int[]{5,10,20};
+		inventoryController = context.mock(InventoryController.class);
+		
+		context.checking(new Expectations(){
+			{
+			allowing(mockedRack).length;
+			will(returnValue(100));
+			oneOf(prepaidController).ConductTransaction(100);
+			will(returnValue(TransactionReturnCode.SUCCESSFUL));
+			}
+		});
+		
+		FundsController funds = new FundsController(locale, bestEffortChange, coinReceptacle, coinRacks,
+				coinRackDenominations, coinRackQuantities, bnReceptacle, banknoteDenominations,
+				availablePaymentMethods,
+				inventoryController);
+		return funds;
+	}
+	
+	private void setupOnlyControllerMocks(){
+		prepaidController = context.mock(PrepaidController.class);
+		coinsController = context.mock(CoinsController.class);
+		bankNoteController = context.mock(BanknoteController.class) ;
+		creditCardController = context.mock(CreditCardController.class);
+		payPalController = context.mock(PayPalController.class);
 	}
 	
 	private FundsController setupControllers(boolean prepaid, boolean banknote, boolean coins,
