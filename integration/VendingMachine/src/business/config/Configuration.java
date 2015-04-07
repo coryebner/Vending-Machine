@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -17,6 +18,8 @@ import business.selection_delivery.CodeSelectionController;
 import business.selection_delivery.InventoryController;
 import business.stub.DisplayController;
 import business.stub.FundsController;
+import hardware.AbstractHardware;
+import hardware.AbstractHardwareListener;
 import hardware.AbstractVendingMachine;
 import hardware.VMRUS_COM_C_M;
 import hardware.VMRUS_COM_C_MI;
@@ -34,6 +37,8 @@ import hardware.exceptions.NoSuchHardwareException;
 import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
 import hardware.test.VendingMachine1Test;
+import hardware.ui.ConfigurationPanelTransmitter;
+import hardware.ui.ConfigurationPanelTransmitterListener;
 import hardware.ui.PushButton;
 import hardware.ui.PushButtonCodeInterpreter;
 
@@ -455,7 +460,23 @@ public class Configuration {
 	 */
 	protected void createConfigurationController(ArrayList<ConfigurationListener> configListeners)
 	{
-
+		try {
+			// Creating the ConfigPanelLogic object.
+			if(machine==null||configListeners == null){
+				return;
+			}
+			ConfigPanelLogic configPanelLogic = new ConfigPanelLogic(this.machine.getDisplay());
+			
+			// Register configPanelLogic with this new listener just created
+			Iterator<ConfigurationListener> current = configListeners.iterator();
+			while(current.hasNext()){
+				configPanelLogic.register(current.next());
+			}
+			
+		} catch (NoSuchHardwareException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
