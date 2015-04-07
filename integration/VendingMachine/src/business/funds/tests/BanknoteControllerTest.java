@@ -10,9 +10,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import business.funds.BanknoteController;
+import business.funds.BanknoteStorageBinController;
 import business.funds.TransactionReturnCode;
 import hardware.funds.Banknote;
 import hardware.funds.BanknoteReceptacle;
+import hardware.ui.IndicatorLight;
 
 /**
  * 
@@ -26,6 +28,8 @@ public class BanknoteControllerTest {
 
 	BanknoteController banknoteController; 
 	BanknoteReceptacle banknoteReceptacle;
+	BanknoteStorageBinController banknoteStorageController;
+	IndicatorLight indicatorLight;
 	Banknote banknoteFive;
 	Banknote banknoteTen;
 	Banknote banknoteTwenty;
@@ -36,8 +40,10 @@ public class BanknoteControllerTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		banknoteController = new BanknoteController(null,null);
 		banknoteReceptacle = new BanknoteReceptacle(20);
+		indicatorLight = new IndicatorLight();
+		banknoteStorageController = new BanknoteStorageBinController(5, indicatorLight);
+		banknoteController = new BanknoteController(banknoteReceptacle,null);		
 		banknoteFive = new Banknote(5);
 		banknoteTen = new Banknote(10);
 		banknoteTwenty = new Banknote(20);
@@ -96,7 +102,7 @@ public class BanknoteControllerTest {
 		banknoteReceptacle = new BanknoteReceptacle(1);
 		banknoteController.banknoteAdded(banknoteReceptacle, banknoteTwenty);	
 		banknoteController.banknoteAdded(banknoteReceptacle, banknoteFive);
-		assertEquals(20, banknoteController.getAvailableBalance());
+		assertEquals(25, banknoteController.getAvailableBalance());
 	}
 
 	/**
@@ -104,10 +110,30 @@ public class BanknoteControllerTest {
 	 */
 	@Test
 	public void BankNoteRemovedTest(){
+		banknoteReceptacle = new BanknoteReceptacle(2);
 		banknoteController.banknoteAdded(banknoteReceptacle, banknoteTwenty);
 		banknoteController.banknoteAdded(banknoteReceptacle, banknoteTen);
 		banknoteController.BanknoteRemoved(banknoteReceptacle);
 		assertEquals(0, banknoteController.getAvailableBalance());
+	}
+	
+	/**
+	 * Test getAvailableBalance() method returns the right total value of bills in receptacle
+	 */
+	@Test
+	public void GetAvailableBalanceTest(){
+		banknoteController.banknoteAdded(banknoteReceptacle, banknoteFive);
+		banknoteController.banknoteAdded(banknoteReceptacle, banknoteTen);
+		assertEquals(15, banknoteController.getAvailableBalance());
+	}
+	
+	/**
+	 * Test Pressed() method listener for return button.
+	 */
+	@Test 
+	public void ReturnAllBankNotesTest(){
+		
+		
 	}
 	
 
