@@ -6,6 +6,7 @@ import hardware.exceptions.SimulationException;
 import hardware.funds.*;
 import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
+import hardware.ui.ConfigurationPanelTransmitter;
 import hardware.ui.DeliveryChute;
 import hardware.ui.Display;
 import hardware.ui.IndicatorLight;
@@ -34,7 +35,6 @@ import java.util.Map;
  * OutOfProductLights: 0<br>
  * ReturnButton: Y<br>
  * 
- * Still Missing: ConfigurationPanel<br>
  * Still Missing: Banknote Hardware Connections<br>
  */
 public class VMRUS_COM_C_MI extends AbstractVendingMachine{
@@ -54,7 +54,7 @@ public class VMRUS_COM_C_MI extends AbstractVendingMachine{
 	
 	private IndicatorLight exactChangeLight, outOfOrderLight, noInternetConnectionLight;
 	private VMSocket socket;
-	// still missing ConfigurationPanel
+	private ConfigurationPanelTransmitter configurationPanelTransmitter;
 
 	protected static int banknoteReceptacleCapacity = 20;
 	protected static int deliveryChuteCapacity = 20;
@@ -99,8 +99,8 @@ public class VMRUS_COM_C_MI extends AbstractVendingMachine{
 				new CoinChannel(deliveryChute), new CoinChannel(coinStorageBin));
 
 		/* NEEDED: Banknote Hardware Connections
-		banknoteSlot.connect(new BanknoteChannel(banknoteReceptacle new CoinChannel(coinStorageBin));
-		banknoteReceptacle.connect(new CoinChannel(deliveryChute), new CoinChannel(coinStorageBin));
+		banknoteSlot.connect(new BanknoteChannel(banknoteReceptacle), new BanknoteChannel(banknoteStorageBin));
+		banknoteReceptacle.connect(new BanknoteChannel(banknoteStorageBin), new BanknoteChannel(deliveryChute));
 		*/
 
 		productRacks = new ProductRack[numOfProducts];
@@ -117,7 +117,7 @@ public class VMRUS_COM_C_MI extends AbstractVendingMachine{
 		
 		display = new Display();
 		socket = new VMSocket();
-		// NEEDED: instantiate configuration panel
+		configurationPanelTransmitter = new ConfigurationPanelTransmitter();
 
 		characterButtons = new PushButton[16];
 		for(int i = 0; i < 16; i++)
@@ -179,11 +179,10 @@ public class VMRUS_COM_C_MI extends AbstractVendingMachine{
 		return coinSlot;
 	}
 
-	// NEEDED: configuration panel
-	// @Override
-	// public Object getConfigurationPanel() throws NoSuchHardwareException {
-	// return configurationPanel;
-	// }
+	@Override
+	public ConfigurationPanelTransmitter getConfigurationPanelTransmitter() {
+		return configurationPanelTransmitter;
+	}
 
 	@Override
 	public CardSlot getCardSlot() {

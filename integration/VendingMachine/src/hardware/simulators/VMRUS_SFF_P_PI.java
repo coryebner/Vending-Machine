@@ -7,6 +7,7 @@ import hardware.exceptions.NoSuchHardwareException;
 import hardware.exceptions.SimulationException;
 import hardware.funds.CardSlot;
 import hardware.racks.ProductRack;
+import hardware.ui.ConfigurationPanelTransmitter;
 import hardware.ui.DeliveryChute;
 import hardware.ui.Display;
 import hardware.ui.IndicatorLight;
@@ -30,7 +31,6 @@ import hardware.ui.PushButton;
  * OutOfProductLights: 6<br>
  * ReturnButton: Y<br>
  * 
- * Still Missing: ConfigurationPanel<br>
  */
 public class VMRUS_SFF_P_PI extends AbstractVendingMachine {
 	private DeliveryChute deliveryChute;
@@ -42,7 +42,7 @@ public class VMRUS_SFF_P_PI extends AbstractVendingMachine {
 	private IndicatorLight outOfOrderLight;
 	private IndicatorLight[] outOfProductLights;
 	private VMSocket socket;
-	// still missing ConfigurationPanel
+	private ConfigurationPanelTransmitter configurationPanelTransmitter;
 
 	protected static int deliveryChuteCapacity = 20;
 	protected static int productRackCapacity = 15;
@@ -79,7 +79,7 @@ public class VMRUS_SFF_P_PI extends AbstractVendingMachine {
 
 		display = new Display();
 		socket = new VMSocket();
-		// NEEDED: instantiate configuration panel
+		configurationPanelTransmitter = new ConfigurationPanelTransmitter();
 
 	}
 
@@ -88,11 +88,10 @@ public class VMRUS_SFF_P_PI extends AbstractVendingMachine {
 		return cardSlot;
 	}
 	
-	// NEEDED: configuration panel
-	// @Override
-	// public Object getConfigurationPanel() throws NoSuchHardwareException {
-	// return configurationPanel;
-	// }
+	@Override
+	public ConfigurationPanelTransmitter getConfigurationPanelTransmitter() {
+		return configurationPanelTransmitter;
+	}
 
 	@Override
 	public DeliveryChute getDeliveryChute() {
