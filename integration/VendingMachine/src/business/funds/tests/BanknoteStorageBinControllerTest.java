@@ -10,6 +10,12 @@ import org.junit.Test;
 import business.funds.BanknoteStorageBinController;
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Banknote Storage Bin Controller Tests
+ * Unit tests
+ * @author Andrei Savu
+ *
+ */
 public class BanknoteStorageBinControllerTest {
 
 	BanknoteStorageBinController controller;
@@ -31,6 +37,10 @@ public class BanknoteStorageBinControllerTest {
 	}
 
 	@Test
+	/**
+	 * Public test for the getQuantity method in the controller
+	 * will test 0,1 and 2 levels
+	 */
 	public void getQuantityTest() {
 		assertEquals(0, controller.getQuantity());
 		controller.banknoteAdded(null, new Banknote(5));
@@ -39,18 +49,11 @@ public class BanknoteStorageBinControllerTest {
 		assertEquals(2, controller.getQuantity());
 	}
 
-//	@Test
-//	public void isFullTest() {
-//		assert(!controller.isFull());
-//		
-//		while(!controller.isFull()){
-//			controller.banknoteAdded(null, new Banknote(5));
-//		}
-//		
-//		assert(controller.isFull());
-//	}
-
 	@Test
+	/**
+	 * Public test for the banknoteAdded() method in the controller
+	 * will add one note and check if controller quantity ++
+	 */
 	public void banknoteAddedTest() {
 		quantity = 2;
 		controller.banknoteAdded(null, new Banknote(5));
@@ -58,6 +61,11 @@ public class BanknoteStorageBinControllerTest {
 	}
 
 	@Test
+	/**
+	 * Public test for banknoteRemoved() method in the controller
+	 * will add 3 notes and then remove all of them
+	 * assert that quantity = 0
+	 */
 	public void banknoteRemovedTest() {
 		// Add a few notes
 		controller.banknoteAdded(null, new Banknote(5));
@@ -68,6 +76,10 @@ public class BanknoteStorageBinControllerTest {
 	}
 
 	@Test
+	/**
+	 * Public test for BanknotesFull() method in controller
+	 * Will test is light is active
+	 */
 	public void banknoteStorageBinFullLightTest() {
 		int value = 5;
 		controller.banknoteAdded(null, new Banknote(value));
