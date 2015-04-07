@@ -29,7 +29,8 @@ public class CoinReceptacle extends AbstractHardware<CoinReceptacleListener> imp
 
     /**
      * Creates a coin receptacle with the indicated capacity.
-     * 
+     * @param capacity
+     * 			   the initial capacity of the coin receptacle 
      * @throws SimulationException
      *             if the capacity is not a positive integer.
      */
@@ -65,7 +66,8 @@ public class CoinReceptacle extends AbstractHardware<CoinReceptacleListener> imp
     /**
      * Loads the indicated coins into the receptacle without causing events to
      * be announced.
-     * 
+     * @param coins
+     * 			the coins (variable length parameter) to be loaded into the receptacle
      * @throws SimulationException
      *             if the loading exceeds the capacity of the receptacle.
      */
@@ -83,6 +85,8 @@ public class CoinReceptacle extends AbstractHardware<CoinReceptacleListener> imp
      * listeners. If a successful addition causes the receptacle to become full,
      * it will also announce a "coinsFull" event to its listeners.
      * 
+     * @param coin
+     * 			   the coin to be accepted by the coin receptacle
      * @throws CapacityExceededException
      *             if the receptacle has no space.
      * @throws DisabledException
@@ -173,18 +177,30 @@ public class CoinReceptacle extends AbstractHardware<CoinReceptacleListener> imp
 	return coinsEntered.size() < maxCapacity;
     }
 
+    /**
+     * Notify listeners that a coin has been added to the receptacle.
+     * 
+     * @param coin
+     * 		   the coin being added to the receptacle (acceptor)
+     */
     private void notifyCoinAdded(Coin coin) {
 	Class<?>[] parameterTypes = new Class<?>[] { CoinReceptacle.class, Coin.class };
 	Object[] args = new Object[] { this, coin };
 	notifyListeners(CoinReceptacleListener.class, "coinAdded", parameterTypes, args);
     }
 
+    /**
+     * Notify listeners coins have been removed from the coin receptacle.
+     */
     private void notifyCoinsRemoved() {
 	Class<?>[] parameterTypes = new Class<?>[] { CoinReceptacle.class };
 	Object[] args = new Object[] { this };
 	notifyListeners(CoinReceptacleListener.class, "coinsRemoved", parameterTypes, args);
     }
 
+    /**
+     * Notify listeners the coin receptacle is full
+     */
     private void notifyCoinsFull() {
 	Class<?>[] parameterTypes = new Class<?>[] { CoinReceptacle.class };
 	Object[] args = new Object[] { this };

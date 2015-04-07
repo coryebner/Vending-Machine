@@ -1,24 +1,40 @@
 package hardware.simulators;
 
+import hardware.channels.BanknoteChannel;
 import hardware.channels.CoinChannel;
-import hardware.channels.PopCanChannel;
 import hardware.channels.ProductChannel;
 import hardware.exceptions.SimulationException;
 import hardware.funds.*;
 import hardware.racks.CoinRack;
-import hardware.racks.PopCanRack;
 import hardware.racks.ProductRack;
+import hardware.ui.ConfigurationPanelTransmitter;
 import hardware.ui.DeliveryChute;
 import hardware.ui.Display;
 import hardware.ui.IndicatorLight;
 import hardware.ui.PushButton;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
- * @deprecated This machine is not ready yet
- * Configuration 12 of the Vending Machine
+ * Configuration 12 of the Vending Machine:
+ * <ul>
+ * <li>Product: Pop and Candy</li>
+ * <li>ProductRacks: 48</li>
+ * <li>SelectionButtons: 48 (One per ProductRack)</li>
+ * <li>CoinSlot: Y</li>
+ * <li>BillSlot: Y</li>
+ * <li>CardSlot: Y</li>
+ * <li>PayPal: Y</li>
+ * <li>TouchScreen: Y</li>
+ * <li>VMSocket (Internet): Y</li>
+ * <li>OutOfOrderLight: Y</li>
+ * <li>ExactChangeLight: Y</li>
+ * <li>NoInternetConnectionLight: Y</li>
+ * <li>OutOfProductLights: 48</li>
+ * <li>ReturnButton: Y</li>
+ * </ul>
  */
 public class VMRUS_TOC_CP_I extends AbstractVendingMachine{
 	private CoinSlot coinSlot;
@@ -26,19 +42,17 @@ public class VMRUS_TOC_CP_I extends AbstractVendingMachine{
 	private BanknoteReceptacle banknoteReceptacle, banknoteStorageBin;
 	private CoinReceptacle coinReceptacle, coinStorageBin;
 	private CardSlot cardSlot;
-	//vm socket
 	private DeliveryChute deliveryChute;
 	private CoinRack[] coinRacks;
 	private Map<Integer, CoinChannel> coinRackChannels;
 	private ProductRack[] productRacks;
 	private Display display;
-	private PushButton[] selectionButtons;
-	private PushButton returnButton;
-	
-	private IndicatorLight exactChangeLight, outOfOrderLight;
+    private PushButton[] selectionButtons;
+    private PushButton returnButton;
+	private IndicatorLight exactChangeLight, outOfOrderLight, noInternetConnectionLight;
 	private IndicatorLight[] outOfProductLights;
-	private IndicatorLight noInternetConnectionLight;
-	// still missing ConfigurationPanel
+	private VMSocket socket;
+	private ConfigurationPanelTransmitter configurationPanelTransmitter;
 
 	protected static int banknoteReceptacleCapacity = 20;
 	protected static int deliveryChuteCapacity = 20;
@@ -49,15 +63,25 @@ public class VMRUS_TOC_CP_I extends AbstractVendingMachine{
 	protected static int displayCharacters = 30;
 
 	// CONSTRUCTOR
-	public VMRUS_TOC_CP_I(int[] coinValues, int[] banknoteValues) {
+	public VMRUS_TOC_CP_I(Locale locale, int[] coinValues, int[] banknoteValues) {
 
-		int numOfProducts = 48;
+		this.locale = locale;
+		
+		int numOfProducts = 48;	
+		
+		if (locale == null || coinValues == null || banknoteValues == null)
+			throw new SimulationException("Arguments may not be null");
+		
 		banknoteSlot = new BanknoteSlot(banknoteValues);
 		banknoteReceptacle = new BanknoteReceptacle(banknoteReceptacleCapacity);
+		banknoteStorageBin = new BanknoteReceptacle(storageBinCapacity);
+		
 		cardSlot = new CardSlot();
+		
 		coinSlot = new CoinSlot(coinValues);
 		coinReceptacle = new CoinReceptacle(coinReceptacleCapacity);
 		coinStorageBin = new CoinReceptacle(storageBinCapacity);
+		
 		deliveryChute = new DeliveryChute(deliveryChuteCapacity);
 		coinRacks = new CoinRack[coinValues.length];
 		coinRackChannels = new HashMap<Integer, CoinChannel>();
@@ -72,12 +96,13 @@ public class VMRUS_TOC_CP_I extends AbstractVendingMachine{
 		coinReceptacle.connect(coinRackChannels,
 				new CoinChannel(deliveryChute), new CoinChannel(coinStorageBin));
 
+		banknoteSlot.connect(new BanknoteChannel(banknoteReceptacle));
+		banknoteReceptacle.connect(new BanknoteChannel(banknoteStorageBin), new BanknoteChannel(deliveryChute));
+		
 		productRacks = new ProductRack[numOfProducts];
 		for (int i = 0; i < numOfProducts; i++) {
 			productRacks[i] = new ProductRack(productRackCapacity);
 			productRacks[i].connect(new ProductChannel(deliveryChute));
-			// NEEDED: set price for productRacks[i]
-			// NEEDED: set name for productRacks[i]
 		}
 
 		selectionButtons = new PushButton[numOfProducts];
@@ -85,6 +110,7 @@ public class VMRUS_TOC_CP_I extends AbstractVendingMachine{
 			selectionButtons[i] = new PushButton();
 		returnButton = new PushButton();
 
+		noInternetConnectionLight = new IndicatorLight();	
 		exactChangeLight = new IndicatorLight();
 		outOfOrderLight = new IndicatorLight();
 		outOfProductLights = new IndicatorLight[numOfProducts];
@@ -92,10 +118,31 @@ public class VMRUS_TOC_CP_I extends AbstractVendingMachine{
 			outOfProductLights[i] = new IndicatorLight();
 
 		display = new Display();
-		// NEEDED: instantiate configuration panel
+		socket = new VMSocket();
+		configurationPanelTransmitter = new ConfigurationPanelTransmitter();
 
 	}
+	
+	@Override
+	public IndicatorLight getNoInternetConnectionLight(){
+		return noInternetConnectionLight;
+	}
+	
+	@Override
+	public IndicatorLight getOutOfOrderLight() {
+		return outOfOrderLight;
+	}
+	
+	@Override
+	public IndicatorLight getOutOfProductLight(int index) {
+		return outOfProductLights[index];
+	}
 
+	@Override
+	public IndicatorLight getExactChangeLight() {
+		return exactChangeLight;
+	}
+	
 	@Override
 	public CoinRack getCoinRack(int index) {
 		return coinRacks[index];
@@ -111,22 +158,16 @@ public class VMRUS_TOC_CP_I extends AbstractVendingMachine{
 		return coinSlot;
 	}
 
-	// NEEDED: configuration panel
-	// @Override
-	// public Object getConfigurationPanel() throws NoSuchHardwareException {
-	// return configurationPanel;
-	// }
+	@Override
+	public ConfigurationPanelTransmitter getConfigurationPanelTransmitter() {
+		return configurationPanelTransmitter;
+	}
 
 	@Override
 	public CardSlot getCardSlot() {
 		return cardSlot;
 	}
-	
-	@Override
-	public BanknoteReceptacle getBanknoteReceptacle() {
-		return banknoteReceptacle;
-	}
-	
+
 	@Override
 	public DeliveryChute getDeliveryChute() {
 		return deliveryChute;
@@ -140,6 +181,11 @@ public class VMRUS_TOC_CP_I extends AbstractVendingMachine{
 	@Override
 	public int getNumberOfCoinRacks() {
 		return coinRacks.length;
+	}
+	
+	@Override
+	public int getNumberOfOutOfProductLights() {
+		return outOfProductLights.length;
 	}
 
 	@Override
@@ -166,7 +212,17 @@ public class VMRUS_TOC_CP_I extends AbstractVendingMachine{
 	public PushButton getSelectionButton(int index) {
 		return selectionButtons[index];
 	}
-
+	
+	@Override
+	public VMSocket getSocket() {
+		return socket;
+	}
+	
+	@Override
+	public BanknoteReceptacle getBanknoteReceptacle() {
+		return banknoteReceptacle;
+	}
+	
 	@Override
 	public BanknoteReceptacle getBanknoteStorageBin() {
 		return banknoteStorageBin;
@@ -185,7 +241,9 @@ public class VMRUS_TOC_CP_I extends AbstractVendingMachine{
 	@Override
 	public void enableSafety() {
 		super.enableSafety();
+		cardSlot.disable();
 		coinSlot.disable();
+		banknoteSlot.disable();
 		deliveryChute.disable();
 
 		for (int i = 0; i < productRacks.length; i++)
@@ -200,7 +258,9 @@ public class VMRUS_TOC_CP_I extends AbstractVendingMachine{
 	@Override
 	public void disableSafety() {
 		super.disableSafety();
+		cardSlot.enable();
 		coinSlot.enable();
+		banknoteSlot.enable();
 		deliveryChute.enable();
 
 		for (int i = 0; i < productRacks.length; i++)
@@ -211,19 +271,5 @@ public class VMRUS_TOC_CP_I extends AbstractVendingMachine{
 
 		outOfOrderLight.deactivate();
 	}
-	
-	@Override
-	public IndicatorLight getNoInternetConnectionLight(){
-		return noInternetConnectionLight;
-	}
-	
-	@Override
-	public IndicatorLight getOutOfProductLight(int index) {
-		return outOfProductLights[index];
-	}
-	
-	@Override
-	public IndicatorLight getOutOfOrderLight() {
-		return outOfOrderLight;
-	}
+
 }

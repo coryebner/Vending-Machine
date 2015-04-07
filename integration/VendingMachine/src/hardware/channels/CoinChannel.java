@@ -14,6 +14,8 @@ public class CoinChannel extends AbstractChannel<AbstractCoinAcceptor> {
     /**
      * Constructs a new coin channel whose output is connected to the indicated
      * sink.
+	 * @param sink
+	 * 			the output to be associated to the new coin channel
      */
     public CoinChannel(AbstractCoinAcceptor sink) {
     	super(sink);
@@ -23,6 +25,8 @@ public class CoinChannel extends AbstractChannel<AbstractCoinAcceptor> {
      * Moves the indicated coin to the sink. This method should be called by the
      * source device, and not by an external application.
      * 
+     * @param coin
+     * 			   the coin to be moved to the associated channel sink.
      * @throws CapacityExceededException
      *             if the sink has no space for the coin.
      * @throws DisabledException

@@ -1,6 +1,8 @@
 package business.config;
 
-public interface ConfigurationListener {
-	public void nameChanged(int index, String newName);
+import business.selection_delivery.AbstractControllerListener;
+
+public interface ConfigurationListener extends AbstractControllerListener {
 	public void priceChanged(int index, int newPrice);
+	public void nameChanged(int index, String newName);
 }
