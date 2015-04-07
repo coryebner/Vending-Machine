@@ -354,7 +354,7 @@ public class Configuration {
 			m.getBanknoteReceptacle().register(fundsNew.getBankNoteController());
 			// Register the coinracks
 			CoinRackController[] crControllers = fundsNew.getCoinRackControllers();
-			for(int i =0; i < this.machine.getNumberOfCoinRacks(); i++){
+			for(int i =0; i < m.getNumberOfCoinRacks(); i++){
 				m.getCoinRack(i).register(crControllers[i]);
 			}
 			m.getCardSlot().register(fundsNew.getPrepaidController());
