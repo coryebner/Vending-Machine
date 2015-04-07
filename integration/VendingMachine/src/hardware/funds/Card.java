@@ -18,7 +18,7 @@ import hardware.exceptions.SimulationException;
 public class Card {
 	
   	/* Represents the anticipated/expected format of the expiration date */
-	private String acceptedExpirationFormat = "mm/YYYY";
+	private String acceptedExpirationFormat = "mm/yyyy";
 	
     /**
      * The types of cards recognized by the vending machine, plus "unknown".
@@ -55,7 +55,7 @@ public class Card {
 	    throw new SimulationException("The arguments may not be null");
 
     if(!isValidExpiration(this.acceptedExpirationFormat, expiry))
-    	throw new SimulationException("Invalid expiration format (mm/YYYY)");
+    	throw new SimulationException("Invalid expiration format (mm/yyyy)");
     
 	this.type = type;
 	this.number = number;
