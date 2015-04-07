@@ -53,7 +53,8 @@ public class Configuration {
 	protected int [] prices;
 
 	protected int [] coinRackQuantities;
-	protected int [] coinStorageQuantities;
+	protected int [] coinStorage;
+	Map<Integer,Integer> coinStorageQuantities;
 	protected int [] billStorageQuantities;
 
 	protected String logFrequency;
@@ -188,6 +189,30 @@ public class Configuration {
 		for(int i=0;i<rackcount;i++){
 			prices[i]=inventoryController.getCost(i);
 		}
+		
+		//coinStorageQuantities = funds.getCoinStorageBinTracker().getQuantities
+		//if(locale.equals(Locale.CANADA){
+		//		coinStorage[0]=coinStorageQuantities.get(5);
+		//		coinStorage[1]=coinStorageQuantities.get(10);
+		//		coinStorage[2]=coinStorageQuantities.get(25);
+		//		coinStorage[3]=coinStorageQuantities.get(100);
+		//		coinStorage[4]=coinStorageQuantities.get(200);
+		//}
+		//if(locale.equals(Locale.UK){
+		//		coinStorage[0]=coinStorageQuantities.get(5);
+		//		coinStorage[1]=coinStorageQuantities.get(10);
+		//		coinStorage[2]=coinStorageQuantities.get(20);
+		//		coinStorage[3]=coinStorageQuantities.get(50);
+		//		coinStorage[4]=coinStorageQuantities.get(100);
+		//		coinStorage[5]=coinStorageQuantities.get(200);
+		//}
+		//if(locale.equals(Locale.US){
+		//		coinStorage[0]=coinStorageQuantities.get(5);
+		//		coinStorage[1]=coinStorageQuantities.get(10);
+		//		coinStorage[2]=coinStorageQuantities.get(25);
+		//		coinStorage[3]=coinStorageQuantities.get(50);
+		//		coinStorage[4]=coinStorageQuantities.get(100);
+		//}
 		//int CRackcount=funds.getCoinRackControllers().length;
 		//for(int i=0;i<CRackcount;i++){
 			//coinRackQuantities[i]=funds.getCoinRackControllers()[i].getQuantity();
@@ -231,7 +256,7 @@ public class Configuration {
 				coinRackQuantities = readIntArray(line);
 			}
 			else if (line.startsWith("coinstorage")) {
-				coinStorageQuantities = readIntArray(line);
+				coinStorage = readIntArray(line);
 			}
 			else if (line.startsWith("billstorage")) {
 				billStorageQuantities = readIntArray(line);
@@ -240,17 +265,53 @@ public class Configuration {
 				
 			}
 		}
-
 		if (type == null
 			|| names == null
 			|| prices == null
 			|| quantities == null
 			|| coinRackQuantities == null
-			|| coinStorageQuantities == null
+			|| coinStorage == null
 			|| billStorageQuantities == null
 			|| locale == null)
 		{
 			throw new ConfigurationException("Missing line in config file!");
+		}
+		if (locale.equals(Locale.CANADA)){
+			try{
+			coinStorageQuantities.put(5,coinStorage[0]);
+			coinStorageQuantities.put(10, coinStorage[1]);
+			coinStorageQuantities.put(25, coinStorage[2]);
+			coinStorageQuantities.put(100, coinStorage[3]);
+			coinStorageQuantities.put(200, coinStorage[4]);
+			}
+			catch(Exception e){
+				throw new ConfigurationException("Coin Storage Quantities Array is incorrect");
+			}
+		}
+		else if(locale.equals(Locale.UK)){
+			try{
+			coinStorageQuantities.put(5,coinStorage[0]);
+			coinStorageQuantities.put(10, coinStorage[1]);
+			coinStorageQuantities.put(20, coinStorage[2]);
+			coinStorageQuantities.put(50, coinStorage[3]);
+			coinStorageQuantities.put(100, coinStorage[4]);
+			coinStorageQuantities.put(200, coinStorage[5]);
+			}
+			catch(Exception e){
+				throw new ConfigurationException("Coin Storage Quantities Array is incorrect");
+			}
+		}
+		else if (locale.equals(Locale.US)){
+			try{
+			coinStorageQuantities.put(5,coinStorage[0]);
+			coinStorageQuantities.put(10, coinStorage[1]);
+			coinStorageQuantities.put(25, coinStorage[2]);
+			coinStorageQuantities.put(50, coinStorage[3]);
+			coinStorageQuantities.put(100, coinStorage[4]);
+			}
+			catch(Exception e){
+				throw new ConfigurationException("Coin Storage Quantities Array is incorrect");
+			}
 		}
 	}
 
@@ -274,8 +335,8 @@ public class Configuration {
 			CRQString+=" "+Integer.toString(coinRackQuantities[i]);
 		}
 		CSQString="coinstorage";
-		for(int i=0;i<coinStorageQuantities.length;i++){
-			CSQString+=" "+Integer.toString(coinStorageQuantities[i]);
+		for(int i=0;i<coinStorage.length;i++){
+			CSQString+=" "+Integer.toString(coinStorage[i]);
 		}
 		BSQString="billstorage";
 		for(int i=0;i<billStorageQuantities.length;i++){
