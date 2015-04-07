@@ -13,6 +13,7 @@ public class BanknoteSlot extends AbstractHardware<BanknoteSlotListener> {
 	private int[] validValues;
 	private BanknoteChannel valid;
 	private Banknote noteReturned;
+	private boolean rejectAllNotes;
 
 	/**
 	 * Creates a new bank note slot - that is used to accept bank notes of the indicated denominations 
@@ -22,6 +23,7 @@ public class BanknoteSlot extends AbstractHardware<BanknoteSlotListener> {
 	public BanknoteSlot(int[] validValues) {
 		this.validValues = validValues;
 		noteReturned = null;
+		rejectAllNotes = false;
 	}
 	/**
 	* Connects the slot to the proper storage device.
@@ -42,6 +44,7 @@ public class BanknoteSlot extends AbstractHardware<BanknoteSlotListener> {
 	 * 		   true if the bank note is one of the accepted denomination values 
 	 * 		   false otherwise
 	 */
+	
 	private boolean isValid(Banknote banknote) {
 		for(int vv : validValues) {
 			if(vv == banknote.getValue())
@@ -49,6 +52,13 @@ public class BanknoteSlot extends AbstractHardware<BanknoteSlotListener> {
 		}
 
 		return false;
+	}
+	
+	/**
+	 * Causes the bank note slot to reject all bank notes entered when set to TRUE.
+	 */
+	public void setRejectBanknote(boolean bool){
+		rejectAllNotes = bool;
 	}
 
 	/**
@@ -68,7 +78,7 @@ public class BanknoteSlot extends AbstractHardware<BanknoteSlotListener> {
 	 public void addBanknote(Banknote banknote) throws DisabledException {
 		if(isDisabled())
 		    throw new DisabledException();
-		if(isValid(banknote) && valid.hasSpace() && (noteReturned==null)) {
+		if(isValid(banknote) && valid.hasSpace() && (noteReturned==null) && !(rejectAllNotes)) {
 		    try {
 		    	valid.deliver(banknote);
 			}
@@ -80,7 +90,7 @@ public class BanknoteSlot extends AbstractHardware<BanknoteSlotListener> {
 			   	notifyValidBanknoteInserted(banknote);
 			}
 		}
-		else if(noteReturned == null) {
+		else if((noteReturned == null) || rejectAllNotes || !(valid.hasSpace())) {
 			try {
 				noteReturned = banknote;
 			}

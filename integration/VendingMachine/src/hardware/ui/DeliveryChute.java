@@ -1,11 +1,13 @@
 package hardware.ui;
 
 import hardware.AbstractHardware;
+import hardware.acceptors.AbstractBanknoteAcceptor;
 import hardware.acceptors.AbstractCoinAcceptor;
 import hardware.acceptors.AbstractProductAcceptor;
 import hardware.exceptions.CapacityExceededException;
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.SimulationException;
+import hardware.funds.Banknote;
 import hardware.funds.Coin;
 import hardware.products.IRackable;
 import hardware.products.Product;
@@ -19,7 +21,7 @@ import java.util.Vector;
  */
 public class DeliveryChute extends
         AbstractHardware<DeliveryChuteListener> implements
-        AbstractCoinAcceptor, AbstractProductAcceptor {
+        AbstractCoinAcceptor, AbstractProductAcceptor, AbstractBanknoteAcceptor  {
     private Vector<Object> chute = new Vector<Object>();
     private int maxCapacity;
 
@@ -74,6 +76,24 @@ public class DeliveryChute extends
 	if(chute.size() >= maxCapacity)
 	    notifyChuteFull();
     }
+    
+	@Override
+	public void acceptBanknote(Banknote banknote)
+			throws CapacityExceededException, DisabledException {
+		if(isDisabled())
+		    throw new DisabledException();
+		
+		if(chute.size() >= maxCapacity)
+		    throw new CapacityExceededException();
+
+		chute.add(banknote);
+
+		notifyItemDelivered();
+
+		if(chute.size() >= maxCapacity)
+		    notifyChuteFull();
+		
+	}
 
     /**
      * Simulates the opening of the door of the delivery chute and the removal
@@ -167,4 +187,6 @@ public class DeliveryChute extends
 	if(chute.size() >= maxCapacity)
 	    notifyChuteFull();
     }
+
+
 }
