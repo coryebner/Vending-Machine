@@ -22,14 +22,15 @@ import hardware.ui.PushButtonListener;
  * 
  *         Class to interact with hardware to conduct a coins Transaction
  */
-public class CoinsController implements CoinReceptacleListener, PushButtonListener{
+public class CoinsController implements CoinReceptacleListener,
+		PushButtonListener {
 
 	private CoinReceptacle coinReceptacle;
 	private CoinRackController[] coinRackControllers;
 	private int availableBalance; // value of coins in cents in the receptacle.
 	private boolean exactChangeStatus;
 	private boolean fullOfChangeStatus;
-	private CoinStorageBinTracker storageBinTracker;
+	private CoinStorageBinController storageBinTracker;
 
 	/**
 	 * Public constructor.
@@ -45,7 +46,8 @@ public class CoinsController implements CoinReceptacleListener, PushButtonListen
 	 *            prices of each product.
 	 */
 	public CoinsController(CoinReceptacle coinReceptacle, CoinRack[] coinRacks,
-			int[] coinRackDenominations, int[] coinRackQuantities, CoinStorageBinTracker storageBinTracker) {
+			int[] coinRackDenominations, int[] coinRackQuantities,
+			CoinStorageBinController storageBinTracker) {
 		this.storageBinTracker = storageBinTracker;
 		this.coinReceptacle = coinReceptacle;
 
@@ -58,7 +60,8 @@ public class CoinsController implements CoinReceptacleListener, PushButtonListen
 	}
 
 	/**
-	 * Conducts a transaction using coins and stores the coins in the receptacle.
+	 * Conducts a transaction using coins and stores the coins in the
+	 * receptacle.
 	 * 
 	 * @param price
 	 *            The price in cents of the transaction attempted
@@ -70,12 +73,13 @@ public class CoinsController implements CoinReceptacleListener, PushButtonListen
 			try {
 				// Store coins.
 				coinReceptacle.storeCoins();
-				//TODO: reset balance?
 			} catch (CapacityExceededException e) {
 				return TransactionReturnCode.UNSUCCESSFUL;
 			} catch (DisabledException e) {
 				return TransactionReturnCode.UNSUCCESSFUL;
 			}
+			// Reset balance.
+			availableBalance = 0;
 			return TransactionReturnCode.SUCCESSFUL;
 		} else { // Not enough money.
 			return TransactionReturnCode.INSUFFICIENTFUNDS;
@@ -205,16 +209,19 @@ public class CoinsController implements CoinReceptacleListener, PushButtonListen
 	@Override
 	public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {
 	}
-	
+
 	/**
-	 * Handles the case when the Return Funds Button is Pressed
-	 * NOT SYNCRONIZATION SAFE
-	 * @param button - button pushed
+	 * Handles the case when the Return Funds Button is Pressed NOT
+	 * SYNCRONIZATION SAFE
+	 * 
+	 * @param button
+	 *            - button pushed
 	 */
 	@Override
 	public void pressed(PushButton button) {
-		// If the overflow is FULL then some funds will have been stored in the temp Recepticle
-		if(storageBinTracker.isFull()){
+		// If the overflow is FULL then some funds will have been stored in the
+		// temp Recepticle
+		if (storageBinTracker.isFull()) {
 			return;
 		}
 		try {
@@ -226,6 +233,6 @@ public class CoinsController implements CoinReceptacleListener, PushButtonListen
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 }

@@ -3,10 +3,12 @@ package business.funds;
 import hardware.funds.BanknoteReceptacle;
 import hardware.funds.CoinReceptacle;
 import hardware.racks.CoinRack;
+import hardware.ui.IndicatorLight;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import business.selection_delivery.InventoryController;
 
@@ -37,9 +39,9 @@ public class FundsController {
 	private CreditCardController creditCardController;
 	private PayPalController payPalController;
 	private ExactChangeController exactChangeController;
-	private CoinStorageBinTracker coinStorageBinTracker;
-	private BankNoteStorageBinTracker banknoteStorageBinTracker;
-	
+	private CoinStorageBinController coinStorageBinTracker;
+	private BanknoteStorageBinController banknoteStorageBinTracker;
+
 	private Currency machineCurrencies;
 
 	private HashMap<String, String> LOG;
@@ -55,13 +57,21 @@ public class FundsController {
 	 *            - CounRack[] of available coin racks
 	 * @param coinRackDenominations
 	 *            - the denominations stored in each coin rack
-	 * @param BanknoteReceptacle bnReceptacle
-	 * 			  - the reference to the machines recepticle
-	 * @param banknoteDenominations 
-	 * 			  - int[] banknoteDenominations is the amounts of supported bank notes 
+	 * @param coinStorageBinQuantities
+	 *            map from coin denomination to its quantity in the storage
+	 *            (overflow) bin.
+	 * @param BanknoteReceptacle
+	 *            bnReceptacle - the reference to the machines receptacle
+	 * @param banknoteDenominations
+	 *            - int[] banknoteDenominations is the amounts of supported bank
+	 *            notes
+	 * @param banknoteStorageBinQuantity
+	 *            the quantity of banknotes in the storage bin.
 	 * @param availablePaymentMethods
 	 *            - List<PaymentMethods> a list of enumerated payment types
 	 *            supported
+	 * @param outOfOrderLight
+	 *            reference to the out-of-order light.
 	 * @param inventoryController
 	 *            - InventoryController reference (must have current product
 	 *            state for machine due to event handling)
@@ -71,8 +81,12 @@ public class FundsController {
 	 */
 	public FundsController(Locale locale, boolean bestEffortChange,
 			CoinReceptacle coinReceptacle, CoinRack[] coinRacks,
-			int[] coinRackDenominations, int[] coinRackQuantities,BanknoteReceptacle bnReceptacle, int[] banknoteDenominations,
+			int[] coinRackDenominations, int[] coinRackQuantities,
+			Map<Integer, Integer> coinStorageBinQuantities,
+			BanknoteReceptacle bnReceptacle, int[] banknoteDenominations,
+			int banknoteStorageBinQuantity,
 			List<PaymentMethods> availablePaymentMethods,
+			IndicatorLight outOfOrderLight,
 			InventoryController inventoryController) {
 
 		this.machineCurrencies = new Currency(locale);
@@ -89,15 +103,20 @@ public class FundsController {
 		}
 		if (availablePaymentMethods.contains(PaymentMethods.BILLS)) {
 			this.billsPresent = true;
-			this.banknoteStorageBinTracker = new BankNoteStorageBinTracker(banknoteDenominations);
-			this.bankNoteController = new BanknoteController(bnReceptacle,this.banknoteStorageBinTracker);
+			this.banknoteStorageBinTracker = new BanknoteStorageBinController(
+					banknoteStorageBinQuantity, outOfOrderLight);
+			this.bankNoteController = new BanknoteController(bnReceptacle,
+					this.banknoteStorageBinTracker);
 		}
 		if (availablePaymentMethods.contains(PaymentMethods.COINS)) {
 			this.coinsPresent = true;
-			this.coinStorageBinTracker = new CoinStorageBinTracker(coinRackDenominations);
-			this.coinsController = new CoinsController(coinReceptacle, coinRacks,
-					coinRackDenominations, coinRackQuantities, this.coinStorageBinTracker);
-			// Can only set up exact change controller if there is a coinsController.
+			this.coinStorageBinTracker = new CoinStorageBinController(
+					coinStorageBinQuantities, outOfOrderLight);
+			this.coinsController = new CoinsController(coinReceptacle,
+					coinRacks, coinRackDenominations, coinRackQuantities,
+					this.coinStorageBinTracker);
+			// Can only set up exact change controller if there is a
+			// coinsController.
 			exactChangeController = new ExactChangeController(
 					inventoryController,
 					coinsController.getCoinRackControllers());
@@ -305,7 +324,8 @@ public class FundsController {
 	 */
 	public boolean isExactChangeActive() {
 		// Returns true if exactChange does not exist.
-		return exactChangeController == null || exactChangeController.isExactChangeActive();
+		return exactChangeController == null
+				|| exactChangeController.isExactChangeActive();
 	}
 
 	/**
@@ -343,11 +363,12 @@ public class FundsController {
 	public CoinRackController[] getCoinRackControllers() {
 		return null;
 	}
-	
-	public CoinStorageBinTracker getCoinStorageBinTracker(){
+
+	public CoinStorageBinController getCoinStorageBinTracker() {
 		return this.coinStorageBinTracker;
 	}
-	public BankNoteStorageBinTracker getBankNoteStorageBinTracker(){
+
+	public BanknoteStorageBinController getBankNoteStorageBinTracker() {
 		return this.banknoteStorageBinTracker;
 	}
 
