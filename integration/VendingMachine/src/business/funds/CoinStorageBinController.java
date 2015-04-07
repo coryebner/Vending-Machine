@@ -25,23 +25,6 @@ public class CoinStorageBinController implements CoinReceptacleListener {
 	private Map<Integer, Integer> denominationQuantities = new HashMap<>();
 
 	/**
-	 * Public constructor.
-	 * 
-	 * @param coinRackDenominations
-	 *            the denomination of each rack.
-	 * @param outOfOrderLight
-	 *            reference to the out-of-order light. null if it doesn't exist.
-	 */
-	public CoinStorageBinController(int[] coinRackDenominations,
-			IndicatorLight outOfOrderLight) {
-		this.outOfOrderLight = outOfOrderLight;
-		// Initialize the quantity of each denomination to 0.
-		for (int coinRackDenomination : coinRackDenominations) {
-			denominationQuantities.put(coinRackDenomination, 0);
-		}
-	}
-
-	/**
 	 * Public constructor used for returning the vending machine back to a
 	 * state.
 	 * 

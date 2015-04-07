@@ -35,19 +35,23 @@ public class CoinsController implements CoinReceptacleListener,
 	/**
 	 * Public constructor.
 	 * 
-	 * @param bestEffortChange
-	 *            boolean indicating whether best-effort change mode is on
-	 *            best-effort: give as much change as possible.
+	 * @param availableBalance
+	 *            the balance at the time of initialization.
+	 * @param coinReceptacle
+	 *            reference to the receptacle.
 	 * @param coinRacks
 	 *            list of coin rack references.
 	 * @param coinRackDenominations
 	 *            value of each coin in a coin rack.
-	 * @param productPrices
-	 *            prices of each product.
+	 * @param coinRackQuantities
+	 *            quantity of each coin rack.
+	 * @param storageBinTracker
+	 *            reference storage bin coin receptacle.
 	 */
-	public CoinsController(CoinReceptacle coinReceptacle, CoinRack[] coinRacks,
-			int[] coinRackDenominations, int[] coinRackQuantities,
-			CoinStorageBinController storageBinTracker) {
+	public CoinsController(int availableBalance, CoinReceptacle coinReceptacle,
+			CoinRack[] coinRacks, int[] coinRackDenominations,
+			int[] coinRackQuantities, CoinStorageBinController storageBinTracker) {
+		this.availableBalance = availableBalance;
 		this.storageBinTracker = storageBinTracker;
 		this.coinReceptacle = coinReceptacle;
 
