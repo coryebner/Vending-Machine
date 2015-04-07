@@ -430,7 +430,7 @@ public class Configuration {
 			// An array of ProductRack is created and used to build an InventoryController object
 			ProductRack racks[] = new ProductRack[numberOfRacks];
 			for(int i=0; i < this.machine.getNumberOfProductRacks(); i++){
-				racks[i] = new ProductRack(this.machine.getProductRack(i).getMaxCapacity());
+				racks[i] = this.machine.getProductRack(i);
 			}
 
 			//Inventory controller creation with information known from machine.
