@@ -1,7 +1,10 @@
 package hardware.simulators;
 
+import java.util.Currency;
 import java.util.Locale;
 
+import rifffish.Machine;
+import rifffish.Rifffish;
 import hardware.channels.ProductChannel;
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.exceptions.SimulationException;
@@ -52,6 +55,12 @@ public class VMRUS_SFF_P_PI extends AbstractVendingMachine {
 	public VMRUS_SFF_P_PI(Locale locale) {
 
 		this.locale = locale;
+		
+		// Create new Rifffish object for logging
+		rifffLogger = new Rifffish("rsh_Dv5iLASQA2FRlYzANQdelAtt");
+		
+		// Create new machine representation in Rifffish
+		rifffMachine = this.getRifffishLogger().createMachine(new Machine("That Vending Machine", "vmrus_sff_p_pi", "In Service", Currency.getInstance(this.getLocale()).getCurrencyCode()));
 		
 		int numOfProducts = 6;
 		
