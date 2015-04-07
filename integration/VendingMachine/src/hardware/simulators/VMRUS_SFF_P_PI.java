@@ -14,23 +14,23 @@ import hardware.ui.IndicatorLight;
 import hardware.ui.PushButton;
 
 /**
- * [Ready for integration testing]<br>
- * Configuration 3 of the Vending Machine<br>
- * Product: Pop<br>
- * ProductRacks: 6<br>
- * SelectionButtons: 6 (One per ProductRack)<br>
- * CoinSlot: N<br>
- * BillSlot: N<br>
- * CardSlot: Y<br>
- * PayPal: N<br>
- * TouchScreen: N<br>
- * VMSocket (Internet): Y<br>
- * OutOfOrderLight: Y<br>
- * ExactChangeLight: N<br>
- * NoInternetConnectionLight: N (might be added later)<br>
- * OutOfProductLights: 6<br>
- * ReturnButton: Y<br>
- * 
+ * Configuration 3 of the Vending Machine:
+ * <ul>
+ * <li>Product: Pop</li>
+ * <li>ProductRacks: 6</li>
+ * <li>SelectionButtons: 6 (One per ProductRack)</li>
+ * <li>oinSlot: N</li>
+ * <li>BillSlot: N</li>
+ * <li>CardSlot: Y</li>
+ * <li>PayPal: N</li>
+ * <li>TouchScreen: N</li>
+ * <li>VMSocket (Internet): Y</li>
+ * <li>OutOfOrderLight: Y</li>
+ * <li>ExactChangeLight: N</li>
+ * <li>NoInternetConnectionLight: N (might be added later)</li>
+ * <li>OutOfProductLights: 6</li>
+ * <li>ReturnButton: Y</li>
+ * </ul> 
  */
 public class VMRUS_SFF_P_PI extends AbstractVendingMachine {
 	private DeliveryChute deliveryChute;

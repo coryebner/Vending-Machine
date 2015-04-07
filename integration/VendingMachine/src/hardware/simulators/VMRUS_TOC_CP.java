@@ -1,5 +1,6 @@
 package hardware.simulators;
 
+import hardware.channels.BanknoteChannel;
 import hardware.channels.CoinChannel;
 import hardware.channels.ProductChannel;
 import hardware.exceptions.SimulationException;
@@ -17,24 +18,23 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * @deprecated This machine is not ready yet<br>
- * Configuration 11 of the Vending Machine<br>
- * Product: Pop and Candy<br>
- * ProductRacks: 48<br>
- * SelectionButtons: 48 (One per ProductRack)<br>
- * CoinSlot: Y<br>
- * BillSlot: Y<br>
- * CardSlot: Y<br>
- * PayPal: N<br>
- * TouchScreen: Y<br>
- * VMSocket (Internet): N<br>
- * OutOfOrderLight: Y<br>
- * ExactChangeLight: Y<br>
- * NoInternetConnectionLight: N<br>
- * OutOfProductLights: 48<br>
- * ReturnButton: Y<br>
- * 
- * Still Missing: Banknote Hardware Connections<br>
+ * Configuration 11 of the Vending Machine:
+ * <ul>
+ * <li>Product: Pop and Candy</li>
+ * <li>ProductRacks: 48</li>
+ * <li>SelectionButtons: 48 (One per ProductRack)</li>
+ * <li>CoinSlot: Y</li>
+ * <li>BillSlot: Y</li>
+ * <li>CardSlot: Y</li>
+ * <li>PayPal: N</li>
+ * <li>TouchScreen: Y</li>
+ * <li>VMSocket (Internet): N</li>
+ * <li>OutOfOrderLight: Y</li>
+ * <li>ExactChangeLight: Y</li>
+ * <li>NoInternetConnectionLight: N</li>
+ * <li>OutOfProductLights: 48</li>
+ * <li>ReturnButton: Y</li>
+ * </ul>
  */
 public class VMRUS_TOC_CP extends AbstractVendingMachine{
 	private CoinSlot coinSlot;
@@ -95,10 +95,8 @@ public class VMRUS_TOC_CP extends AbstractVendingMachine{
 		coinReceptacle.connect(coinRackChannels,
 				new CoinChannel(deliveryChute), new CoinChannel(coinStorageBin));
 
-		/* NEEDED: Banknote Hardware Connections
-		banknoteSlot.connect(new BanknoteChannel(banknoteReceptacle), new BanknoteChannel(banknoteStorageBin));
+		banknoteSlot.connect(new BanknoteChannel(banknoteReceptacle));
 		banknoteReceptacle.connect(new BanknoteChannel(banknoteStorageBin), new BanknoteChannel(deliveryChute));
-		*/
 		
 		productRacks = new ProductRack[numOfProducts];
 		for (int i = 0; i < numOfProducts; i++) {
