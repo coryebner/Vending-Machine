@@ -32,7 +32,8 @@ public class BanknoteStorageBinControllerTest {
 
 	@Test
 	public void getQuantityTest() {
-
+		controller.banknoteAdded(null, new Banknote(5));
+		assertEquals(1, controller.getQuantity());
 	}
 
 	@Test
