@@ -1,4 +1,3 @@
-//INCOMPLETE: Tests for Out of Product Lights, Return Button
 package hardware.test;
 
 import static org.junit.Assert.assertFalse;
@@ -20,7 +19,7 @@ import hardware.products.PopCan;
 import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
 import hardware.simulators.AbstractVendingMachine;
-import hardware.simulators.VMRUS_COM_P_MI;
+import hardware.simulators.VMRUS_COM_P_M;
 import hardware.test.stub.BanknoteReceptacleListenerStub;
 import hardware.test.stub.BanknoteSlotListenerStub;
 import hardware.test.stub.CardSlotListenerStub;
@@ -37,7 +36,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class VMRUS_COM_P_MITest {
+public class VMRUS_COM_P_MTest {
 
 	private final int NO_COINRACKS = 5;
 	private final int NO_PRODUCTRACKS = 12;
@@ -59,14 +58,13 @@ public class VMRUS_COM_P_MITest {
 	private PushButtonListenerStub[] pushButtonListeners;
 	private PushButtonListenerStub returnButtonListener;
 	private IndicatorLightListenerStub outOfProductListeners[];
-	private IndicatorLightListenerStub internetConnectionLightListener;
 	private Banknote banknote;
 	
 
 	@Before
 	public void setup() throws NoSuchHardwareException {
 
-		hardware = new VMRUS_COM_P_MI(Locale.CANADA, new int[] { 5, 10, 25, 100,
+		hardware = new VMRUS_COM_P_M(Locale.CANADA, new int[] { 5, 10, 25, 100,
 				200 }, new int[] {5, 10, 20, 50, 100});
 
 		coin = new Coin(100);
@@ -101,7 +99,6 @@ public class VMRUS_COM_P_MITest {
 
 		outOfOrderListener = new IndicatorLightListenerStub();
 		exactChangeListener = new IndicatorLightListenerStub();
-		internetConnectionLightListener=new IndicatorLightListenerStub();
 
 		
 		outOfProductListeners = new IndicatorLightListenerStub[NO_SELECTIONBUTTONS];
@@ -118,7 +115,7 @@ public class VMRUS_COM_P_MITest {
 		hardware.getDeliveryChute().register(deliveryChuteListener);
 		hardware.getExactChangeLight().register(exactChangeListener);
 		hardware.getOutOfOrderLight().register(outOfOrderListener);
-		hardware.getNoInternetConnectionLight().register(internetConnectionLightListener);
+		
 	}
 
 	@After
@@ -169,19 +166,18 @@ public class VMRUS_COM_P_MITest {
 		outOfOrderListener = null;
 		banknoteSlotListener=null;
 		banknoteReceptacleListener=null;
-		internetConnectionLightListener=null;
 	}
 
 	@Test(expected = SimulationException.class)
 	public void testNullCoinValues() {
 		
-		 hardware = new VMRUS_COM_P_MI(Locale.CANADA, null, new int[]{5,10,20,50,100});
+		 hardware = new VMRUS_COM_P_M(Locale.CANADA, null, new int[] {5,10,20,50,100});
 	}
 	
 	@Test(expected = SimulationException.class)
 	public void testNullBanknoteValues() {
 		
-		 hardware = new VMRUS_COM_P_MI(Locale.CANADA, new int[]{5,10,25,100,200}, null);
+		 hardware = new VMRUS_COM_P_M(Locale.CANADA, new int[] {5,10,25,100, 200}, null);
 	}
 
 	@Test
@@ -547,21 +543,6 @@ public class VMRUS_COM_P_MITest {
 			fail("Unexpected Exception: "+e);
 		}
 		
-	}
-	//Test Internet
-	@Test
-	public void testNoInternetLight() throws NoSuchHardwareException {
-		IndicatorLight noInternetLight = hardware.getNoInternetConnectionLight();
-		internetConnectionLightListener.expect("deactivated", "activated");
-
-		noInternetLight.loadWithoutEvents(true);
-		assertTrue(noInternetLight.isActive());
-		noInternetLight.deactivate();
-		assertFalse(noInternetLight.isActive());
-		noInternetLight.activate();
-		assertTrue(noInternetLight.isActive());
-
-		internetConnectionLightListener.assertProtocol();
 	}
 
 }
