@@ -32,38 +32,44 @@ public class BanknoteStorageBinControllerTest {
 
 	@Test
 	public void getQuantityTest() {
+		assertEquals(0, controller.getQuantity());
 		controller.banknoteAdded(null, new Banknote(5));
 		assertEquals(1, controller.getQuantity());
+		controller.banknoteAdded(null, new Banknote(5));
+		assertEquals(2, controller.getQuantity());
 	}
 
-	@Test
-	public void isFullTest() {
-		assert(!controller.isFull());
-		
-		while(!controller.isFull()){
-			controller.banknoteAdded(null, new Banknote(5));
-		}
-		
-		assert(controller.isFull());
-	}
+//	@Test
+//	public void isFullTest() {
+//		assert(!controller.isFull());
+//		
+//		while(!controller.isFull()){
+//			controller.banknoteAdded(null, new Banknote(5));
+//		}
+//		
+//		assert(controller.isFull());
+//	}
 
 	@Test
 	public void banknoteAddedTest() {
-		
+		quantity = 2;
+		controller.banknoteAdded(null, new Banknote(5));
+		assertEquals(3, controller.getQuantity());
 	}
 
 	@Test
 	public void banknoteRemovedTest() {
-
+		// Add a few notes
+		controller.banknoteAdded(null, new Banknote(5));
+		controller.banknoteAdded(null, new Banknote(5));
+		controller.banknoteAdded(null, new Banknote(5));		
+		controller.BanknoteRemoved(null);
+		assertEquals(0, controller.getQuantity());
 	}
 
 	@Test
 	public void banknoteStorageBinFullLightTest() {
 		int value = 5;
-		controller.banknoteAdded(null, new Banknote(value));
-		controller.banknoteAdded(null, new Banknote(value));
-		controller.banknoteAdded(null, new Banknote(value));
-		controller.banknoteAdded(null, new Banknote(value));
 		controller.banknoteAdded(null, new Banknote(value));
 		assert(outOfOrderLight.isActive());
 	}
