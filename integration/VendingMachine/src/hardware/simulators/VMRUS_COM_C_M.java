@@ -1,5 +1,6 @@
 package hardware.simulators;
 
+import hardware.channels.BanknoteChannel;
 import hardware.channels.CoinChannel;
 import hardware.channels.ProductChannel;
 import hardware.exceptions.SimulationException;
@@ -18,24 +19,23 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * @deprecated This machine is not ready yet<br>
- * Configuration 9 of the Vending Machine<br>
- * Product: Candy<br>
- * ProductRacks: 24<br>
- * SelectionButtons: 16 (A-F, 0-9)<br>
- * CoinSlot: Y<br>
- * BillSlot: Y<br>
- * CardSlot: Y<br>
- * PayPal: N<br>
- * TouchScreen: N<br>
- * VMSocket (Internet): N<br>
- * OutOfOrderLight: Y<br>
- * ExactChangeLight: Y<br>
- * NoInternetConnectionLight: N<br>
- * OutOfProductLights: 0<br>
- * ReturnButton: Y<br>
- * 
- * Still Missing: Banknote Hardware Connections<br>
+ * Configuration 9 of the Vending Machine:
+ * <ul>
+ * <li>Product: Candy</li>
+ * <li>ProductRacks: 24</li>
+ * <li>SelectionButtons: 16 (A-F, 0-9)</li>
+ * <li>CoinSlot: Y</li>
+ * <li>BillSlot: Y</li>
+ * <li>CardSlot: Y</li>
+ * <li>PayPal: N</li>
+ * <li>TouchScreen: N</li>
+ * <li>VMSocket (Internet): N</li>
+ * <li>OutOfOrderLight: Y</li>
+ * <li>ExactChangeLight: Y</li>
+ * <li>NoInternetConnectionLight: N</li>
+ * <li>OutOfProductLights: 0</li>
+ * <li>ReturnButton: Y</li>
+ * </ul>
  */
 public class VMRUS_COM_C_M extends AbstractVendingMachine{
 	private CoinSlot coinSlot;
@@ -97,10 +97,8 @@ public class VMRUS_COM_C_M extends AbstractVendingMachine{
 		coinReceptacle.connect(coinRackChannels,
 				new CoinChannel(deliveryChute), new CoinChannel(coinStorageBin));
 
-		/* NEEDED: Banknote Hardware Connections
-		banknoteSlot.connect(new BanknoteChannel(banknoteReceptacle), new BanknoteChannel(banknoteStorageBin));
+		banknoteSlot.connect(new BanknoteChannel(banknoteReceptacle));
 		banknoteReceptacle.connect(new BanknoteChannel(banknoteStorageBin), new BanknoteChannel(deliveryChute));
-		*/
 
 		productRacks = new ProductRack[numOfProducts];
 		for (int i = 0; i < numOfProducts; i++) {

@@ -18,23 +18,23 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * [Ready for integration testing]<br>
- * Configuration 1 of the Vending Machine<br>
- * Product: Pop<br>
- * ProductRacks: 6<br>
- * SelectionButtons: 6 (One per ProductRack)<br>
- * CoinSlot: Y<br>
- * BillSlot: N<br>
- * CardSlot: N<br>
- * PayPal: N<br>
- * TouchScreen: N<br>
- * VMSocket (Internet): N<br>
- * OutOfOrderLight: Y<br>
- * ExactChangeLight: Y<br>
- * NoInternetConnectionLight: N<br>
- * OutOfProductLights: 6<br>
- * ReturnButton: Y<br>
- * 
+ * Configuration 1 of the Vending Machine:
+ * <ul>
+ * <li>Product: Pop</li>
+ * <li>ProductRacks: 6</li>
+ * <li>SelectionButtons: 6 (One per ProductRack)</li>
+ * <li>CoinSlot: Y</li>
+ * <li>BillSlot: N</li>
+ * <li>CardSlot: N</li>
+ * <li>PayPal: N</li>
+ * <li>TouchScreen: N</li>
+ * <li>VMSocket (Internet): N</li>
+ * <li>OutOfOrderLight: Y</li>
+ * <li>ExactChangeLight: Y</li>
+ * <li>NoInternetConnectionLight: N</li>
+ * <li>OutOfProductLights: 6</li>
+ * <li>ReturnButton: Y</li>
+ * </ul>
  */
 public class VMRUS_SFF_P_C extends AbstractVendingMachine {
 	private CoinSlot coinSlot;
