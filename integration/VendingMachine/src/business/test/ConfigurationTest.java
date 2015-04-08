@@ -22,7 +22,7 @@ import business.config.Configuration;
 import business.config.ConfigurationException;
 import business.selection_delivery.InventoryController;
 import business.stub.DisplayController;
-import business.stub.FundsController;
+import business.funds.FundsController;
 
 public class ConfigurationTest extends Configuration {
 	public ConfigurationTest()
