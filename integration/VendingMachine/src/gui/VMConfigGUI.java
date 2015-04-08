@@ -278,7 +278,7 @@ public class VMConfigGUI {
 //						window.frmVendingMachines.setVisible(true);
 //						frmVendingMachinesRUS.setVisible(false);	
 //					}
-			
+//			
 //					Will always launch the default vending machine inside the standardMachineGUI
 					VendingMachineGUI window = new StandardMachineGUI();
 					window.getMainFrame().setVisible(true);

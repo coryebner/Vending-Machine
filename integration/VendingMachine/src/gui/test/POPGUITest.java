@@ -9,9 +9,8 @@ import java.util.Locale;
 
 import gui.*;
 import hardware.*;
-import hardware.exceptions.NoSuchHardwareException;
-import hardware.simulators.AbstractVendingMachine;
-import hardware.simulators.VMRUS_SFF_P_C;
+import hardware.exceptions.*;
+import hardware.simulators.*;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -40,8 +39,7 @@ public class POPGUITest {
 				parts.add(true);
 			}
 		}
-		Locale locale = Locale.CANADA;
-		machine = new VMRUS_SFF_P_C(locale,coinValue);
+		machine = new VMRUS_COM_P_M(Locale.CANADA,coinValue,billValue);
 		window = new StandardMachineGUI (machine,parts);
 		window.getMainFrame().setVisible(true);
 	}
@@ -85,48 +83,48 @@ public class POPGUITest {
 		assertTrue(window.getButtonPressStatus());
 	}
 	
-////	No cards and bills in this machine
-////	@Test
-////	public void InsertCardWith0Valuetest() {
-////		window.resetButtonPressedStatus();
-////		window.getcardButtons(0).doClick();
-////		assertTrue(window.getButtonPressStatus());
-////	}
-////	
-////	@Test
-////	public void InsertCardWith5Dollartest() {
-////		window.resetButtonPressedStatus();
-////		window.getcardButtons(1).doClick();
-////		assertTrue(window.getButtonPressStatus());
-////	}
-////	
-////	@Test
-////	public void InsertCardWith10Dollartest() {
-////		window.resetButtonPressedStatus();
-////		window.getcardButtons(2).doClick();
-////		assertTrue(window.getButtonPressStatus());
-////	}
-////	
-//	@Test
-//	public void Insert5DollarBilltest() {
-//		window.resetButtonPressedStatus();
-//		window.getbillButtons(0).doClick();
-//		assertTrue(window.getButtonPressStatus());
-//	}
-//	
-//	@Test
-//	public void Insert10DollarBilltest() {
-//		window.resetButtonPressedStatus();
-//		window.getbillButtons(1).doClick();
-//		assertTrue(window.getButtonPressStatus());
-//	}
-//	
-//	@Test
-//	public void Insert20DollarBilltest() {
-//		window.resetButtonPressedStatus();
-//		window.getbillButtons(2).doClick();
-//		assertTrue(window.getButtonPressStatus());
-//	}
+//	No cards and bills in this machine
+	@Test
+	public void InsertCardWith0Valuetest() {
+		window.resetButtonPressedStatus();
+		window.getcardButtons(0).doClick();
+		assertTrue(window.getButtonPressStatus());
+	}
+	
+	@Test
+	public void InsertCardWith5Dollartest() {
+		window.resetButtonPressedStatus();
+		window.getcardButtons(1).doClick();
+		assertTrue(window.getButtonPressStatus());
+	}
+	
+	@Test
+	public void InsertCardWith10Dollartest() {
+		window.resetButtonPressedStatus();
+		window.getcardButtons(2).doClick();
+		assertTrue(window.getButtonPressStatus());
+	}
+	
+	@Test
+	public void Insert5DollarBilltest() {
+		window.resetButtonPressedStatus();
+		window.getbillButtons(0).doClick();
+		assertTrue(window.getButtonPressStatus());
+	}
+	
+	@Test
+	public void Insert10DollarBilltest() {
+		window.resetButtonPressedStatus();
+		window.getbillButtons(1).doClick();
+		assertTrue(window.getButtonPressStatus());
+	}
+	
+	@Test
+	public void Insert20DollarBilltest() {
+		window.resetButtonPressedStatus();
+		window.getbillButtons(2).doClick();
+		assertTrue(window.getButtonPressStatus());
+	}
 	
 	@Test
 	public void SelectionButton1Test(){

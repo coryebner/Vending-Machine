@@ -436,8 +436,11 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
         billEject.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO ask the Bill slot to eject bill
-                //				machine.getBanknoteSlot();
+                try {
+					machine.getBanknoteSlot().removeBanknote();
+				} catch (NoSuchHardwareException e1) {
+					e1.printStackTrace();
+				}
             }
         });
        

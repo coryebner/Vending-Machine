@@ -4,11 +4,12 @@ import static org.junit.Assert.*;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import gui.*;
 import hardware.*;
-import hardware.exceptions.NoSuchHardwareException;
-import hardware.simulators.AbstractVendingMachine;
+import hardware.exceptions.*;
+import hardware.simulators.*;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -44,9 +45,9 @@ public class CandyGUITest {
 			}
 		}
 		
-		machine = new CandyVendingMachine(coinValue, billValue);
-		window = new GUI (machine,parts);
-		window.getfrmVendingMachines().setVisible(true);
+		machine = new VMRUS_COM_C_MI(Locale.CANADA,coinValue, billValue);
+		window = new StandardMachineGUI (machine,parts);
+		window.getMainFrame().setVisible(true);
 	}
 
 	@After
@@ -88,48 +89,48 @@ public class CandyGUITest {
 		assertTrue(window.getButtonPressStatus());
 	}
 	
-////	No cards and bills in this machine
-////	@Test
-////	public void InsertCardWith0Valuetest() {
-////		window.resetButtonPressedStatus();
-////		window.getcardButtons(0).doClick();
-////		assertTrue(window.getButtonPressStatus());
-////	}
-////	
-////	@Test
-////	public void InsertCardWith5Dollartest() {
-////		window.resetButtonPressedStatus();
-////		window.getcardButtons(1).doClick();
-////		assertTrue(window.getButtonPressStatus());
-////	}
-////	
-////	@Test
-////	public void InsertCardWith10Dollartest() {
-////		window.resetButtonPressedStatus();
-////		window.getcardButtons(2).doClick();
-////		assertTrue(window.getButtonPressStatus());
-////	}
-////	
-//	@Test
-//	public void Insert5DollarBilltest() {
-//		window.resetButtonPressedStatus();
-//		window.getbillButtons(0).doClick();
-//		assertTrue(window.getButtonPressStatus());
-//	}
-//	
-//	@Test
-//	public void Insert10DollarBilltest() {
-//		window.resetButtonPressedStatus();
-//		window.getbillButtons(1).doClick();
-//		assertTrue(window.getButtonPressStatus());
-//	}
-//	
-//	@Test
-//	public void Insert20DollarBilltest() {
-//		window.resetButtonPressedStatus();
-//		window.getbillButtons(2).doClick();
-//		assertTrue(window.getButtonPressStatus());
-//	}
+//	No cards and bills in this machine
+	@Test
+	public void InsertCardWith0Valuetest() {
+		window.resetButtonPressedStatus();
+		window.getcardButtons(0).doClick();
+		assertTrue(window.getButtonPressStatus());
+	}
+	
+	@Test
+	public void InsertCardWith5Dollartest() {
+		window.resetButtonPressedStatus();
+		window.getcardButtons(1).doClick();
+		assertTrue(window.getButtonPressStatus());
+	}
+	
+	@Test
+	public void InsertCardWith10Dollartest() {
+		window.resetButtonPressedStatus();
+		window.getcardButtons(2).doClick();
+		assertTrue(window.getButtonPressStatus());
+	}
+	
+	@Test
+	public void Insert5DollarBilltest() {
+		window.resetButtonPressedStatus();
+		window.getbillButtons(0).doClick();
+		assertTrue(window.getButtonPressStatus());
+	}
+	
+	@Test
+	public void Insert10DollarBilltest() {
+		window.resetButtonPressedStatus();
+		window.getbillButtons(1).doClick();
+		assertTrue(window.getButtonPressStatus());
+	}
+	
+	@Test
+	public void Insert20DollarBilltest() {
+		window.resetButtonPressedStatus();
+		window.getbillButtons(2).doClick();
+		assertTrue(window.getButtonPressStatus());
+	}
 	
 	@Test
 	public void SelectionButton_ATest(){
@@ -176,69 +177,69 @@ public class CandyGUITest {
 	@Test
 	public void SelectionButton1Test(){
 		window.resetButtonPressedStatus();
-		window.getPopBtn(7).doClick();
+		window.getNumButtons(1).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
 	
 	@Test
 	public void SelectionButton2Test(){
 		window.resetButtonPressedStatus();
-		window.getPopBtn(8).doClick();
+		window.getPopBtn(2).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
 	
 	@Test
 	public void SelectionButton3Test(){
 		window.resetButtonPressedStatus();
-		window.getPopBtn(9).doClick();
+		window.getNumButtons(3).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
 	
 	@Test
 	public void SelectionButton4Test(){
 		window.resetButtonPressedStatus();
-		window.getPopBtn(10).doClick();
+		window.getNumButtons(4).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
 	
 	@Test
 	public void SelectionButton5Test(){
 		window.resetButtonPressedStatus();
-		window.getPopBtn(11).doClick();
+		window.getNumButtons(5).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
 	
 	@Test
 	public void SelectionButton6Test(){
 		window.resetButtonPressedStatus();
-		window.getPopBtn(12).doClick();
+		window.getNumButtons(6).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
 	@Test
 	public void SelectionButton7Test(){
 		window.resetButtonPressedStatus();
-		window.getPopBtn(13).doClick();
+		window.getNumButtons(7).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
 	
 	@Test
 	public void SelectionButton8Test(){
 		window.resetButtonPressedStatus();
-		window.getPopBtn(14).doClick();
+		window.getNumButtons(8).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
 	
 	@Test
 	public void SelectionButton9Test(){
 		window.resetButtonPressedStatus();
-		window.getPopBtn(15).doClick();
+		window.getNumButtons(9).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
 	
 	@Test
 	public void SelectionButton0Test(){
 		window.resetButtonPressedStatus();
-		window.getPopBtn(6).doClick();
+		window.getNumButtons(0).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
 	

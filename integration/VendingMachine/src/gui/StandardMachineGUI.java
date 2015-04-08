@@ -165,8 +165,15 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 		int [] popcost	= {200,200,200,200,200,200 };
 		String [] popname = {"Coke","DietCode","RootBeer", "asdf", "qwer","zxcv"};
 		Locale locale = Locale.CANADA;
-		AbstractVendingMachine vm = new VMRUS_SFF_P_C(locale,coinvalue);
-		initialize(vm, true, true, true, true, true, true, false);
+//		POP Vending Machine
+		AbstractVendingMachine vm = new VMRUS_SFF_P_C(locale,coinvalue);		
+//		initialize(vm, true, true, true, true, true, false, false); // no touch screen, with pop buttons
+//		Candy Vending Machine
+//		AbstractVendingMachine vm = new VMRUS_COM_C_M(locale,coinvalue, popcost);
+//		initialize(vm, true, true, true, true, false, true, false); // no touch screen, with candy buttons
+//		Touch Screen Not Ready Yet
+		initialize(vm, true, true, true, true, false, false, true); // Touch screen
+		
 	}
 
 	public StandardMachineGUI(AbstractVendingMachine machine, ArrayList<Boolean> parts) {
@@ -432,8 +439,10 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 		JButton btnAdmin = new JButton("Admin");
 		btnAdmin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ControlPanelGUI configPanel = new ControlPanelGUI(
-						getMainFrame());
+				VirtualKeyboard vk = new VirtualKeyboard(getMainFrame());
+				
+//				ControlPanelGUI configPanel = new ControlPanelGUI(
+//						getMainFrame());
 			}
 		});
 		pnlAdminBtn.add(btnAdmin);
@@ -443,8 +452,12 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
         billEject.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO ask the Bill slot to eject bill
-                //				machine.getBanknoteSlot();
+               
+				try {
+					machine.getBanknoteSlot().removeBanknote();
+				} catch (NoSuchHardwareException e1) {
+					e1.printStackTrace();
+				}
             }
         });
        
@@ -1043,7 +1056,8 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 	@Override
 	public void itemDelivered(DeliveryChute chute) {
 		GUIHelper.enableComponents(getMainFrame(), true);
-		// TODO should display contents of the DevliveryChute
+		for(Object item: chute.removeItems())
+			System.out.println(item);
 	}
 
 	@Override
