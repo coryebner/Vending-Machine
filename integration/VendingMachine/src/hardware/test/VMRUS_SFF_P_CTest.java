@@ -98,12 +98,6 @@ public class VMRUS_SFF_P_CTest {
 
 		outOfOrderListener = new IndicatorLightListenerStub();
 		exactChangeListener = new IndicatorLightListenerStub();
-		
-		outOfProductListeners = new IndicatorLightListenerStub[NO_SELECTIONBUTTONS];
-		for(int i=0; i<NO_SELECTIONBUTTONS; i++){
-			hardware.getOutOfProductLight(i).register(outOfProductListeners[i]);
-		}
-
 		hardware.getCoinSlot().register(coinSlotListener);
 		hardware.getCoinReceptacle().register(coinReceptacleListener);
 		hardware.getCoinStorageBin().register(storageBinListener);
