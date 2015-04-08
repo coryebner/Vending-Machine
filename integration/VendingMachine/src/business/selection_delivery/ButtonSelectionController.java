@@ -77,7 +77,7 @@ public class ButtonSelectionController
 			return;
 		}	
 			
-		TransactionReturnCode transInfo = funds.ConductTransaction(cost,id);
+		TransactionReturnCode transInfo = funds.ConductTransaction(id,cost);
 		
 		switch(transInfo){
 			case SUCCESSFUL: 
