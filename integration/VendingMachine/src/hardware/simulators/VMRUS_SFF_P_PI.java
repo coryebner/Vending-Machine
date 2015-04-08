@@ -3,8 +3,8 @@ package hardware.simulators;
 import java.util.Currency;
 import java.util.Locale;
 
-import rifffish.Machine;
-import rifffish.Rifffish;
+import SDK.rifffish.Machine;
+import SDK.rifffish.Rifffish;
 import hardware.channels.ProductChannel;
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.exceptions.SimulationException;
