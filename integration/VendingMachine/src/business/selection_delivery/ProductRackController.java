@@ -2,8 +2,8 @@ package business.selection_delivery;
 
 import java.security.InvalidParameterException;
 
-import rifffish.Rifffish;
-import rifffish.Stockout;
+import SDK.rifffish.Rifffish;
+import SDK.rifffish.Stockout;
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
 import hardware.exceptions.CapacityExceededException;
@@ -142,7 +142,7 @@ public class ProductRackController implements ProductRackListener
 		cost = newCost;
 		
 		//Update Database
-		rifffish.Product p = logger.getProduct(productID);
+		SDK.rifffish.Product p = logger.getProduct(productID);
 		p.setPrice(newCost);
 		logger.updateProduct(p);
 	}
@@ -152,7 +152,7 @@ public class ProductRackController implements ProductRackListener
 		name = newName;
 		
 		//Update Database
-		rifffish.Product p = logger.getProduct(productID);
+		SDK.rifffish.Product p = logger.getProduct(productID);
 		p.setName(name);
 		logger.updateProduct(p);
 	}
@@ -162,7 +162,7 @@ public class ProductRackController implements ProductRackListener
 		productID = newID;
 		
 		//Update Database
-		rifffish.Product p = logger.getProduct(productID);
+		SDK.rifffish.Product p = logger.getProduct(productID);
 		p.setId(newID);
 		logger.updateProduct(p);
 	}
@@ -179,7 +179,7 @@ public class ProductRackController implements ProductRackListener
 			productCount++;
 		
 		//Update Database
-		rifffish.Product p = logger.getProduct(productID);
+		SDK.rifffish.Product p = logger.getProduct(productID);
 		p.setCurrentStockLevel(productCount);
 		logger.updateProduct(p);
 	}
