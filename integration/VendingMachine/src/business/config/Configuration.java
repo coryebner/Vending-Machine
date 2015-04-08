@@ -72,6 +72,7 @@ public class Configuration {
 	protected CodeSelectionController codeSelectionController; // Maria: Added CodeSelectionController object
 	protected DisplayController displayController; // Maria: added for the displayController
 	protected ButtonSelectionController buttonSelectionController;
+	protected Funds fundsChanged;
 
 
 	public Configuration()
@@ -377,6 +378,7 @@ public class Configuration {
 	 *  this will also have to save the FundsController as the 'funds' field
 	 *  of this class so we have access to it when we want to save later.
 	 *  
+	 * @param m						AbstractVendingMachine
 	 * @param coin					does this machine accept coin?
 	 * @param card					does this machine accept card?
 	 * @param paypal				does this machine accept paypal?
@@ -410,15 +412,15 @@ public class Configuration {
 			if(bill){
 				availablePaymentMethods.add(PaymentMethods.BILLS);
 			}
-			Funds fundsNew = new Funds(this.locale, bestEffortChange, cr, this.quantities,this.coinRackQuantities, availablePaymentMethods, inventoryController);
-			m.getCoinReceptacle().register(fundsNew.getCoinsController());
-			m.getBanknoteReceptacle().register(fundsNew.getBankNoteController());
+			this.fundsChanged = new Funds(this.locale, bestEffortChange, cr, this.quantities,this.coinRackQuantities, availablePaymentMethods, inventoryController);
+			m.getCoinReceptacle().register(fundsChanged.getCoinsController());
+			m.getBanknoteReceptacle().register(fundsChanged.getBankNoteController());
 			// Register the coinracks
-			CoinRackController[] crControllers = fundsNew.getCoinRackControllers();
+			CoinRackController[] crControllers = fundsChanged.getCoinRackControllers();
 			for(int i =0; i < m.getNumberOfCoinRacks(); i++){
 				m.getCoinRack(i).register(crControllers[i]);
 			}
-			m.getCardSlot().register(fundsNew.getPrepaidController());
+			m.getCardSlot().register(fundsChanged.getPrepaidController());
 		} catch (NoSuchHardwareException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
