@@ -12,12 +12,14 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Timer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -46,6 +48,7 @@ public class VirtualKeyboard extends JFrame {
     private boolean SIM_Mode = false;
     private JTextField textField;
     private String display;
+    private Container callerContainer;
     private final static String[][] key = {
     	
     	// Row 0
@@ -68,10 +71,32 @@ public class VirtualKeyboard extends JFrame {
      
     };
 
+    /**
+	 * Disables the passed containers components on launch, enables on close
+	 * @param caller should be the container who created this GUI
+	 */
+	public VirtualKeyboard(Container caller) {
+		this();
+		callerContainer = caller;
+		GUIHelper.enableComponents(caller, false);
+		frame.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			/**
+			 * Renables caller window's components on close
+			 */
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				GUIHelper.enableComponents(callerContainer, true);
+			}
+		});
+	}
+    
     public VirtualKeyboard()
     {
+    	
         super("Virtual Keyboard");
         panel = new JPanel[6];	// Number of Array elements is the number of rows on keyboard
+        
+        frame.setResizable(false);
         
         textField = new JTextField();
 		textField.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -81,6 +106,8 @@ public class VirtualKeyboard extends JFrame {
 		parent.add(textField);
 		textField.setColumns(10);
 		textField.setVisible(true);
+		textField.setEditable(true);
+		textField.setFocusable(false);
 		
 		display = textField.getText();
 		
@@ -98,7 +125,7 @@ public class VirtualKeyboard extends JFrame {
 					textField.setText("SIM_Mode off");
 			}
 		});
-        
+		
         for (int row = 0; row < key.length; row++) {
             panel[row] = new JPanel();
             
@@ -121,16 +148,9 @@ public class VirtualKeyboard extends JFrame {
     }
 
     public class KeyboardActionListener implements ActionListener {
-    	public char charToSend;
-    	/*public void updateString(char newValue){
-    		this.charToSend = newValue;
-    		System.out.println("We are sending this char: "+ charToSend);
-
-            notifyKeyDown(charToSend);
-    	}*/
-    	
+    	private String enteredString;
         public void actionPerformed(ActionEvent e) {
-        	display = textField.getText();
+        	
             final JButton btn = (JButton) e.getSource();
             btn.addActionListener(new ActionListener() {
     			public void actionPerformed(ActionEvent arg0) {
@@ -138,28 +158,34 @@ public class VirtualKeyboard extends JFrame {
     			}
     		});
             
-            System.out.println("Clicked Column: --> " + btn.getClientProperty("column")
+            /*System.out.println("Clicked Column: --> " + btn.getClientProperty("column")
                     + ", Clicked Row: --> " + btn.getClientProperty("row")
                     + ", Key Typed: --> " + btn.getClientProperty("key"));
-            
-           
+            */
             if (btn.getClientProperty("key") != null){
     				display = textField.getText();
+    				if (display == "SIM_Mode on" || display == "SIM_Mode off")
+    					textField.setText("");
+    				
                 	if (btn.getClientProperty("key").equals("Backspace")) {
-                    	display = textField.getText();	
-                    	textField.setText(display.substring(0, display.length() - 1));
+                    	display = textField.getText();
+                    	if (textField.getText().isEmpty()){
+                    		//textField.setText("cant do that");
+                    	}
+                    	else
+                    		textField.setText(display.substring(0, display.length() - 1));
                 	}
                 	else if (btn.getClientProperty("key").equals("           Space            ")) {
                     	textField.setText(display+ " ");
-                    	//updateString(' ');
                     }
                     else if (btn.getClientProperty("key").equals("Enter")) {
-                    	//updateString('\n');
+                    	enteredString = textField.getText();
+                    	textField.setText("");
+                    	System.out.println(enteredString);
                     }
                     else if (btn.getClientProperty("key").equals("Tab")) {
                     	display = textField.getText();
                     	textField.setText(display+ "	");
-                    	//updateString('\t');
                     }
                     else if (btn.getClientProperty("key").equals("Caps") && key[3][1].equals("a")) {
                     	setCapsOn();
@@ -182,8 +208,9 @@ public class VirtualKeyboard extends JFrame {
                     	button[4][0].setForeground(Color.black);
                     	shiftOn = false;
                     }
-                	else 
+                	else{
                 		textField.setText(display + btn.getClientProperty("key"));
+                	}
             }
         }
     }

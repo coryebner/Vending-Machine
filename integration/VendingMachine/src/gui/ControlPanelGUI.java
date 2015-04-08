@@ -206,13 +206,14 @@ public class ControlPanelGUI {
 			correct.setEnabled(false);
 		correct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (display != null) {
+				if (textField.getText().isEmpty()) {
+					
+					
+				}
+				else{
 					display = textField.getText();
 					String newdisplay = display.substring(0, display.length() - 1);
 					textField.setText(newdisplay);
-				}
-				else{
-					correct.setEnabled(false);
 				}
 			}
 		});
