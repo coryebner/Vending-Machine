@@ -92,7 +92,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
 	
 	private AbstractVendingMachine machine;
 	private boolean codeInProgress = false;
-
+	private boolean buttonPressed = false;
 	private JPanel pnlMachineButtons;
 	private JPanel pnlPopButtons;
 	private JPanel pnlCandyButtons;
@@ -348,7 +348,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
 		// First 6 keys are the A-F
 		int key = 6;
 		for (JButton btn : candyNumberButtons) {
-				addButtonAction(btn, key);
+				addNumButtonAction(btn, key);
 	            key++;
 		}
 
@@ -503,6 +503,17 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
 		return billEject;
 	}
 	
+	public boolean getButtonPressStatus(){
+		return buttonPressed;
+	}
+	
+	public void resetButtonPressedStatus(){
+		buttonPressed = false;
+	}
+	
+	public JTextPane getDisplay(){
+		return Display_text;
+	}
 
 	/**
 	 * Sets what currency buttons are shown based on the currency type selected
@@ -741,6 +752,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
           public void actionPerformed(ActionEvent arg0) {
               Coin coin = new Coin(amount);
               try {
+            	  buttonPressed = true;
                   machine.getCoinSlot().addCoin(coin);
               } catch (NoSuchHardwareException e) {
                   e.printStackTrace();
@@ -771,6 +783,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
           public void actionPerformed(ActionEvent arg0) {
               Banknote bill = new Banknote(amount);
               try {
+            	  buttonPressed = true;
                   machine.getBanknoteSlot().addBanknote(bill);
               } catch (DisabledException | NoSuchHardwareException e) {
                   
@@ -801,6 +814,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
 						CardType cardtype = Card.CardType.PREPAID; 
 						Card card = new Card (cardtype,"123456","prepaidcard","","03/2020",null,amount);
 			                try {
+			                	buttonPressed = true;
 			                    machine.getCardSlot().insertCard(card);
 			                } catch (CardSlotNotEmptyException | DisabledException
 			                         | NoSuchHardwareException e) {
@@ -918,8 +932,26 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
           @Override
           public void actionPerformed(ActionEvent e) {
               try {
-                  enableInteractivity(false);
+            	  buttonPressed = true;
+            	  GUIHelper.enableComponents(getMainFrame(), false);
                   machine.getSelectionButton(key).press();
+              } catch (NoSuchHardwareException e1) {			
+                  e1.printStackTrace();
+              }
+          }
+      });
+  }
+ 
+  public void addNumButtonAction(JButton button, int key){
+  	button.addActionListener(new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+              try {
+              	buttonPressed = true;
+              	if (codeInProgress) {
+              		GUIHelper.enableComponents(getMainFrame(), false);
+              		machine.getSelectionButton(key).press();
+              	}
               } catch (NoSuchHardwareException e1) {			
                   e1.printStackTrace();
               }
@@ -932,6 +964,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
           @Override
           public void actionPerformed(ActionEvent e) {
               try {
+            	  buttonPressed = true;
               	if (!codeInProgress) {
 						codeInProgress = true;
 					} else {
