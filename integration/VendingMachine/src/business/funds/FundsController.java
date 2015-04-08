@@ -1,7 +1,9 @@
 package business.funds;
 
 import hardware.funds.BanknoteReceptacle;
+import hardware.funds.BanknoteSlot;
 import hardware.funds.CoinReceptacle;
+import hardware.funds.CoinSlot;
 import hardware.racks.CoinRack;
 import hardware.ui.IndicatorLight;
 
@@ -9,7 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
+import rifffish.Rifffish;
 import business.selection_delivery.InventoryController;
 
 /**
@@ -47,48 +52,83 @@ public class FundsController {
 	private HashMap<String, String> LOG;
 
 	/**
-	 * @param locale
+	 * @param Locale locale
 	 *            - the locale of the machine Locale.US, Locale.CANADA,
 	 *            Locale.UK only supported
-	 * @param bestEffortChange
-	 *            - if the machine dispenses change or not when exact change is
-	 *            active
-	 * @param coinRacks
-	 *            - CounRack[] of available coin racks
-	 * @param coinRackDenominations
-	 *            - the denominations stored in each coin rack
-	 * @param coinStorageBinQuantities
-	 *            map from coin denomination to its quantity in the storage
-	 *            (overflow) bin.
-	 * @param BanknoteReceptacle
-	 *            bnReceptacle - the reference to the machines receptacle
-	 * @param banknoteDenominations
-	 *            - int[] banknoteDenominations is the amounts of supported bank
-	 *            notes
-	 * @param banknoteStorageBinQuantity
-	 *            the quantity of banknotes in the storage bin.
-	 * @param availablePaymentMethods
+	 * @param List<PaymentMethods> availablePaymentMethods
 	 *            - List<PaymentMethods> a list of enumerated payment types
 	 *            supported
-	 * @param outOfOrderLight
-	 *            reference to the out-of-order light.
-	 * @param inventoryController
+	 * @param boolean bestEffortChange
+	 *            - if the machine dispenses change or not when exact change is
+	 *            active
+	 * @param int[] coinDenominations
+	 *            - the denominations supported by the machine
+	 *                        
+	 * @param Coinslot coinslot
+	 * 				- a reference to the coin slot of the machine
+	 * @param CoinReceptacle tempCoinReceptacle
+	 * 				- reference to the temporary coin receptacle (hooked up to the coin slot)
+	 * @param int tempCoinRecepticleBalance
+	 * 				- the current balance inside the temp coin receptacle (0 on fresh start)
+	 * @param CoinReceptacle overflowCoinReceptacle
+	 * 				- reference to the overflow coin receptacle (hooked up to the temp coin receptacle)
+	 * @param Map<Integer, Integer> coinOverflowCoinRecepticleQuantities
+	 * 				- a Map of the Value to the number of stored coins <Integer-value><Integer number> inside the overflow bin
+	 * @param CoinRack[] coinRacks
+	 *            - CoinRack[] of available coin racks
+	 * @param int[] coinRackQuantities
+	 * 			  - the number of coins currently in each rack
+	 * @param BanknoteSlot banknoteSlot
+	 * 				- reference to the bank note slot
+	 * @param BanknoteReceptacle tempBanknoteReceptacle
+	 * 				- reference to the inital temporary banknote receptacle (hooked up to the banknote slot)
+	 * @param BanknoteReceptacle permBanknoteStore
+	 * 				- reference to the permanent storage banknote receptacle (hooked up to the temp banknote receptacle)
+	 * @param Map<Integer, Integer> tempBanknoteReceptacleQuantities
+	 *				- a Map of the Value to the number of stored bills <Integer-value><Integer number> inside the temp banknote bin
+	 * @param int permBanknoteReceptacleQuanity,	
+	 * 				- integer of the number of banknotes permanently stored
+	 * @param IndicatorLight outOfOrderLight
+	 * @param InventoryController inventoryController
 	 *            - InventoryController reference (must have current product
-	 *            state for machine due to event handling)
-	 * 
-	 *            No arguments needed for BankNotController, PayPal controller.
-	 *            creditCard controller constructors
+	 * 	           state for machine due to event handling)
+	 * @param Rifffish logger	
+	 * 				- reference to the logger
 	 */
-	public FundsController(Locale locale, boolean bestEffortChange,
-			CoinReceptacle coinReceptacle, CoinRack[] coinRacks,
-			int[] coinRackDenominations, int[] coinRackQuantities,
-			Map<Integer, Integer> coinStorageBinQuantities,
-			BanknoteReceptacle bnReceptacle, int[] banknoteDenominations,
-			int banknoteStorageBinQuantity,
-			List<PaymentMethods> availablePaymentMethods,
-			IndicatorLight outOfOrderLight,
-			InventoryController inventoryController) {
-
+	public FundsController(
+			Locale locale, 													
+			List<PaymentMethods> availablePaymentMethods,				
+			
+			// Coin Parameters
+			boolean bestEffortChange,									//false if not using coins
+			int[] coinDenominations,									//empty if not using coins 		- denominations of coins supported by the machine 
+			CoinSlot coinSlot,											//null if not using coins		- for full state
+			
+			// TempCoinReceptacle
+			CoinReceptacle tempCoinReceptacle, 							//null if not using coins 		- for tracking and funds return
+			int tempCoinRecepticleBalance,								//0 if not using coins			- needed for recovery (just the funds total)
+			
+			// Overflow Coin Recepacle
+			CoinReceptacle overflowCoinReceptacle, 						//null if not using coins 		- for tracking
+			Map<Integer, Integer> coinOverflowCoinRecepticleQuantities,	//null if not using coins		- needed for recovery
+			
+			// Coin Racks
+			CoinRack[] coinRacks,										//null if not using coins		- needed to provide change
+			int[] coinRackQuantities,									//empty array if not using coins- needed for recovery
+			
+			// Bills Parameters
+			BanknoteSlot banknoteSlot,									//null if not using banknotes	- for full state
+			BanknoteReceptacle tempBanknoteReceptacle,					//null if not using banknotes 	- for tracking and funds return
+			BanknoteReceptacle permBanknoteStore,						//null if not using banknotes 	- for tracking
+			Map<Integer, Integer> tempBanknoteReceptacleQuantities,		//demoninations to quantity map(initially 0) - for recovery and setup
+			int permBanknoteReceptacleQuanity,							//0 if not using bills - initially 0, unless from recovery state
+			
+			
+			IndicatorLight outOfOrderLight,								//NOT NULL - needed for full and out of order statuses
+			InventoryController inventoryController,					//NOT NULL - needed for exact change calculations
+			Rifffish logger												//Needed for logging purposes
+			) {
+		
 		this.machineCurrencies = new Currency(locale);
 
 		this.LOG = new HashMap<String, String>();
@@ -104,17 +144,24 @@ public class FundsController {
 		if (availablePaymentMethods.contains(PaymentMethods.BILLS)) {
 			this.billsPresent = true;
 			this.banknoteStorageBinTracker = new BanknoteStorageBinController(
-					banknoteStorageBinQuantity, outOfOrderLight);
-			this.bankNoteController = new BanknoteController(bnReceptacle,
+					permBanknoteReceptacleQuanity, outOfOrderLight);
+			this.bankNoteController = new BanknoteController(tempBanknoteReceptacle,
 					this.banknoteStorageBinTracker);
 		}
+		
+		// Everything to do with coins
 		if (availablePaymentMethods.contains(PaymentMethods.COINS)) {
 			this.coinsPresent = true;
+	
+			// Permanent Storage Bin Controller - restore safe
 			this.coinStorageBinTracker = new CoinStorageBinController(
-					coinStorageBinQuantities, outOfOrderLight);
-			this.coinsController = new CoinsController(coinReceptacle,
-					coinRacks, coinRackDenominations, coinRackQuantities,
+					coinOverflowCoinRecepticleQuantities, outOfOrderLight);
+			
+			// Coin controller - restore safe
+			this.coinsController = new CoinsController(tempCoinRecepticleBalance,tempCoinReceptacle,
+					coinRacks, coinDenominations, coinRackQuantities,
 					this.coinStorageBinTracker);
+			
 			// Can only set up exact change controller if there is a
 			// coinsController.
 			exactChangeController = new ExactChangeController(
@@ -140,7 +187,7 @@ public class FundsController {
 	 * @return The return code based on success of the transaction Assumption,
 	 *         returnValue of ConductTransaction
 	 */
-	public TransactionReturnCode ConductTransaction(int price) {
+	public TransactionReturnCode ConductTransaction(int productID, int price) {
 		TransactionReturnCode returnCode = TransactionReturnCode.INSUFFICIENTFUNDS;
 		TransactionReturnCode returnCodeCC_PP = TransactionReturnCode.INSUFFICIENTFUNDS;
 

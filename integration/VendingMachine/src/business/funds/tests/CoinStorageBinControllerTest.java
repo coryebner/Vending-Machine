@@ -1,6 +1,10 @@
 package business.funds.tests;
 
 import static org.junit.Assert.*;
+
+import java.util.Map;
+import java.util.TreeMap;
+
 import hardware.funds.Coin;
 import hardware.ui.IndicatorLight;
 
@@ -14,17 +18,18 @@ public class CoinStorageBinControllerTest {
 
 	CoinStorageBinController controller;
 	IndicatorLight outOfOrderLight;
-	int[] rackDenominations;
+	Map<Integer,Integer> rackDenominations;
 	
 	@Before
 	public void setUp() throws Exception {
 		outOfOrderLight = new IndicatorLight();
-		rackDenominations = new int[5];
-		rackDenominations[0] = 5;
-		rackDenominations[1] = 10;
-		rackDenominations[2] = 25;
-		rackDenominations[3] = 100;
-		rackDenominations[4] = 200;
+		rackDenominations = new TreeMap<Integer,Integer>();
+		
+			rackDenominations.put(5, 0);
+			rackDenominations.put(10, 0);
+			rackDenominations.put(25, 0);
+			rackDenominations.put(100, 0);
+			rackDenominations.put(200, 0);
 		controller = new CoinStorageBinController(rackDenominations, outOfOrderLight);
 	}
 
@@ -36,7 +41,7 @@ public class CoinStorageBinControllerTest {
 
 	@Test
 	public void testGetNumberOfDenominations() {
-		assertEquals(rackDenominations.length, controller.getNumberOfDenominations());
+		assertEquals(rackDenominations.keySet().size(), controller.getNumberOfDenominations());
 	}
 
 	@Test
