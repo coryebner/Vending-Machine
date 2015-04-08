@@ -15,12 +15,16 @@ import hardware.exceptions.SimulationException;
 public class CoinSlot extends AbstractHardware<CoinSlotListener> {
     private int[] validValues;
     private CoinChannel valid, invalid;
+    private boolean rejectAllCoins;
 
     /**
      * Creates a coin slot that recognizes coins of the specified values.
+	 * @param validValues
+	 * 		   the accepted denominations of the coin slot 
      */
     public CoinSlot(int[] validValues) {
 	this.validValues = validValues;
+	rejectAllCoins = false;
     }
 
     /**
@@ -54,6 +58,8 @@ public class CoinSlot extends AbstractHardware<CoinSlotListener> {
      * store it or the coin is invalid, a "coinRejected" event is announced to
      * its listeners and the coin is returned.
      * 
+     * @param coin
+     * 			  the coin to be added to the coin slot.
      * @throws DisabledException
      *             if the coin slot is currently disabled.
      */
@@ -61,7 +67,7 @@ public class CoinSlot extends AbstractHardware<CoinSlotListener> {
 	if(isDisabled())
 	    throw new DisabledException();
 
-	if(isValid(coin) && valid.hasSpace()) {
+	if(isValid(coin) && valid.hasSpace() && !rejectAllCoins) {
 	    try {
 		valid.deliver(coin);
 	    }
@@ -87,6 +93,18 @@ public class CoinSlot extends AbstractHardware<CoinSlotListener> {
 	}
 	else
 	    throw new SimulationException("Unable to route coin: All channels full");
+    }
+    
+    /**
+     * Sets the coin slot to reject all coin inputs.
+     * When set to <strong>true</strong>, all coins are routed to the return
+     * receptacle; when set to <strong>false</strong>, coin insertion behaves
+     * as normal.
+     * @param value Whether or not this coin slot should reject all coins.
+     */
+    
+    public void setRejectCoins(boolean value){
+    	rejectAllCoins = value;
     }
 
     private void notifyValidCoinInserted(Coin coin) {
