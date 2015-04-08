@@ -28,5 +28,8 @@
 	<classpathentry kind="lib" path="integration/VendingMachine/lib/jmock-2.6.0/jmock-legacy-2.6.0.jar"/>
 	<classpathentry kind="lib" path="integration/VendingMachine/lib/jmock-2.6.0/jmock-script-2.6.0.jar"/>
 	<classpathentry kind="lib" path="integration/VendingMachine/lib/jmock-2.6.0/objenesis-1.0.jar"/>
+	<classpathentry kind="lib" path="integration/VendingMachine/lib/retrofit-1.9.0.jar"/>
+	<classpathentry kind="lib" path="integration/VendingMachine/lib/gson-2.3.1.jar"/>
+	<classpathentry kind="lib" path="integration/VendingMachine/lib/rifffish-1.0.1.jar"/>
 	<classpathentry kind="output" path="bin1"/>
 </classpath>
