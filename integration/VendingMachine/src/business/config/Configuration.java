@@ -261,6 +261,9 @@ public class Configuration {
 			else if (line.startsWith("billstorage")) {
 				billStorageQuantities = readIntArray(line);
 			}
+			else if (line.startsWith("logfrequency")){
+				
+			}
 			else if (line.startsWith("locale")){
 				
 			}
