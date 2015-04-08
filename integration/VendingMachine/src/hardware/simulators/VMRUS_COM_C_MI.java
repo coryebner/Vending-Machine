@@ -19,8 +19,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import rifffish.Machine;
-import rifffish.Rifffish;
+import SDK.rifffish.Machine;
+import SDK.rifffish.Rifffish;
 
 /**
  * Configuration 8 of the Vending Machine:

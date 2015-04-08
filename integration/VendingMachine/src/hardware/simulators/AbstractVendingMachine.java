@@ -2,8 +2,8 @@ package hardware.simulators;
 
 import java.util.Locale;
 
-import rifffish.Machine;
-import rifffish.Rifffish;
+import SDK.rifffish.Machine;
+import SDK.rifffish.Rifffish;
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.funds.BanknoteReceptacle;
 import hardware.funds.BanknoteSlot;

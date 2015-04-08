@@ -6,19 +6,20 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import SDK.rifffish.Rifffish;
 import business.funds.CoinRackController;
-import business.funds.Funds;
+import business.funds.FundsController;
 import business.funds.PaymentMethods;
 import business.selection_delivery.ButtonSelectionController;
 import business.selection_delivery.CodeSelectionController;
 import business.selection_delivery.InventoryController;
 import business.stub.DisplayController;
-import business.stub.FundsController;
 import hardware.simulators.AbstractVendingMachine;
 import hardware.simulators.VMRUS_COM_C_M;
 import hardware.simulators.VMRUS_COM_C_MI;
@@ -34,30 +35,16 @@ import hardware.simulators.VMRUS_TOC_P_I;
 import hardware.simulators.VMRUS_TOC_P_MI;
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
-import hardware.AbstractVendingMachine;
-import hardware.VMRUS_COM_C_M;
-import hardware.VMRUS_COM_C_MI;
-import hardware.VMRUS_COM_P_M;
-import hardware.VMRUS_COM_P_MI;
-import hardware.VMRUS_SFF_P_C;
-import hardware.VMRUS_SFF_P_CI;
-import hardware.VMRUS_SFF_P_PI;
-import hardware.VMRUS_TOC_CP;
-import hardware.VMRUS_TOC_CP_I;
-import hardware.VMRUS_TOC_C_MI;
-import hardware.VMRUS_TOC_P_I;
-import hardware.VMRUS_TOC_P_MI;
+import hardware.simulators.*;
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
-import hardware.test.VendingMachine1Test;
 import hardware.ui.ConfigurationPanelTransmitter;
 import hardware.ui.ConfigurationPanelTransmitterListener;
 import hardware.ui.PushButton;
 import hardware.ui.PushButtonCodeInterpreter;
 
 public class Configuration {
-
 
 	// Configuration data loaded from/written to the configuration file
 	protected String type;
@@ -69,6 +56,8 @@ public class Configuration {
 	protected int [] coinStorage;
 	Map<Integer,Integer> coinStorageQuantities;
 	protected int [] billStorageQuantities;
+	protected int [] coinDenominations;
+	protected int [] billDenominations;
 
 	protected String logFrequency;
 	protected Locale locale;
@@ -276,14 +265,16 @@ public class Configuration {
 				billStorageQuantities = readIntArray(line);
 			}
 			else if (line.startsWith("logfrequency")){
-				
+				logFrequency = readString(line);
 			}
 			else if (line.startsWith("locale")){
-				
+				String l = readString(line);
+				if (l.equals("CAD")) locale = Locale.CANADA;
+				else if (l.equals("USD")) locale = Locale.US;
+				else if (l.equals("EUR")) locale = Locale.UK;
+				else throw new ConfigurationException("Invalid locale " + l + " - must be CAD, USD or EUR");
 			}
 		}
-		
-		locale = new Locale("en", "CA"); // TODO: Read locale properly from config file
 		
 		if (type == null
 			|| names == null
@@ -303,6 +294,8 @@ public class Configuration {
 			coinStorageQuantities.put(25, coinStorage[2]);
 			coinStorageQuantities.put(100, coinStorage[3]);
 			coinStorageQuantities.put(200, coinStorage[4]);
+			coinDenominations = new int [] {5, 10, 25, 50, 100, 200};
+			billDenominations = new int [] {500, 1000, 2000, 5000, 10000};
 			}
 			catch(Exception e){
 				throw new ConfigurationException("Coin Storage Quantities Array is incorrect");
@@ -316,6 +309,8 @@ public class Configuration {
 			coinStorageQuantities.put(50, coinStorage[3]);
 			coinStorageQuantities.put(100, coinStorage[4]);
 			coinStorageQuantities.put(200, coinStorage[5]);
+			coinDenominations = new int [] {5, 10, 20, 50, 100, 200};
+			billDenominations = new int [] {500, 1000, 2000, 5000, 10000};
 			}
 			catch(Exception e){
 				throw new ConfigurationException("Coin Storage Quantities Array is incorrect");
@@ -328,6 +323,8 @@ public class Configuration {
 			coinStorageQuantities.put(25, coinStorage[2]);
 			coinStorageQuantities.put(50, coinStorage[3]);
 			coinStorageQuantities.put(100, coinStorage[4]);
+			coinDenominations = new int [] {5, 10, 25, 50, 100};
+			billDenominations = new int [] {500, 1000, 2000, 5000, 10000};
 			}
 			catch(Exception e){
 				throw new ConfigurationException("Coin Storage Quantities Array is incorrect");
@@ -408,7 +405,7 @@ public class Configuration {
 	{
 		boolean bestEffortChange = false;
 		// TODO Maria, working on this.
-		this.funds = new FundsController();
+		// this.funds = new FundsController();
 		//	public Funds(Locale locale, boolean bestEffortChange, CoinRack[] coinRacks,
 		//int[] coinRackDenominations, int[] coinRackQuantities, 
 		CoinRack[] cr;
@@ -430,7 +427,34 @@ public class Configuration {
 			if(bill){
 				availablePaymentMethods.add(PaymentMethods.BILLS);
 			}
-			Funds fundsNew = new Funds(this.locale, bestEffortChange, cr, this.quantities,this.coinRackQuantities, availablePaymentMethods, inventoryController);
+			FundsController fundsNew =
+					new FundsController(this.locale,
+										availablePaymentMethods,
+										
+										bestEffortChange,
+										coinDenominations,
+										m.getCoinSlot(),
+										
+										m.getCoinReceptacle(),
+										0,
+										
+										m.getCoinStorageBin(),
+										coinStorageQuantities,
+										
+										cr,
+										quantities,
+										
+										m.getBanknoteSlot(),
+										m.getBanknoteReceptacle(),
+										m.getBanknoteStorageBin(),
+										
+										new HashMap<Integer, Integer>(), // TODO: Save/restore this like we do coins
+										0,
+										
+										m.getOutOfOrderLight(),
+										inventoryController,
+										new Rifffish("BAD_API_KEY")); // TODO: This needs to be a Logger()
+			
 			m.getCoinReceptacle().register(fundsNew.getCoinsController());
 			m.getBanknoteReceptacle().register(fundsNew.getBankNoteController());
 			// Register the coinracks
@@ -461,7 +485,7 @@ public class Configuration {
 				pushButtons[i] = m.getSelectionButton(i);
 			}
 			//Creation of controller
-			this.buttonSelectionController = new ButtonSelectionController(this.inventoryController,this.displayController,this.funds,pushButtons,numberOfButtons);
+			this.buttonSelectionController = new ButtonSelectionController(this.inventoryController, this.funds, pushButtons, numberOfButtons);
 
 			// Registering the buttons from hardware with the buttonSelectionController
 			for(int i=0; i < numberOfButtons; i++){
@@ -486,12 +510,8 @@ public class Configuration {
 
 		try {
 			// Creating the code selection controller.
-			this.codeSelectionController = new CodeSelectionController(
-					this.inventoryController, 
-					this.displayController, 
-					this.funds, 
-					m.getPushButtonCodeInterpreter(), 
-					offset);
+			this.codeSelectionController =
+					new CodeSelectionController(inventoryController, this.funds, offset);
 
 			//Registering the PushButtonCodeInterpreter with the codeSelectionController
 			m.getPushButtonCodeInterpreter().register(codeSelectionController);
@@ -514,12 +534,16 @@ public class Configuration {
 			int numberOfRacks = m.getNumberOfProductRacks();
 			// An array of ProductRack is created and used to build an InventoryController object
 			ProductRack racks[] = new ProductRack[numberOfRacks];
+			
+			// TODO: This is not right... the ids part at least
+			int [] ids = new int[racks.length];
 			for(int i=0; i < m.getNumberOfProductRacks(); i++){
 				racks[i] = m.getProductRack(i);
+				ids[i] = i;
 			}
 
 			//Inventory controller creation with information known from machine.
-			this.inventoryController = new InventoryController(racks,numberOfRacks,this.names,this.prices,this.quantities);
+			this.inventoryController = new InventoryController(racks, numberOfRacks, this.names, this.prices, this.quantities, ids);
 
 		} catch (NoSuchHardwareException e) {
 			e.printStackTrace();
@@ -574,12 +598,12 @@ public class Configuration {
 	 *   - createFundsController()
 	 *   - createButtonController()
 	 *   - createCodeController()
-	 *   - createInventoryController()
+	 *   - createInventoryController(machine)
 	 *  in the correct order. Note that this does NOT include createLogger()
 	 */
 //	protected AbstractVendingMachine createSFFPC()
 //	{
-//		return new VendingMachine1(new int [] {5, 10, 25, 100, 200}, prices, names);
+//		return new VendingMachine1(coinDenominations, prices, names);
 //	}
 	
 	//These are all marked deprecated, and the first few have inconsistent constructors. This is intentional, of course, but I made the constructors as close to
@@ -588,7 +612,7 @@ public class Configuration {
 
 	protected AbstractVendingMachine createSFFPC(AbstractVendingMachine m)
 	{
-		m = new VMRUS_SFF_P_C(new int [] {5, 10, 25, 100, 200});
+		m = new VMRUS_SFF_P_C(locale, coinDenominations);
 
 		controllerCreator(m);
 
@@ -597,7 +621,8 @@ public class Configuration {
 	
 	protected void controllerCreator(AbstractVendingMachine m)
 	{
-		machine = new VMRUS_SFF_P_C(locale, new int [] {5, 10, 25, 100, 200});
+		//Create the inventory manager
+		createInventoryController(m);
 		
 		//Create a funds controller for coins only
 		createFundsController(m, true, false, false, false);
@@ -605,239 +630,236 @@ public class Configuration {
 		//Create a selection button controller
 		createButtonSelectionController(m);
 
-		//Create the inventory manager
-		createInventoryController(m);
-
 		//Create the logger
 		createLogger(m, logFrequency);
 		
 	}
-	//
-	//	protected AbstractVendingMachine createSFFPCI()
-	//	{
-	//		machine = new VMRUS_SFF_P_CI(new int [] {5, 10, 25, 100, 200}, popCosts, popNames);	
-	//		
-	//		//Create a funds controller for coins only
-	//		createFundsController(true, false, false);
-	//		
-	//		//Create a selection button controller
-	//		createButtonSelectionController();
-	//		
-	//		//Create the inventory manager
-	//		createInventoryController();
-	//		
-	//		//Create the logger
-	//		createLogger(logFrequency);
-	//		
-	//		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(True)
-	//		return machine;
-	//	}
-	//
-	//	protected AbstractVendingMachine createSFFPPI()
-	//	{
-	//		machine = new VMRUS_SFF_P_PI(popCosts, popNames);
-	//	
-	//		//Create a funds controller for prepaid cards only
-	//		createFundsController(false, true, false);
-	//		
-	//		//Create a selection button controller
-	//		createButtonSelectionController();
-	//		
-	//		//Create the inventory manager
-	//		createInventoryController();
-	//		
-	//		//Create the logger
-	//		createLogger(logFrequency);
-	//		
-	//		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(True)
-	//		return machine;
-	//	}
-	//
-	//	protected AbstractVendingMachine createCOMPMI()
-	//	{
-	//		machine = new VMRUS_COM_P_MI(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
-	//	
-	//		//Create a funds controller for all payment options
-	//		createFundsController(true, true, true);
-	//		
-	//		//Create a selection button controller
-	//		createButtonSelectionController();
-	//		
-	//		//Create the inventory manager
-	//		createInventoryController();
-	//		
-	//		//Create the logger
-	//		createLogger(logFrequency);
-	//		
-	//		//TODO: Displaycontroller(Basic), keyboardController(Physical), internetController(True)
-	//		return machine;
-	//	}
-	//
-	//	protected AbstractVendingMachine createCOMPM()
-	//	{
-	//		machine = new VMRUS_COM_P_M(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
-	//	
-	//		//Create a funds controller for all payment options except Paypal
-	//		createFundsController(true, true, false);
-	//		
-	//		//Create a selection button controller
-	//		createButtonSelectionController();
-	//		
-	//		//Create the inventory manager
-	//		createInventoryController();
-	//		
-	//		//Create the logger
-	//		createLogger(logFrequency);
-	//	
-	//		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(False)
-	//		return machine;
-	//	}
-	//
-	//	protected AbstractVendingMachine createCOMCMI()
-	//	{
-	//		machine = new VMRUS_COM_C_MI(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
-	//	
-	//		//Create a funds controller for all payment options
-	//		createFundsController(true, true, true);
-	//		
-	//		//Create the inventory manager
-	//		createInventoryController();
-	//	
-	//		//Create Code selection controller
-	//		createCodeController(0);
-	//		
-	//		//Create the logger
-	//		createLogger(logFrequency);
-	//		
-	//		//TODO: Displaycontroller(basic), keyboardController(Physical), internetController(True)
-	//		return machine;
-	//	}
-	//
-	//	protected AbstractVendingMachine createCOMCM()
-	//	{
-	//		machine = new VMRUS_COM_C_M(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
-	//	
-	//		//Create a funds controller for all options except Paypal
-	//		createFundsController(true, true, false);
-	//		
-	//		//Create the inventory manager
-	//		createInventoryController();
-	//
-	//		//Create Code selection controller
-	//		createCodeController(0);
-	//		
-	//		//Create the logger
-	//		createLogger(logFrequency);
-	//		
-	//		//TODO: Displaycontroller(basic), keyboardController(none), internetController(false)
-	//		return machine;
-	//	}
-	//	
-	//	protected AbstractVendingMachine createTOCPMI()
-	//	{
-	//		machine = new VMRUS_TOC_P_MI(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
-	//	
-	//		//Create a funds controller for all payment options
-	//		createFundsController(true, true, true);
-	//	
-	//		//Create a selection button controller
-	//		createButtonSelectionController();
-	//		
-	//		//Create the inventory manager
-	//		createInventoryController();
-	//	
-	//		//Create the logger
-	//		createLogger(logFrequency);
-	//		
-	//		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(True)
-	//		return machine;
-	//	}
-	//	
-	//	protected AbstractVendingMachine createTOCPI()
-	//	{
-	//		machine = new VMRUS_TOC_P_I(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});
-	//	
-	//		//Create a funds controller for all payment options except Paypal
-	//		createFundsController(true, true, false);
-	//
-	//		//Create a selection button controller
-	//		createButtonSelectionController();
-	//		
-	//		//Create the inventory manager
-	//		createInventoryController();
-	//
-	//		//Create the logger
-	//		createLogger(logFrequency);
-	//	
-	//		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(False)
-	//		return machine;		
-	//	}
-	//
-	//	protected AbstractVendingMachine createTOCCMI()
-	//	{
-	//		machine = new VMRUS_TOC_C_MI(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
-	//	
-	//		//Create a funds controller for all payment options
-	//		createFundsController(true, true, true);
-	//		
-	//		//Create the inventory manager
-	//		createInventoryController();
-	//	
-	//		//Create Code selection controller
-	//		createCodeController(0);
-	//	
-	//		//Create the logger
-	//		createLogger(logFrequency);
-	//	
-	//		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(True)
-	//		return machine;
-	//	}
-	//
-	//	protected AbstractVendingMachine createTOCCp() throws NoSuchHardwareException
-	//	{
-	//		machine = new VMRUS_TOC_CP(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
-	//	
-	//		//Create a funds controller for all payment options except Paypal
-	//		createFundsController(true, true, false);
-	//	
-	//		//Create a selection button controller
-	//		createButtonSelectionController();
-	//	
-	//		//Create the inventory manager
-	//		createInventoryController();
-	//
-	//		//Create Code selection controller
-	//		createCodeController(this.machine.getNumberOfSelectionButtons());
-	//
-	//		//Create the logger
-	//		createLogger(logFrequency);
-	//
-	//		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(false)
-	//		return machine;
-	//	}
-	//
-	//	protected AbstractVendingMachine createTOCCpI() throws NoSuchHardwareException
-	//	{
-	//		machine = new VMRUS_TOC_CP_I(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});
-	//	
-	//		//Create a funds controller for all payment options
-	//		createFundsController(true, true, true);
-	//
-	//		//Create a selection button controller
-	//		createButtonSelectionController();
-	//
-	//		//Create the inventory manager
-	//		createInventoryController();
-	//
-	//		//Create Code selection controller
-	//		createCodeController(this.machine.getNumberOfSelectionButtons());
-	//
-	//		//Create the logger
-	//		createLogger(logFrequency);
-	//
-	//		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(true)
-	//		return machine;		
-	//	}
+
+	protected AbstractVendingMachine createSFFPCI()
+	{
+		machine = new VMRUS_SFF_P_CI(locale, coinDenominations);	
+		
+		//Create the inventory manager
+		createInventoryController(machine);
+		
+		//Create a funds controller for coins only
+		createFundsController(machine, true, false, false, false);
+		
+		//Create a selection button controller
+		createButtonSelectionController(machine);
+		
+		//Create the logger
+		createLogger(machine, logFrequency);
+		
+		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(True)
+		return machine;
+	}
+
+	protected AbstractVendingMachine createSFFPPI()
+	{
+		machine = new VMRUS_SFF_P_PI(locale);
+		
+		//Create the inventory manager
+		createInventoryController(machine);
+	
+		//Create a funds controller for prepaid cards only
+		createFundsController(machine, false, true, false, false);
+		
+		//Create a selection button controller
+		createButtonSelectionController(machine);
+		
+		//Create the logger
+		createLogger(machine, logFrequency);
+		
+		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(True)
+		return machine;
+	}
+
+	protected AbstractVendingMachine createCOMPMI()
+	{
+		machine = new VMRUS_COM_P_MI(locale, coinDenominations, billDenominations);	
+		
+		//Create the inventory manager
+		createInventoryController(machine);	
+	
+		//Create a funds controller for all payment options
+		createFundsController(machine, true, true, true, true);
+		
+		//Create a selection button controller
+		createButtonSelectionController(machine);
+		
+		//Create the logger
+		createLogger(machine, logFrequency);
+		
+		//TODO: Displaycontroller(Basic), keyboardController(Physical), internetController(True)
+		return machine;
+	}
+
+	protected AbstractVendingMachine createCOMPM()
+	{
+		machine = new VMRUS_COM_P_M(locale, coinDenominations, billDenominations);		
+		
+		//Create the inventory manager
+		createInventoryController(machine);
+	
+		//Create a funds controller for all payment options except Paypal
+		createFundsController(machine, true, true, false, true);
+		
+		//Create a selection button controller
+		createButtonSelectionController(machine);
+		
+		//Create the logger
+		createLogger(machine, logFrequency);
+	
+		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(False)
+		return machine;
+	}
+
+	protected AbstractVendingMachine createCOMCMI()
+	{
+		machine = new VMRUS_COM_C_MI(locale, coinDenominations, billDenominations);		
+
+		//Create the inventory manager
+		createInventoryController(machine);
+		
+		//Create a funds controller for all payment options
+		createFundsController(machine, true, true, true, true);
+	
+		//Create Code selection controller
+		createCodeController(machine, 0);
+		
+		//Create the logger
+		createLogger(machine, logFrequency);
+		
+		//TODO: Displaycontroller(basic), keyboardController(Physical), internetController(True)
+		return machine;
+	}
+
+	protected AbstractVendingMachine createCOMCM()
+	{
+		machine = new VMRUS_COM_C_M(locale, coinDenominations, billDenominations);		
+
+		//Create the inventory manager
+		createInventoryController(machine);
+		
+		//Create a funds controller for all options except Paypal
+		createFundsController(machine, true, true, false, true);
+
+		//Create Code selection controller
+		createCodeController(machine, 0);
+		
+		//Create the logger
+		createLogger(machine, logFrequency);
+		
+		//TODO: Displaycontroller(basic), keyboardController(none), internetController(false)
+		return machine;
+	}
+	
+	protected AbstractVendingMachine createTOCPMI()
+	{
+		machine = new VMRUS_TOC_P_MI(locale, coinDenominations, billDenominations);		
+		
+		//Create the inventory manager
+		createInventoryController(machine);
+		
+		//Create a funds controller for all payment options
+		createFundsController(machine, true, true, true, true);
+	
+		//Create a selection button controller
+		createButtonSelectionController(machine);
+	
+		//Create the logger
+		createLogger(machine, logFrequency);
+		
+		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(True)
+		return machine;
+	}
+	
+	protected AbstractVendingMachine createTOCPI()
+	{
+		machine = new VMRUS_TOC_P_I(locale, coinDenominations, billDenominations);
+		
+		//Create the inventory manager
+		createInventoryController(machine);
+		
+		//Create a funds controller for all payment options except Paypal
+		createFundsController(machine, true, true, false, true);
+
+		//Create a selection button controller
+		createButtonSelectionController(machine);
+
+		//Create the logger
+		createLogger(machine, logFrequency);
+	
+		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(False)
+		return machine;		
+	}
+
+	protected AbstractVendingMachine createTOCCMI()
+	{
+		machine = new VMRUS_TOC_C_MI(locale, coinDenominations, billDenominations);		
+		
+		//Create the inventory manager
+		createInventoryController(machine);
+	
+		//Create a funds controller for all payment options
+		createFundsController(machine, true, true, true, true);
+	
+		//Create Code selection controller
+		createCodeController(machine, 0);
+	
+		//Create the logger
+		createLogger(machine, logFrequency);
+	
+		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(True)
+		return machine;
+	}
+
+	protected AbstractVendingMachine createTOCCp() throws NoSuchHardwareException
+	{
+		machine = new VMRUS_TOC_CP(locale, coinDenominations, billDenominations);		
+		
+		//Create the inventory manager
+		createInventoryController(machine);	
+		
+		//Create a funds controller for all payment options except Paypal
+		createFundsController(machine, true, true, false, true);
+	
+		//Create a selection button controller
+		createButtonSelectionController(machine);
+
+		//Create Code selection controller
+		createCodeController(machine, machine.getNumberOfSelectionButtons());
+
+		//Create the logger
+		createLogger(machine, logFrequency);
+
+		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(false)
+		return machine;
+	}
+
+	protected AbstractVendingMachine createTOCCpI() throws NoSuchHardwareException
+	{
+		machine = new VMRUS_TOC_CP_I(locale, coinDenominations, billDenominations);
+
+		//Create the inventory manager
+		createInventoryController(machine);
+		
+		//Create a funds controller for all payment options
+		createFundsController(machine, true, true, true, true);
+
+		//Create a selection button controller
+		createButtonSelectionController(machine);
+
+		//Create Code selection controller
+		createCodeController(machine, machine.getNumberOfSelectionButtons());
+
+		//Create the logger
+		createLogger(machine, logFrequency);
+
+		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(true)
+		return machine;		
+	}
 
 	/**
 	 * Parsing functions - simple parsing of integer and string arrays
@@ -871,6 +893,10 @@ public class Configuration {
 		String [] components = line.split(" ");
 
 		return stripFirst(components);
+	}
+	
+	protected String readString(String line) {
+		return readStringArray(line)[0];
 	}
 
 	protected int [] toIntArray(String [] strings) {

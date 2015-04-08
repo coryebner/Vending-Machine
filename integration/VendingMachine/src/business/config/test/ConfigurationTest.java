@@ -23,6 +23,7 @@ public class ConfigurationTest {
 	String [] names = new String[2];
 	int [] costs = new int [2];
 	int [] quantity = new int [2];
+	int [] ids = new int [] {0, 1};
 	ConfigurationPanelTransmitter test;
 	ConfigPanelLogic sub;
 
@@ -41,7 +42,7 @@ public class ConfigurationTest {
 		quantity [1] = 3;
 
 		display = new Display();
-		manager = new InventoryController(rack,rackcount,names,costs,quantity);
+		manager = new InventoryController(rack,rackcount,names,costs,quantity, ids);
 		test = new ConfigurationPanelTransmitter();
 		sub = new ConfigPanelLogic(display);
 		test.register(sub);
