@@ -1,12 +1,18 @@
 package business.selection_delivery;
 
-import business.stub.*;
+import java.security.InvalidParameterException;
+
+import business.funds.FundsController;
+import business.funds.TransactionReturnCode;
+import business.stub.DisplayController;
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
-import hardware.exceptions.EmptyException;
 import hardware.exceptions.DisabledException;
+import hardware.exceptions.EmptyException;
 import hardware.ui.PushButton;
 import hardware.ui.PushButtonListener;
+
+
 
 /**
  * @class PopSelectionController
@@ -28,9 +34,13 @@ public class ButtonSelectionController
 	 * Registers us with the PopVendingMachine's PushButtons to listen for
 	 *  pressed() events.
 	 */
-	public ButtonSelectionController(InventoryController inv, DisplayController disp, FundsController f, PushButton[] butts, int numButts)
+	public ButtonSelectionController(InventoryController inv, DisplayController disp, FundsController f, 
+			PushButton[] butts, int numButts)
 	{
 		super(inv, disp, f);
+		
+		if(butts == null)
+			throw new InvalidParameterException();
 		
 		buttons = butts;
 		numButtons= numButts;
@@ -65,33 +75,25 @@ public class ButtonSelectionController
 			notifyEmptySelection();
 			//display.setDisplay("The product selected is empty", 5000);
 			return;
-		}
+		}	
+			
+		TransactionReturnCode transInfo = funds.ConductTransaction(cost);
 		
-		boolean pass = funds.conductTransaction(cost);
-//		Rifffish logger = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
-//		Error e = logger.log(new Transaction(1, PaymentMethod.COIN, true));
-//			
-		if (pass)
-		{//If we can afford paying
-			dispense(index);
-
-			try
-			{//Attempt to eject the card after a transaction.
-				funds.getCardSlot().ejectCard();
-			}
-			catch (EmptyException | DisabledException e)
-			{
-				//Catch block. There might not have been a card.
-				//We don't care. We always try anyway. Does not matter if it does not work.
-			}
-		}
-		else
-		{//We cannot afford to pay
-			notifyInsufficientFunds();
-			/*display.setDisplay("Insufficient funds for product: $"
-														+ Double.toString( cost / 100)
-														+ " required"
-														, 4000);*/
+		switch(transInfo){
+			case SUCCESSFUL: 
+				dispense(index);
+				break;
+			case UNSUCCESSFUL:
+				break;
+			case INSUFFICIENTFUNDS:
+				notifyInsufficientFunds(cost);
+				break;
+			case DISABLED:				
+				break;
+			case TIMEOUT:		
+				break;
+			case CREDITCARDERROR:
+				break;
 		}
 	}
 	

@@ -1,12 +1,12 @@
 package business.selection_delivery;
 
+import java.security.InvalidParameterException;
+
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
 import hardware.exceptions.CapacityExceededException;
 import hardware.exceptions.DisabledException;
 import hardware.products.Product;
-import hardware.racks.AbstractRack;
-import hardware.racks.PopCanRack;
 import hardware.racks.ProductRack;
 import hardware.racks.ProductRackListener;
 
@@ -18,9 +18,13 @@ public class ProductRackController implements ProductRackListener
 	private int productCount;
 	private int cost;
 	private String name;
+	private int productID;
 	
-	public ProductRackController(ProductRack pr, String n, int c, int quantity)
+	public ProductRackController(ProductRack pr, String n, int c, int quantity, int pID)
 	{//Remember and register to the pop can rack that this manager is responsible for and get the values.
+		if(pr == null)
+			throw new InvalidParameterException();
+		
 		rack = pr;
 		pr.register(this);	//Register to appropriate pop can rack.
 		
@@ -28,6 +32,7 @@ public class ProductRackController implements ProductRackListener
 		
 		name = n;
 		cost = c;
+		productID = pID;
 	}
 	
 	//Default constructor
@@ -60,12 +65,10 @@ public class ProductRackController implements ProductRackListener
 	
 	public void refillQuantity(int quantity)
 	{
-		productCount = quantity;
-		
-		for (int j = 0 ; j <= quantity; j++ )
+		for (int j = 0 ; j < quantity; j++ )
 		{
 			try{
-			rack.addProduct(new Product());
+				rack.addProduct(new Product());
 			} catch (CapacityExceededException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -105,6 +108,11 @@ public class ProductRackController implements ProductRackListener
 		return name;
 	}
 	
+	public int getProductID()
+	{//Return the ID of a product.
+		return productID;
+	}
+	
 	public boolean isFull()
 	{
 		if (productCount == getCapacity())
@@ -133,6 +141,11 @@ public class ProductRackController implements ProductRackListener
 	public void changeName(String newName)
 	{//Change the name of the product.
 		name = newName;
+	}
+	
+	public void changeProductID(int newID)
+	{//Change the Id of a product.
+		productID = newID;
 	}
 	
 	

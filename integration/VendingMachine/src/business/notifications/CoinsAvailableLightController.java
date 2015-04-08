@@ -1,16 +1,11 @@
 package business.notifications;
 
-import hardware.AbstractHardware;
-import hardware.AbstractHardwareListener;
-import hardware.funds.Coin;
-import hardware.racks.CoinRack;
-import hardware.racks.CoinRackListener;
+
 import hardware.ui.IndicatorLight;
 
-import java.util.Iterator;
-import java.util.Vector;
 
 import business.funds.ExactChangeController;
+import business.funds.ExactChangeControllerListener;
 
 public class CoinsAvailableLightController implements ExactChangeControllerListener{
 	

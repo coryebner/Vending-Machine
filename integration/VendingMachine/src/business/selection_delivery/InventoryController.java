@@ -1,8 +1,8 @@
 package business.selection_delivery;
 
-import hardware.products.Product;
-import hardware.racks.ProductRack;
+import java.security.InvalidParameterException;
 
+import hardware.racks.ProductRack;
 import business.config.ConfigurationListener;
 
 public class InventoryController implements ConfigurationListener
@@ -10,14 +10,17 @@ public class InventoryController implements ConfigurationListener
 	public ProductRackController racks[];	//Connected rack managers
 	private int rackCount;
 	
-	public InventoryController(ProductRack[] pr, int numRacks, String[] names, int[] costs, int [] quantity)
+	public InventoryController(ProductRack[] pr, int numRacks, String[] names, int[] costs, int [] quantity, int [] productID)
 	{
+		if(pr == null || names == null || costs == null || quantity == null || productID == null)
+			throw new InvalidParameterException();
+		
 		rackCount = numRacks;
 	
 		racks = new ProductRackController[rackCount];
 		for (int i = 0; i < rackCount; i++)
 		{//Create managers for each of the racks
-			racks[i] = new ProductRackController(pr[i], names[i], costs[i], quantity[i]);
+			racks[i] = new ProductRackController(pr[i], names[i], costs[i], quantity[i] , productID[i]);
 		}
 		
 	}
@@ -83,6 +86,11 @@ public class InventoryController implements ConfigurationListener
 		return racks[index].getName();
 	}
 	
+	public int getProductID(int index)
+	{//Return the productID of the product for the rack at the index number.
+		return racks[index].getProductID();
+	}
+	
 	public boolean isFull(int index)
 	{//Return whether the rack at the index number is full.
 		return racks[index].isFull();
@@ -98,13 +106,18 @@ public class InventoryController implements ConfigurationListener
 	 * Setters
 	 */
 	public void changePrice(int index, int cost)
-	{//Return the product cost.
+	{//Change the price of a product.
 		racks[index].changePrice(cost);
 	}
 	
 	public void changeName(int index, String newName)
 	{//Change the name of the product for rack at index.
 		racks[index].changeName(newName);
+	}
+	
+	public void changeProductID(int index, int productID)
+	{//Change the ID of a product.
+		racks[index].changeProductID(productID);
 	}
 	
 	/**
