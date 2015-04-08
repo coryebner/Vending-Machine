@@ -2,6 +2,8 @@ package business.selection_delivery;
 
 import java.security.InvalidParameterException;
 
+import rifffish.Rifffish;
+import rifffish.Stockout;
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
 import hardware.exceptions.CapacityExceededException;
@@ -19,6 +21,7 @@ public class ProductRackController implements ProductRackListener
 	private int cost;
 	private String name;
 	private int productID;
+	private Rifffish logger;
 	
 	public ProductRackController(ProductRack pr, String n, int c, int quantity, int pID)
 	{//Remember and register to the pop can rack that this manager is responsible for and get the values.
@@ -33,6 +36,7 @@ public class ProductRackController implements ProductRackListener
 		name = n;
 		cost = c;
 		productID = pID;
+		logger = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
 	}
 	
 	//Default constructor
@@ -136,16 +140,31 @@ public class ProductRackController implements ProductRackListener
 	public void changePrice(int newCost)
 	{//Return the product cost.
 		cost = newCost;
+		
+		//Update Database
+		rifffish.Product p = logger.getProduct(productID);
+		p.setPrice(newCost);
+		logger.updateProduct(p);
 	}
 	
 	public void changeName(String newName)
 	{//Change the name of the product.
 		name = newName;
+		
+		//Update Database
+		rifffish.Product p = logger.getProduct(productID);
+		p.setName(name);
+		logger.updateProduct(p);
 	}
 	
 	public void changeProductID(int newID)
 	{//Change the Id of a product.
 		productID = newID;
+		
+		//Update Database
+		rifffish.Product p = logger.getProduct(productID);
+		p.setId(newID);
+		logger.updateProduct(p);
 	}
 	
 	
@@ -158,12 +177,19 @@ public class ProductRackController implements ProductRackListener
 	{//Add a pop to the count
 		if (productCount < rack.getMaxCapacity())
 			productCount++;
+		
+		//Update Database
+		rifffish.Product p = logger.getProduct(productID);
+		p.setCurrentStockLevel(productCount);
+		logger.updateProduct(p);
 	}
 
 	@Override
 	public void productEmpty(ProductRack arg0)
 	{//Rack is empty. Just set it to zero.
 		productCount = 0;
+		
+		logger.log(new Stockout(productID, Rifffish.StockoutTypes.OUTOFSTOCK));
 	}
 
 	@Override

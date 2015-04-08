@@ -34,10 +34,9 @@ public class ButtonSelectionController
 	 * Registers us with the PopVendingMachine's PushButtons to listen for
 	 *  pressed() events.
 	 */
-	public ButtonSelectionController(InventoryController inv, DisplayController disp, FundsController f, 
-			PushButton[] butts, int numButts)
+	public ButtonSelectionController(InventoryController inv, FundsController f, PushButton[] butts, int numButts)
 	{
-		super(inv, disp, f);
+		super(inv, f);
 		
 		if(butts == null)
 			throw new InvalidParameterException();
@@ -62,6 +61,7 @@ public class ButtonSelectionController
 	{
 		int index = getIndex(button);
 		int cost = inventory.getCost(index);
+		int id = inventory.getProductID(index);
 
 		if (index == -1)
 		{//Index of -1 is thrown by getIndex as an error.
@@ -77,7 +77,7 @@ public class ButtonSelectionController
 			return;
 		}	
 			
-		TransactionReturnCode transInfo = funds.ConductTransaction(cost);
+		TransactionReturnCode transInfo = funds.ConductTransaction(cost,id);
 		
 		switch(transInfo){
 			case SUCCESSFUL: 

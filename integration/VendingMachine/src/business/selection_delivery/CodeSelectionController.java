@@ -30,9 +30,9 @@ public class CodeSelectionController
 	 * Registers us with the CandyVendingMachine's PushButtonInterpreter to
 	 *  listen for codeEntered() events.
 	 */
-	public CodeSelectionController(InventoryController inv, DisplayController disp, FundsController f, int off)
+	public CodeSelectionController(InventoryController inv, FundsController f, int off)
 	{
-		super(inv, disp, f);
+		super(inv, f);
 		
 		offset = off;
 	}
@@ -49,22 +49,23 @@ public class CodeSelectionController
 	public void codeEntered(String code, PushButtonCodeInterpreter arg1) {
 		int index = productIndex(code, offset);
 		int cost = inventory.getCost(index);
+		int id = inventory.getProductID(index);
 
 		if (index == -1)
 		{//Index of -1 is thrown by getIndex as an error.
 			notifyInvalidSelection();
-			display.setDisplay("Error: Invalid code", 5000);
+			//display.setDisplay("Error: Invalid code", 5000);
 			return;
 		}
 
 		if (inventory.isEmpty(index))
 		{//We are out of stock. Output message and leave function.
 			notifyEmptySelection();
-			display.setDisplay("The product selected is empty", 5000);
+			//display.setDisplay("The product selected is empty", 5000);
 			return;
 		}
 
-		TransactionReturnCode transInfo = funds.ConductTransaction(cost);
+		TransactionReturnCode transInfo = funds.ConductTransaction(cost, id);
 
 		switch(transInfo){
 		case SUCCESSFUL: 

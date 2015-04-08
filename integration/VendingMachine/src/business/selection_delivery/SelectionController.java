@@ -3,7 +3,6 @@ package business.selection_delivery;
 import java.security.InvalidParameterException;
 
 import business.funds.FundsController;
-import business.stub.DisplayController;
 import hardware.exceptions.CapacityExceededException;
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.EmptyException;
@@ -20,16 +19,14 @@ public abstract class SelectionController extends
 	AbstractController<SelectionControllerListener> {
 
 	protected InventoryController inventory;
-	protected DisplayController display;
 	protected FundsController funds;
 	
-	public SelectionController(InventoryController inv, DisplayController disp, FundsController f)
+	public SelectionController(InventoryController inv, FundsController f)
 	{
-		if(inv == null || disp == null || f == null)
+		if(inv == null || f == null)
 			throw new InvalidParameterException();
 		
 		inventory = inv;
-		display = disp;
 		funds = f;
 	}
 	
@@ -44,10 +41,11 @@ public abstract class SelectionController extends
 			inventory.getRack(index).dispenseProduct();
 		}
 		catch (CapacityExceededException e) {
-			display.setDisplay("The coin receptacles are full", 5000);
+			//Amy: We should never be writing directly to display
+			//display.setDisplay("The coin receptacles are full", 5000);
 		}
 		catch (DisabledException e) {
-			display.setDisplay("Product dispensing functions are disabled", 5000);	
+			//display.setDisplay("Product dispensing functions are disabled", 5000);	
 		}
 		catch (EmptyException e) {/*
 			It shouldn't ever have to reach this catch block.
