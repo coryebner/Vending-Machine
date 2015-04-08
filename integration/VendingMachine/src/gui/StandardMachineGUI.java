@@ -455,6 +455,8 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
             machine.getExactChangeLight().register(this);
             machine.getDisplay().register(this);
             machine.getDeliveryChute().register(this);
+//            TODO register the GUI to listen to the Internet light
+//            machine.getInternetLight().register(this);
             if(popBtns == true){
                 for(int i = 0; i< machine.getNumberOfProductRacks(); i++){
                 	machine.getProductRack(i).register(this);
@@ -972,8 +974,10 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
         try {
             if(light == machine.getExactChangeLight()){
                 lblExactChange.setForeground(Color.BLACK);
-            }else{
+            }else if(light == machine.getOutOfOrderLight()){
                 lblOutOfOrder.setForeground(Color.BLACK);
+            }else{
+            	lblInternetLight.setForeground(Color.BLACK);
             }
         } catch (NoSuchHardwareException e) {			
             e.printStackTrace();
@@ -986,8 +990,10 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
         try {
             if(light == machine.getExactChangeLight()){
                 lblExactChange.setForeground(Color.RED);
-            }else{
+            }else if(light == machine.getOutOfOrderLight()){
                 lblOutOfOrder.setForeground(Color.LIGHT_GRAY);
+            }else{
+            	lblInternetLight.setForeground(Color.LIGHT_GRAY);
             }
         } catch (NoSuchHardwareException e) {
             e.printStackTrace();
