@@ -1,12 +1,13 @@
 package business.selection_delivery;
 
+import java.security.InvalidParameterException;
+
+import business.funds.FundsController;
 import hardware.exceptions.CapacityExceededException;
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.EmptyException;
 
 
-import business.stub.DisplayController;
-import business.stub.FundsController;
 /*
  * The Selection Controller is the abstract shell for the CodeSelectionController
  * and ButtonSelectionController
@@ -18,13 +19,14 @@ public abstract class SelectionController extends
 	AbstractController<SelectionControllerListener> {
 
 	protected InventoryController inventory;
-	protected DisplayController display;
 	protected FundsController funds;
 	
-	public SelectionController(InventoryController inv, DisplayController disp, FundsController f)
+	public SelectionController(InventoryController inv, FundsController f)
 	{
+		if(inv == null || f == null)
+			throw new InvalidParameterException();
+		
 		inventory = inv;
-		display = disp;
 		funds = f;
 	}
 	
@@ -39,10 +41,11 @@ public abstract class SelectionController extends
 			inventory.getRack(index).dispenseProduct();
 		}
 		catch (CapacityExceededException e) {
-			display.setDisplay("The coin receptacles are full", 5000);
+			//Amy: We should never be writing directly to display
+			//display.setDisplay("The coin receptacles are full", 5000);
 		}
 		catch (DisabledException e) {
-			display.setDisplay("Product dispensing functions are disabled", 5000);	
+			//display.setDisplay("Product dispensing functions are disabled", 5000);	
 		}
 		catch (EmptyException e) {/*
 			It shouldn't ever have to reach this catch block.
@@ -63,7 +66,7 @@ public abstract class SelectionController extends
 	{
 		Class<?>[] parameterTypes =
 		        new Class<?>[] { };
-		Object[] args = new Object[] { this };
+		Object[] args = new Object[] {};
 		notifyListeners(SelectionControllerListener.class, "emptySelection", parameterTypes, args);
 	}
 	
@@ -71,15 +74,15 @@ public abstract class SelectionController extends
 	{
 		Class<?>[] parameterTypes =
 		        new Class<?>[] { };
-		Object[] args = new Object[] { this };
+		Object[] args = new Object[] {};
 		notifyListeners(SelectionControllerListener.class, "invalidSelection", parameterTypes, args);
 	}
 	
-	protected void notifyInsufficientFunds()
+	protected void notifyInsufficientFunds(int fundsRequired)
 	{
 		Class<?>[] parameterTypes =
-		        new Class<?>[] { };
-		Object[] args = new Object[] { this };
+		        new Class<?>[] {int.class};
+		Object[] args = new Object[] {fundsRequired};
 		notifyListeners(SelectionControllerListener.class, "insufficientFunds", parameterTypes, args);
 	}
 }

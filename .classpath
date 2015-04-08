@@ -38,6 +38,5 @@
 	<classpathentry kind="lib" path="integration/VendingMachine/lib/paypal/logback-core-1.1.2.jar"/>
 	<classpathentry kind="lib" path="integration/VendingMachine/lib/paypal/rest-api-sdk-1.2.0.jar"/>
 	<classpathentry kind="lib" path="integration/VendingMachine/lib/paypal/slf4j.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin1"/>
 </classpath>
