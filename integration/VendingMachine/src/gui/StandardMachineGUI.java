@@ -16,6 +16,7 @@ import java.awt.GridLayout;
 
 import javax.swing.JButton;
 
+import java.awt.ComponentOrientation;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -85,6 +86,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 	private JPanel pnlPopButtons;
 	private JPanel pnlCandyButtons;
 	private JPanel pnlCandyLetterButtons;
+	private JPanel pnlTouchScreen;
 	private JPanel pnlMoneySelection;
 	private JPanel pnlCoins;
 	private JPanel pnlCoinBtns;
@@ -310,6 +312,15 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 		JPanel pnlNumberCandyButtons = new JPanel();
 		pnlCandyButtons.add(pnlNumberCandyButtons);
 		pnlNumberCandyButtons.setLayout(new GridLayout(0, 3, 0, 0));
+		
+		pnlTouchScreen = new JPanel();
+		pnlTouchScreen.setLayout(new GridLayout());
+		pnlTouchScreen.setLayout(new GridLayout(3, 4, 5, 10));
+		pnlTouchScreen.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		pnlTouchScreen.setBorder(new LineBorder(new Color(0, 0, 0)));
+		if (hasTouchScreen) {
+			pnlMachineButtons.add(pnlTouchScreen);
+		}
 
 		JButton btn1 = new JButton("1");
 		candyNumberButtons.add(btn1);
