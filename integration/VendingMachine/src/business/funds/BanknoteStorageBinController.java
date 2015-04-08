@@ -64,20 +64,6 @@ public class BanknoteStorageBinController implements BanknoteReceptacleListener 
 	}
 
 	@Override
-	public void BanknoteRemoved(BanknoteReceptacle receptacle) {
-		full = false;
-		quantity = 0;
-	}
-
-	@Override
-	public void BanknotesFull(BanknoteReceptacle receptacle) {
-		full = true;
-		// Turn on the out-of-order light if it exists.
-		if (outOfOrderLight != null)
-			outOfOrderLight.activate();
-	}
-
-	@Override
 	public void enabled(BanknoteReceptacle receptacle) {
 	}
 
@@ -92,4 +78,21 @@ public class BanknoteStorageBinController implements BanknoteReceptacleListener 
 	@Override
 	public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {
 	}
+//////////////////
+
+	@Override
+	public void banknoteRemoved(BanknoteReceptacle receptacle) {
+		full = false;
+		quantity = 0;	
+	}
+
+	@Override
+	public void banknoteFull(BanknoteReceptacle receptacle) {
+		full = true;
+		// Turn on the out-of-order light if it exists.
+		if (outOfOrderLight != null)
+			outOfOrderLight.activate();
+	}
+
+
 }

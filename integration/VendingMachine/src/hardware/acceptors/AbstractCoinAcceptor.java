@@ -17,6 +17,7 @@ public interface AbstractCoinAcceptor extends IAcceptor {
      * @throws CapacityExceededException
      *             If the device does not have enough space for the coin.
      * @throws DisabledException 
+     * 				if the device is currently disabled.
      */
     void acceptCoin(Coin coin) throws CapacityExceededException, DisabledException;
 

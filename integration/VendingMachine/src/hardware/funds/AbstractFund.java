@@ -11,6 +11,8 @@ public abstract class AbstractFund implements IFund {
     /**
      * Creates an fund with the specified value in cents.
      * 
+     * @param value
+     * 			   the initial value of the fund in cents
      * @throws SimulationException
      *             if the value is not positive.
      */
@@ -37,10 +39,18 @@ public abstract class AbstractFund implements IFund {
 		return this.locale;
 	}
 
-	public int compareTo(IFund coin) {
-		int ret = Integer.compare(this.getValue(), coin.getValue());
+	/**
+	 * Comparison of one fund to another first compares value in cents and then locale.
+	 * 
+	 * @param fund
+	 * 		   the fund to be compared
+	 * @return
+	 * 		   true if both value in cents and locale of the fund parameter match the current fund object
+	 */
+	public int compareTo(IFund fund) {
+		int ret = Integer.compare(this.getValue(), fund.getValue());
 		if (ret == 0) {
-			return this.locale.equals(coin.getLocale()) ? 0 : ret;
+			return this.locale.equals(fund.getLocale()) ? 0 : ret;
 		}
 		return ret;
 	}

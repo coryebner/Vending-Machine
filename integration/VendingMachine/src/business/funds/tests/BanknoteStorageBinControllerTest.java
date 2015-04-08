@@ -71,7 +71,7 @@ public class BanknoteStorageBinControllerTest {
 		controller.banknoteAdded(null, new Banknote(5));
 		controller.banknoteAdded(null, new Banknote(5));
 		controller.banknoteAdded(null, new Banknote(5));		
-		controller.BanknoteRemoved(null);
+		controller.banknoteRemoved(null);
 		assertEquals(0, controller.getQuantity());
 	}
 

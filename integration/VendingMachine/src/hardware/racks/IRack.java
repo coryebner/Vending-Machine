@@ -3,13 +3,11 @@ package hardware.racks;
 import hardware.channels.IChannel;
 import hardware.products.IRackable;
 
+
 /**
- * IRack <interface>
- * 
- * @synopsis
- * 		Base rack API 
+ * Base rack
  *
- * @param <T>
+ * @param <T> The associated sink of the rack 
  */
 public interface IRack<T extends IChannel<?>> {
 

@@ -6,13 +6,13 @@ import java.util.Locale;
 
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
-import hardware.Hardware;
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.EmptyException;
 import hardware.funds.Card;
 import hardware.funds.Card.CardType;
 import hardware.funds.CardSlot;
 import hardware.funds.CardSlotNotEmptyException;
+import hardware.simulators.VMRUS_COM_C_M;
 
 import org.junit.After;
 import org.junit.Before;
@@ -25,6 +25,7 @@ import business.funds.Currency;
 
 
 public class PrepaidControllerTest {
+	int[] bankNoteValues = {5,10,20};
 	int[] coinValues = {5, 10, 25, 100, 200};
 	int[] popCosts = {100, 200, 150, 250, 175};
 	String[] popNames = {"Coke", "Pepsi", "7up", "Sprite", "Crush"};
@@ -34,7 +35,7 @@ public class PrepaidControllerTest {
 	Card prepaidCard;
 	PrepaidController pc;
 	Currency curr;
-	Hardware hw;
+	VMRUS_COM_C_M hw;
 	AbstractHardware<AbstractHardwareListener> abstractHW;
 
 	class abHardwareStub extends AbstractHardware {
@@ -44,7 +45,7 @@ public class PrepaidControllerTest {
 	@Before
 	public void setUp() throws Exception {
 		curr = new Currency(Locale.CANADA);
-		hw = new Hardware(coinValues, popCosts, popNames);
+		hw = new VMRUS_COM_C_M(Locale.CANADA, coinValues, bankNoteValues);
 		abstractHW = new abHardwareStub();
 		pc = new PrepaidController(curr);
 		cs = hw.getCardSlot();

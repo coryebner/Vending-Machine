@@ -113,7 +113,7 @@ public class BanknoteControllerTest {
 		banknoteReceptacle = new BanknoteReceptacle(2);
 		banknoteController.banknoteAdded(banknoteReceptacle, banknoteTwenty);
 		banknoteController.banknoteAdded(banknoteReceptacle, banknoteTen);
-		banknoteController.BanknoteRemoved(banknoteReceptacle);
+		banknoteController.banknoteRemoved(banknoteReceptacle);
 		assertEquals(0, banknoteController.getAvailableBalance());
 	}
 	

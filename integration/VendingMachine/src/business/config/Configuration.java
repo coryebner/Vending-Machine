@@ -8,12 +8,33 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import hardware.AbstractVendingMachine;
-import hardware.VendingMachine1;
+import business.funds.Funds;
+import business.selection_delivery.ButtonSelectionController;
+import business.selection_delivery.CodeSelectionController;
+import business.selection_delivery.InventoryController;
+import business.stub.DisplayController;
+import business.stub.FundsController;
+import hardware.simulators.AbstractVendingMachine;
+import hardware.simulators.VMRUS_COM_C_M;
+import hardware.simulators.VMRUS_COM_C_MI;
+import hardware.simulators.VMRUS_COM_P_M;
+import hardware.simulators.VMRUS_COM_P_MI;
+import hardware.simulators.VMRUS_SFF_P_C;
+import hardware.simulators.VMRUS_SFF_P_CI;
+import hardware.simulators.VMRUS_SFF_P_PI;
+import hardware.simulators.VMRUS_TOC_CP;
+import hardware.simulators.VMRUS_TOC_CP_I;
+import hardware.simulators.VMRUS_TOC_C_MI;
+import hardware.simulators.VMRUS_TOC_P_I;
+import hardware.simulators.VMRUS_TOC_P_MI;
+import hardware.exceptions.NoSuchHardwareException;
+import hardware.racks.ProductRack;
+import hardware.test.VendingMachine1Test;
+import hardware.ui.PushButton;
+import hardware.ui.PushButtonCodeInterpreter;
 
 public class Configuration {
-	static class InventoryManager {}
-	static class FundsController {}
+	
 	
 	// Configuration data loaded from/written to the configuration file
 	protected String type;
@@ -34,11 +55,20 @@ public class Configuration {
 	
 	// Controllers we require data from when saving
 	// eg. FundsController needs to tell us how many coins in each rack
-	protected FundsController funds;
-	protected InventoryManager inventory;
 	
+	protected FundsController funds;
+	protected Funds fundsController;
+	//protected InventoryManager inventory;
+	protected InventoryController inventoryController; // Maria: added as InventoryManager was commented.
+	protected CodeSelectionController codeSelectionController; // Maria: Added CodeSelectionController object
+	protected DisplayController displayController; // Maria: added for the displayController
+	protected ButtonSelectionController buttonSelectionController;
+	
+
 	public Configuration()
-	{}
+	{
+
+	}
 
 	/**
 	 * Loads a vending machine from a given configuration file.
@@ -95,7 +125,7 @@ public class Configuration {
 		throws ConfigurationException
 	{
 		if (type.equals("VMRUS-SFF-P/C")) {
-			machine = createSFFPC();
+			//machine = createSFFPC();
 		}
 //		else if (type.equals("VMRUS-SFF-P/CI")) {
 //			machine = createSFFPCI();
@@ -133,6 +163,30 @@ public class Configuration {
 		else {
 			throw new ConfigurationException("Invalid machine type!");
 		}
+		
+	/**
+	 * This will take the values of all prices racks and quantities from the controllers
+	 * and update the Configuration values
+	 */
+	}
+	protected void updateValues(){
+		int rackcount=inventoryController.getRackCount();
+		for(int i=0;i<rackcount;i++){
+				names[i]=inventoryController.getName(i);
+			}
+		for(int i=0;i<rackcount;i++){
+				quantities[i]=inventoryController.getCount(i);
+		}
+		for(int i=0;i<rackcount;i++){
+				prices[i]=inventoryController.getCost(i);
+		}
+		int CRackcount=fundsController.getCoinRackControllers().length;
+		for(int i=0;i<CRackcount;i++){
+				coinRackQuantities[i]=fundsController.getCoinRackControllers()[i].getQuantity();
+		}
+		
+		//TODO Anish: Working on this
+		//Add funds controller stuff here
 	}
 	
 	/**
@@ -178,6 +232,8 @@ public class Configuration {
 			}
 		}
 		
+		locale = new Locale("en", "CA"); // TODO: Read locale properly from config file
+		
 		if (type == null
 			|| names == null
 			|| prices == null
@@ -191,9 +247,60 @@ public class Configuration {
 		}
 	}
 	
-	protected void writeConfigFile(BufferedWriter output)
+	protected void writeConfigFile(BufferedWriter output) throws IOException
 	{
-		// Do basically the opposite of what we do in readConfigFile()
+		String namestring,pricesstring,Qstring,CRQString,CSQString,BRQString,BSQString,LQString,LocaleString;
+		namestring="names";
+		for(int i=0;i<names.length;i++){
+			namestring+=" "+names[i];
+		}
+		pricesstring="prices";
+		for(int i=0;i<prices.length;i++){
+			pricesstring+=" "+Integer.toString(prices[i]);
+		}
+		Qstring="quantities";
+		for(int i=0;i<quantities.length;i++){
+			Qstring+=" "+Integer.toString(quantities[i]);
+		}
+		CRQString="coinracks";
+		for(int i=0;i<coinRackQuantities.length;i++){
+			CRQString+=" "+Integer.toString(coinRackQuantities[i]);
+		}
+		CSQString="coinstorage";
+		for(int i=0;i<coinStorageQuantities.length;i++){
+			CRQString+=" "+Integer.toString(coinStorageQuantities[i]);
+		}
+		BRQString="billracks";
+		for(int i=0;i<billRackQuantities.length;i++){
+			BRQString+=" "+Integer.toString(billRackQuantities[i]);
+		}
+		BSQString="billstorage";
+		for(int i=0;i<billStorageQuantities.length;i++){
+			BRQString+=" "+Integer.toString(billStorageQuantities[i]);
+		}
+		LQString="logfrequency "+logFrequency;
+		LocaleString="locale "+locale.getCountry();
+		output.write(type);
+		output.newLine();
+		output.write(namestring);
+		output.newLine();
+		output.write(pricesstring);
+		output.newLine();
+		output.write(Qstring);
+		output.newLine();
+		output.write(CRQString);
+		output.newLine();
+		output.write(CSQString);
+		output.newLine();
+		output.write(BRQString);
+		output.newLine();
+		output.write(BSQString);
+		output.newLine();
+		output.write(LQString);
+		output.newLine();
+		output.write(LocaleString);
+		//TODO Anish:Working on this
+		//Do basically the opposite of what we do in readConfigFile()
 	}
 	
 	protected void loadMachine()
@@ -216,17 +323,35 @@ public class Configuration {
 									     boolean card,
 									     boolean paypal)
 	{
-		// funds = new FundsController(locale, coin, card, paypal);
-		// machine.getCoinSlot().register(funds.getCoinController());
-		// machine.getCardSlot().register...
+		//funds = new FundsController(locale, coin, card, paypal);
+		//machine.getCoinSlot().register(funds.getCoinController());
+		//machine.getCardSlot().register...
 	}
 	
 	/**
 	 * Create a ButtonController, and register it with all the buttons it needs
 	 *  to be registered with.
 	 */
-	protected void createButtonController()
+	protected void createButtonSelectionController()
 	{
+		
+		try {
+		int numberOfButtons = this.machine.getNumberOfSelectionButtons();
+		PushButton [] pushButtons = new PushButton[numberOfButtons];
+		for(int i = 0; i < numberOfButtons; i++){
+			
+				pushButtons[i] = this.machine.getSelectionButton(i);
+		}
+		//Creation of controller
+		this.buttonSelectionController = new ButtonSelectionController(this.inventoryController,this.displayController,this.funds,pushButtons,numberOfButtons);
+		
+		// Registering the buttons from hardware with the buttonSelectionController
+		for(int i=0; i < numberOfButtons; i++){
+			pushButtons[i].register(buttonSelectionController);
+		}
+			} catch (NoSuchHardwareException e) {
+				e.printStackTrace();
+			}
 		
 	}
 	
@@ -240,6 +365,22 @@ public class Configuration {
 	protected void createCodeController(int offset)
 	{
 		
+		
+		try {
+			// Creating the code selection controller.
+			this.codeSelectionController = new CodeSelectionController(
+					this.inventoryController, 
+					this.displayController, 
+					this.funds, 
+					this.machine.getPushButtonCodeInterpreter(), 
+					offset);
+			
+			//Registering the PushButtonCodeInterpreter with the codeSelectionController
+			this.machine.getPushButtonCodeInterpreter().register(codeSelectionController);
+		} catch (NoSuchHardwareException e) {
+			
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -248,8 +389,23 @@ public class Configuration {
 	 *  as the 'inventory' field of this class, so we have access to it again
 	 *  when we want to save.
 	 */
-	protected void createInventoryManager()
+	protected void createInventoryController()
 	{
+		
+		try {
+			int numberOfRacks = this.machine.getNumberOfProductRacks();
+			// An array of ProductRack is created and used to build an InventoryController object
+			ProductRack racks[] = new ProductRack[numberOfRacks];
+			for(int i=0; i < this.machine.getNumberOfProductRacks(); i++){
+				racks[i] = new ProductRack(this.machine.getProductRack(i).getMaxCapacity());
+			}
+			
+			//Inventory controller creation with information known from machine.
+			this.inventoryController = new InventoryController(racks,numberOfRacks,this.names,this.prices,this.quantities);
+			
+		} catch (NoSuchHardwareException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -287,64 +443,260 @@ public class Configuration {
 	 *   - createInventoryController()
 	 *  in the correct order. Note that this does NOT include createLogger()
 	 */
+//	protected AbstractVendingMachine createSFFPC()
+//	{
+//		return new VendingMachine1(new int [] {5, 10, 25, 100, 200}, prices, names);
+//	}
+	
+	//These are all marked deprecated, and the first few have inconsistent constructors. This is intentional, of course, but I made the constructors as close to
+	//finished as was reasonable. I had to do instantiate the machine object here, instead of waiting for createMachine() to resolve, because the controllers need
+	//the machine to be instantiated to work properly.
+	
 	protected AbstractVendingMachine createSFFPC()
 	{
-		return new VendingMachine1(new int [] {5, 10, 25, 100, 200}, prices, names);
+		machine = new VMRUS_SFF_P_C(locale, new int [] {5, 10, 25, 100, 200});
+		
+		//Create a funds controller for coins only
+		createFundsController(true, false, false);
+		
+		//Create a selection button controller
+		createButtonSelectionController();
+		
+		//Create the inventory manager
+		createInventoryController();
+		
+		//Create the logger
+		createLogger(logFrequency);
+		
+		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(False),
+		
+		return machine;
 	}
 //
 //	protected AbstractVendingMachine createSFFPCI()
 //	{
-//		return new AbstractVendingMachine();	
+//		machine = new VMRUS_SFF_P_CI(new int [] {5, 10, 25, 100, 200}, popCosts, popNames);	
+//		
+//		//Create a funds controller for coins only
+//		createFundsController(true, false, false);
+//		
+//		//Create a selection button controller
+//		createButtonSelectionController();
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//		
+//		//Create the logger
+//		createLogger(logFrequency);
+//		
+//		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(True)
+//		return machine;
 //	}
 //
 //	protected AbstractVendingMachine createSFFPPI()
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_SFF_P_PI(popCosts, popNames);
+//	
+//		//Create a funds controller for prepaid cards only
+//		createFundsController(false, true, false);
+//		
+//		//Create a selection button controller
+//		createButtonSelectionController();
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//		
+//		//Create the logger
+//		createLogger(logFrequency);
+//		
+//		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(True)
+//		return machine;
 //	}
 //
 //	protected AbstractVendingMachine createCOMPMI()
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_COM_P_MI(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
+//	
+//		//Create a funds controller for all payment options
+//		createFundsController(true, true, true);
+//		
+//		//Create a selection button controller
+//		createButtonSelectionController();
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//		
+//		//Create the logger
+//		createLogger(logFrequency);
+//		
+//		//TODO: Displaycontroller(Basic), keyboardController(Physical), internetController(True)
+//		return machine;
 //	}
 //
 //	protected AbstractVendingMachine createCOMPM()
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_COM_P_M(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
+//	
+//		//Create a funds controller for all payment options except Paypal
+//		createFundsController(true, true, false);
+//		
+//		//Create a selection button controller
+//		createButtonSelectionController();
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//		
+//		//Create the logger
+//		createLogger(logFrequency);
+//	
+//		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(False)
+//		return machine;
 //	}
 //
 //	protected AbstractVendingMachine createCOMCMI()
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_COM_C_MI(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
+//	
+//		//Create a funds controller for all payment options
+//		createFundsController(true, true, true);
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//	
+//		//Create Code selection controller
+//		createCodeController(0);
+//		
+//		//Create the logger
+//		createLogger(logFrequency);
+//		
+//		//TODO: Displaycontroller(basic), keyboardController(Physical), internetController(True)
+//		return machine;
 //	}
 //
 //	protected AbstractVendingMachine createCOMCM()
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_COM_C_M(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
+//	
+//		//Create a funds controller for all options except Paypal
+//		createFundsController(true, true, false);
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//
+//		//Create Code selection controller
+//		createCodeController(0);
+//		
+//		//Create the logger
+//		createLogger(logFrequency);
+//		
+//		//TODO: Displaycontroller(basic), keyboardController(none), internetController(false)
+//		return machine;
 //	}
 //	
 //	protected AbstractVendingMachine createTOCPMI()
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_TOC_P_MI(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
+//	
+//		//Create a funds controller for all payment options
+//		createFundsController(true, true, true);
+//	
+//		//Create a selection button controller
+//		createButtonSelectionController();
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//	
+//		//Create the logger
+//		createLogger(logFrequency);
+//		
+//		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(True)
+//		return machine;
 //	}
 //	
 //	protected AbstractVendingMachine createTOCPI()
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_TOC_P_I(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});
+//	
+//		//Create a funds controller for all payment options except Paypal
+//		createFundsController(true, true, false);
+//
+//		//Create a selection button controller
+//		createButtonSelectionController();
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//
+//		//Create the logger
+//		createLogger(logFrequency);
+//	
+//		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(False)
+//		return machine;		
 //	}
 //
 //	protected AbstractVendingMachine createTOCCMI()
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_TOC_C_MI(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
+//	
+//		//Create a funds controller for all payment options
+//		createFundsController(true, true, true);
+//		
+//		//Create the inventory manager
+//		createInventoryController();
+//	
+//		//Create Code selection controller
+//		createCodeController(0);
+//	
+//		//Create the logger
+//		createLogger(logFrequency);
+//	
+//		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(True)
+//		return machine;
 //	}
 //
-//	protected AbstractVendingMachine createTOCCp()
+//	protected AbstractVendingMachine createTOCCp() throws NoSuchHardwareException
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_TOC_CP(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});		
+//	
+//		//Create a funds controller for all payment options except Paypal
+//		createFundsController(true, true, false);
+//	
+//		//Create a selection button controller
+//		createButtonSelectionController();
+//	
+//		//Create the inventory manager
+//		createInventoryController();
+//
+//		//Create Code selection controller
+//		createCodeController(this.machine.getNumberOfSelectionButtons());
+//
+//		//Create the logger
+//		createLogger(logFrequency);
+//
+//		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(false)
+//		return machine;
 //	}
 //
-//	protected AbstractVendingMachine createTOCCpI()
+//	protected AbstractVendingMachine createTOCCpI() throws NoSuchHardwareException
 //	{
-//		return new AbstractVendingMachine();		
+//		machine = new VMRUS_TOC_CP_I(new int [] {5, 10, 25, 100, 200}, new int [] {500, 1000, 2000, 5000, 10000});
+//	
+//		//Create a funds controller for all payment options
+//		createFundsController(true, true, true);
+//
+//		//Create a selection button controller
+//		createButtonSelectionController();
+//
+//		//Create the inventory manager
+//		createInventoryController();
+//
+//		//Create Code selection controller
+//		createCodeController(this.machine.getNumberOfSelectionButtons());
+//
+//		//Create the logger
+//		createLogger(logFrequency);
+//
+//		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(true)
+//		return machine;		
 //	}
 	
 	/**
@@ -397,4 +749,15 @@ public class Configuration {
 		
 		return toIntArray(strings);
 	}
+	
+	// Getters and setters
+	
+	public ButtonSelectionController getButtonSelectionController() {
+		return buttonSelectionController;
+	}
+	
+	public void setButtonSelectionController(ButtonSelectionController controller){
+		this.buttonSelectionController = controller;
+	}
+	
 }

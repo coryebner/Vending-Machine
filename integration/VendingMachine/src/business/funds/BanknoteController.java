@@ -66,17 +66,6 @@ public class BanknoteController implements BanknoteReceptacleListener,
 	}
 
 	@Override
-	public void BanknoteRemoved(BanknoteReceptacle receptacle) {
-		availableBalance = 0;
-	}
-
-	@Override
-	public void BanknotesFull(BanknoteReceptacle receptacle) {
-		// TODO: Returns the bank notes in the receptacle.
-		// receptacle.returnBanknotes();
-	}
-
-	@Override
 	public void enabled(BanknoteReceptacle receptacle) {
 	}
 
@@ -98,16 +87,31 @@ public class BanknoteController implements BanknoteReceptacleListener,
 		if (banknoteStorageController.isFull()) {
 			return;
 		}
-		// try {
-		// banknoteRecepticle.returnBanknotes();
-		// } catch (CapacityExceededException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// } catch (DisabledException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
+		 try {
+			 banknoteReceptacle.returnBanknotes();
+		 } catch (CapacityExceededException e) {
+		 // TODO Auto-generated catch block
+		 e.printStackTrace();
+		 } catch (DisabledException e) {
+		 // TODO Auto-generated catch block
+		 e.printStackTrace();
+		 }
 
+	}
+
+	@Override
+	public void banknoteRemoved(BanknoteReceptacle receptacle) {
+		availableBalance = 0;
+	}
+
+	@Override
+	public void banknoteFull(BanknoteReceptacle receptacle) {
+		try {
+			receptacle.returnBanknotes();
+		} catch (CapacityExceededException | DisabledException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
