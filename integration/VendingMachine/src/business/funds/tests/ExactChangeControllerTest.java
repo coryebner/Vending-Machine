@@ -2,7 +2,6 @@ package business.funds.tests;
 
 import static org.junit.Assert.*;
 
-import java.lang.reflect.Field;
 import java.util.Vector;
 
 import hardware.racks.CoinRack;
@@ -13,9 +12,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.jmock.Mockery;
-import org.jmock.Expectations;
-import org.jmock.integration.junit4.JUnit4Mockery;
+
 
 import business.funds.CoinRackController;
 import business.funds.ExactChangeController;
@@ -67,7 +64,7 @@ public class ExactChangeControllerTest {
 	    	crc[i] = new CoinRackController(cr[i], rackDenomination[i], amount[i]);	
 	    }
 	    
-		ExactChangeController exactChangeController = new ExactChangeController(ic, crc);
+		ExactChangeController exactChangeController = new ExactChangeController(ic, crc, productRacks, cr);
 		
 		Vector<Integer> returnValues = exactChangeController.getReturnValues();
 		Vector<Integer> expectedReturnValues = new Vector<Integer>();
@@ -113,7 +110,7 @@ public class ExactChangeControllerTest {
 	    	crc[i] = new CoinRackController(cr[i], rackDenomination[i], amount[i]);	
 	    }
 	    
-		ExactChangeController exactChangeController = new ExactChangeController(ic, crc);
+		ExactChangeController exactChangeController = new ExactChangeController(ic, crc, productRacks, cr);
 		
 		
 		Vector<Integer> returnValues = exactChangeController.getReturnValues();
@@ -156,7 +153,7 @@ public class ExactChangeControllerTest {
 	    	crc[i] = new CoinRackController(cr[i], rackDenomination[i], amount[i]);	
 	    }
 	    
-		ExactChangeController exactChangeController = new ExactChangeController(ic, crc);
+		ExactChangeController exactChangeController = new ExactChangeController(ic, crc, productRacks, cr);
 		
 		
 		Vector<Integer> returnValues = exactChangeController.getReturnValues();

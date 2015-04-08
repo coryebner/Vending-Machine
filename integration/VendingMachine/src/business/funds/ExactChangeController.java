@@ -6,18 +6,18 @@ import java.util.HashMap;
 import java.util.Stack;
 import java.util.Vector;
 
-import com.sun.jndi.url.corbaname.corbanameURLContextFactory;
 
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
-import hardware.exceptions.EmptyException;
+import hardware.funds.Coin;
 import hardware.products.Product;
+import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
 import hardware.racks.ProductRackListener;
 import business.config.ConfigurationListener;
 import business.selection_delivery.InventoryController;
 
-public class ExactChangeController implements ConfigurationListener, ProductRackListener {
+public class ExactChangeController implements ConfigurationListener, ProductRackListener, hardware.racks.CoinRackListener {
 
 	private class TrackedProduct{
 		public boolean isEmpty;
@@ -33,8 +33,20 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 	private CoinRackController coinRacks[];
 	private Vector<Integer> returnValues;
 	
+	/**
+	 * 
+	 * @param InventoryController ic
+	 * 			- the inventory controller associated with the vending machine
+	 * @param CoinRackController coinRacks
+	 * 			- the coin rack controllers associated with the vending machine
+	 * @param ProductRack productRacks
+	 * 			- the hardware product racks associated with the vending machine
+	 * @param CoinRack hardwareCoinRacks
+	 * 			- the hardware coin racks associated with the vending machine
+	 */
 	//ASSUME COIN RACKS ARE IN ASSENDING ORDER
-	public ExactChangeController(InventoryController ic, CoinRackController coinRacks[]){
+	public ExactChangeController(InventoryController ic, CoinRackController coinRacks[],
+			ProductRack[] productRacks, CoinRack[] hardwareCoinRacks){
 		if(ic == null){
 			throw new InvalidParameterException();
 		}
@@ -52,6 +64,13 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 			products[i].price = ic.getCost(i);
 			products[i].rackIndex = i;
 			rackToProductMap.put(ic.getRack(i), products[i]);
+		}
+		
+		for(int i = 0; i < productRacks.length; i++) {
+			productRacks[i].register(this);
+		}
+		for(int i = 0; i < hardwareCoinRacks.length; i++) {
+			hardwareCoinRacks[i].register(this);
 		}
 		calculateChangeToMake();
 		recalculateExactChange();
@@ -152,7 +171,6 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 	
 	@Override 
 	public void productRemoved(ProductRack productRack, Product product) {
-		recalculateExactChange();
 	}
 	
 	
@@ -194,11 +212,29 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 			l.exactChangeUnavailable(this);
 	}
 	
-	// DO NOT NEED TO LISTEN TO THESE :D
 	@Override public void nameChanged(int index, String newName) {}
 	@Override public void enabled(AbstractHardware<AbstractHardwareListener> hardware) {}
 	@Override public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {}
 	
 	@Override public void productFull(ProductRack productRack) {}
+
+	@Override
+	public void coinsFull(CoinRack rack) {		
+	}
+
+	@Override
+	public void coinsEmpty(CoinRack rack) {		
+	}
+
+	@Override
+	public void coinAdded(CoinRack rack, Coin coin) {	
+		recalculateExactChange();
+
+	}
+
+	@Override
+	public void coinRemoved(CoinRack rack, Coin coin) {		
+		recalculateExactChange();
+	}
 
 }
