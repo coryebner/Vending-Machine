@@ -1,5 +1,8 @@
 package business.selection_delivery.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -21,17 +24,16 @@ import hardware.ui.PushButton;
 public class ButtonSelectionControllerTest {
 
 	private ButtonSelectionController buttonSelectionController;
-	
+
 	//All the Controllers needed for ButtonSelectionController
 	private  InventoryController inventoryController;
 	private  DisplayController displayController;
-	private  FundsController funds;
+	private  FundsController fundsController;
 	private  PushButton[] pushButtonArray;
 	private  int numberOfButtons;
-	
+
 	//Listener
-	private PushButton button;
-	private PushButtonListenerStub listener;
+	private PushButtonListenerStub pushButtonListenerStub;
 
 	//Fields for InventoryController
 	private int rackcount = 6;
@@ -48,30 +50,31 @@ public class ButtonSelectionControllerTest {
 	private int[] coinRackDenominations;
 	private int[] coinRackQuantities;
 	private List<PaymentMethods> availablePaymentMethods;
-	
-	
-	
-	
+
+
+
 	@BeforeClass
 	public static void BeforeRoutine() {
 
-		
+
 	}
 
 	@Before
 	public void setup() {
-		
 
-		//Simple Testing of a single Button Press
-		button = new PushButton();
-		listener = new PushButtonListenerStub();
-		button.register(listener);
-		listener.init();
-		
+
+		pushButtonListenerStub = new PushButtonListenerStub();
+
+		rackcount = 6;
+		numberOfButtons = 6;
+
 		//Setting up the push buttons
 		pushButtonArray = new PushButton[rackcount];
 		for(int i = 0; i < rackcount; i++ )
+		{
 			pushButtonArray[i] = new PushButton();
+			pushButtonArray[i].register(pushButtonListenerStub);
+		}
 
 		//Setting up the inventory manager
 		rack = new ProductRack[rackcount];
@@ -79,29 +82,28 @@ public class ButtonSelectionControllerTest {
 		costs = new int[rackcount];
 		quantity = new int[rackcount];
 		productID = new int[rackcount];
-		
+
 		for(int i = 0; i < rackcount; i++)
 			rack[i] = new ProductRack(10);
-		
+
 		for(int i = 0; i < rackcount; i++)
 			names[i] = "Product" + i;
-		
+
 		for(int i = 0; i < rackcount; i++)
 			costs[i] = 100;
-		
+
 		for(int i = 0; i < rackcount; i++)
 			quantity[i] = 2;
-		
+
 		for(int i = 0; i < rackcount; i++)
 			productID[i] = i + 1;
-		
+
 		inventoryController = new InventoryController(rack, rackcount, names, costs, quantity, productID);
 
-		
+		//Setting up the display controller
 		displayController = new DisplayController();
-		
+
 		//Setting up the funds manager
-		locale = new Locale("CANADA");
 		bestEffortChange = true;
 		CoinRack[] coinRacks = new CoinRack[5];
 		coinRacks[0] = new CoinRack(100);
@@ -115,49 +117,101 @@ public class ButtonSelectionControllerTest {
 		coinRackDenominations[2] = 25;
 		coinRackDenominations[3] = 100;
 		coinRackDenominations[4] = 200;
-		
+
 		coinRackQuantities = new int[5];
 		coinRackQuantities[0] = 0;
 		coinRackQuantities[1] = 0;
 		coinRackQuantities[2] = 0;
 		coinRackQuantities[3] = 0;
 		coinRackQuantities[4] = 0;
-		
+
 		availablePaymentMethods = new ArrayList<PaymentMethods>();
 		availablePaymentMethods.add(PaymentMethods.COINS);
-		
+
 		System.out.println(coinRackDenominations);
 		System.out.println(coinRackQuantities);
 		System.out.println(availablePaymentMethods);
 		System.out.println(inventoryController);
 		System.out.println(bestEffortChange);
 		System.out.println(coinRacks);
-		
-		funds = new FundsController(Locale.CANADA, bestEffortChange, coinRacks, coinRackDenominations, coinRackQuantities, availablePaymentMethods, inventoryController);
-		
-		buttonSelectionController = new ButtonSelectionController(inventoryController, displayController, funds, pushButtonArray, numberOfButtons);
-		
 
-		listener.init();
+		fundsController = new FundsController(Locale.CANADA, bestEffortChange, coinRacks, coinRackDenominations, coinRackQuantities, availablePaymentMethods, inventoryController);
+		
+		buttonSelectionController = new ButtonSelectionController(inventoryController, fundsController, pushButtonArray, numberOfButtons);
+
+
+		pushButtonListenerStub.init();
 	}
 
 	@After
 	public void teardown() {
-		button.deregisterAll();
-		button = null;
-		listener = null;
 		
+		//Teardown the buttons and listeners
+		for(int i = 0; i < rackcount; i++ )
+		{
+			pushButtonArray[i].deregisterAll();
+			pushButtonArray[i] = null;
+		}
+
+		pushButtonListenerStub = null;
+
+		//Teardown the inventory manager
 		rack = null;
+		names = null;
+		costs = null;
 		quantity = null;
-		productID = null;
+		productID= null;
 		inventoryController = null;
+
+		//Teardown the FundsController
+		bestEffortChange = false;
+		coinRacks = null;
+		coinRackDenominations = null;
+		coinRackQuantities = null;
+		availablePaymentMethods = null;
+		fundsController = null;
+
+		buttonSelectionController = null;
 	}
 
 	@Test
-	public void testPressPushButton() {
-		listener.expect("pressed");
+	public void testPressPushButtonLowerBound() {
+		pushButtonListenerStub.expect("pressed");
 		pushButtonArray[0].press();
-		listener.assertProtocol();
+		pushButtonListenerStub.assertProtocol();
+	}
+	
+	@Test
+	public void testPressPushButtonUpperBound() {
+		pushButtonListenerStub.expect("pressed");
+		pushButtonArray[5].press();
+		pushButtonListenerStub.assertProtocol();
+	}
+	
+	@Test
+	public void testConstructorForPressPushButtonController() {
+		
+		assertFalse( buttonSelectionController == null);
+	}
+	
+	@Test
+	public void testGetIndexForButtonLowerBound() {
+		
+		assertEquals("Index should have value", 0, buttonSelectionController.getIndex(pushButtonArray[0]));
+	}
+	
+	@Test
+	public void testGetIndexForButtonUpperBound() {
+		
+		assertEquals("Index should have value", 5, buttonSelectionController.getIndex(pushButtonArray[5]));
+	}
+	
+	@Test
+	public void testGetIndexForButtonInvalidIndex() {
+		
+		numberOfButtons = 3;
+		buttonSelectionController = new ButtonSelectionController(inventoryController, fundsController, pushButtonArray, numberOfButtons);
+		assertEquals("Index should have value", -1, buttonSelectionController.getIndex(pushButtonArray[5]));
 	}
 
 }

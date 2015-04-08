@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import business.stub.DisplayController;
-import business.funds.Funds;
+import business.funds.FundsController;
 import business.selection_delivery.CodeSelectionController;
 import business.selection_delivery.InventoryController;
 import hardware.racks.ProductRack;
@@ -23,7 +23,7 @@ public class CodeSelectionControllerTest {
 	public CodeSelectionController test;
 	public InventoryController inv;
 	public DisplayController disp = new DisplayController();
-	public Funds fun;
+	public FundsController fun;
 	int off = 0;
 	List<PaymentMethods> payments = new ArrayList<PaymentMethods>();
 	
@@ -71,8 +71,8 @@ public class CodeSelectionControllerTest {
 		productID[2] = 666;
 		
 		inv = new InventoryController(rack,rackcount,names,costs,quantity,productID);
-		fun = new Funds(Locale.US, true, crack, cdenom, cquant, payments, inv);
-		test = new CodeSelectionController(inv, disp, fun, off);
+		fun = new FundsController(Locale.US, true, crack, cdenom, cquant, payments, inv);
+		test = new CodeSelectionController(inv, fun, off);
 	}
 
 	@Test
