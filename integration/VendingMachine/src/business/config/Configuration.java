@@ -19,7 +19,7 @@ import business.funds.PaymentMethods;
 import business.selection_delivery.ButtonSelectionController;
 import business.selection_delivery.CodeSelectionController;
 import business.selection_delivery.InventoryController;
-import business.stub.DisplayController;
+import business.notifications.DisplayController;
 import hardware.simulators.AbstractVendingMachine;
 import hardware.simulators.VMRUS_COM_C_M;
 import hardware.simulators.VMRUS_COM_C_MI;

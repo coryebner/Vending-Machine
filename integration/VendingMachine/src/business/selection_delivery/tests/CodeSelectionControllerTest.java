@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import business.stub.DisplayController;
+import business.notifications.DisplayController;
 import business.funds.Funds;
 import business.selection_delivery.CodeSelectionController;
 import business.selection_delivery.InventoryController;
