@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import SDK.logger.Logger;
 import SDK.rifffish.Rifffish;
 import business.funds.CoinRackController;
 import business.funds.FundsController;
@@ -74,6 +75,7 @@ public class Configuration {
 	protected CodeSelectionController codeSelectionController; // Maria: Added CodeSelectionController object
 	protected DisplayController displayController; // Maria: added for the displayController
 	protected ButtonSelectionController buttonSelectionController;
+	protected Logger logger;
 
 
 	public Configuration()
@@ -560,7 +562,18 @@ public class Configuration {
 	 */
 	protected void createLogger(AbstractVendingMachine m, String frequency)
 	{
-
+		Rifffish r = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
+		if(frequency.equalsIgnoreCase("instant")){
+			this.logger= new Logger()
+			
+		} else if(frequency.equalsIgnoreCase("batch")){
+			
+		}else if(frequency.equalsIgnoreCase("daily")){
+			
+		}else if(frequency.equalsIgnoreCase("offline")){
+			// I guess it's the offline
+		}
+		this.logger= new Logger();
 	}
 
 	/**
