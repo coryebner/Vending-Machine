@@ -3,6 +3,7 @@ package business.config.test;
 import static org.junit.Assert.*;
 import hardware.racks.ProductRack;
 import hardware.ui.ConfigurationPanelTransmitter;
+import hardware.ui.Display;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,7 @@ public class ConfigurationTest {
 
 	public InventoryController manager;
 	public ConfigurationListener config;
+	public Display display;
 	public ProductRack[] rack = new ProductRack[2];
 	public int rackcount;
 	String [] names = new String[2];
@@ -38,9 +40,10 @@ public class ConfigurationTest {
 		quantity[0] = 4;
 		quantity [1] = 3;
 
+		display = new Display();
 		manager = new InventoryController(rack,rackcount,names,costs,quantity);
 		test = new ConfigurationPanelTransmitter();
-		sub = new ConfigPanelLogic();
+		sub = new ConfigPanelLogic(display);
 		test.register(sub);
 		sub.register(manager);
 	}
@@ -48,13 +51,13 @@ public class ConfigurationTest {
 	@Test
 	public void changePriceTest() {
 		
-		test.enterCommand("newPrice");
 		test.enterCommand("1");
-		test.enterCommand("ENTER");
+		test.enterCommand("1");
+		test.enterCommand("\n");
 		test.enterCommand("1");
 		test.enterCommand("2");
 		test.enterCommand("5");
-		test.enterCommand("ENTER");
+		test.enterCommand("\n");
 
 
 		assertEquals("New cost: " + manager.getCost(1), 125, manager.getCost(1));
@@ -64,16 +67,87 @@ public class ConfigurationTest {
 	@Test
 	public void changeNameTest() {
 
-		test.enterCommand("newName");
+		test.enterCommand("2");
 		test.enterCommand("0");
-		test.enterCommand("ENTER");
+		test.enterCommand("\n");
 		test.enterCommand("C");
 		test.enterCommand("o");
 		test.enterCommand("l");
 		test.enterCommand("a");
-		test.enterCommand("ENTER");
+		test.enterCommand("\n");
 		
 		assertEquals("New name: " + manager.getName(0), "Cola", manager.getName(0));
 		
+	}
+	
+	@Test
+	public void correctInputNameTest() {
+
+		test.enterCommand("2");
+		test.enterCommand("0");
+		test.enterCommand("\n");
+		test.enterCommand("C");
+		test.enterCommand("p");
+		test.enterCommand("_correct");
+		test.enterCommand("o");
+		test.enterCommand("l");
+		test.enterCommand("a");
+		test.enterCommand("\n");
+		
+		assertEquals("New name: " + manager.getName(0), "Cola", manager.getName(0));
+		
+	}
+	
+	@Test
+	public void correctInputPriceTest() {
+
+		test.enterCommand("1");
+		test.enterCommand("1");
+		test.enterCommand("\n");
+		test.enterCommand("1");
+		test.enterCommand("6");
+		test.enterCommand("_correct");
+		test.enterCommand("2");
+		test.enterCommand("5");
+		test.enterCommand("\n");
+
+
+		assertEquals("New cost: " + manager.getCost(1), 125, manager.getCost(1));
+
+	}
+	
+	@Test
+	public void correctInputNameIndexTest() {
+
+		test.enterCommand("2");
+		test.enterCommand("5");
+		test.enterCommand("_correct");
+		test.enterCommand("0");
+		test.enterCommand("\n");
+		test.enterCommand("C");
+		test.enterCommand("o");
+		test.enterCommand("l");
+		test.enterCommand("a");
+		test.enterCommand("\n");
+		
+		assertEquals("New name: " + manager.getName(0), "Cola", manager.getName(0));
+		
+	}
+	
+	@Test
+	public void correctInputPriceIndexTest() {
+
+		test.enterCommand("1");
+		test.enterCommand("5");
+		test.enterCommand("_correct");
+		test.enterCommand("1");
+		test.enterCommand("\n");
+		test.enterCommand("1");
+		test.enterCommand("2");
+		test.enterCommand("5");
+		test.enterCommand("\n");
+
+		assertEquals("New cost: " + manager.getCost(1), 125, manager.getCost(1));
+
 	}
 }
