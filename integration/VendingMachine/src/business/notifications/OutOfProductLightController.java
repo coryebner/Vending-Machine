@@ -2,6 +2,7 @@ package business.notifications;
 
 import java.util.HashMap;
 
+import business.selection_delivery.InventoryController;
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
 import hardware.products.Product;
@@ -13,8 +14,18 @@ public class OutOfProductLightController implements ProductRackListener{
 
 	HashMap<ProductRack,IndicatorLight> rackLightMap;
 
-	
-	public OutOfProductLightController(IndicatorLight outOfProductLight[], ProductRack productRacks[]) {
+	/**
+	 * @param IndicatorLight outOfProductLight[]
+	 *            - an array of all the product lights
+	 *            - each indicator light is associated with the productRacks[] at the same index.
+	 * @param ProductRack productRacks[]
+	 * 			  - an array of all the product racks
+	 * 			  - each product rack is associated with the outOfProductLight[] at the same index.
+	 * @param InventoryController inventory
+	 * 			  - the inventory controller associated to the vending machine
+	 */
+	public OutOfProductLightController(IndicatorLight outOfProductLight[], ProductRack productRacks[],
+			InventoryController inventory) {
 		if(productRacks.length != outOfProductLight.length)
 			throw new IllegalArgumentException();
 		
@@ -23,7 +34,12 @@ public class OutOfProductLightController implements ProductRackListener{
 			rackLightMap.put(productRacks[i], outOfProductLight[i]);
 		}
 		
-		//TODO determine initial state
+		for(int i = 0; i < inventory.getRackCount(); i++) {
+			if(inventory.isEmpty(i))
+				outOfProductLight[i].deactivate();
+			else
+				outOfProductLight[i].activate();
+		}
 	}
 
 	@Override

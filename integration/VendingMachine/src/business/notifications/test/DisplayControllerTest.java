@@ -1,38 +1,48 @@
 package business.notifications.test;
 
-import static org.junit.Assert.*;
-import hardware.funds.Coin;
-import hardware.funds.CoinReceptacle;
-import hardware.ui.Display;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Scanner;
 
-import org.junit.Test;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
+import javax.swing.Timer;
 
-import business.funds.CoinsController;
-import business.notifications.DisplayController;
-import business.selection_delivery.SelectionController;
+
+/*
+ * quick manual test to check if the timer works correctly
+ */
 
 public class DisplayControllerTest {
-
-	@Test
-	public void test() {
-	    Mockery context = new Mockery();
-        final CoinsController coinsController = context.mock(CoinsController.class);
-        final SelectionController selectionController = context.mock(SelectionController.class);
-        CoinReceptacle receptacle = new CoinReceptacle(100);
-        Display display = new Display();
-        DisplayController displayController = new DisplayController(display, selectionController, coinsController, receptacle);
-        context.checking(new Expectations() {{
-            oneOf (coinsController).getAvailableBalance(); returnValue(100);
-        }});
-        
-        displayController.coinAdded(receptacle, new Coin(0));
-        
-	    assertEquals("100", displayController.getMessage());
-        
-        
+    
+	Timer eventTimer = null;
+	
+	public DisplayControllerTest() {
+		eventTimer = new Timer(5000, listener);
+	}
+	
+	ActionListener listener = new ActionListener(){
+		  public void actionPerformed(ActionEvent event){
+			 System.out.println("end");
+			 eventTimer.stop();
+		  }
+	};
+	
+	public void SimulateTimer() {
+		int time = 0;
+	    Scanner sc = new Scanner(System.in);
+		while(time >= 0) {
+		    time = sc.nextInt();
+			eventTimer.setInitialDelay(time);
+			eventTimer.restart();
+			System.out.println("start");
+			eventTimer.start();
+		}
 	}
 
+	public static void main(String[] args) {
+		DisplayControllerTest dc = new DisplayControllerTest();
+		dc.SimulateTimer();
+	}
+
+
+	
 }
