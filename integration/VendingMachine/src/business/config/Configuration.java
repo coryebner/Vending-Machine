@@ -685,7 +685,7 @@ public class Configuration {
 	 * @param frequency				logging frequency
 	 * 								  (one of either "instant", "batch" or "daily")
 	 */
-	protected void createLogger(AbstractVendingMachine m, String frequency)
+	protected void createLogger(AbstractVendingMachine m, String frequency) throws ConfigurationException
 	{
 		String r = "rsh_3wL4MyhWW4z3kfjoYfyN0gtt";
 		if(frequency.equalsIgnoreCase("instant")){
@@ -706,7 +706,9 @@ public class Configuration {
 			this.logger= new Logger();
 			machineID = getMachineID(false);
 		}
-		
+		else {
+			throw new ConfigurationException("Invalid logging frequency " + frequency + " - must be one of instant, batch, daily or offline");
+		}
 	}
 
 	/**
