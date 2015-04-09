@@ -777,6 +777,9 @@ public class Configuration {
 	protected void controllerCreator(AbstractVendingMachine m)
 		throws ConfigurationException
 	{
+		//Create the logger
+		createLogger(m, logFrequency);
+
 		//Create the inventory manager
 		createInventoryController(m);
 		
@@ -786,11 +789,7 @@ public class Configuration {
 		//Create a selection button controller
 		createButtonSelectionController(m);
 		
-		createDisplayController(m, buttonSelectionController, funds.getCoinsController());
-
-		//Create the logger
-		createLogger(m, logFrequency);
-		
+		createDisplayController(m, buttonSelectionController, funds.getCoinsController());		
 	}
 
 	protected AbstractVendingMachine createSFFPCI()

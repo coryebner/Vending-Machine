@@ -13,8 +13,8 @@ public class EndToEndTest_SFFPC extends EndToEndTest {
 	}
 	
 	@Test
-	public void testPurchaseProductWithCoin() throws Exception {
-		super.testPurchaseProductWithCoin();
+	public void testPurchaseProductCoin() throws Exception {
+		super.testPurchaseProductCoin();
 	}
 	
 	@Test
@@ -25,5 +25,10 @@ public class EndToEndTest_SFFPC extends EndToEndTest {
 	@Test
 	public void testMakeChangeFromCoin() throws Exception {
 		super.testMakeChangeFromCoin();
+	}
+	
+	@Test
+	public void testMakeChangeFromPriorPurchase() throws Exception {
+		super.testMakeChangeFromPriorPurchase();
 	}
 }
