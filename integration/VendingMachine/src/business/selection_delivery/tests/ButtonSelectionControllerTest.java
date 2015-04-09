@@ -84,7 +84,7 @@ public class ButtonSelectionControllerTest {
 	@Before
 	public void setup() {
 		
-		Machine newMachine = r.createMachine(new Machine("Test Machine", "vmrs_sff_p_c", "in_service", "CAD"));
+		//Machine newMachine = r.createMachine(new Machine("Test Machine", "vmrs_sff_p_c", "in_service", "CAD"));
 
 		pushButtonListenerStub = new PushButtonListenerStub();
 
