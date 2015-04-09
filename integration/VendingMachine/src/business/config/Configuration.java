@@ -211,39 +211,39 @@ public class Configuration {
 			//machine = createSFFPC();
 			machine = createSFFPC(machine);
 		}
-		//		else if (type.equals("VMRUS-SFF-P/CI")) {
-		//			machine = createSFFPCI();
-		//		}
-		//		else if (type.equals("VMRUS-SFF-P/PI")) {
-		//			machine = createSFFPPI();
-		//		}
-		//		else if (type.equals("VMRUS-COM-P/MI")) {
-		//			machine = createCOMPMI();
-		//		}
-		//		else if (type.equals("VMRUS-COM-P/M")) {
-		//			machine = createCOMPM();
-		//		}
-		//		else if (type.equals("VMRUS-COM-C/MI")) {
-		//			machine = createCOMCMI();
-		//		}
-		//		else if (type.equals("VMRUS-COM-C/M")) {
-		//			machine = createCOMCM();
-		//		}
-		//		else if (type.equals("VMRUS-TOC-P/MI")) {
-		//			machine = createTOCPMI();
-		//		}
-		//		else if (type.equals("VMRUS-TOC-P/I")) {
-		//			machine = createTOCPI();
-		//		}
-		//		else if (type.equals("VMRUS-TOC-C/MI")) {
-		//			machine = createTOCCMI();
-		//		}
-		//		else if (type.equals("VMRUS-TOC-C+")) {
-		//			machine = createTOCCp();
-		//		}
-		//		else if (type.equals("VMRUS-TOC-C+/I")) {
-		//			machine = createTOCCpI();
-		//		}
+		else if (type.equals("VMRUS-SFF-P/CI")) {
+			machine = createSFFPCI();
+		}
+		else if (type.equals("VMRUS-SFF-P/PI")) {
+			machine = createSFFPPI();
+		}
+		else if (type.equals("VMRUS-COM-P/MI")) {
+			machine = createCOMPMI();
+		}
+		else if (type.equals("VMRUS-COM-P/M")) {
+			machine = createCOMPM();
+		}
+		else if (type.equals("VMRUS-COM-C/MI")) {
+			machine = createCOMCMI();
+		}
+		else if (type.equals("VMRUS-COM-C/M")) {
+			machine = createCOMCM();
+		}
+		else if (type.equals("VMRUS-TOC-P/MI")) {
+			machine = createTOCPMI();
+		}
+		else if (type.equals("VMRUS-TOC-P/I")) {
+			machine = createTOCPI();
+		}
+		else if (type.equals("VMRUS-TOC-C/MI")) {
+			machine = createTOCCMI();
+		}
+		else if (type.equals("VMRUS-TOC-C+")) {
+			machine = createTOCCp();
+		}
+		else if (type.equals("VMRUS-TOC-C+/I")) {
+			machine = createTOCCpI();
+		}
 		else {
 			throw new ConfigurationException("Invalid machine type!");
 		}
@@ -499,8 +499,7 @@ public class Configuration {
 			if(bill){
 				availablePaymentMethods.add(PaymentMethods.BILLS);
 			}
-			FundsController fundsNew =
-					new FundsController(this.locale,
+			funds =	new FundsController(this.locale,
 										availablePaymentMethods,
 										
 										bestEffortChange,
@@ -525,16 +524,16 @@ public class Configuration {
 										
 										m.getOutOfOrderLight(),
 										inventoryController,
-										logger;
+										logger);
 			
-			m.getCoinReceptacle().register(fundsNew.getCoinsController());
-			m.getBanknoteReceptacle().register(fundsNew.getBankNoteController());
+			m.getCoinReceptacle().register(funds.getCoinsController());
+			m.getBanknoteReceptacle().register(funds.getBankNoteController());
 			// Register the coinracks
-			CoinRackController[] crControllers = fundsNew.getCoinRackControllers();
+			CoinRackController[] crControllers = funds.getCoinRackControllers();
 			for(int i =0; i < m.getNumberOfCoinRacks(); i++){
 				m.getCoinRack(i).register(crControllers[i]);
 			}
-			m.getCardSlot().register(fundsNew.getPrepaidController());
+			m.getCardSlot().register(funds.getPrepaidController());
 		} catch (NoSuchHardwareException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -897,7 +896,7 @@ public class Configuration {
 		return machine;
 	}
 
-	protected AbstractVendingMachine createTOCCp() throws NoSuchHardwareException
+	protected AbstractVendingMachine createTOCCp() throws ConfigurationException
 	{
 		machine = new VMRUS_TOC_CP(locale, coinDenominations, billDenominations);		
 		
@@ -911,7 +910,12 @@ public class Configuration {
 		createButtonSelectionController(machine);
 
 		//Create Code selection controller
-		createCodeController(machine, machine.getNumberOfSelectionButtons());
+		try {
+			createCodeController(machine, machine.getNumberOfSelectionButtons());
+		}
+		catch (NoSuchHardwareException e) {
+			throw new ConfigurationException("Unable to get selection buttons from machine!");
+		}
 
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -920,7 +924,7 @@ public class Configuration {
 		return machine;
 	}
 
-	protected AbstractVendingMachine createTOCCpI() throws NoSuchHardwareException
+	protected AbstractVendingMachine createTOCCpI() throws ConfigurationException
 	{
 		machine = new VMRUS_TOC_CP_I(locale, coinDenominations, billDenominations);
 
@@ -933,8 +937,13 @@ public class Configuration {
 		//Create a selection button controller
 		createButtonSelectionController(machine);
 
-		//Create Code selection controller
-		createCodeController(machine, machine.getNumberOfSelectionButtons());
+		try {
+			//Create Code selection controller
+			createCodeController(machine, machine.getNumberOfSelectionButtons());
+		}
+		catch (NoSuchHardwareException e) {
+			throw new ConfigurationException("Unable to get selection buttons from machine!");
+		}
 
 		//Create the logger
 		createLogger(machine, logFrequency);
