@@ -229,19 +229,19 @@ public class VMConfigGUI {
 		ActionListener reportConfigListener = new ReportConfigListener();
 		//Remote reporting configurations
 		JRadioButton reportConfig1 = new JRadioButton("Every transaction");
-		reportConfig1.setActionCommand("Every transaction");
+		reportConfig1.setActionCommand("instant");
 		reportConfig1.setBounds(6, 6, 172, 23);
 		reportConfig1.addActionListener(reportConfigListener);
 		panel_2.add(reportConfig1);
 		
 		JRadioButton reportConfig2 = new JRadioButton("Every 100 transactions");
-		reportConfig2.setActionCommand("Every 100 transactions");
+		reportConfig2.setActionCommand("batch");
 		reportConfig2.setBounds(6, 30, 178, 23);
 		reportConfig2.addActionListener(reportConfigListener);
 		panel_2.add(reportConfig2);
 		
 		JRadioButton reportConfig3 = new JRadioButton("Daily at 4:00am");
-		reportConfig3.setActionCommand("Daily at 4:00am");
+		reportConfig3.setActionCommand("daily");
 		reportConfig3.setBounds(6, 54, 172, 23);
 		reportConfig3.addActionListener(reportConfigListener);
 		panel_2.add(reportConfig3);
