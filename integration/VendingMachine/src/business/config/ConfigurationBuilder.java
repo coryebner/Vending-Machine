@@ -32,7 +32,7 @@ class ConfigurationBuilder {
 			|| type == Configuration.COMCMI)
 		{
 			return type + "\n"
-				+ "names Coke Pepsi 7-up Sprite Fanta Crush Mug Barqs DietCoke DietPepsi Lemonade Water"
+				+ "names Coke Pepsi 7-up Sprite Fanta Crush Mug Barqs DietCoke DietPepsi Lemonade Water "
 				+ "pop13 pop14 pop15 pop16 pop17 pop18 pop19 pop20 pop21 pop22 pop23 pop24\n"
 				+ "prices 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100\n"
 				+ "quantities 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20\n"
