@@ -9,7 +9,7 @@ import javax.swing.border.LineBorder;
 
 import java.awt.BorderLayout;
 
-import org.eclipse.wb.swing.FocusTraversalOnArray;
+//import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import business.config.Configuration;
 import business.config.ConfigurationException;

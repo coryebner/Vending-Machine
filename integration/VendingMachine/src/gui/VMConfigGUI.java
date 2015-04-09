@@ -25,14 +25,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.util.ArrayList;
-import java.util.List;
 
-import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
-
-import org.junit.experimental.theories.FromDataPoints;
-
-import com.paypal.api.payments.FmfDetails;
 
 import business.config.Configuration;
 import business.config.ConfigurationException;
@@ -301,8 +295,7 @@ public class VMConfigGUI {
 					}
 					ArrayList<Boolean> parts = null;
 					parts= config.parts();
-				
-					ArrayList<Boolean> parts = config.parts();
+
 					VendingMachineGUI window = new StandardMachineGUI(machine,parts);
 					window.getMainFrame().setVisible(true);
 					frmVendingMachinesRUS.setVisible(false);
