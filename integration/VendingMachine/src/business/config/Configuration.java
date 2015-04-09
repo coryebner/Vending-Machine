@@ -20,6 +20,7 @@ import SDK.logger.LogDate.LoggingType;
 import SDK.logger.Logger;
 import SDK.rifffish.Rifffish;
 import business.funds.CoinRackController;
+import business.funds.CoinsController;
 import business.funds.FundsController;
 import business.funds.PaymentMethods;
 import business.notifications.DisplayController;
@@ -43,6 +44,7 @@ import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
 import hardware.simulators.*;
 import hardware.exceptions.NoSuchHardwareException;
+import hardware.funds.CoinReceptacle;
 import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
 import hardware.ui.ConfigurationPanelTransmitter;
@@ -82,6 +84,7 @@ public class Configuration {
 	protected ButtonSelectionController buttonSelectionController;
 	protected Logger logger;
 	protected ConfigPanelLogic configLogic;
+	private DisplayController display;
 
 	public static final String SFFPC = "VMRUS-SFF-P/C";
 	public static final String SFFPCI = "VMRUS-SFF-P/CI";
@@ -700,6 +703,19 @@ public class Configuration {
 			e.printStackTrace();
 		}
 	}
+	
+	protected void createDisplayController(AbstractVendingMachine m,
+										   ButtonSelectionController buttons,
+										   CoinsController coins) 
+		throws ConfigurationException
+	{
+		try {
+			display = new DisplayController(m.getDisplay(), buttons, coins, m.getCoinReceptacle());
+		}
+		catch (NoSuchHardwareException e) {
+			throw new ConfigurationException("Unable to find hardware necessary for display controller");
+		}
+	}
 
 	/**
 	 * Specific hardware creation functions. Returns an AbstractVendingMachine
@@ -723,6 +739,7 @@ public class Configuration {
 	//the machine to be instantiated to work properly.
 
 	protected AbstractVendingMachine createSFFPC(AbstractVendingMachine m)
+		throws ConfigurationException
 	{
 		m = new VMRUS_SFF_P_C(locale, coinDenominations);
 
@@ -732,6 +749,7 @@ public class Configuration {
 	}
 	
 	protected void controllerCreator(AbstractVendingMachine m)
+		throws ConfigurationException
 	{
 		//Create the inventory manager
 		createInventoryController(m);
@@ -741,6 +759,8 @@ public class Configuration {
 
 		//Create a selection button controller
 		createButtonSelectionController(m);
+		
+		createDisplayController(m, buttonSelectionController, funds.getCoinsController());
 
 		//Create the logger
 		createLogger(m, logFrequency);
@@ -748,6 +768,7 @@ public class Configuration {
 	}
 
 	protected AbstractVendingMachine createSFFPCI()
+		throws ConfigurationException
 	{
 		machine = new VMRUS_SFF_P_CI(locale, coinDenominations);	
 		
@@ -759,6 +780,7 @@ public class Configuration {
 		
 		//Create a selection button controller
 		createButtonSelectionController(machine);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 		
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -768,6 +790,7 @@ public class Configuration {
 	}
 
 	protected AbstractVendingMachine createSFFPPI()
+		throws ConfigurationException
 	{
 		machine = new VMRUS_SFF_P_PI(locale);
 		
@@ -779,6 +802,8 @@ public class Configuration {
 		
 		//Create a selection button controller
 		createButtonSelectionController(machine);
+
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 		
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -788,6 +813,7 @@ public class Configuration {
 	}
 
 	protected AbstractVendingMachine createCOMPMI()
+			throws ConfigurationException
 	{
 		machine = new VMRUS_COM_P_MI(locale, coinDenominations, billDenominations);	
 		
@@ -799,6 +825,7 @@ public class Configuration {
 		
 		//Create a selection button controller
 		createButtonSelectionController(machine);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 		
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -808,6 +835,7 @@ public class Configuration {
 	}
 
 	protected AbstractVendingMachine createCOMPM()
+			throws ConfigurationException
 	{
 		machine = new VMRUS_COM_P_M(locale, coinDenominations, billDenominations);		
 		
@@ -819,6 +847,7 @@ public class Configuration {
 		
 		//Create a selection button controller
 		createButtonSelectionController(machine);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 		
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -828,6 +857,7 @@ public class Configuration {
 	}
 
 	protected AbstractVendingMachine createCOMCMI()
+			throws ConfigurationException
 	{
 		machine = new VMRUS_COM_C_MI(locale, coinDenominations, billDenominations);		
 
@@ -839,6 +869,7 @@ public class Configuration {
 	
 		//Create Code selection controller
 		createCodeController(machine, 0);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 		
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -848,6 +879,7 @@ public class Configuration {
 	}
 
 	protected AbstractVendingMachine createCOMCM()
+			throws ConfigurationException
 	{
 		machine = new VMRUS_COM_C_M(locale, coinDenominations, billDenominations);		
 
@@ -859,6 +891,7 @@ public class Configuration {
 
 		//Create Code selection controller
 		createCodeController(machine, 0);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 		
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -868,6 +901,7 @@ public class Configuration {
 	}
 	
 	protected AbstractVendingMachine createTOCPMI()
+			throws ConfigurationException
 	{
 		machine = new VMRUS_TOC_P_MI(locale, coinDenominations, billDenominations);		
 		
@@ -879,6 +913,7 @@ public class Configuration {
 	
 		//Create a selection button controller
 		createButtonSelectionController(machine);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 	
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -888,6 +923,7 @@ public class Configuration {
 	}
 	
 	protected AbstractVendingMachine createTOCPI()
+			throws ConfigurationException
 	{
 		machine = new VMRUS_TOC_P_I(locale, coinDenominations, billDenominations);
 		
@@ -899,6 +935,7 @@ public class Configuration {
 
 		//Create a selection button controller
 		createButtonSelectionController(machine);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -908,6 +945,7 @@ public class Configuration {
 	}
 
 	protected AbstractVendingMachine createTOCCMI()
+		throws ConfigurationException
 	{
 		machine = new VMRUS_TOC_C_MI(locale, coinDenominations, billDenominations);		
 		
@@ -919,6 +957,7 @@ public class Configuration {
 	
 		//Create Code selection controller
 		createCodeController(machine, 0);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 	
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -939,6 +978,7 @@ public class Configuration {
 	
 		//Create a selection button controller
 		createButtonSelectionController(machine);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 
 		//Create Code selection controller
 		try {
@@ -967,6 +1007,7 @@ public class Configuration {
 
 		//Create a selection button controller
 		createButtonSelectionController(machine);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 
 		try {
 			//Create Code selection controller
