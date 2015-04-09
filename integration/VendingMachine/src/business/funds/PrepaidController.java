@@ -151,6 +151,7 @@ public class PrepaidController implements CardSlotListener {
 	public void cardEjected(CardSlot slot) {
 		prepaidCard = null;
 		prepaidCardInserted = false;
+		cardSlot = null;
 	}
 	
 }

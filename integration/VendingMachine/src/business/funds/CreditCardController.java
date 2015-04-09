@@ -4,13 +4,14 @@ import java.security.InvalidParameterException;
 
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
+import hardware.exceptions.DisabledException;
 import hardware.exceptions.EmptyException;
 import hardware.funds.Card;
 import hardware.funds.Card.CardType;
 import hardware.funds.CardSlot;
 import hardware.funds.CardSlotListener;
 
-/** Description of PrepaidController
+/** Description of CreditCardController
  * @author James Pihooja
  * 
  * Class to interact with hardware to conduct a CreditCard Transaction
@@ -20,6 +21,7 @@ public class CreditCardController implements CardSlotListener{
 	private boolean creditCardInserted;
 	private Card creditCard;
 	private PayPalController payPalController;
+	private CardSlot cardSlot;
 	
 	public CreditCardController(PayPalController payPalController){
 		if(payPalController == null){
@@ -38,8 +40,17 @@ public class CreditCardController implements CardSlotListener{
 	{
 		if(creditCardInserted){
 			TransactionReturnCode returnCode = payPalController.ConductCreditCardTransaction(price, creditCard);
+			if(returnCode == TransactionReturnCode.SUCCESSFUL) {
+				try {
+					cardSlot.ejectCard();
+				} catch (EmptyException e) {
+				} catch (DisabledException e) {
+				}
+				cardSlot = null;
+			}
+			return returnCode;
 		}
-		return null;
+		return TransactionReturnCode.CREDITCARDERROR;
 	}
 	
 	/** Description of isCardInserted for a Prepaid Card
@@ -67,6 +78,7 @@ public class CreditCardController implements CardSlotListener{
 		try {
 			Card temp = slot.readCardData();
 			if(temp.getType() == CardType.UNKNOWN){///////////////needs to be fixed
+				cardSlot = slot;
 				creditCard = temp;
 				creditCardInserted = true;
 			}
@@ -77,7 +89,8 @@ public class CreditCardController implements CardSlotListener{
 
 	@Override
 	public void cardEjected(CardSlot slot) {
-		creditCardInserted = false;	
+		creditCardInserted = false;
+		cardSlot = null;
 	}
 
 }
