@@ -3,6 +3,8 @@ package business.selection_delivery;
 import java.security.InvalidParameterException;
 
 import hardware.racks.ProductRack;
+import SDK.logger.Logger;
+import SDK.rifffish.Rifffish;
 import business.config.ConfigurationListener;
 
 public class InventoryController implements ConfigurationListener
@@ -10,9 +12,9 @@ public class InventoryController implements ConfigurationListener
 	public ProductRackController racks[];	//Connected rack managers
 	private int rackCount;
 	
-	public InventoryController(ProductRack[] pr, int numRacks, String[] names, int[] costs, int [] quantity, int [] productID)
+	public InventoryController(ProductRack[] pr, int numRacks, String[] names, int[] costs, int [] quantity, Rifffish r, Logger l, int machineID)
 	{
-		if(pr == null || names == null || costs == null || quantity == null || productID == null)
+		if(pr == null || names == null || costs == null || quantity == null)
 			throw new InvalidParameterException();
 		
 		rackCount = numRacks;
@@ -20,7 +22,7 @@ public class InventoryController implements ConfigurationListener
 		racks = new ProductRackController[rackCount];
 		for (int i = 0; i < rackCount; i++)
 		{//Create managers for each of the racks
-			racks[i] = new ProductRackController(pr[i], names[i], costs[i], quantity[i] , productID[i]);
+			racks[i] = new ProductRackController(pr[i], names[i], costs[i], quantity[i], r, l, machineID);
 		}
 		
 	}
@@ -114,11 +116,11 @@ public class InventoryController implements ConfigurationListener
 	{//Change the name of the product for rack at index.
 		racks[index].changeName(newName);
 	}
-	
-	public void changeProductID(int index, int productID)
-	{//Change the ID of a product.
-		racks[index].changeProductID(productID);
-	}
+//	
+//	public void changeProductID(int index, int productID)
+//	{//Change the ID of a product.
+//		racks[index].changeProductID(productID);
+//	}
 	
 	/**
 	 * Listeners

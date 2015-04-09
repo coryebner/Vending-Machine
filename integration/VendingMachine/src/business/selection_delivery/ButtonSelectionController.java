@@ -4,11 +4,8 @@ import java.security.InvalidParameterException;
 
 import business.funds.FundsController;
 import business.funds.TransactionReturnCode;
-import business.notifications.DisplayController;
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
-import hardware.exceptions.DisabledException;
-import hardware.exceptions.EmptyException;
 import hardware.ui.PushButton;
 import hardware.ui.PushButtonListener;
 
@@ -57,6 +54,7 @@ public class ButtonSelectionController
 	 *  
 	 *  @param button			button that generated the event
 	 */
+	@Override
 	public void pressed(PushButton button)
 	{
 		int index = getIndex(button);
@@ -103,7 +101,7 @@ public class ButtonSelectionController
 	 * @param button			button pressed
 	 * @return					index of product to dispense
 	 */
-	private int getIndex(PushButton button)
+	public int getIndex(PushButton button)
 	{
 		for (int i = 0; i < numButtons; i++)
 		{
