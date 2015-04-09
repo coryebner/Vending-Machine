@@ -157,6 +157,7 @@ public class Configuration {
 							(type != COMCM && type != TOCCMI), // pop buttons
 							(type == COMCMI || type == COMCM || type == TOCCMI || type == TOCCp || type == TOCCpI), // candy buttons
 							(type.startsWith("TOC")), // touchscreen
+							false, // paypal
 		};
 		
 		ArrayList<Boolean> ret = new ArrayList<Boolean>();
