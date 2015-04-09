@@ -526,14 +526,45 @@ public class Configuration {
 										inventoryController,
 										logger);
 			
-			m.getCoinReceptacle().register(funds.getCoinsController());
-			m.getBanknoteReceptacle().register(funds.getBankNoteController());
-			// Register the coinracks
-			CoinRackController[] crControllers = funds.getCoinRackControllers();
-			for(int i =0; i < m.getNumberOfCoinRacks(); i++){
-				m.getCoinRack(i).register(crControllers[i]);
+			if (funds.isPrepaidPresent()) {
+				m.getCardSlot().register(funds.getPrepaidController());
 			}
-			m.getCardSlot().register(funds.getPrepaidController());
+			
+			if (funds.isCoinsPresent()) {
+				m.getCoinReceptacle().register(funds.getCoinsController());
+				// Register the coinracks
+			
+				ProductRack [] racks = new ProductRack[m.getNumberOfProductRacks()];
+				for (int i = 0; i < racks.length; ++i) {
+					racks[i] = m.getProductRack(i);
+				}
+
+				CoinRackController[] crControllers = funds.getCoinRackControllers();
+				for(int i =0; i < m.getNumberOfCoinRacks(); i++){
+					m.getCoinRack(i).register(crControllers[i]);
+					m.getCoinRack(i).register(funds.getExactChangeController());
+				}
+
+				for(ProductRack productRack: racks){
+					productRack.register(funds.getExactChangeController());
+				}
+			
+				
+				m.getCoinStorageBin().register(funds.getCoinStorageBinTracker());
+				m.getCoinReceptacle().register(funds.getCoinsController());
+				m.getReturnButton().register(funds.getCoinsController());
+			}
+
+			if (funds.isBillsPresent()) {
+				m.getBanknoteStorageBin().register(funds.getBankNoteStorageBinTracker());
+				m.getBanknoteReceptacle().register(funds.getBankNoteController());
+				m.getReturnButton().register(funds.getBankNoteController());
+			}
+			
+			if (funds.isCreditCardPresent()) {
+				m.getCardSlot().register(funds.getCreditCardController());
+			}
+			
 		} catch (NoSuchHardwareException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
