@@ -285,4 +285,14 @@ public class FundsIntegrationTests {
 		assertEquals(TransactionReturnCode.SUCCESSFUL, fundsController.ConductTransaction(0, 175));
 	}
 	
+	@Test
+	public void testBillsTransactionSufficient() throws Exception{		
+		try {
+			banknoteSlot.addBanknote(new Banknote(5));
+		} catch (DisabledException e) {
+			
+		}
+		assertEquals(TransactionReturnCode.SUCCESSFUL, fundsController.ConductTransaction(0, 175));
+	}
+	
 }
