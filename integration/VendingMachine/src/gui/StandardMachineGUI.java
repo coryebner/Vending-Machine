@@ -171,7 +171,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 		Locale locale = Locale.CANADA;
 //		POP Vending Machine
 		AbstractVendingMachine vm = new VMRUS_SFF_P_C(locale,coinvalue);		
-		initialize(vm, true, true, true, true, true, true, false); // no touch screen, with pop buttons
+		initialize(vm, true, true, true, true, true, false, true); // no touch screen, with pop buttons
 //		Candy Vending Machine
 //		AbstractVendingMachine vm = new VMRUS_COM_C_M(locale,coinvalue, popcost);
 //		initialize(vm, true, true, true, true, false, true, false); // no touch screen, with candy buttons
@@ -757,12 +757,20 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 	public void machine1Setup() {
 		ArrayList<String> names = new ArrayList();
 
-		names.add("Coke");
-		names.add("Diet Coke");
-		names.add("Coke Zero");
-		names.add("Sprite");
-		names.add("Root Beer");
-		names.add("Water");
+//		names.add("Coke");
+//		names.add("Diet Coke");
+//		names.add("Coke Zero");
+//		names.add("Sprite");
+//		names.add("Root Beer");
+//		names.add("Water");
+		
+		try {
+			for(int i=0; i< machine.getNumberOfProductRacks(); i++){
+				names.add("Pop "+ i);
+			}
+		} catch (NoSuchHardwareException e) {
+			e.printStackTrace();
+		}
 
 		createPopButtons(names);
 		reloadPopButtons();
