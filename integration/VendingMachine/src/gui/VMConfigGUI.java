@@ -29,6 +29,9 @@ import java.util.ArrayList;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 
+import business.config.Configuration;
+import business.config.ConfigurationException;
+
 public class VMConfigGUI {
 	private JFrame frmVendingMachinesRUS;
 	private ButtonGroup machineConfigRadioGroup;
@@ -49,11 +52,11 @@ public class VMConfigGUI {
 		});
 	}
 
-	public VMConfigGUI() {
+	public VMConfigGUI(){
 		initialize();
 	}
 
-	private void initialize() {
+	private void initialize()  {
 		frmVendingMachinesRUS = new JFrame();
 		frmVendingMachinesRUS.setTitle("Vending Machines R Us");
 		frmVendingMachinesRUS.setBounds(100, 100, 386, 440);
@@ -273,8 +276,14 @@ public class VMConfigGUI {
 //					ProperSetup
 //					receive the vending machine from BussinessLogic
 					Configuration config = new Configuration();
-					AbstractVendingMachine machine = config.load(machineConfig,reportConfig);
-					ArrayList<Boolean> parts = config.parts();
+					AbstractVendingMachine machine = null;
+					try {
+						machine = config.load(machineConfig,reportConfig);
+					} catch (ConfigurationException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					ArrayList<Boolean> parts = (ArrayList<Boolean>)config.parts();
 					VendingMachineGUI window = new StandardMachineGUI(machine,parts);
 					window.getMainFrame().setVisible(true);
 					frmVendingMachinesRUS.setVisible(false);
