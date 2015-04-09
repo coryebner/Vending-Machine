@@ -50,7 +50,7 @@ public class VMRUS_TOC_C_MI extends AbstractVendingMachine{
 	private CoinRack[] coinRacks;
 	private Map<Integer, CoinChannel> coinRackChannels;
 	private ProductRack[] productRacks;
-	private Display display;
+	private Display display, configPanelDisplay;
     private PushButton[] selectionButtons;
     private PushButton returnButton;
 	private IndicatorLight exactChangeLight, outOfOrderLight, noInternetConnectionLight;
@@ -127,6 +127,7 @@ public class VMRUS_TOC_C_MI extends AbstractVendingMachine{
 			outOfProductLights[i] = new IndicatorLight();
 
 		display = new Display();
+		configPanelDisplay = new Display();
 		configurationPanelTransmitter = new ConfigurationPanelTransmitter();
 
 	}
@@ -184,6 +185,11 @@ public class VMRUS_TOC_C_MI extends AbstractVendingMachine{
 	@Override
 	public Display getDisplay() {
 		return display;
+	}
+	
+	@Override
+	public Display getConfigPanelDisplay() {
+		return configPanelDisplay;
 	}
 
 	@Override

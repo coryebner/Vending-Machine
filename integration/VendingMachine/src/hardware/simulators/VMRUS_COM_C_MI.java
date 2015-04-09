@@ -51,7 +51,7 @@ public class VMRUS_COM_C_MI extends AbstractVendingMachine{
 	private CoinRack[] coinRacks;
 	private Map<Integer, CoinChannel> coinRackChannels;
 	private ProductRack[] productRacks;
-	private Display display;
+	private Display display, configPanelDisplay;
     private PushButton[] characterButtons;
     private PushButtonCodeInterpreter interpreter;
 	private PushButton returnButton;
@@ -123,6 +123,7 @@ public class VMRUS_COM_C_MI extends AbstractVendingMachine{
 		noInternetConnectionLight = new IndicatorLight();
 		
 		display = new Display();
+		configPanelDisplay = new Display();
 		configurationPanelTransmitter = new ConfigurationPanelTransmitter();
 
 		characterButtons = new PushButton[16];
@@ -203,6 +204,11 @@ public class VMRUS_COM_C_MI extends AbstractVendingMachine{
 	@Override
 	public Display getDisplay() {
 		return display;
+	}
+	
+	@Override
+	public Display getConfigPanelDisplay(){
+		return configPanelDisplay;
 	}
 
 	@Override

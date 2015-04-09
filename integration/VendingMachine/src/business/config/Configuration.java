@@ -150,12 +150,12 @@ public class Configuration {
 	}
 	
 	public ArrayList<Boolean> parts() {
-		Boolean [] parts = {(type != SFFPPI), // coinslot
-							(type != SFFPPI && type != SFFPCI && type != SFFPC), // billslot
-							(type != SFFPC && type != SFFPCI), // cardslot
-							(type != SFFPC && type != COMPM && type != COMCM && type != TOCCp), // internet
-							(type != COMCM && type != TOCCMI), // pop buttons
-							(type == COMCMI || type == COMCM || type == TOCCMI || type == TOCCp || type == TOCCpI), // candy buttons
+		Boolean [] parts = {!(type.equals(SFFPPI)), // coinslot
+							!(type.equals(SFFPPI) || type.equals(SFFPCI) || type.equals(SFFPC)), // billslot
+							!(type.equals(SFFPC) || type.equals(SFFPCI)), // cardslot
+							!(type.equals(SFFPC) || type.equals(COMPM) || type.equals(COMCM) || type.equals(TOCCp)), // internet
+							!(type.equals(COMCM) || type.equals(TOCCMI)), // pop buttons
+							(type.equals(COMCMI) || type.equals(COMCM) || type.equals(TOCCMI) || type.equals(TOCCp) || type.equals(TOCCpI)), // candy buttons
 							(type.startsWith("TOC")), // touchscreen
 							false, // paypal
 		};

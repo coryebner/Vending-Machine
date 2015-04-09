@@ -269,6 +269,18 @@ public abstract class AbstractVendingMachine {
 	public ConfigurationPanelTransmitter getConfigurationPanelTransmitter() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
+	
+	/**
+	 * Returns the config panel display transmitter.
+	 * 
+	 * @return the configuration panel display transmitter.
+	 * @throws NoSuchHardwareException
+	 * 				if this hardware component does not exist in the
+	 * 				configuration of the vending machine.
+	 */
+	public Display getConfigPanelDisplay() throws NoSuchHardwareException {
+		throw new NoSuchHardwareException();
+	}
 
 	/**
 	 * Returns the locale.
