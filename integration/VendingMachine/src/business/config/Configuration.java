@@ -17,9 +17,10 @@ import java.util.Map;
 
 import SDK.logger.LogDate;
 import SDK.logger.LogDate.LoggingType;
-import logger.Logger;
+import SDK.logger.Logger;
 import SDK.rifffish.Rifffish;
 import business.funds.CoinRackController;
+import business.funds.CoinsController;
 import business.funds.FundsController;
 import business.funds.PaymentMethods;
 import business.notifications.DisplayController;
@@ -43,6 +44,7 @@ import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
 import hardware.simulators.*;
 import hardware.exceptions.NoSuchHardwareException;
+import hardware.funds.CoinReceptacle;
 import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
 import hardware.ui.ConfigurationPanelTransmitter;
@@ -80,8 +82,9 @@ public class Configuration {
 	protected CodeSelectionController codeSelectionController; // Maria: Added CodeSelectionController object
 	protected DisplayController displayController; // Maria: added for the displayController
 	protected ButtonSelectionController buttonSelectionController;
-	protected logger.Logger logger;
+	protected Logger logger;
 	protected ConfigPanelLogic configLogic;
+	private DisplayController display;
 
 	public static final String SFFPC = "VMRUS-SFF-P/C";
 	public static final String SFFPCI = "VMRUS-SFF-P/CI";
@@ -211,39 +214,39 @@ public class Configuration {
 			//machine = createSFFPC();
 			machine = createSFFPC(machine);
 		}
-		//		else if (type.equals("VMRUS-SFF-P/CI")) {
-		//			machine = createSFFPCI();
-		//		}
-		//		else if (type.equals("VMRUS-SFF-P/PI")) {
-		//			machine = createSFFPPI();
-		//		}
-		//		else if (type.equals("VMRUS-COM-P/MI")) {
-		//			machine = createCOMPMI();
-		//		}
-		//		else if (type.equals("VMRUS-COM-P/M")) {
-		//			machine = createCOMPM();
-		//		}
-		//		else if (type.equals("VMRUS-COM-C/MI")) {
-		//			machine = createCOMCMI();
-		//		}
-		//		else if (type.equals("VMRUS-COM-C/M")) {
-		//			machine = createCOMCM();
-		//		}
-		//		else if (type.equals("VMRUS-TOC-P/MI")) {
-		//			machine = createTOCPMI();
-		//		}
-		//		else if (type.equals("VMRUS-TOC-P/I")) {
-		//			machine = createTOCPI();
-		//		}
-		//		else if (type.equals("VMRUS-TOC-C/MI")) {
-		//			machine = createTOCCMI();
-		//		}
-		//		else if (type.equals("VMRUS-TOC-C+")) {
-		//			machine = createTOCCp();
-		//		}
-		//		else if (type.equals("VMRUS-TOC-C+/I")) {
-		//			machine = createTOCCpI();
-		//		}
+		else if (type.equals("VMRUS-SFF-P/CI")) {
+			machine = createSFFPCI();
+		}
+		else if (type.equals("VMRUS-SFF-P/PI")) {
+			machine = createSFFPPI();
+		}
+		else if (type.equals("VMRUS-COM-P/MI")) {
+			machine = createCOMPMI();
+		}
+		else if (type.equals("VMRUS-COM-P/M")) {
+			machine = createCOMPM();
+		}
+		else if (type.equals("VMRUS-COM-C/MI")) {
+			machine = createCOMCMI();
+		}
+		else if (type.equals("VMRUS-COM-C/M")) {
+			machine = createCOMCM();
+		}
+		else if (type.equals("VMRUS-TOC-P/MI")) {
+			machine = createTOCPMI();
+		}
+		else if (type.equals("VMRUS-TOC-P/I")) {
+			machine = createTOCPI();
+		}
+		else if (type.equals("VMRUS-TOC-C/MI")) {
+			machine = createTOCCMI();
+		}
+		else if (type.equals("VMRUS-TOC-C+")) {
+			machine = createTOCCp();
+		}
+		else if (type.equals("VMRUS-TOC-C+/I")) {
+			machine = createTOCCpI();
+		}
 		else {
 			throw new ConfigurationException("Invalid machine type!");
 		}
@@ -341,10 +344,10 @@ public class Configuration {
 			}
 			else if (line.startsWith("locale")){
 				String l = readString(line);
-				if (l.equals("CAD")) locale = Locale.CANADA;
-				else if (l.equals("USD")) locale = Locale.US;
-				else if (l.equals("EUR")) locale = Locale.UK;
-				else throw new ConfigurationException("Invalid locale " + l + " - must be CAD, USD or EUR");
+				if (l.equals("CA")) locale = Locale.CANADA;
+				else if (l.equals("US")) locale = Locale.US;
+				else if (l.equals("UK")) locale = Locale.UK;
+				else throw new ConfigurationException("Invalid locale " + l + " - must be CA, US or UK");
 			}
 		}
 		
@@ -499,8 +502,7 @@ public class Configuration {
 			if(bill){
 				availablePaymentMethods.add(PaymentMethods.BILLS);
 			}
-			FundsController fundsNew =
-					new FundsController(this.locale,
+			funds =	new FundsController(this.locale,
 										availablePaymentMethods,
 										
 										bestEffortChange,
@@ -527,14 +529,45 @@ public class Configuration {
 										inventoryController,
 										logger);
 			
-			m.getCoinReceptacle().register(fundsNew.getCoinsController());
-			m.getBanknoteReceptacle().register(fundsNew.getBankNoteController());
-			// Register the coinracks
-			CoinRackController[] crControllers = fundsNew.getCoinRackControllers();
-			for(int i =0; i < m.getNumberOfCoinRacks(); i++){
-				m.getCoinRack(i).register(crControllers[i]);
+			if (funds.isPrepaidPresent()) {
+				m.getCardSlot().register(funds.getPrepaidController());
 			}
-			m.getCardSlot().register(fundsNew.getPrepaidController());
+			
+			if (funds.isCoinsPresent()) {
+				m.getCoinReceptacle().register(funds.getCoinsController());
+				// Register the coinracks
+			
+				ProductRack [] racks = new ProductRack[m.getNumberOfProductRacks()];
+				for (int i = 0; i < racks.length; ++i) {
+					racks[i] = m.getProductRack(i);
+				}
+
+				CoinRackController[] crControllers = funds.getCoinRackControllers();
+				for(int i =0; i < m.getNumberOfCoinRacks(); i++){
+					m.getCoinRack(i).register(crControllers[i]);
+					m.getCoinRack(i).register(funds.getExactChangeController());
+				}
+
+				for(ProductRack productRack: racks){
+					productRack.register(funds.getExactChangeController());
+				}
+			
+				
+				m.getCoinStorageBin().register(funds.getCoinStorageBinTracker());
+				m.getCoinReceptacle().register(funds.getCoinsController());
+				m.getReturnButton().register(funds.getCoinsController());
+			}
+
+			if (funds.isBillsPresent()) {
+				m.getBanknoteStorageBin().register(funds.getBankNoteStorageBinTracker());
+				m.getBanknoteReceptacle().register(funds.getBankNoteController());
+				m.getReturnButton().register(funds.getBankNoteController());
+			}
+			
+			if (funds.isCreditCardPresent()) {
+				m.getCardSlot().register(funds.getCreditCardController());
+			}
+			
 		} catch (NoSuchHardwareException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -670,6 +703,19 @@ public class Configuration {
 			e.printStackTrace();
 		}
 	}
+	
+	protected void createDisplayController(AbstractVendingMachine m,
+										   ButtonSelectionController buttons,
+										   CoinsController coins) 
+		throws ConfigurationException
+	{
+		try {
+			display = new DisplayController(m.getDisplay(), buttons, coins, m.getCoinReceptacle());
+		}
+		catch (NoSuchHardwareException e) {
+			throw new ConfigurationException("Unable to find hardware necessary for display controller");
+		}
+	}
 
 	/**
 	 * Specific hardware creation functions. Returns an AbstractVendingMachine
@@ -693,6 +739,7 @@ public class Configuration {
 	//the machine to be instantiated to work properly.
 
 	protected AbstractVendingMachine createSFFPC(AbstractVendingMachine m)
+		throws ConfigurationException
 	{
 		m = new VMRUS_SFF_P_C(locale, coinDenominations);
 
@@ -702,6 +749,7 @@ public class Configuration {
 	}
 	
 	protected void controllerCreator(AbstractVendingMachine m)
+		throws ConfigurationException
 	{
 		//Create the inventory manager
 		createInventoryController(m);
@@ -711,6 +759,8 @@ public class Configuration {
 
 		//Create a selection button controller
 		createButtonSelectionController(m);
+		
+		createDisplayController(m, buttonSelectionController, funds.getCoinsController());
 
 		//Create the logger
 		createLogger(m, logFrequency);
@@ -718,6 +768,7 @@ public class Configuration {
 	}
 
 	protected AbstractVendingMachine createSFFPCI()
+		throws ConfigurationException
 	{
 		machine = new VMRUS_SFF_P_CI(locale, coinDenominations);	
 		
@@ -729,6 +780,7 @@ public class Configuration {
 		
 		//Create a selection button controller
 		createButtonSelectionController(machine);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 		
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -738,6 +790,7 @@ public class Configuration {
 	}
 
 	protected AbstractVendingMachine createSFFPPI()
+		throws ConfigurationException
 	{
 		machine = new VMRUS_SFF_P_PI(locale);
 		
@@ -749,6 +802,8 @@ public class Configuration {
 		
 		//Create a selection button controller
 		createButtonSelectionController(machine);
+
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 		
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -758,6 +813,7 @@ public class Configuration {
 	}
 
 	protected AbstractVendingMachine createCOMPMI()
+			throws ConfigurationException
 	{
 		machine = new VMRUS_COM_P_MI(locale, coinDenominations, billDenominations);	
 		
@@ -769,6 +825,7 @@ public class Configuration {
 		
 		//Create a selection button controller
 		createButtonSelectionController(machine);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 		
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -778,6 +835,7 @@ public class Configuration {
 	}
 
 	protected AbstractVendingMachine createCOMPM()
+			throws ConfigurationException
 	{
 		machine = new VMRUS_COM_P_M(locale, coinDenominations, billDenominations);		
 		
@@ -789,6 +847,7 @@ public class Configuration {
 		
 		//Create a selection button controller
 		createButtonSelectionController(machine);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 		
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -798,6 +857,7 @@ public class Configuration {
 	}
 
 	protected AbstractVendingMachine createCOMCMI()
+			throws ConfigurationException
 	{
 		machine = new VMRUS_COM_C_MI(locale, coinDenominations, billDenominations);		
 
@@ -809,6 +869,7 @@ public class Configuration {
 	
 		//Create Code selection controller
 		createCodeController(machine, 0);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 		
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -818,6 +879,7 @@ public class Configuration {
 	}
 
 	protected AbstractVendingMachine createCOMCM()
+			throws ConfigurationException
 	{
 		machine = new VMRUS_COM_C_M(locale, coinDenominations, billDenominations);		
 
@@ -829,6 +891,7 @@ public class Configuration {
 
 		//Create Code selection controller
 		createCodeController(machine, 0);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 		
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -838,6 +901,7 @@ public class Configuration {
 	}
 	
 	protected AbstractVendingMachine createTOCPMI()
+			throws ConfigurationException
 	{
 		machine = new VMRUS_TOC_P_MI(locale, coinDenominations, billDenominations);		
 		
@@ -849,6 +913,7 @@ public class Configuration {
 	
 		//Create a selection button controller
 		createButtonSelectionController(machine);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 	
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -858,6 +923,7 @@ public class Configuration {
 	}
 	
 	protected AbstractVendingMachine createTOCPI()
+			throws ConfigurationException
 	{
 		machine = new VMRUS_TOC_P_I(locale, coinDenominations, billDenominations);
 		
@@ -869,6 +935,7 @@ public class Configuration {
 
 		//Create a selection button controller
 		createButtonSelectionController(machine);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -878,6 +945,7 @@ public class Configuration {
 	}
 
 	protected AbstractVendingMachine createTOCCMI()
+		throws ConfigurationException
 	{
 		machine = new VMRUS_TOC_C_MI(locale, coinDenominations, billDenominations);		
 		
@@ -889,6 +957,7 @@ public class Configuration {
 	
 		//Create Code selection controller
 		createCodeController(machine, 0);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 	
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -897,7 +966,7 @@ public class Configuration {
 		return machine;
 	}
 
-	protected AbstractVendingMachine createTOCCp() throws NoSuchHardwareException
+	protected AbstractVendingMachine createTOCCp() throws ConfigurationException
 	{
 		machine = new VMRUS_TOC_CP(locale, coinDenominations, billDenominations);		
 		
@@ -909,9 +978,15 @@ public class Configuration {
 	
 		//Create a selection button controller
 		createButtonSelectionController(machine);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 
 		//Create Code selection controller
-		createCodeController(machine, machine.getNumberOfSelectionButtons());
+		try {
+			createCodeController(machine, machine.getNumberOfSelectionButtons());
+		}
+		catch (NoSuchHardwareException e) {
+			throw new ConfigurationException("Unable to get selection buttons from machine!");
+		}
 
 		//Create the logger
 		createLogger(machine, logFrequency);
@@ -920,7 +995,7 @@ public class Configuration {
 		return machine;
 	}
 
-	protected AbstractVendingMachine createTOCCpI() throws NoSuchHardwareException
+	protected AbstractVendingMachine createTOCCpI() throws ConfigurationException
 	{
 		machine = new VMRUS_TOC_CP_I(locale, coinDenominations, billDenominations);
 
@@ -932,9 +1007,15 @@ public class Configuration {
 
 		//Create a selection button controller
 		createButtonSelectionController(machine);
+		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 
-		//Create Code selection controller
-		createCodeController(machine, machine.getNumberOfSelectionButtons());
+		try {
+			//Create Code selection controller
+			createCodeController(machine, machine.getNumberOfSelectionButtons());
+		}
+		catch (NoSuchHardwareException e) {
+			throw new ConfigurationException("Unable to get selection buttons from machine!");
+		}
 
 		//Create the logger
 		createLogger(machine, logFrequency);

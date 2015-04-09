@@ -44,6 +44,7 @@ public class ExactChangeControllerTest {
 	    String names[] = {"1", "2", "3", "4", "5"};
 	    int costs[] = {1,1,1,1,100};
 	    int quantity[] = {1,1,1,1,1};
+	    int [] ids = {1, 2, 3, 4, 5};
 
 	    ProductRack productRacks[];
 		productRacks = new ProductRack[numProductRacks];
@@ -51,7 +52,7 @@ public class ExactChangeControllerTest {
 	    	productRacks[i] = new ProductRack(10);
 	    }
 		
-		InventoryController ic = new InventoryController(productRacks, numProductRacks, names, costs, quantity);
+		InventoryController ic = new InventoryController(productRacks, numProductRacks, names, costs, quantity, ids);
 		
 		
 		int numRacks = 5;
@@ -90,6 +91,7 @@ public class ExactChangeControllerTest {
 	    String names[] = {"1", "2", "3", "4", "5"};
 	    int costs[] = {50,50,50,50,50};
 	    int quantity[] = {1,1,1,1,1};
+	    int [] ids = {1, 2, 3, 4, 5};
 
 	    ProductRack productRacks[];
 		productRacks = new ProductRack[numProductRacks];
@@ -97,7 +99,7 @@ public class ExactChangeControllerTest {
 	    	productRacks[i] = new ProductRack(10);
 	    }
 		
-		InventoryController ic = new InventoryController(productRacks, numProductRacks, names, costs, quantity);
+		InventoryController ic = new InventoryController(productRacks, numProductRacks, names, costs, quantity, ids);
 		
 		
 		int numRacks = 5;
@@ -133,6 +135,7 @@ public class ExactChangeControllerTest {
 	    String names[] = {"1", "2", "3", "4", "5"};
 	    int costs[] = {100,50,175,200,250};
 	    int quantity[] = {1,1,1,1,1};
+	    int [] ids = {1, 2, 3, 4, 5};
 
 	    ProductRack productRacks[];
 		productRacks = new ProductRack[numProductRacks];
@@ -140,7 +143,7 @@ public class ExactChangeControllerTest {
 	    	productRacks[i] = new ProductRack(10);
 	    }
 		
-		InventoryController ic = new InventoryController(productRacks, numProductRacks, names, costs, quantity);
+		InventoryController ic = new InventoryController(productRacks, numProductRacks, names, costs, quantity, ids);
 		
 		
 		int numRacks = 5;
