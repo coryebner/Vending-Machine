@@ -29,7 +29,8 @@ class ConfigurationBuilder {
 		}
 		
 		if (type == Configuration.COMCM
-			|| type == Configuration.COMCMI)
+			|| type == Configuration.COMCMI
+			|| type == Configuration.TOCCMI)
 		{
 			return type + "\n"
 				+ "names Coke Pepsi 7-up Sprite Fanta Crush Mug Barqs DietCoke DietPepsi Lemonade Water "
