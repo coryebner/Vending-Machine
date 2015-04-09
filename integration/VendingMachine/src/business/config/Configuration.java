@@ -739,7 +739,7 @@ public class Configuration {
 		throws ConfigurationException
 	{
 		try {
-			display = new DisplayController(m.getDisplay(), buttons, coins, m.getCoinReceptacle());
+			display = new DisplayController(m.getDisplay(), funds);
 		}
 		catch (NoSuchHardwareException e) {
 			throw new ConfigurationException("Unable to find hardware necessary for display controller");
