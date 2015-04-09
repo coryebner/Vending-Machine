@@ -2,6 +2,7 @@ package business.config;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -75,6 +76,10 @@ public class Configuration {
 	protected DisplayController displayController; // Maria: added for the displayController
 	protected ButtonSelectionController buttonSelectionController;
 
+	// Configuration config = new Configuration();
+	// AbstractVendingMachine machine = config.load("VMRUS-SFF-PC", "[offline|instant|batch|daily], configListeners);
+	// AbstractVendingMachine machine = config.load(new File("vm.config"))
+	// ArrayList<Boolean> parts = config.getParts();
 
 	public Configuration()
 	{
@@ -93,17 +98,25 @@ public class Configuration {
 	 * @throws IOException				standard file reading exceptions
 	 * @throws ConfigurationException	if the configuration file is incorrectly formed
 	 */
-	public AbstractVendingMachine load(String filename,
-			ArrayList<ConfigurationListener> configListeners)
-					throws IOException, ConfigurationException
-	{
-		BufferedReader input = new BufferedReader(new FileReader(filename));
-		readConfigFile(input);
-		createMachine();
-		createConfigurationController(machine, configListeners);
-		loadMachine();
-		return machine;
-	}
+//	public AbstractVendingMachine load(String filename,
+//			ArrayList<ConfigurationListener> configListeners)
+//					throws IOException, ConfigurationException
+//	{
+//		BufferedReader input = new BufferedReader(new FileReader(filename));
+//		readConfigFile(input);
+//		createMachine();
+//		createConfigurationController(machine, configListeners);
+//		loadMachine();
+//		return machine;
+//	}
+	
+//	public AbstractVendingMachine load(String type, String logFreq) {}
+//	public AbstractVendingMachine load(File config) {}
+//  public void registerConfigListener(ConfigurationListener listener) {}
+//	public void save(File config) {}
+//	public ArrayList<Boolean> parts() {
+//		return new ArrayList<Boolean>();
+//	}
 
 	/**
 	 * Saves the vending machine previously created by load() to a given file.
