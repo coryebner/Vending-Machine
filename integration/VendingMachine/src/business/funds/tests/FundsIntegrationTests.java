@@ -1,11 +1,13 @@
 package business.funds.tests;
 
 import hardware.exceptions.DisabledException;
+import hardware.funds.Banknote;
 import hardware.funds.BanknoteReceptacle;
 import hardware.funds.BanknoteSlot;
 import hardware.funds.Card;
 import hardware.funds.CardSlot;
 import hardware.funds.CardSlotNotEmptyException;
+import hardware.funds.Coin;
 import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinSlot;
 import hardware.racks.CoinRack;
@@ -26,6 +28,8 @@ import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.paypal.api.payments.BillingInfo;
 
 import business.config.Configuration;
 import business.funds.BanknoteController;
@@ -226,4 +230,56 @@ public class FundsIntegrationTests {
 		}
 		assertEquals(TransactionReturnCode.SUCCESSFUL, fundsController.ConductTransaction(0, 200));
 	}
+	
+	@Test
+	public void testPrepaidandCoinsTransactionSufficient(){
+		try {
+			cardSlot.insertCard(new Card(Card.CardType.PREPAID, "7373737373", "Defualt Prepaid" , "", "00/0000", Locale.CANADA, 50));
+		} catch (CardSlotNotEmptyException | DisabledException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			coinSlot.addCoin(new Coin(100));
+			coinSlot.addCoin(new Coin(25));
+		} catch (DisabledException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertEquals(TransactionReturnCode.SUCCESSFUL, fundsController.ConductTransaction(0, 175));
+	}
+	
+	@Test
+	public void testPrepaidandCoinsTransactionInsufficient(){
+		try {
+			cardSlot.insertCard(new Card(Card.CardType.PREPAID, "7373737373", "Defualt Prepaid" , "", "00/0000", Locale.CANADA, 50));
+		} catch (CardSlotNotEmptyException | DisabledException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			coinSlot.addCoin(new Coin(100));
+		} catch (DisabledException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertEquals(TransactionReturnCode.INSUFFICIENTFUNDS, fundsController.ConductTransaction(0, 175));
+	}
+	
+	@Test
+	public void testPrepaidandBillsTransactionSufficient() throws Exception{
+		try {
+			cardSlot.insertCard(new Card(Card.CardType.PREPAID, "7373737373", "Defualt Prepaid" , "", "00/0000", Locale.CANADA, 50));
+		} catch (CardSlotNotEmptyException | DisabledException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			banknoteSlot.addBanknote(new Banknote(500));
+		} catch (DisabledException e) {
+			
+		}
+		assertEquals(TransactionReturnCode.SUCCESSFUL, fundsController.ConductTransaction(0, 175));
+	}
+	
 }
