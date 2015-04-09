@@ -665,12 +665,6 @@ public class Configuration {
 
 			configLogic = new ConfigPanelLogic(m.getDisplay());
 			
-			// Register configPanelLogic with this new listener just created
-			Iterator<ConfigurationListener> current = configListeners.iterator();
-			while(current.hasNext()){
-				configPanelLogic.register(current.next());
-			}
-			
 		} catch (NoSuchHardwareException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
