@@ -512,20 +512,20 @@ public class Configuration {
 										
 										bestEffortChange,
 										coinDenominations,
-										m.getCoinSlot(),
+										(coin) ? m.getCoinSlot() : null,
 										
-										m.getCoinReceptacle(),
+										(coin) ? m.getCoinReceptacle() : null,
 										0,
 										
-										m.getCoinStorageBin(),
+										(coin) ? m.getCoinStorageBin() : null,
 										coinStorageQuantities,
 										
 										cr,
 										quantities,
 										
-										m.getBanknoteSlot(),
-										m.getBanknoteReceptacle(),
-										m.getBanknoteStorageBin(),
+										(bill) ? m.getBanknoteSlot() : null,
+										(bill) ? m.getBanknoteReceptacle() : null,
+										(bill) ? m.getBanknoteStorageBin() : null,
 										
 										new HashMap<Integer, Integer>(), // TODO: Save/restore this like we do coins
 										0,
