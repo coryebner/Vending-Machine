@@ -185,7 +185,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(AbstractVendingMachine machine, boolean coinSlot, boolean billSlot, boolean cardSlot, boolean internetLight, boolean popBtns, boolean candyBtns) {
+	private void initialize(final AbstractVendingMachine machine, boolean coinSlot, boolean billSlot, boolean cardSlot, boolean internetLight, boolean popBtns, boolean candyBtns) {
 		this.machine = machine;
 		coinButtons = new ArrayList();
 		billButtons = new ArrayList();
@@ -715,7 +715,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
 	 * functionality complete
 	 */
 	public void machine6Setup() {
-		ArrayList<String> names = new ArrayList();
+		ArrayList<String> names = new ArrayList<>();
 		
 		try {
 			for(int i=0; i< machine.getNumberOfProductRacks(); i++){
@@ -741,7 +741,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
 	 *            is the currency identifier (ex. $)
 	 * @return the button being asked for
 	 */
-	public JButton createCoinButton(int amount, String currType) {
+	public JButton createCoinButton(final int amount, String currType) {
 		DecimalFormat df = new DecimalFormat("0.00");
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
@@ -772,7 +772,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
 	 *            is the currency identifier (ex. $)
 	 * @return the button being asked for
 	 */
-	public JButton createBillButton(int amount, String currType) {
+	public JButton createBillButton(final int amount, String currType) {
 		DecimalFormat df = new DecimalFormat("0.00");
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
@@ -802,7 +802,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
 	 *            is the currency identifier (ex. $)
 	 * @return the button being asked for
 	 */
-	public JButton createCardButton(int amount, String currType) {
+	public JButton createCardButton(final int amount, String currType) {
 		DecimalFormat df = new DecimalFormat("0.00");
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
@@ -925,7 +925,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
    * @param name of the JButton
    * @param key to the product rack
    */
-  public void addButtonAction(JButton button, int key){
+  public void addButtonAction(JButton button,final int key){
       button.addActionListener(new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent e) {
@@ -940,7 +940,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
       });
   }
  
-  public void addNumButtonAction(JButton button, int key){
+  public void addNumButtonAction(JButton button,final int key){
   	button.addActionListener(new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent e) {
@@ -957,7 +957,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
       });
   }
   
-  public void addLetterButtonAction(JButton button, int key){
+  public void addLetterButtonAction(JButton button,final int key){
       button.addActionListener(new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent e) {
