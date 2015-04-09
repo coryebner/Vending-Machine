@@ -67,15 +67,16 @@ import gui.test.*;
  * @author Shayne
  * 
  */
-																
-public class StandardMachineGUI extends VendingMachineGUI implements ProductRackListener,IndicatorLightListener,
-																DisplayListener, DeliveryChuteListener  {
+
+public class StandardMachineGUI extends VendingMachineGUI implements
+		ProductRackListener, IndicatorLightListener, DisplayListener,
+		DeliveryChuteListener {
 
 	// AP : This image is just a placeholder, config will give us resources (?)
 	ImageIcon coke = createImageIcon("img/coca_cola.png", "Coke Logo");
 
 	// unicode for the euro symbol
-	private final String EURO = "\u20ac";  
+	private final String EURO = "\u20ac";
 	private AbstractVendingMachine machine;
 	private static final String[] ALPHABET = { "A", "B", "C", "D", "E", "F",
 			"G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
@@ -121,17 +122,20 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 	private boolean hasInternetLight = true;
 	private boolean hasPopButtons = true;
 	private boolean hasCandyButtons = true;
-	
 	private boolean hasTouchScreen = false;
+	private boolean hasPayPal = true;
 
 	/**
-	 * Needed for Image generation. Used for testing purposes,
-	 * This should come from the Configurations Team.
+	 * Needed for Image generation. Used for testing purposes, This should come
+	 * from the Configurations Team.
 	 * 
 	 * TODO: remove when we have the image from config team
 	 * 
-	 * @param path the absolute path leading to the image resource (currently 137 x 46)
-	 * @param description of the image
+	 * @param path
+	 *            the absolute path leading to the image resource (currently 137
+	 *            x 46)
+	 * @param description
+	 *            of the image
 	 * 
 	 */
 	protected ImageIcon createImageIcon(String path, String description) {
@@ -143,7 +147,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Launch the application.
 	 */
@@ -164,33 +168,45 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 	 * Create the application.
 	 */
 	public StandardMachineGUI() {
-		int []coinvalue = { 5, 10, 25, 100, 200 };
-		int []banknote = {500,1000,2000};
-		int [] popcost	= {200,200,200,200,200,200 };
-		String [] popname = {"Coke","DietCode","RootBeer", "asdf", "qwer","zxcv"};
+		int[] coinvalue = { 5, 10, 25, 100, 200 };
+		int[] banknote = { 500, 1000, 2000 };
+		int[] popcost = { 200, 200, 200, 200, 200, 200 };
+		String[] popname = { "Coke", "DietCode", "RootBeer", "asdf", "qwer",
+				"zxcv" };
 		Locale locale = Locale.CANADA;
-//		POP Vending Machine
-		AbstractVendingMachine vm = new VMRUS_SFF_P_C(locale,coinvalue);		
-		initialize(vm, true, true, true, true, true, false, true); // no touch screen, with pop buttons
-//		Candy Vending Machine
-//		AbstractVendingMachine vm = new VMRUS_COM_C_M(locale,coinvalue, popcost);
-//		initialize(vm, true, true, true, true, false, true, false); // no touch screen, with candy buttons
-//		Touch Screen Not Ready Yet
-//		initialize(vm, true, true, true, true, false, false, true); // Touch screen
-		
+		// POP Vending Machine
+		AbstractVendingMachine vm = new VMRUS_SFF_P_C(locale, coinvalue);
+		initialize(vm, true, true, true, true, true, false, true, true); // no
+																			// touch
+																			// screen,
+																			// with
+																			// pop
+																			// buttons
+		// Candy Vending Machine
+		// AbstractVendingMachine vm = new VMRUS_COM_C_M(locale,coinvalue,
+		// popcost);
+		// initialize(vm, true, true, true, true, false, true, false); // no
+		// touch screen, with candy buttons
+		// Touch Screen Not Ready Yet
+		// initialize(vm, true, true, true, true, false, false, true); // Touch
+		// screen
+
 	}
 
-	public StandardMachineGUI(AbstractVendingMachine machine, ArrayList<Boolean> parts) {
+	public StandardMachineGUI(AbstractVendingMachine machine,
+			ArrayList<Boolean> parts) {
 		initialize(machine, parts.get(0), parts.get(1), parts.get(2),
-				parts.get(3), parts.get(4), parts.get(5), parts.get(6));
+				parts.get(3), parts.get(4), parts.get(5), parts.get(6),
+				parts.get(7));
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(AbstractVendingMachine machine, boolean coinSlot, boolean billSlot,
-			boolean cardSlot, boolean internetLight, boolean popBtns,
-			boolean candyBtns, boolean touchScreen) {
+	private void initialize(AbstractVendingMachine machine, boolean coinSlot,
+			boolean billSlot, boolean cardSlot, boolean internetLight,
+			boolean popBtns, boolean candyBtns, boolean touchScreen,
+			boolean payPal) {
 		this.machine = machine;
 		coinButtons = new ArrayList();
 		billButtons = new ArrayList();
@@ -207,6 +223,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 		hasPopButtons = popBtns;
 		hasCandyButtons = candyBtns;
 		hasTouchScreen = touchScreen;
+		hasPayPal = payPal;
 
 		JFrame mainFrame = new JFrame();
 		mainFrame.setTitle("Vending Machines");
@@ -260,7 +277,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 		pnlMisc.setLayout(new GridLayout(0, 1, 0, 3));
 
 		btnReturn = new JButton("Return");
-		btnReturn.addActionListener(new ActionListener(){
+		btnReturn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				buttonPressed = true;
@@ -269,7 +286,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 				} catch (NoSuchHardwareException e1) {
 					e1.printStackTrace();
 				}
-			}			
+			}
 		});
 		pnlMisc.add(btnReturn);
 
@@ -293,6 +310,24 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 			pnlMisc.add(lblInternetLight);
 		}
 
+		JButton btnPayPal = new JButton("PayPal");
+		btnPayPal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// TODO launch paypal
+			}
+		});
+		if (hasPayPal) {
+			pnlMisc.add(btnPayPal);
+		}
+		
+		JButton btnShutDown = new JButton("Shut down");
+		btnShutDown.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// TODO: save machine state to config file
+			}
+		});
+		pnlMisc.add(btnShutDown);
+
 		pnlPopButtons = new JPanel();
 		if (hasPopButtons) {
 			pnlMachineButtons.add(pnlPopButtons);
@@ -314,11 +349,12 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 		JPanel pnlNumberCandyButtons = new JPanel();
 		pnlCandyButtons.add(pnlNumberCandyButtons);
 		pnlNumberCandyButtons.setLayout(new GridLayout(0, 3, 0, 0));
-		
+
 		pnlTouchScreen = new JPanel();
 		pnlTouchScreen.setLayout(new GridLayout());
 		pnlTouchScreen.setLayout(new GridLayout(3, 4, 5, 10));
-		pnlTouchScreen.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		pnlTouchScreen
+				.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		pnlTouchScreen.setBorder(new LineBorder(new Color(0, 0, 0)));
 		if (hasTouchScreen) {
 			pnlMachineButtons.add(pnlTouchScreen);
@@ -370,12 +406,12 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 		// First 6 keys are the A-F
 		int key = 6;
 		for (JButton btn : candyNumberButtons) {
-			if(key ==15){
-				addNumButtonAction(btn,6);
-			}else{
-				addNumButtonAction(btn, key+1);
+			if (key == 15) {
+				addNumButtonAction(btn, 6);
+			} else {
+				addNumButtonAction(btn, key + 1);
 			}
-            key++;
+			key++;
 		}
 
 		machine1Setup();
@@ -453,110 +489,108 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 		btnAdmin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VirtualKeyboard vk = new VirtualKeyboard(getMainFrame());
-				
-//				ControlPanelGUI configPanel = new ControlPanelGUI(
-//						getMainFrame());
+
+				// ControlPanelGUI configPanel = new ControlPanelGUI(
+				// getMainFrame());
 			}
 		});
 		pnlAdminBtn.add(btnAdmin);
 
 		billEject = new JButton("Remove bill");
 		billEject.setEnabled(false);
-        billEject.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-               
+		billEject.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
 				try {
 					machine.getBanknoteSlot().removeBanknote();
 				} catch (NoSuchHardwareException e1) {
 					e1.printStackTrace();
 				}
-            }
-        });
-       
+			}
+		});
+
 		// Registering GUI to listen to parts of the vending machine
-        try {
-        // Added type cast to the machine because the class type of the machine is Object
-            machine.getOutOfOrderLight().register(this);
-            machine.getExactChangeLight().register(this);
-            machine.getDisplay().register(this);
-            machine.getDeliveryChute().register(this);
-//            TODO register the GUI to listen to the Internet light
-//            machine.getInternetLight().register(this);
-            
-//            TODO need to register the GUI to the software
-            
-            
-            if(popBtns == true){
-                for(int i = 0; i< machine.getNumberOfProductRacks(); i++){
-                	machine.getProductRack(i).register(this);
-                }
-            }
-        } catch (NoSuchHardwareException e2) {
-            e2.printStackTrace();
-        }
+		try {
+			// Added type cast to the machine because the class type of the
+			// machine is Object
+			machine.getOutOfOrderLight().register(this);
+			machine.getExactChangeLight().register(this);
+			machine.getDisplay().register(this);
+			machine.getDeliveryChute().register(this);
+			// TODO register the GUI to listen to the Internet light
+			// machine.getInternetLight().register(this);
+
+			// TODO need to register the GUI to the software
+
+			if (popBtns == true) {
+				for (int i = 0; i < machine.getNumberOfProductRacks(); i++) {
+					machine.getProductRack(i).register(this);
+				}
+			}
+		} catch (NoSuchHardwareException e2) {
+			e2.printStackTrace();
+		}
 		canadaSetup();
 	}
-	
-//	Get Methods, mainly used for testing
-	public JButton getCoinBtn(int index){
-		return coinButtons.get(index);		
+
+	// Get Methods, mainly used for testing
+	public JButton getCoinBtn(int index) {
+		return coinButtons.get(index);
 	}
-	
-	public JButton getbillButtons(int index){
+
+	public JButton getbillButtons(int index) {
 		return billButtons.get(index);
 	}
-	
-	public JButton getcardButtons(int index){
+
+	public JButton getcardButtons(int index) {
 		return cardButtons.get(index);
 	}
-	
-	
-	public JButton getPopBtn(int index){
+
+	public JButton getPopBtn(int index) {
 		return popButtons.get(index);
 	}
-	
-	public JButton getLetterBtn(int index){
+
+	public JButton getLetterBtn(int index) {
 		return candyLetterButtons.get(index);
 	}
-	
-	public JButton getNumButtons(int index){
+
+	public JButton getNumButtons(int index) {
 		return candyNumberButtons.get(index);
 	}
-	
-	public JLabel getOutOfProductLabels(int index){
+
+	public JLabel getOutOfProductLabels(int index) {
 		return outOfProductLabels.get(index);
-	}	
-	
-	public JLabel getOutOfOrderLight(){
+	}
+
+	public JLabel getOutOfOrderLight() {
 		return lblOutOfOrder;
 	}
-	
-	public JLabel getExactChangeLight(){
+
+	public JLabel getExactChangeLight() {
 		return lblExactChange;
 	}
-	
-	public JButton getReturnButton(){
+
+	public JButton getReturnButton() {
 		return btnReturn;
 	}
-	
-	public JButton getEjectBillButton(){
+
+	public JButton getEjectBillButton() {
 		return billEject;
 	}
-	
-	public boolean getButtonPressStatus(){
+
+	public boolean getButtonPressStatus() {
 		return buttonPressed;
 	}
-	
-	public void resetButtonPressedStatus(){
+
+	public void resetButtonPressedStatus() {
 		buttonPressed = false;
 	}
-	
-	public JTextPane getDisplay(){
+
+	public JTextPane getDisplay() {
 		return Display_text;
 	}
-	
-	
+
 	/**
 	 * Sets what currency buttons are shown based on the currency type selected
 	 * in the combo box Mainly used by combo box action listener
@@ -590,10 +624,10 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 		int i = 0;
 		for (String name : names) {
 			outOfProductLabels.add(createOutOfProductLight());
-            JButton popbtn = createPopButton(name);
-            popButtons.add(popbtn);
-            addButtonAction(popbtn,i);
-            i++;
+			JButton popbtn = createPopButton(name);
+			popButtons.add(popbtn);
+			addButtonAction(popbtn, i);
+			i++;
 		}
 	}
 
@@ -757,16 +791,16 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 	public void machine1Setup() {
 		ArrayList<String> names = new ArrayList();
 
-//		names.add("Coke");
-//		names.add("Diet Coke");
-//		names.add("Coke Zero");
-//		names.add("Sprite");
-//		names.add("Root Beer");
-//		names.add("Water");
-		
+		// names.add("Coke");
+		// names.add("Diet Coke");
+		// names.add("Coke Zero");
+		// names.add("Sprite");
+		// names.add("Root Beer");
+		// names.add("Water");
+
 		try {
-			for(int i=0; i< machine.getNumberOfProductRacks(); i++){
-				names.add("Pop "+ i);
+			for (int i = 0; i < machine.getNumberOfProductRacks(); i++) {
+				names.add("Pop " + i);
 			}
 		} catch (NoSuchHardwareException e) {
 			e.printStackTrace();
@@ -794,19 +828,19 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 		String buttonText = currType + df.format(amountInDollars);
 		JButton btn = new JButton(buttonText);
 		btn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-            	Coin coin = new Coin(amount);
-                try {
-        			System.out.println("Before Inseting coin");
-        			buttonPressed = true;
-                    machine.getCoinSlot().addCoin(coin);                                        
-                } catch (NoSuchHardwareException e) {
-                    e.printStackTrace();
-                } catch (DisabledException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+			public void actionPerformed(ActionEvent arg0) {
+				Coin coin = new Coin(amount);
+				try {
+					System.out.println("Before Inseting coin");
+					buttonPressed = true;
+					machine.getCoinSlot().addCoin(coin);
+				} catch (NoSuchHardwareException e) {
+					e.printStackTrace();
+				} catch (DisabledException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		return btn;
 	}
 
@@ -906,7 +940,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 			btn.setEnabled(status);
 		}
 	}
-	
+
 	public void billRejected(Object billSlot, Object bill) {
 		enableBillButtons(false);
 		billEject.setEnabled(true);
@@ -934,169 +968,172 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 			Display_text.setText(newMsg);
 		}
 	}
-	
-	  /**
-     * Add Listener to the JButtons on the GUI
-     * @param name of the JButton
-     * @param key to the product rack
-     */
-    public void addButtonAction(JButton button, int key){
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                	System.out.println("Inside Button Action");
-                	buttonPressed = true;
-                	GUIHelper.enableComponents(getMainFrame(), false);
-                    machine.getSelectionButton(key).press();
-                } catch (NoSuchHardwareException e1) {			
-                    e1.printStackTrace();
-                }
-            }
-        });
-    }
-    
-    public void addNumButtonAction(JButton button, int key){
-    	button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                	buttonPressed = true;
-                	if (codeInProgress) {
-                		GUIHelper.enableComponents(getMainFrame(), false);
-                		machine.getSelectionButton(key).press();
-                	}
-                } catch (NoSuchHardwareException e1) {			
-                    e1.printStackTrace();
-                }
-            }
-        });
-    }
-    
-    public void addLetterButtonAction(JButton button, int key){
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                	buttonPressed = true;
-                	if (!codeInProgress) {
+
+	/**
+	 * Add Listener to the JButtons on the GUI
+	 * 
+	 * @param name
+	 *            of the JButton
+	 * @param key
+	 *            to the product rack
+	 */
+	public void addButtonAction(JButton button, int key) {
+		button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					System.out.println("Inside Button Action");
+					buttonPressed = true;
+					GUIHelper.enableComponents(getMainFrame(), false);
+					machine.getSelectionButton(key).press();
+				} catch (NoSuchHardwareException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+	}
+
+	public void addNumButtonAction(JButton button, int key) {
+		button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					buttonPressed = true;
+					if (codeInProgress) {
+						GUIHelper.enableComponents(getMainFrame(), false);
+						machine.getSelectionButton(key).press();
+					}
+				} catch (NoSuchHardwareException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+	}
+
+	public void addLetterButtonAction(JButton button, int key) {
+		button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					buttonPressed = true;
+					if (!codeInProgress) {
 						codeInProgress = true;
 					} else {
 						codeInProgress = false;
 					}
-                    machine.getSelectionButton(key).press();
-                } catch (NoSuchHardwareException e1) {			
-                    e1.printStackTrace();
-                }
-            }
-        });
-    }
-    
-    @Override
-    public void enabled(AbstractHardware<AbstractHardwareListener> hardware) {
-        // TODO Auto-generated method stub
-        
-    }
-    
-    @Override
-    public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {
-        // TODO Auto-generated method stub
-        
-    }
-    
-    @Override
-    public void activated(IndicatorLight light) {
-        try {
-            if(light == machine.getExactChangeLight()){
-                lblExactChange.setForeground(Color.BLACK);
-            }else if(light == machine.getOutOfOrderLight()){
-                lblOutOfOrder.setForeground(Color.BLACK);
-            }else{
-            	lblInternetLight.setForeground(Color.BLACK);
-            }
-        } catch (NoSuchHardwareException e) {			
-            e.printStackTrace();
-        }
-        
-    }
-    
-    @Override
-    public void deactivated(IndicatorLight light) {
-        try {
-            if(light == machine.getExactChangeLight()){
-                lblExactChange.setForeground(Color.RED);
-            }else if(light == machine.getOutOfOrderLight()){
-                lblOutOfOrder.setForeground(Color.LIGHT_GRAY);
-            }else{
-            	lblInternetLight.setForeground(Color.LIGHT_GRAY);
-            }
-        } catch (NoSuchHardwareException e) {
-            e.printStackTrace();
-        }	
-    }
-    
-    @Override
-    public void productAdded(ProductRack productRack, Product product) {
-        int productIndex;
-        for(productIndex = 0; ;productIndex++){
-            try {
-                if(machine.getProductRack(productIndex) == productRack){
-                    break;
-                }
-            } catch (NoSuchHardwareException e) {
-                e.printStackTrace();
-            }
-        }
-        outOfProductLabels.get(productIndex).setForeground(Color.LIGHT_GRAY);	
-    }
-    
-    @Override
-    public void productRemoved(ProductRack productRack, Product product) {
-        // No need to do anything
-    }
-    
-    @Override
-    public void productFull(ProductRack productRack) {
-        // No need to do anything
-    }
-    
-    @Override
-    public void productEmpty(ProductRack productRack) {
-        int productIndex;
-        for(productIndex = 0; ;productIndex++){
-            try {
-                if(machine.getProductRack(productIndex) == productRack){
-                    break;
-                }
-            } catch (NoSuchHardwareException e) {
-                e.printStackTrace();
-            }
-        }
-        outOfProductLabels.get(productIndex).setForeground(Color.BLACK);
-    }
+					machine.getSelectionButton(key).press();
+				} catch (NoSuchHardwareException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+	}
+
+	@Override
+	public void enabled(AbstractHardware<AbstractHardwareListener> hardware) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void activated(IndicatorLight light) {
+		try {
+			if (light == machine.getExactChangeLight()) {
+				lblExactChange.setForeground(Color.BLACK);
+			} else if (light == machine.getOutOfOrderLight()) {
+				lblOutOfOrder.setForeground(Color.BLACK);
+			} else {
+				lblInternetLight.setForeground(Color.BLACK);
+			}
+		} catch (NoSuchHardwareException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void deactivated(IndicatorLight light) {
+		try {
+			if (light == machine.getExactChangeLight()) {
+				lblExactChange.setForeground(Color.RED);
+			} else if (light == machine.getOutOfOrderLight()) {
+				lblOutOfOrder.setForeground(Color.LIGHT_GRAY);
+			} else {
+				lblInternetLight.setForeground(Color.LIGHT_GRAY);
+			}
+		} catch (NoSuchHardwareException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void productAdded(ProductRack productRack, Product product) {
+		int productIndex;
+		for (productIndex = 0;; productIndex++) {
+			try {
+				if (machine.getProductRack(productIndex) == productRack) {
+					break;
+				}
+			} catch (NoSuchHardwareException e) {
+				e.printStackTrace();
+			}
+		}
+		outOfProductLabels.get(productIndex).setForeground(Color.LIGHT_GRAY);
+	}
+
+	@Override
+	public void productRemoved(ProductRack productRack, Product product) {
+		// No need to do anything
+	}
+
+	@Override
+	public void productFull(ProductRack productRack) {
+		// No need to do anything
+	}
+
+	@Override
+	public void productEmpty(ProductRack productRack) {
+		int productIndex;
+		for (productIndex = 0;; productIndex++) {
+			try {
+				if (machine.getProductRack(productIndex) == productRack) {
+					break;
+				}
+			} catch (NoSuchHardwareException e) {
+				e.printStackTrace();
+			}
+		}
+		outOfProductLabels.get(productIndex).setForeground(Color.BLACK);
+	}
 
 	@Override
 	public void itemDelivered(DeliveryChute chute) {
 		GUIHelper.enableComponents(getMainFrame(), true);
-		for(Object item: chute.removeItems())
+		for (Object item : chute.removeItems())
 			System.out.println(item);
 	}
 
 	@Override
 	public void doorOpened(DeliveryChute chute) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void doorClosed(DeliveryChute chute) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void chuteFull(DeliveryChute chute) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
