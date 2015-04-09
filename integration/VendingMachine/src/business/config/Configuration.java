@@ -344,10 +344,10 @@ public class Configuration {
 			}
 			else if (line.startsWith("locale")){
 				String l = readString(line);
-				if (l.equals("CAD")) locale = Locale.CANADA;
-				else if (l.equals("USD")) locale = Locale.US;
-				else if (l.equals("EUR")) locale = Locale.UK;
-				else throw new ConfigurationException("Invalid locale " + l + " - must be CAD, USD or EUR");
+				if (l.equals("CA")) locale = Locale.CANADA;
+				else if (l.equals("US")) locale = Locale.US;
+				else if (l.equals("UK")) locale = Locale.UK;
+				else throw new ConfigurationException("Invalid locale " + l + " - must be CA, US or UK");
 			}
 		}
 		
