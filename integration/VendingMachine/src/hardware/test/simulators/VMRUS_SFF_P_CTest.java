@@ -1,5 +1,5 @@
 //INCOMPLETE: Tests for Out of Product Lights, Return Button
-package hardware.test;
+package hardware.test.simulators;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -19,7 +19,7 @@ import hardware.products.PopCan;
 import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
 import hardware.simulators.AbstractVendingMachine;
-import hardware.simulators.VMRUS_SFF_P_CI;
+import hardware.simulators.VMRUS_SFF_P_C;
 import hardware.test.stub.CoinRackListenerStub;
 import hardware.test.stub.CoinReceptacleListenerStub;
 import hardware.test.stub.CoinSlotListenerStub;
@@ -33,7 +33,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class VMRUS_SFF_P_CITest {
+public class VMRUS_SFF_P_CTest {
 
 	private final int NO_COINRACKS = 5;
 	private final int NO_PRODUCTRACKS = 6;
@@ -58,7 +58,7 @@ public class VMRUS_SFF_P_CITest {
 	@Before
 	public void setup() throws NoSuchHardwareException {
 
-		hardware = new VMRUS_SFF_P_CI(Locale.CANADA, new int[] { 5, 10, 25, 100,
+		hardware = new VMRUS_SFF_P_C(Locale.CANADA, new int[] { 5, 10, 25, 100,
 				200 });
 
 		coin = new Coin(100);
@@ -82,22 +82,22 @@ public class VMRUS_SFF_P_CITest {
 
 		pushButtonListeners = new PushButtonListenerStub[NO_SELECTIONBUTTONS];
 		for (int i = 0; i < NO_SELECTIONBUTTONS; i++) {
-			pushButtonListeners[i]=new PushButtonListenerStub();
+			pushButtonListeners[i] = new PushButtonListenerStub();
 			hardware.getSelectionButton(i).register(pushButtonListeners[i]);
 		}
 
 		returnButtonListener = new PushButtonListenerStub();
-		hardware.getReturnButton().register(returnButtonListener);
-
-		outOfOrderListener = new IndicatorLightListenerStub();
-		exactChangeListener = new IndicatorLightListenerStub();
 		
 		outOfProductListeners = new IndicatorLightListenerStub[NO_SELECTIONBUTTONS];
 		for(int i=0; i<NO_SELECTIONBUTTONS; i++){
 			outOfProductListeners[i]=new IndicatorLightListenerStub();
 			hardware.getOutOfProductLight(i).register(outOfProductListeners[i]);
 		}
+		
+		hardware.getReturnButton().register(returnButtonListener);
 
+		outOfOrderListener = new IndicatorLightListenerStub();
+		exactChangeListener = new IndicatorLightListenerStub();
 		hardware.getCoinSlot().register(coinSlotListener);
 		hardware.getCoinReceptacle().register(coinReceptacleListener);
 		hardware.getCoinStorageBin().register(storageBinListener);
@@ -157,7 +157,7 @@ public class VMRUS_SFF_P_CITest {
 	@Test(expected = SimulationException.class)
 	public void testNullCoinValues() {
 		
-		 hardware = new VMRUS_SFF_P_CI(Locale.CANADA, null);
+		 hardware = new VMRUS_SFF_P_C(Locale.CANADA, null);
 	}
 
 	@Test
@@ -475,14 +475,7 @@ public class VMRUS_SFF_P_CITest {
 		deliveryChuteListener.assertProtocol();
 		chuteContents = hardware.getDeliveryChute().removeItems();
 		
-		// TODO: Verify with Luigi - changed April 4, 2015 - wwright
-		// Changed anticipated length to 5 rather than 1
-		// hardware.getNumberOfCoinRacks() yields 5
-		// chuterContents.length yields 5
-		// original: assertTrue(cuteContents.length == 1)
-		
 		assertTrue(chuteContents.length == 5);
-		System.out.println(chuteContents[0].getClass());
 		 assertTrue(chuteContents[0].getClass() == Coin.class);
 	}
 
