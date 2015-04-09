@@ -32,7 +32,7 @@ import SDK.rifffish.Rifffish;
  * <li>CardSlot: N</li>
  * <li>PayPal: N</li>
  * <li>TouchScreen: N</li>
- * <li>VMSocket (Internet): N</li>
+ * <li>Internet: N</li>
  * <li>OutOfOrderLight: Y</li>
  * <li>ExactChangeLight: Y</li>
  * <li>NoInternetConnectionLight: N</li>
