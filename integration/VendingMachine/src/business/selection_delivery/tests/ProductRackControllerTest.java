@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import hardware.racks.*;
+import SDK.logger.Logger;
 import business.selection_delivery.ProductRackController;
 
 public class ProductRackControllerTest {
@@ -60,7 +61,7 @@ public class ProductRackControllerTest {
 		quantity = 0;
 		productID = 10;
 		
-		rackManager = new ProductRackController(rack, name, cost, quantity, productID);
+		rackManager = new ProductRackController(rack, name, cost, quantity, null, new Logger(), 0);
 		
 	}
 
@@ -95,7 +96,7 @@ public class ProductRackControllerTest {
 	{
 		quantity = 5;
 		
-		rackManager = new ProductRackController(rack, name, cost, quantity, productID);
+		rackManager = new ProductRackController(rack, name, cost, quantity, null, new Logger(), 0);
 		
 		assertNotNull(rackManager);
 	}
@@ -203,15 +204,15 @@ public class ProductRackControllerTest {
 		assertEquals(newName, nameReturn);
 	}
 	
-	@Test
-	public void test_changeProductID()
-	{
-		int newID = 20;
-		rackManager.changeProductID(newID);
-		
-		int IDReturn = rackManager.getProductID();
-		assertEquals(newID, IDReturn);
-	}
+//	@Test
+//	public void test_changeProductID()
+//	{
+//		int newID = 20;
+//		rackManager.changeProductID(newID);
+//		
+//		int IDReturn = rackManager.getProductID();
+//		assertEquals(newID, IDReturn);
+//	}
 	
 	@Test
 	public void test_load_isFull()
