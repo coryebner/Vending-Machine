@@ -1,6 +1,7 @@
 package business.funds.tests;
 
 import hardware.exceptions.DisabledException;
+
 import hardware.funds.Banknote;
 import hardware.funds.BanknoteReceptacle;
 import hardware.funds.BanknoteSlot;
@@ -15,12 +16,14 @@ import hardware.racks.ProductRack;
 import hardware.simulators.VMRUS_COM_C_M;
 import hardware.ui.PushButton;
 import SDK.logger.Logger;
+import SDK.rifffish.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import org.jmock.Mockery;
+import org.jmock.Expectations;
 import org.jmock.lib.legacy.ClassImposteriser;
 
 import static org.junit.Assert.*;
@@ -29,10 +32,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.paypal.api.payments.BillingInfo;
-
 import business.config.Configuration;
-import business.config.ConfigurationListener;
 import business.funds.BanknoteController;
 import business.funds.CoinRackController;
 import business.funds.CoinsController;
@@ -47,9 +47,7 @@ import business.selection_delivery.InventoryController;
 
 public class FundsIntegrationTests {
 
-	private Mockery context = new Mockery() {{
-		setImposteriser(ClassImposteriser.INSTANCE);
-	}};
+	private Mockery context;
 
 	int[] popCosts;
 	String[] popNames;
@@ -92,6 +90,9 @@ public class FundsIntegrationTests {
 	
 	@Before
 	public void setUp() throws Exception {
+		context = new Mockery() {{
+			setImposteriser(ClassImposteriser.INSTANCE);
+		}};
 		// The cause of all your troubles
 		banknoteDenominations = new int[] {500,1000,2000};
 		coinRackDenominations = new int[]{5, 10, 25, 100, 200};
@@ -131,7 +132,8 @@ public class FundsIntegrationTests {
 		availablePaymentMethods.add(PaymentMethods.PAYPAL);	
 		
 		inventoryController = new InventoryController();
-		logger = new Logger();
+		logger = context.mock(Logger.class);
+		
 		returnButton = new PushButton();
 		ProductRack[] productRacks = new ProductRack[hw.getNumberOfProductRacks()];
 		for(int i = 0; i < hw.getNumberOfProductRacks(); i++){
@@ -179,11 +181,14 @@ public class FundsIntegrationTests {
 			returnButton.register(fundsController.getBankNoteController());
 			//bnReceptacle.register(fundsController.getBankNoteStorageBinTracker());
 			bnReceptacle.register(fundsController.getBankNoteController());
-		}	
+		}
+		payPalController = context.mock(PayPalController.class);
+		fundsController.ONLY_FOR_TESTING_setControllerState(true, payPalController, PayPalController.class);
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		context = null;
 		popCosts = null;
 		popNames = null;
 		fundsController = null;
@@ -219,6 +224,11 @@ public class FundsIntegrationTests {
 
 	@Test
 	public void testTEMPORARYTEST_PREPAID() {
+		context.checking(new Expectations(){
+			{
+				allowing(logger).log(with(any(Transaction.class)));
+			}
+		});
 		try {
 			cardSlot.insertCard(new Card(Card.CardType.PREPAID, "7373737373", "Defualt Prepaid" , "", "00/0000", Locale.CANADA, 10000));
 		} catch (CardSlotNotEmptyException e) {
@@ -231,6 +241,11 @@ public class FundsIntegrationTests {
 	
 	@Test
 	public void testPrepaidandCoinsTransactionSufficient(){
+		context.checking(new Expectations(){
+			{
+				allowing(logger).log(with(any(Transaction.class)));
+			}
+		});
 		try {
 			cardSlot.insertCard(new Card(Card.CardType.PREPAID, "7373737373", "Defualt Prepaid" , "", "00/0000", Locale.CANADA, 50));
 		} catch (CardSlotNotEmptyException | DisabledException e) {
@@ -247,6 +262,14 @@ public class FundsIntegrationTests {
 	
 	@Test
 	public void testPrepaidandCoinsTransactionInsufficient(){
+		context.checking(new Expectations(){
+			{
+			allowing(logger).log(with(any(Transaction.class)));
+			atLeast(1).of(payPalController).ConductTransaction(25);
+			will(returnValue(TransactionReturnCode.INSUFFICIENTFUNDS));
+			}
+		});
+		
 		try {
 			cardSlot.insertCard(new Card(Card.CardType.PREPAID, "7373737373", "Defualt Prepaid" , "", "00/0000", Locale.CANADA, 50));
 		} catch (CardSlotNotEmptyException | DisabledException e) {
@@ -262,6 +285,11 @@ public class FundsIntegrationTests {
 	
 	@Test
 	public void testPrepaidandBillsTransactionSufficient() throws Exception{
+		context.checking(new Expectations(){
+			{
+				allowing(logger).log(with(any(Transaction.class)));
+			}
+		});
 		try {
 			cardSlot.insertCard(new Card(Card.CardType.PREPAID, "7373737373", "Defualt Prepaid" , "", "00/0000", Locale.CANADA, 50));
 		} catch (CardSlotNotEmptyException | DisabledException e) {
@@ -276,17 +304,35 @@ public class FundsIntegrationTests {
 		assertEquals(TransactionReturnCode.SUCCESSFUL, fundsController.ConductTransaction(0, 175));
 	}
 	
-	// Test using bill note only
 	@Test
-	public void testBillsTransactionSufficient() throws Exception{
+	public void testBillsTransactionSufficient(){
+		context.checking(new Expectations(){
+			{
+				allowing(logger).log(with(any(Transaction.class)));
+			}
+		});
 		try {
-			// No idea which one to use
 			banknoteSlot.addBanknote(new Banknote(500));
-			tempbnReceptacle.acceptBanknote(new Banknote(500));
 		} catch (DisabledException e) {
-			fail();
+			
 		}
-		// New error, no idea why unsuccessful now.........
 		assertEquals(TransactionReturnCode.SUCCESSFUL, fundsController.ConductTransaction(0, 175));
+	}
+	
+	@Test
+	public void testBillsTransactionInSufficient(){
+		context.checking(new Expectations(){
+			{
+			allowing(logger).log(with(any(Transaction.class)));
+			atLeast(1).of(payPalController).ConductTransaction(5);
+			will(returnValue(TransactionReturnCode.INSUFFICIENTFUNDS));
+			}
+		});
+		try {
+			banknoteSlot.addBanknote(new Banknote(500));
+		} catch (DisabledException e) {
+			
+		}
+		assertEquals(TransactionReturnCode.INSUFFICIENTFUNDS, fundsController.ConductTransaction(0, 505));
 	}
 }

@@ -259,18 +259,6 @@ public abstract class AbstractVendingMachine {
 	}
 
 	/**
-	 * Returns the socket.
-	 * 
-	 * @return the socket.
-	 * @throws NoSuchHardwareException
-	 *             if this hardware component does not exist in the
-	 *             configuration of the vending machine.
-	 */
-	public VMSocket getSocket() throws NoSuchHardwareException {
-		throw new NoSuchHardwareException();
-	}
-
-	/**
 	 * Returns the configuration panel transmitter.
 	 * 
 	 * @return the configuration panel transmitter.

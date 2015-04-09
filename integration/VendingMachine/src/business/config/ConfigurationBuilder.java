@@ -29,10 +29,11 @@ class ConfigurationBuilder {
 		}
 		
 		if (type == Configuration.COMCM
-			|| type == Configuration.COMCMI)
+			|| type == Configuration.COMCMI
+			|| type == Configuration.TOCCMI)
 		{
 			return type + "\n"
-				+ "names Coke Pepsi 7-up Sprite Fanta Crush Mug Barqs DietCoke DietPepsi Lemonade Water"
+				+ "names Coke Pepsi 7-up Sprite Fanta Crush Mug Barqs DietCoke DietPepsi Lemonade Water "
 				+ "pop13 pop14 pop15 pop16 pop17 pop18 pop19 pop20 pop21 pop22 pop23 pop24\n"
 				+ "prices 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100\n"
 				+ "quantities 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20\n"
@@ -50,8 +51,10 @@ class ConfigurationBuilder {
 					+ "candy25 candy26 candy27 candy28 candy29 candy30 candy31 candy32 candy33 candy34 candy35 candy36\n"
 					+ "prices 100 100 100 100 100 100 100 100 100 100 100 100 "
 					+ "100 100 100 100 100 100 100 100 100 100 100 100 "
+					+ "100 100 100 100 100 100 100 100 100 100 100 100 "
 					+ "100 100 100 100 100 100 100 100 100 100 100 100\n"
 					+ "quantities 20 20 20 20 20 20 20 20 20 20 20 20 "
+					+ "20 20 20 20 20 20 20 20 20 20 20 20 "
 					+ "20 20 20 20 20 20 20 20 20 20 20 20 "
 					+ "20 20 20 20 20 20 20 20 20 20 20 20\n"
 					+ "coinracks 0 0 0 0 0 0\n"

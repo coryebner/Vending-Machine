@@ -27,7 +27,7 @@ import hardware.ui.PushButton;
  * <li>CardSlot: Y</li>
  * <li>PayPal: N</li>
  * <li>TouchScreen: N</li>
- * <li>VMSocket (Internet): Y</li>
+ * <li>Internet: Y</li>
  * <li>OutOfOrderLight: Y</li>
  * <li>ExactChangeLight: N</li>
  * <li>NoInternetConnectionLight: N (might be added later)</li>
@@ -44,7 +44,6 @@ public class VMRUS_SFF_P_PI extends AbstractVendingMachine {
 	private PushButton returnButton;
 	private IndicatorLight outOfOrderLight;
 	private IndicatorLight[] outOfProductLights;
-	private VMSocket socket;
 	private ConfigurationPanelTransmitter configurationPanelTransmitter;
 
 	protected static int deliveryChuteCapacity = 20;
@@ -87,7 +86,6 @@ public class VMRUS_SFF_P_PI extends AbstractVendingMachine {
 			outOfProductLights[i] = new IndicatorLight();
 
 		display = new Display();
-		socket = new VMSocket();
 		configurationPanelTransmitter = new ConfigurationPanelTransmitter();
 
 	}
@@ -152,11 +150,6 @@ public class VMRUS_SFF_P_PI extends AbstractVendingMachine {
 		return selectionButtons[index];
 	}
 	
-	@Override
-	public VMSocket getSocket() throws NoSuchHardwareException {
-		return socket;
-	}
-
 	@Override
 	public void enableSafety() {
 		super.enableSafety();

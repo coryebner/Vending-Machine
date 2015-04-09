@@ -53,11 +53,11 @@ public class VMConfigGUI {
 		});
 	}
 
-	public VMConfigGUI() {
+	public VMConfigGUI(){
 		initialize();
 	}
 
-	private void initialize() {
+	private void initialize()  {
 		frmVendingMachinesRUS = new JFrame();
 		frmVendingMachinesRUS.setTitle("Vending Machines R Us");
 		frmVendingMachinesRUS.setBounds(100, 100, 386, 440);
@@ -279,13 +279,12 @@ public class VMConfigGUI {
 					try {
 						machine = config.load(machineConfig,reportConfig);
 					} catch (ConfigurationException e1) {
+						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					ArrayList<Boolean> parts = null;
-					List list= config.parts();
-					for(int i = 0; i<list.size(); i++){
-						parts.add((Boolean) list.get(i));
-					}
+					
+					ArrayList<Boolean> parts = config.parts();
+
 					VendingMachineGUI window = new StandardMachineGUI(machine,parts);
 					window.getMainFrame().setVisible(true);
 					frmVendingMachinesRUS.setVisible(false);

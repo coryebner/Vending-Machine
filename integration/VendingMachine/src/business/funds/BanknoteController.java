@@ -67,7 +67,7 @@ public class BanknoteController implements BanknoteReceptacleListener,
 
 	@Override
 	public void banknoteAdded(BanknoteReceptacle receptacle, Banknote banknote) {
-		availableBalance += banknote.getValue()*100;
+		availableBalance += banknote.getValue();
 	}
 
 	@Override
