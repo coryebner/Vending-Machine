@@ -10,7 +10,7 @@ class ConfigurationBuilder {
 					+ "coinracks 0 0 0 0 0 0\n"
 					+ "coinstorage 0 0 0 0 0 0\n"
 					+ "billstorage 0 0 0 0 0\n"
-					+ "locale CAD\n";
+					+ "locale CA\n";
 		}
 		
 		if (type == Configuration.COMPM
@@ -25,7 +25,7 @@ class ConfigurationBuilder {
 					+ "coinracks 0 0 0 0 0 0\n"
 					+ "coinstorage 0 0 0 0 0 0\n"
 					+ "billstorage 0 0 0 0 0\n"
-					+ "locale CAD\n";
+					+ "locale CA\n";
 		}
 		
 		if (type == Configuration.COMCM
@@ -39,7 +39,7 @@ class ConfigurationBuilder {
 				+ "coinracks 0 0 0 0 0 0\n"
 				+ "coinstorage 0 0 0 0 0 0\n"
 				+ "billstorage 0 0 0 0 0\n"
-				+ "locale CAD\n";
+				+ "locale CA\n";
 		}
 		
 		if (type == Configuration.TOCCp || type == Configuration.TOCCpI) {
@@ -57,7 +57,7 @@ class ConfigurationBuilder {
 					+ "coinracks 0 0 0 0 0 0\n"
 					+ "coinstorage 0 0 0 0 0 0\n"
 					+ "billstorage 0 0 0 0 0\n"
-					+ "locale CAD\n";
+					+ "locale CA\n";
 			
 		}
 		
