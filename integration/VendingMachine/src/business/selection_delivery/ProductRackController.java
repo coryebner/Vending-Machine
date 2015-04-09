@@ -21,7 +21,7 @@ public class ProductRackController implements ProductRackListener
 	private int cost;
 	private String name;
 	private int productID;
-	private Rifffish logger;
+	private Rifffish logger = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
 	
 	public ProductRackController(ProductRack pr, String n, int c, int quantity, int pID)
 	{//Remember and register to the pop can rack that this manager is responsible for and get the values.
@@ -36,7 +36,6 @@ public class ProductRackController implements ProductRackListener
 		name = n;
 		cost = c;
 		productID = pID;
-		logger = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
 	}
 	
 	//Default constructor
@@ -69,6 +68,12 @@ public class ProductRackController implements ProductRackListener
 	
 	public void refillQuantity(int quantity)
 	{
+		int maxFill = this.getCapacity() - this.getCount();		//The max number of additional pops we can add
+		
+		if (quantity > maxFill)	//If we are trying to refill more than the rack is holding, cap it.
+			quantity = maxFill;
+		
+		
 		for (int j = 0 ; j < quantity; j++ )
 		{
 			try{
