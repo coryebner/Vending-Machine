@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
@@ -280,7 +281,11 @@ public class VMConfigGUI {
 					} catch (ConfigurationException e1) {
 						e1.printStackTrace();
 					}
-					ArrayList<Boolean> parts = (ArrayList<Boolean>) config.parts();
+					ArrayList<Boolean> parts = null;
+					List list= config.parts();
+					for(int i = 0; i<list.size(); i++){
+						parts.add((Boolean) list.get(i));
+					}
 					VendingMachineGUI window = new StandardMachineGUI(machine,parts);
 					window.getMainFrame().setVisible(true);
 					frmVendingMachinesRUS.setVisible(false);
