@@ -12,6 +12,8 @@ import org.junit.Test;
 import business.funds.BanknoteController;
 import business.funds.BanknoteStorageBinController;
 import business.funds.TransactionReturnCode;
+import hardware.exceptions.CapacityExceededException;
+import hardware.exceptions.DisabledException;
 import hardware.funds.Banknote;
 import hardware.funds.BanknoteReceptacle;
 import hardware.ui.IndicatorLight;
@@ -41,6 +43,7 @@ public class BanknoteControllerTest {
 	@Before
 	public void setUp() throws Exception {
 		banknoteReceptacle = new BanknoteReceptacle(20);
+		
 		indicatorLight = new IndicatorLight();
 		banknoteStorageController = new BanknoteStorageBinController(5,
 				indicatorLight);
@@ -48,6 +51,8 @@ public class BanknoteControllerTest {
 		banknoteFive = new Banknote(5);
 		banknoteTen = new Banknote(10);
 		banknoteTwenty = new Banknote(20);
+		
+		banknoteReceptacle.register(banknoteController);
 	}
 
 	/**
@@ -139,5 +144,21 @@ public class BanknoteControllerTest {
 	public void returnAllBankNotesTest() {
 		banknoteController.pressed(null);
 		assertEquals(0, banknoteController.getAvailableBalance());
+	}
+	
+	/**
+	 * Test banknoteController registration with banknote receptacle
+	 */
+	@Test
+	public void bankNoteAddedTest2() {
+		try {
+			banknoteReceptacle.acceptBanknote(banknoteFive);
+			assertEquals(5, banknoteController.getAvailableBalance());
+		} catch (CapacityExceededException e) {
+			fail();
+		} catch (DisabledException e) {
+			fail();
+		}
+		
 	}
 }

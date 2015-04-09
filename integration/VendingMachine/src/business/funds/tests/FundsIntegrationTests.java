@@ -1,11 +1,13 @@
 package business.funds.tests;
 
 import hardware.exceptions.DisabledException;
+import hardware.funds.Banknote;
 import hardware.funds.BanknoteReceptacle;
 import hardware.funds.BanknoteSlot;
 import hardware.funds.Card;
 import hardware.funds.CardSlot;
 import hardware.funds.CardSlotNotEmptyException;
+import hardware.funds.Coin;
 import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinSlot;
 import hardware.racks.CoinRack;
@@ -27,7 +29,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.paypal.api.payments.BillingInfo;
+
 import business.config.Configuration;
+import business.config.ConfigurationListener;
 import business.funds.BanknoteController;
 import business.funds.CoinRackController;
 import business.funds.CoinsController;
@@ -83,11 +88,12 @@ public class FundsIntegrationTests {
 	VMRUS_COM_C_M hw;
 
 	int id = 10;
-	PushButton returnButton; 
-
+	PushButton returnButton;
+	
 	@Before
 	public void setUp() throws Exception {
-		banknoteDenominations = new int[] {5,10,20};
+		// The cause of all your troubles
+		banknoteDenominations = new int[] {500,1000,2000};
 		coinRackDenominations = new int[]{5, 10, 25, 100, 200};
 		coinRackQuantities = new int[]{5, 5, 5, 5, 5};
 		popCosts = new int []{100, 200, 150, 250, 175};
@@ -106,20 +112,22 @@ public class FundsIntegrationTests {
 		for(int i=0; i < hw.getNumberOfCoinRacks(); i++) {
 			coinRacks[i] = hw.getCoinRack(i);
 		}
-
+		config = new Configuration();
 		bnReceptacle = hw.getBanknoteReceptacle();
-		tempbnReceptacle = new BanknoteReceptacle(10);
+		tempbnReceptacle = hw.getBanknoteReceptacle();
+		
 		overflowCoinReceptacle = new CoinReceptacle(10);
 		
-		prepaidController = new PrepaidController(currency);
+		//prepaidController = new PrepaidController(currency);
 		cardSlot = hw.getCardSlot();
-		cardSlot.register(prepaidController);
+		//cardSlot.register(prepaidController);
 		
 		availablePaymentMethods = new ArrayList<PaymentMethods>();
 		availablePaymentMethods.add(PaymentMethods.PREPAID);
 		availablePaymentMethods.add(PaymentMethods.BILLS);
 		availablePaymentMethods.add(PaymentMethods.COINS);
-		availablePaymentMethods.add(PaymentMethods.CREDITCARD);
+		// Impossible to test both credit card AND prepaid
+		//availablePaymentMethods.add(PaymentMethods.CREDITCARD);
 		availablePaymentMethods.add(PaymentMethods.PAYPAL);	
 		
 		inventoryController = new InventoryController();
@@ -138,7 +146,7 @@ public class FundsIntegrationTests {
 		// COINS registration
 		if(fundsController.isCoinsPresent()){
 			//Exact Change Controller Registration
-			//WE"LL IGNORE THIS...>>>>>>>>***CONFIG***.register(fundsController.getExactChangeController())
+			//config.registerConfigListener(fundsController.getExactChangeController());
 			for(ProductRack productRack: productRacks){
 				productRack.register(fundsController.getExactChangeController());
 			}
@@ -166,18 +174,12 @@ public class FundsIntegrationTests {
 
 		}
 		if(fundsController.isBillsPresent()){
-			tempbnReceptacle.register(fundsController.getBankNoteController());
+			// I don't know which one is the real banknote receptacle?
+			//tempbnReceptacle.register(fundsController.getBankNoteController());
 			returnButton.register(fundsController.getBankNoteController());
-			bnReceptacle.register(fundsController.getBankNoteStorageBinTracker());
-		}
-		
-		
-		
-		
-		
-		
-		
-		
+			//bnReceptacle.register(fundsController.getBankNoteStorageBinTracker());
+			bnReceptacle.register(fundsController.getBankNoteController());
+		}	
 	}
 
 	@After
@@ -225,5 +227,66 @@ public class FundsIntegrationTests {
 			fail();
 		}
 		assertEquals(TransactionReturnCode.SUCCESSFUL, fundsController.ConductTransaction(0, 200));
+	}
+	
+	@Test
+	public void testPrepaidandCoinsTransactionSufficient(){
+		try {
+			cardSlot.insertCard(new Card(Card.CardType.PREPAID, "7373737373", "Defualt Prepaid" , "", "00/0000", Locale.CANADA, 50));
+		} catch (CardSlotNotEmptyException | DisabledException e) {
+			fail();
+		}
+		try {
+			coinSlot.addCoin(new Coin(100));
+			coinSlot.addCoin(new Coin(25));
+		} catch (DisabledException e) {
+			fail();
+		}
+		assertEquals(TransactionReturnCode.SUCCESSFUL, fundsController.ConductTransaction(0, 175));
+	}
+	
+	@Test
+	public void testPrepaidandCoinsTransactionInsufficient(){
+		try {
+			cardSlot.insertCard(new Card(Card.CardType.PREPAID, "7373737373", "Defualt Prepaid" , "", "00/0000", Locale.CANADA, 50));
+		} catch (CardSlotNotEmptyException | DisabledException e) {
+			fail();
+		}
+		try {
+			coinSlot.addCoin(new Coin(100));
+		} catch (DisabledException e) {
+			fail();
+		}
+		assertEquals(TransactionReturnCode.INSUFFICIENTFUNDS, fundsController.ConductTransaction(0, 175));
+	}
+	
+	@Test
+	public void testPrepaidandBillsTransactionSufficient() throws Exception{
+		try {
+			cardSlot.insertCard(new Card(Card.CardType.PREPAID, "7373737373", "Defualt Prepaid" , "", "00/0000", Locale.CANADA, 50));
+		} catch (CardSlotNotEmptyException | DisabledException e) {
+			fail();
+		}
+		
+		try {
+			banknoteSlot.addBanknote(new Banknote(500));
+		} catch (DisabledException e) {
+			fail();
+		}
+		assertEquals(TransactionReturnCode.SUCCESSFUL, fundsController.ConductTransaction(0, 175));
+	}
+	
+	// Test using bill note only
+	@Test
+	public void testBillsTransactionSufficient() throws Exception{
+		try {
+			// No idea which one to use
+			banknoteSlot.addBanknote(new Banknote(500));
+			tempbnReceptacle.acceptBanknote(new Banknote(500));
+		} catch (DisabledException e) {
+			fail();
+		}
+		// New error, no idea why unsuccessful now.........
+		assertEquals(TransactionReturnCode.SUCCESSFUL, fundsController.ConductTransaction(0, 175));
 	}
 }

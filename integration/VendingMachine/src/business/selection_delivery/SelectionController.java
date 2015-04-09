@@ -61,7 +61,6 @@ public abstract class SelectionController extends
 	/**
 	 * Notifications
 	 */
-	
 	protected void notifyEmptySelection()
 	{
 		Class<?>[] parameterTypes =
