@@ -293,8 +293,7 @@ public class VMConfigGUI {
 					} catch (ConfigurationException e1) {
 						e1.printStackTrace();
 					}
-					ArrayList<Boolean> parts = null;
-					parts= config.parts();
+					ArrayList<Boolean> parts = config.parts();
 
 					VendingMachineGUI window = new StandardMachineGUI(machine,parts);
 					window.getMainFrame().setVisible(true);
