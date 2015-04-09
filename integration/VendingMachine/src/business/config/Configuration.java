@@ -101,7 +101,7 @@ public class Configuration {
 
 	public Configuration()
 	{
-
+		coinStorageQuantities = new HashMap<Integer, Integer>();
 	}
 	
 	/**
