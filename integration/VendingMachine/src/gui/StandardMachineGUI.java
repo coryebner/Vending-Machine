@@ -358,7 +358,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		
 		pnlPopButtons = new JPanel();
 		pnlPopButtons.setLayout(new GridLayout(0, 2, 2, 2));
-		popScroller.add(pnlPopButtons);
+		popScroller.setViewportView(pnlPopButtons);
 		
 //		old verison without scroller
 //		pnlPopButtons = new JPanel();
@@ -840,7 +840,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		} catch (NoSuchHardwareException e) {
 			e.printStackTrace();
 		}
-
+		
 		createPopButtons(names);
 		reloadPopButtons();
 
