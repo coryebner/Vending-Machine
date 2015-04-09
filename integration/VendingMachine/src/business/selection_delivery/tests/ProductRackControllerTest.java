@@ -160,12 +160,12 @@ public class ProductRackControllerTest {
 		assertEquals(name, nameReturn);
 	}
 	
-	@Test
-	public void test_getProductID()
-	{
-		int IDReturn = rackManager.getProductID();
-		assertEquals(productID, IDReturn);
-	}
+//	@Test
+//	public void test_getProductID()
+//	{
+//		int IDReturn = rackManager.getProductID();
+//		assertEquals(productID, IDReturn);
+//	}
 	
 	@Test
 	public void test_isFull()

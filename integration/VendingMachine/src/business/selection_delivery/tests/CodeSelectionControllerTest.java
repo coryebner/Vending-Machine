@@ -13,23 +13,24 @@ import business.funds.TransactionReturnCode;
 import business.selection_delivery.CodeSelectionController;
 import business.selection_delivery.InventoryController;
 import hardware.racks.ProductRack;
-import hardware.racks.CoinRack;
+//import hardware.racks.CoinRack;
+import hardware.ui.DeliveryChute;
 import hardware.ui.PushButtonCodeInterpreter;
-import business.funds.PaymentMethods;
+//import business.funds.PaymentMethods;
 import SDK.logger.Logger;
-import SDK.rifffish.Rifffish;
-import SDK.rifffish.Transaction;
-import hardware.funds.BanknoteReceptacle;
-import hardware.funds.BanknoteSlot;
-import hardware.funds.CoinReceptacle;
-import hardware.funds.CoinSlot;
-import hardware.ui.IndicatorLight;
+//import SDK.rifffish.Rifffish;
+import hardware.acceptors.AbstractProductAcceptor;
+import hardware.channels.ProductChannel;
+//import hardware.funds.BanknoteReceptacle;
+//import hardware.funds.BanknoteSlot;
+//import hardware.funds.CoinReceptacle;
+//import hardware.funds.CoinSlot;
+//import hardware.ui.IndicatorLight;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+//import java.util.ArrayList;
+//import java.util.HashMap;
+//import java.util.List;
+//import java.util.Map;
 
 public class CodeSelectionControllerTest {
 	
@@ -51,25 +52,25 @@ public class CodeSelectionControllerTest {
 	
 	//Here follows everything required for FundsController's bloated constructor
 	//Locale locale (created later)
-	public List<PaymentMethods> payments = new ArrayList<PaymentMethods>();
-	//boolean bestEffortChange (created later)
-	public int[] cdenom = new int[3];
-	public CoinSlot cslot = new CoinSlot(cdenom);
-	public CoinReceptacle tempcrecep = new CoinReceptacle(10);
-	public int tempcrecepbal = 10;
-	public CoinReceptacle overcrecep = new CoinReceptacle(10);
-	public Map<Integer, Integer> overcquant = new HashMap();
-	public CoinRack[] crack = new CoinRack[3];
-	public int[] cquant = new int[3];
-	public BanknoteSlot bslot = new BanknoteSlot(cdenom); //using coin denominations for a bill slot just to because REASONS
-	public BanknoteReceptacle tempbrecep = new BanknoteReceptacle(10);
-	public BanknoteReceptacle permbrecep = new BanknoteReceptacle(10);
-	public Map<Integer, Integer> tempbquant = new HashMap();
-	public int permbquant = 10;
-	public IndicatorLight out = new IndicatorLight();
-	// InventoryController inventoryController (created earlier)
-	public static Rifffish r = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
-	public Logger log = new Logger();
+//	public List<PaymentMethods> payments = new ArrayList<PaymentMethods>();
+//	//boolean bestEffortChange (created later)
+//	public int[] cdenom = new int[3];
+//	public CoinSlot cslot = new CoinSlot(cdenom);
+//	public CoinReceptacle tempcrecep = new CoinReceptacle(10);
+//	public int tempcrecepbal = 10;
+//	public CoinReceptacle overcrecep = new CoinReceptacle(10);
+//	public Map<Integer, Integer> overcquant = new HashMap();
+//	public CoinRack[] crack = new CoinRack[3];
+//	public int[] cquant = new int[3];
+//	public BanknoteSlot bslot = new BanknoteSlot(cdenom); //using coin denominations for a bill slot just to because REASONS
+//	public BanknoteReceptacle tempbrecep = new BanknoteReceptacle(10);
+//	public BanknoteReceptacle permbrecep = new BanknoteReceptacle(10);
+//	public Map<Integer, Integer> tempbquant = new HashMap();
+//	public int permbquant = 10;
+//	public IndicatorLight out = new IndicatorLight();
+//	// InventoryController inventoryController (created earlier)
+//	public static Rifffish r = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
+//	public Logger log = new Logger();
 	//holy moe I should have mocked this
 	
 	@Before
@@ -77,20 +78,20 @@ public class CodeSelectionControllerTest {
 		context = new Mockery() {{
 			setImposteriser(ClassImposteriser.INSTANCE);
 		}};
-		rack[0] = new ProductRack(20);
-		rack[1] = new ProductRack(20);
-		rack[2] = new ProductRack(20);
-		
-		crack[0] = new CoinRack(10);
-		crack[1] = new CoinRack(10);
-		crack[2] = new CoinRack(10);
-		cdenom[0] = 5;
-		cdenom[1] = 10;
-		cdenom[2] = 15;
-		cquant[0] = 10;
-		cquant[1] = 10;
-		cquant[2] = 10;
-		payments.add(PaymentMethods.COINS);
+//		rack[0] = new ProductRack(20);
+//		rack[1] = new ProductRack(20);
+//		rack[2] = new ProductRack(20);
+//		
+//		crack[0] = new CoinRack(10);
+//		crack[1] = new CoinRack(10);
+//		crack[2] = new CoinRack(10);
+//		cdenom[0] = 5;
+//		cdenom[1] = 10;
+//		cdenom[2] = 15;
+//		cquant[0] = 10;
+//		cquant[1] = 10;
+//		cquant[2] = 10;
+//		payments.add(PaymentMethods.COINS);
 		
 		//rackcount = 3;
 		names[0] = "Product1";
@@ -110,6 +111,15 @@ public class CodeSelectionControllerTest {
 		fun = 	context.mock(FundsController.class);
 				//new FundsController(Locale.US, payments, true, cdenom, cslot, tempcrecep, tempcrecepbal, overcrecep, overcquant, crack, cquant, bslot, tempbrecep, permbrecep, tempbquant, permbquant, out, inv, log);
 		test = new CodeSelectionController(inv, fun, off);
+		
+		//Add sinks to racks
+		AbstractProductAcceptor acceptor = new DeliveryChute(100);
+		ProductChannel sink = new ProductChannel(acceptor);
+		
+		for(int i=0; i<rackcount; i++){
+			inv.getRack(i).connect(sink);
+		}
+		
 	}
 
 	@Test
