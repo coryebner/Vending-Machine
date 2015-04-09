@@ -4,7 +4,6 @@
 package business.funds.tests;
 
 import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,19 +34,19 @@ public class BanknoteControllerTest {
 	Banknote banknoteFive;
 	Banknote banknoteTen;
 	Banknote banknoteTwenty;
-
 	/**
 	 * 
 	 * Instantiating all objects;
 	 */
 	@Before
 	public void setUp() throws Exception {
+		
 		banknoteReceptacle = new BanknoteReceptacle(20);
 		
 		indicatorLight = new IndicatorLight();
 		banknoteStorageController = new BanknoteStorageBinController(5,
 				indicatorLight);
-		banknoteController = new BanknoteController(banknoteReceptacle, null);
+		banknoteController = new BanknoteController(banknoteReceptacle, banknoteStorageController);
 		banknoteFive = new Banknote(5);
 		banknoteTen = new Banknote(10);
 		banknoteTwenty = new Banknote(20);
