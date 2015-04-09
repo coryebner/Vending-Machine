@@ -2,10 +2,13 @@ package business.config;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -78,36 +81,101 @@ public class Configuration {
 	protected DisplayController displayController; // Maria: added for the displayController
 	protected ButtonSelectionController buttonSelectionController;
 	protected Logger logger;
+	protected ConfigPanelLogic configLogic;
 
+	public static final String SFFPC = "VMRUS-SFF-P/C";
+	public static final String SFFPCI = "VMRUS-SFF-P/CI";
+	public static final String SFFPPI = "VMRUS-SFF-P/PI";
+	public static final String COMPMI = "VMRUS-COM-P/MI";
+	public static final String COMPM = "VMRUS-COM-P/M";
+	public static final String COMCMI = "VMRUS-COM-C/MI";
+	public static final String COMCM = "VMRUS-COM-C/M";
+	public static final String TOCPMI = "VMRUS-TOC-P/MI";
+	public static final String TOCPI = "VMRUS-TOC-P/I";
+	public static final String TOCCMI = "VMRUS-TOC-C/MI";
+	public static final String TOCCp = "VMRUS-TOC-C+";
+	public static final String TOCCpI = "VMRUS-TOC-C+/I";
 
 	public Configuration()
 	{
 
 	}
-
+	
 	/**
-	 * Loads a vending machine from a given configuration file.
-	 * 
-	 * @param filename					config file to read from
-	 * @param configListeners			listeners to register with the ConfigurationPanel
-	 * 									  (for the GUI pieces that need it)
+	 * Loads a default vending machine of a specific type, with the specified
+	 *  logging frequency.
+	 *  
+	 * @param  type						Type of vending machine - see the public final fields
+	 * 									 above for valid types
+	 * @param  logFrequency				Logging style - valid frequencies are offline,
+	 * 									 instant, batch and daily
 	 * 
 	 * @return							the created AbstractVendingMachine
 	 * 
 	 * @throws IOException				standard file reading exceptions
-	 * @throws ConfigurationException	if the configuration file is incorrectly formed
+	 * @throws ConfigurationException	if the type or log frequency are invalid
 	 */
-	public AbstractVendingMachine load(String filename,
-			ArrayList<ConfigurationListener> configListeners)
-					throws IOException, ConfigurationException
-	{
-		BufferedReader input = new BufferedReader(new FileReader(filename));
-		readConfigFile(input);
+	
+	public AbstractVendingMachine load(String type, String logFrequency) throws ConfigurationException {
+		BufferedReader reader = new BufferedReader(new StringReader(ConfigurationBuilder.build(type, logFrequency)));
+		try {
+			return load(reader);
+		}
+		catch (IOException e) {
+			throw new ConfigurationException("Error creating configuration");
+			// This probably shouldn't be hit...
+		}
+	}
+	
+	public AbstractVendingMachine load(File config) throws ConfigurationException {
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(config));
+			return load(reader);
+		}
+		catch (IOException e) {
+			throw new ConfigurationException("Config file " + config.getName() + " not found");
+		}
+	}
+	
+	public void registerConfigListener(ConfigurationListener listener) {
+		configLogic.register(listener);
+	}
+	
+	public List<Boolean> parts() {
+		Boolean [] parts = {(type != SFFPPI), // coinslot
+							(type != SFFPPI && type != SFFPCI && type != SFFPC), // billslot
+							(type != SFFPC && type != SFFPCI), // cardslot
+							(type != SFFPC && type != COMPM && type != COMCM && type != TOCCp), // internet
+							(type != COMCM && type != TOCCMI), // pop buttons
+							(type == COMCMI || type == COMCM || type == TOCCMI || type == TOCCp || type == TOCCpI), // candy buttons
+							(type.startsWith("TOC")), // touchscreen
+		};
+		
+		return Arrays.asList(parts);
+	}
+	
+	private AbstractVendingMachine load(BufferedReader config) throws ConfigurationException, IOException {
+		readConfigFile(config);
 		createMachine();
-		createConfigurationController(machine, configListeners);
+		createConfigurationController(machine);
 		loadMachine();
 		return machine;
 	}
+//	public AbstractVendingMachine load(String filename,
+//			ArrayList<ConfigurationListener> configListeners)
+//					throws IOException, ConfigurationException
+//	{
+//		BufferedReader input = new BufferedReader(new FileReader(filename));
+//		readConfigFile(input);
+//	}
+	
+//	public AbstractVendingMachine load(String type, String logFreq) {}
+//	public AbstractVendingMachine load(File config) {}
+//  public void registerConfigListener(ConfigurationListener listener) {}
+//	public void save(File config) {}
+//	public ArrayList<Boolean> parts() {
+//		return new ArrayList<Boolean>();
+//	}
 
 	/**
 	 * Saves the vending machine previously created by load() to a given file.
@@ -119,14 +187,14 @@ public class Configuration {
 	 * @throws IOException				standard file reading exceptions
 	 * @throws ConfigurationException 	if a machine has not been created
 	 */
-	public void save(String filename) throws IOException, ConfigurationException
+	public void save(File config) throws IOException, ConfigurationException
 	{
 		if (machine == null) {
 			throw new ConfigurationException("Attempted to save a nonexistent machine!");
 		}
 
 		// Read all the data we need from machine, funds and inventory
-		BufferedWriter output = new BufferedWriter(new FileWriter(filename));
+		BufferedWriter output = new BufferedWriter(new FileWriter(config));
 		writeConfigFile(output);
 	}
 
@@ -587,14 +655,15 @@ public class Configuration {
 	 *  as well as registering anything that needs to be listening to it.
 	 * @param machine
 	 */
-	protected void createConfigurationController(AbstractVendingMachine m, ArrayList<ConfigurationListener> configListeners)
+	protected void createConfigurationController(AbstractVendingMachine m)
 	{
 		try {
 			// Creating the ConfigPanelLogic object.
-			if(machine==null||configListeners == null){
+			if(machine==null){
 				return;
 			}
-			ConfigPanelLogic configPanelLogic = new ConfigPanelLogic(m.getDisplay());
+
+			configLogic = new ConfigPanelLogic(m.getDisplay());
 			
 			// Register configPanelLogic with this new listener just created
 			Iterator<ConfigurationListener> current = configListeners.iterator();
