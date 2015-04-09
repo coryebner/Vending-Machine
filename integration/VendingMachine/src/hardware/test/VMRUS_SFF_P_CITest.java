@@ -136,6 +136,7 @@ public class VMRUS_SFF_P_CITest {
 			hardware.getOutOfProductLight(i).deregisterAll();
 			outOfProductListeners[i] = null;
 		}
+		outOfProductListeners=null;
 
 		hardware.getReturnButton().deregisterAll();
 		returnButtonListener = null;
