@@ -42,7 +42,8 @@ public class ConfigurationTest extends Configuration {
 						+ "coinracks 0 0 0 0 0\n"
 						+ "coinstorage 0 0 0 0 0\n"
 						+ "billracks 0 0 0 0 0\n"
-						+ "billstorage 0 0 0 0 0\n"));
+						+ "billstorage 0 0 0 0 0\n"
+						+ "locale CA\n"));
 
 		readConfigFile(input);
 
@@ -109,7 +110,8 @@ public class ConfigurationTest extends Configuration {
 						+ "coinracks 30 15 12 0 10\n"
 						+ "coinstorage 90 23 12 14 55\n"
 						+ "billracks 98 53 22 10 64\n"
-						+ "billstorage 2 5 19 21 3\n"));
+						+ "billstorage 2 5 19 21 3\n"
+						+ "locale CA\n"));
 
 		readConfigFile(input);
 

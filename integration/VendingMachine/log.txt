@@ -1,1 +1,1 @@
-Stockout,1,out_of_stock,2015-04-09 15:00:35.208
+Stockout,1,out_of_stock,2015-04-09 15:43:35.092
