@@ -55,12 +55,12 @@ public class DisplayController implements SelectionControllerListener, CoinRecep
 		if(receptacle != null)
 			receptacle.register(this);
 		
-		display(Integer.toString(this.coinsController.getAvailableBalance()));
+		display(centsToString(this.coinsController.getAvailableBalance()));
 	}
 	
 	ActionListener listener = new ActionListener(){
 		  public void actionPerformed(ActionEvent event){
-			  display(Integer.toString(coinsController.getAvailableBalance()));
+			  display(centsToString(coinsController.getAvailableBalance()));
 			 eventTimer.stop();
 		  }
 	};
@@ -92,18 +92,18 @@ public class DisplayController implements SelectionControllerListener, CoinRecep
     public void insufficientFunds(int fundsRequired) {
 		eventTimer.setInitialDelay(5000);
 		eventTimer.restart();
-		this.display("Insufficient funds. Product costs: " + Integer.toString(fundsRequired));
+		this.display("Insufficient funds. Product costs: " + centsToString(fundsRequired));
 		eventTimer.start();
     }
 
 	@Override
 	public void coinAdded(CoinReceptacle receptacle, Coin coin) {
-		display(Integer.toString(this.coinsController.getAvailableBalance()));
+		display(centsToString(this.coinsController.getAvailableBalance()));
 	}
 
 	@Override
 	public void coinsRemoved(CoinReceptacle receptacle) {
-		display(Integer.toString(this.coinsController.getAvailableBalance()));
+		display(centsToString(this.coinsController.getAvailableBalance()));
 	}
 	
 	@Override
@@ -128,5 +128,16 @@ public class DisplayController implements SelectionControllerListener, CoinRecep
 	@Override
 	public void disabled(CoinReceptacle receptacle) {
 
+	}
+	private String centsToString(int cents){
+		String ret = "";
+		ret+= "$"+ cents/100+".";
+		if(cents%100 <10){
+			ret+= "0"+ cents%100;
+		}
+		else{
+			ret+= cents%100;
+		}
+		return ret;
 	}
 }
