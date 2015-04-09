@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.jmock.Mockery;
+import org.jmock.Expectations;
 import org.jmock.lib.legacy.ClassImposteriser;
 
 import static org.junit.Assert.*;
@@ -28,11 +29,7 @@ import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.paypal.api.payments.BillingInfo;
-
 import business.config.Configuration;
-import business.config.ConfigurationListener;
 import business.funds.BanknoteController;
 import business.funds.CoinRackController;
 import business.funds.CoinsController;
@@ -179,7 +176,9 @@ public class FundsIntegrationTests {
 			returnButton.register(fundsController.getBankNoteController());
 			//bnReceptacle.register(fundsController.getBankNoteStorageBinTracker());
 			bnReceptacle.register(fundsController.getBankNoteController());
-		}	
+		}
+		PayPalController payPalController = context.mock(PayPalController.class);
+		fundsController.ONLY_FOR_TESTING_setControllerState(true, payPalController, PayPalController.class);
 	}
 
 	@After
@@ -276,17 +275,29 @@ public class FundsIntegrationTests {
 		assertEquals(TransactionReturnCode.SUCCESSFUL, fundsController.ConductTransaction(0, 175));
 	}
 	
-	// Test using bill note only
 	@Test
-	public void testBillsTransactionSufficient() throws Exception{
+	public void testBillsTransactionSufficient(){		
 		try {
-			// No idea which one to use
 			banknoteSlot.addBanknote(new Banknote(500));
-			tempbnReceptacle.acceptBanknote(new Banknote(500));
 		} catch (DisabledException e) {
-			fail();
+			
 		}
-		// New error, no idea why unsuccessful now.........
 		assertEquals(TransactionReturnCode.SUCCESSFUL, fundsController.ConductTransaction(0, 175));
+	}
+	
+	@Test
+	public void testBillsTransactionInSufficient(){
+		try {
+			banknoteSlot.addBanknote(new Banknote(5));
+		} catch (DisabledException e) {
+			
+		}
+		context.checking(new Expectations(){
+			{
+			atLeast(1).of(payPalController).ConductTransaction(5);
+			will(returnValue(TransactionReturnCode.UNSUCCESSFUL));
+			}
+		});
+		assertEquals(TransactionReturnCode.INSUFFICIENTFUNDS, fundsController.ConductTransaction(0, 505));
 	}
 }

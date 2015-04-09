@@ -545,7 +545,6 @@ public class Configuration {
 			}
 			
 			if (funds.isCoinsPresent()) {
-				m.getCoinReceptacle().register(funds.getCoinsController());
 				// Register the coinracks
 			
 				ProductRack [] racks = new ProductRack[m.getNumberOfProductRacks()];
@@ -979,7 +978,7 @@ public class Configuration {
 		createFundsController(machine, true, true, true, true);
 	
 		//Create Code selection controller
-		createCodeController(machine, 0);
+		createButtonSelectionController(machine);
 		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 	
 		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(True)
