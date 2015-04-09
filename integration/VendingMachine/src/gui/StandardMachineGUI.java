@@ -343,6 +343,8 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		btnShutDown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// TODO: save machine state to config file
+				
+				
 			}
 		});
 		pnlMisc.add(btnShutDown);
@@ -537,8 +539,10 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 			machine.getExactChangeLight().register(this);
 			machine.getDisplay().register(this);
 			machine.getDeliveryChute().register(this);
-			// TODO register the GUI to listen to the Internet light
-			// machine.getInternetLight().register(this);
+			if(hasInternetLight){
+				// TODO register the GUI to listen to the Internet light
+				
+			}
 
 			// TODO need to register the GUI to the software
 
