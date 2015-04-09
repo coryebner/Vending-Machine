@@ -2,15 +2,20 @@ package business.funds.tests;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import hardware.funds.Coin;
 import hardware.funds.CoinReceptacle;
 import hardware.racks.CoinRack;
+import hardware.ui.IndicatorLight;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import business.funds.CoinRackController;
+import business.funds.CoinStorageBinController;
 import business.funds.CoinsController;
 import business.funds.TransactionReturnCode;
 
@@ -22,6 +27,9 @@ public class CoinsControllerTest {
 	int[] coinRackQuantities;
 	String[] productNames;
 	CoinReceptacle receptacle;
+	CoinStorageBinController csbc;
+	Map<Integer,Integer> storageBinQuantities;
+	IndicatorLight il;
 
 	@Before
 	public void setUp() throws Exception {
@@ -47,9 +55,19 @@ public class CoinsControllerTest {
 		coinRacks[2] = new CoinRack(100);
 		coinRacks[3] = new CoinRack(100);
 		coinRacks[4] = new CoinRack(100);
+		
+		storageBinQuantities = new HashMap<Integer,Integer>();
+		storageBinQuantities.put(5, 0);
+		storageBinQuantities.put(10, 0);
+		storageBinQuantities.put(25, 0);
+		storageBinQuantities.put(100, 0);
+		storageBinQuantities.put(200, 0);
+		
+		il = new IndicatorLight();
+		csbc = new CoinStorageBinController(storageBinQuantities,il);
 
 		coinsController = new CoinsController(0, receptacle, coinRacks,
-				coinRackDenominations, coinRackQuantities, null);
+				coinRackDenominations, coinRackQuantities, csbc);
 		coinsController.coinAdded(receptacle, new Coin(100));
 		coinsController.coinAdded(receptacle, new Coin(25));
 		coinsController.coinAdded(receptacle, new Coin(25));
@@ -62,6 +80,9 @@ public class CoinsControllerTest {
 		receptacle = null;
 		coinRacks = null;
 		coinRackQuantities = null;
+		storageBinQuantities = null;
+		csbc = null;
+		il = null;
 	}
 
 	/**
@@ -181,6 +202,12 @@ public class CoinsControllerTest {
 	public void pressedTest() {
 		coinsController.pressed(null);
 		assertEquals(0, coinsController.getAvailableBalance());
+	}
+	
+	@Test
+	public void provideChangeTest(){
+		assertEquals(TransactionReturnCode.SUCCESSFUL,
+				coinsController.provideChange(100));
 	}
 
 }
