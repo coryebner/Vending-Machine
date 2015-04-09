@@ -494,12 +494,14 @@ public class Configuration {
 		//int[] coinRackDenominations, int[] coinRackQuantities, 
 		CoinRack[] cr;
 		try {
-			cr = new CoinRack[m.getNumberOfCoinRacks()];
-			for(int i=0; i< m.getNumberOfCoinRacks(); i++){
-				cr[i] = m.getCoinRack(i);
-			}
+			cr = null;
 			List<PaymentMethods> availablePaymentMethods = new ArrayList<PaymentMethods>();
 			if(coin){
+				cr = new CoinRack[m.getNumberOfCoinRacks()];
+				for(int i=0; i< m.getNumberOfCoinRacks(); i++){
+					cr[i] = m.getCoinRack(i);
+				}
+				
 				availablePaymentMethods.add(PaymentMethods.COINS);
 			}
 			if(card){
