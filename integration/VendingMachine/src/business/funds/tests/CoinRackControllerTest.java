@@ -62,9 +62,11 @@ public class CoinRackControllerTest {
 				
 			}
 		};
+		
 		sink = new CoinChannel(abstractCoinAcceptor);
 		coinRack.connect(sink);
 		coinRackController = new CoinRackController(coinRack, rackDenomination, quantity);
+		coinRack.register(coinRackController);
 	}
 	
 	/**
@@ -86,6 +88,7 @@ public class CoinRackControllerTest {
 	 */
 	@Test
 	public void releaseCoinTest(){
+		
 		try {
 			coinRackController.releaseCoin();
 		} catch (EmptyException e) {

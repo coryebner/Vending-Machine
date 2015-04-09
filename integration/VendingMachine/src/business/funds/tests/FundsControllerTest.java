@@ -296,7 +296,7 @@ public class FundsControllerTest {
 		FundsController funds = setupControllers(false, true, false, false, false);
 		context.checking(new Expectations(){
 			{
-				allowing(logger).log(new Transaction(id, PaymentMethod.COIN, true));
+			allowing(logger).log(with(any(Transaction.class)));
 			atLeast(1).of(bankNoteController).getAvailableBalance();
 			will(returnValue(500));
 			oneOf(bankNoteController).ConductTransaction(100);

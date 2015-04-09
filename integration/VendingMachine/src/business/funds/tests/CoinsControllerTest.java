@@ -75,6 +75,7 @@ public class CoinsControllerTest {
 		coinsController.coinAdded(receptacle, new Coin(25));
 		
 		receptacle.register(coinsController);
+		receptacle.register(csbc);
 	}
 
 	@After
