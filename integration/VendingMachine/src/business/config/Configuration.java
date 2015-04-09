@@ -669,9 +669,10 @@ public class Configuration {
 	protected int getMachineID(boolean online)
 	{
 		if (online) {
-			rifffish = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
-			Machine m = rifffish.createMachine(new Machine("VENDINGMACHINE", type, "in_service", locale.getCountry()));
-			return m.getId();
+//			rifffish = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
+//			Machine m = rifffish.createMachine(new Machine("VENDINGMACHINE", type, "in_service", locale.getCountry()));
+//			return m.getId();
+			return 0;
 		}
 		else {
 			return 0;
