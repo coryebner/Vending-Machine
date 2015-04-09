@@ -443,7 +443,11 @@ public class FundsController {
 	 * @return An array of CoinRackControllers for registration
 	 */
 	public CoinRackController[] getCoinRackControllers() {
-		return null;
+		if(!coinsPresent){
+			return null;
+		}
+		CoinRackController[] coinRackControllers = coinsController.getCoinRackControllers();
+		return coinRackControllers;
 	}
 
 	public CoinStorageBinController getCoinStorageBinTracker() {
