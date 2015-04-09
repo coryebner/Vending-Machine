@@ -3,7 +3,6 @@ package hardware.simulators;
 import hardware.channels.BanknoteChannel;
 import hardware.channels.CoinChannel;
 import hardware.channels.ProductChannel;
-import hardware.exceptions.NoSuchHardwareException;
 import hardware.exceptions.SimulationException;
 import hardware.funds.*;
 import hardware.racks.CoinRack;
@@ -33,7 +32,6 @@ import rifffish.Rifffish;
  * <li>CardSlot: Y</li>
  * <li>PayPal: Y</li>
  * <li>TouchScreen: Y</li>
- * <li>VMSocket (Internet): Y</li>
  * <li>OutOfOrderLight: Y</li>
  * <li>ExactChangeLight: Y</li>
  * <li>NoInternetConnectionLight: Y</li>
@@ -56,7 +54,6 @@ public class VMRUS_TOC_P_MI extends AbstractVendingMachine{
 	private PushButton returnButton;	
 	private IndicatorLight exactChangeLight, outOfOrderLight, noInternetConnectionLight;
 	private IndicatorLight[] outOfProductLights;
-	private VMSocket socket;
 	private ConfigurationPanelTransmitter configurationPanelTransmitter;
 
 	protected static int banknoteReceptacleCapacity = 20;
@@ -129,7 +126,6 @@ public class VMRUS_TOC_P_MI extends AbstractVendingMachine{
 			outOfProductLights[i] = new IndicatorLight();
 
 		display = new Display();
-		socket = new VMSocket();
 		configurationPanelTransmitter = new ConfigurationPanelTransmitter();
 
 	}
@@ -227,11 +223,6 @@ public class VMRUS_TOC_P_MI extends AbstractVendingMachine{
 	@Override
 	public PushButton getSelectionButton(int index) {
 		return selectionButtons[index];
-	}
-
-	@Override
-	public VMSocket getSocket() throws NoSuchHardwareException {
-		return socket;
 	}
 	
 	@Override

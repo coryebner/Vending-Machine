@@ -32,7 +32,6 @@ import rifffish.Rifffish;
  * <li>CardSlot: Y</li>
  * <li>PayPal: Y</li>
  * <li>TouchScreen: Y</li>
- * <li>VMSocket (Internet): Y</li>
  * <li>OutOfOrderLight: Y</li>
  * <li>ExactChangeLight: Y</li>
  * <li>NoInternetConnectionLight: Y</li>
@@ -55,7 +54,6 @@ public class VMRUS_TOC_CP_I extends AbstractVendingMachine{
     private PushButton returnButton;
 	private IndicatorLight exactChangeLight, outOfOrderLight, noInternetConnectionLight;
 	private IndicatorLight[] outOfProductLights;
-	private VMSocket socket;
 	private ConfigurationPanelTransmitter configurationPanelTransmitter;
 
 	protected static int banknoteReceptacleCapacity = 20;
@@ -128,7 +126,6 @@ public class VMRUS_TOC_CP_I extends AbstractVendingMachine{
 			outOfProductLights[i] = new IndicatorLight();
 
 		display = new Display();
-		socket = new VMSocket();
 		configurationPanelTransmitter = new ConfigurationPanelTransmitter();
 
 	}
@@ -222,12 +219,7 @@ public class VMRUS_TOC_CP_I extends AbstractVendingMachine{
 	public PushButton getSelectionButton(int index) {
 		return selectionButtons[index];
 	}
-	
-	@Override
-	public VMSocket getSocket() {
-		return socket;
-	}
-	
+		
 	@Override
 	public BanknoteReceptacle getBanknoteReceptacle() {
 		return banknoteReceptacle;
