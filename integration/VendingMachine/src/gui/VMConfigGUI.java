@@ -273,8 +273,6 @@ public class VMConfigGUI {
 		btnLaunch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { 
 				if(reportConfig!=null && machineConfig!=null){	
-//					ProperSetup
-//					receive the vending machine from BussinessLogic
 					Configuration config = new Configuration();
 					AbstractVendingMachine machine = null;
 					try {
@@ -283,6 +281,7 @@ public class VMConfigGUI {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+					
 					ArrayList<Boolean> parts = config.parts();
 					VendingMachineGUI window = new StandardMachineGUI(machine,parts);
 					window.getMainFrame().setVisible(true);
