@@ -18,19 +18,26 @@ public class EndToEndTest {
 		machine.getCoinSlot().addCoin(new Coin(100));
 		machine.getSelectionButton(0).press();
 		
-		assertItemsReturned(new Product(), 1, "A product should have been dispensed");
+		assertItemTypesReturned(Product.class, 1, "A product should have been dispensed");
+	}
+	
+	@Test
+	public void testPurchaseProductNoFunds() throws Exception {
+		machine.getSelectionButton(0).press();
+		
+		assertItemTypesReturned(Product.class, 0, "No products should have been dispensed");
 	}
 
-	private void assertItemsReturned(Object test, int n, String message) throws Exception {
+	private void assertItemTypesReturned(Class c, int n, String message) throws Exception {
 		Object [] items = machine.getDeliveryChute().removeItems();
 		int count = 0;
 		
 		for (Object i : items) {
-			if (i.equals(test)) {
+			if (c.isInstance(i)) {
 				++count;
 			}
 		}
 		
-		assertEquals(message, count, n);
+		assertEquals(message, n, count);
 	}
 }
