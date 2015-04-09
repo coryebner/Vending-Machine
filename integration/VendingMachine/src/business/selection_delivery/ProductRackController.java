@@ -2,6 +2,7 @@ package business.selection_delivery;
 
 import java.security.InvalidParameterException;
 
+import SDK.logger.Logger;
 import SDK.rifffish.Rifffish;
 import SDK.rifffish.Stockout;
 import hardware.AbstractHardware;
@@ -21,9 +22,13 @@ public class ProductRackController implements ProductRackListener
 	private int cost;
 	private String name;
 	private int productID;
-	private Rifffish logger;
+	private Rifffish rifffish; // = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
+	private Logger logger;
+	private SDK.rifffish.Product product;
 	
-	public ProductRackController(ProductRack pr, String n, int c, int quantity, int pID)
+	private static int nextValidID = 0;
+
+	public ProductRackController(ProductRack pr, String n, int c, int quantity, Rifffish r, Logger l, int machineID)
 	{//Remember and register to the pop can rack that this manager is responsible for and get the values.
 		if(pr == null)
 			throw new InvalidParameterException();
@@ -35,8 +40,15 @@ public class ProductRackController implements ProductRackListener
 		
 		name = n;
 		cost = c;
-		productID = pID;
-		logger = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
+		productID = nextValidID++;
+		
+		rifffish = r;
+		logger = l;
+		
+		if (rifffish != null) {
+			product = rifffish.createProduct(new SDK.rifffish.Product(machineID, name, cost, quantity, rack.getMaxCapacity()));
+			productID = product.getId();
+		}
 	}
 	
 	//Default constructor
@@ -69,6 +81,12 @@ public class ProductRackController implements ProductRackListener
 	
 	public void refillQuantity(int quantity)
 	{
+		int maxFill = this.getCapacity() - this.getCount();		//The max number of additional pops we can add
+		
+		if (quantity > maxFill)	//If we are trying to refill more than the rack is holding, cap it.
+			quantity = maxFill;
+		
+		
 		for (int j = 0 ; j < quantity; j++ )
 		{
 			try{
@@ -141,31 +159,41 @@ public class ProductRackController implements ProductRackListener
 	{//Return the product cost.
 		cost = newCost;
 		
-		//Update Database
-		SDK.rifffish.Product p = logger.getProduct(productID);
-		p.setPrice(newCost);
-		logger.updateProduct(p);
+		if (rifffish != null) {
+			product.setPrice(cost);
+			rifffish.updateProduct(product);
+		}
 	}
 	
 	public void changeName(String newName)
 	{//Change the name of the product.
 		name = newName;
 		
-		//Update Database
-		SDK.rifffish.Product p = logger.getProduct(productID);
-		p.setName(name);
-		logger.updateProduct(p);
+		if (rifffish != null) {
+			product.setName(name);
+			rifffish.updateProduct(product);
+		}
 	}
 	
-	public void changeProductID(int newID)
-	{//Change the Id of a product.
-		productID = newID;
-		
-		//Update Database
-		SDK.rifffish.Product p = logger.getProduct(productID);
-		p.setId(newID);
-		logger.updateProduct(p);
-	}
+//	public void changeProductID(int newID)
+//	{//Change the Id of a product.
+//		productID = newID;
+//		
+//		//Update Database
+//		SDK.rifffish.Product p = logger.getProduct(productID);
+//		p.setId(newID);
+//		logger.updateProduct(p);
+//	}
+	
+//	public void changeProductID()
+//	{
+//		if (rifffish != null) {
+//			
+//		}
+//		else {
+//			
+//		}
+//	}
 	
 	
 	/**
@@ -178,10 +206,10 @@ public class ProductRackController implements ProductRackListener
 		if (productCount < rack.getMaxCapacity())
 			productCount++;
 		
-		//Update Database
-		SDK.rifffish.Product p = logger.getProduct(productID);
-		p.setCurrentStockLevel(productCount);
-		logger.updateProduct(p);
+		if (rifffish != null) {
+			product.setCurrentStockLevel(productCount);
+			rifffish.updateProduct(product);
+		}
 	}
 
 	@Override
@@ -196,6 +224,10 @@ public class ProductRackController implements ProductRackListener
 	public void productFull(ProductRack arg0)
 	{//Rack is full. Set it right to max.
 		productCount = rack.getMaxCapacity();
+		if (rifffish != null) {
+			product.setCurrentStockLevel(productCount);
+			rifffish.updateProduct(product);
+		}
 	}
 
 	@Override

@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import hardware.exceptions.CapacityExceededException;
+import hardware.exceptions.DisabledException;
 import hardware.funds.Coin;
 import hardware.funds.CoinReceptacle;
 import hardware.racks.CoinRack;
@@ -71,6 +73,8 @@ public class CoinsControllerTest {
 		coinsController.coinAdded(receptacle, new Coin(100));
 		coinsController.coinAdded(receptacle, new Coin(25));
 		coinsController.coinAdded(receptacle, new Coin(25));
+		
+		receptacle.register(coinsController);
 	}
 
 	@After
@@ -208,6 +212,23 @@ public class CoinsControllerTest {
 	public void provideChangeTest(){
 		assertEquals(TransactionReturnCode.SUCCESSFUL,
 				coinsController.provideChange(100));
+	}
+	
+	/**
+	 * Test coinsController registration with coinReceptacle
+	 * 
+	 */
+	@Test
+	public void coinAdded2() {
+		try {
+			receptacle.acceptCoin(new Coin(100));
+			assertEquals(250, coinsController.getAvailableBalance());
+		} catch (CapacityExceededException e) {
+			fail();
+		} catch (DisabledException e) {
+			fail();
+		}
+		
 	}
 
 }

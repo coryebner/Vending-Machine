@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
+import SDK.logger.Logger;
 import business.funds.CoinRackController;
 import business.funds.ExactChangeController;
 import business.selection_delivery.InventoryController;
@@ -44,7 +44,6 @@ public class ExactChangeControllerTest {
 	    String names[] = {"1", "2", "3", "4", "5"};
 	    int costs[] = {1,1,1,1,100};
 	    int quantity[] = {1,1,1,1,1};
-	    int [] ids = {1, 2, 3, 4, 5};
 
 	    ProductRack productRacks[];
 		productRacks = new ProductRack[numProductRacks];
@@ -52,7 +51,7 @@ public class ExactChangeControllerTest {
 	    	productRacks[i] = new ProductRack(10);
 	    }
 		
-		InventoryController ic = new InventoryController(productRacks, numProductRacks, names, costs, quantity, ids);
+		InventoryController ic = new InventoryController(productRacks, numProductRacks, names, costs, quantity, null, new Logger(), 0);
 		
 		
 		int numRacks = 5;
@@ -91,7 +90,6 @@ public class ExactChangeControllerTest {
 	    String names[] = {"1", "2", "3", "4", "5"};
 	    int costs[] = {50,50,50,50,50};
 	    int quantity[] = {1,1,1,1,1};
-	    int [] ids = {1, 2, 3, 4, 5};
 
 	    ProductRack productRacks[];
 		productRacks = new ProductRack[numProductRacks];
@@ -99,7 +97,7 @@ public class ExactChangeControllerTest {
 	    	productRacks[i] = new ProductRack(10);
 	    }
 		
-		InventoryController ic = new InventoryController(productRacks, numProductRacks, names, costs, quantity, ids);
+		InventoryController ic = new InventoryController(productRacks, numProductRacks, names, costs, quantity, null, new Logger(), 0);
 		
 		
 		int numRacks = 5;
@@ -135,7 +133,6 @@ public class ExactChangeControllerTest {
 	    String names[] = {"1", "2", "3", "4", "5"};
 	    int costs[] = {100,50,175,200,250};
 	    int quantity[] = {1,1,1,1,1};
-	    int [] ids = {1, 2, 3, 4, 5};
 
 	    ProductRack productRacks[];
 		productRacks = new ProductRack[numProductRacks];
@@ -143,7 +140,7 @@ public class ExactChangeControllerTest {
 	    	productRacks[i] = new ProductRack(10);
 	    }
 		
-		InventoryController ic = new InventoryController(productRacks, numProductRacks, names, costs, quantity, ids);
+		InventoryController ic = new InventoryController(productRacks, numProductRacks, names, costs, quantity, null, new Logger(), 0);
 		
 		
 		int numRacks = 5;

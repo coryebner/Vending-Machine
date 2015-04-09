@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import SDK.logger.Logger;
 import SDK.rifffish.Rifffish.PaymentMethod;
@@ -227,16 +225,16 @@ public class FundsController {
 		}
 		if(cashUsed && (!cardUsed && !paypalused)){
 			
-			logger.log(new Transaction(availableFunds, PaymentMethod.COIN, true));
+			logger.log(new Transaction(productID, PaymentMethod.COIN, true));
 		}
 		else if(cardUsed && (!cashUsed && !paypalused)){
-			logger.log(new Transaction(availableFunds, PaymentMethod.CREDIT_CARD, true));
+			logger.log(new Transaction(productID, PaymentMethod.CREDIT_CARD, true));
 		}
 		else if(paypalused && (!cashUsed && !cardUsed)){
-			logger.log(new Transaction(availableFunds, PaymentMethod.PAYPAL, true));
+			logger.log(new Transaction(productID, PaymentMethod.PAYPAL, true));
 		}
-		else{
-			logger.log(new Transaction(availableFunds, PaymentMethod.COIN, true));
+		else if(paypalused || cashUsed || cardUsed){
+			logger.log(new Transaction(productID, PaymentMethod.COIN, true));
 			//logger.log(new Transaction(availableFunds, PaymentMethod.MIXED, true));
 		}
 		return returnCode;

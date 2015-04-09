@@ -43,7 +43,12 @@ public class BanknoteController implements BanknoteReceptacleListener,
 	public TransactionReturnCode ConductTransaction(int price) {
 		// Return success if enough coins.
 		if (availableBalance >= price) {
-			// banknoteReceptacle.storeBanknotes();
+			 try {
+				banknoteReceptacle.storeBanknotes();
+			} catch (CapacityExceededException | DisabledException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return TransactionReturnCode.SUCCESSFUL;
 		} else { // Not enough money.
 			return TransactionReturnCode.INSUFFICIENTFUNDS;
@@ -62,7 +67,7 @@ public class BanknoteController implements BanknoteReceptacleListener,
 
 	@Override
 	public void banknoteAdded(BanknoteReceptacle receptacle, Banknote banknote) {
-		availableBalance += banknote.getValue();
+		availableBalance += banknote.getValue()*100;
 	}
 
 	@Override
