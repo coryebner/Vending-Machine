@@ -32,6 +32,7 @@ import org.junit.Test;
 import com.paypal.api.payments.BillingInfo;
 
 import business.config.Configuration;
+import business.config.ConfigurationListener;
 import business.funds.BanknoteController;
 import business.funds.CoinRackController;
 import business.funds.CoinsController;
@@ -87,8 +88,8 @@ public class FundsIntegrationTests {
 	VMRUS_COM_C_M hw;
 
 	int id = 10;
-	PushButton returnButton; 
-
+	PushButton returnButton;
+	
 	@Before
 	public void setUp() throws Exception {
 		banknoteDenominations = new int[] {5,10,20};
@@ -110,7 +111,7 @@ public class FundsIntegrationTests {
 		for(int i=0; i < hw.getNumberOfCoinRacks(); i++) {
 			coinRacks[i] = hw.getCoinRack(i);
 		}
-
+		config = new Configuration();
 		bnReceptacle = hw.getBanknoteReceptacle();
 		tempbnReceptacle = new BanknoteReceptacle(10);
 		overflowCoinReceptacle = new CoinReceptacle(10);
@@ -142,7 +143,7 @@ public class FundsIntegrationTests {
 		// COINS registration
 		if(fundsController.isCoinsPresent()){
 			//Exact Change Controller Registration
-			//WE"LL IGNORE THIS...>>>>>>>>***CONFIG***.register(fundsController.getExactChangeController())
+			//config.registerConfigListener(fundsController.getExactChangeController());
 			for(ProductRack productRack: productRacks){
 				productRack.register(fundsController.getExactChangeController());
 			}
