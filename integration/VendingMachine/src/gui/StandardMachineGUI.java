@@ -51,7 +51,9 @@ import hardware.simulators.*;
 import hardware.ui.*;
 import gui.test.*;
 
-
+// TODO need to have a SHUT DOWN button for the GUI 
+// SHUT DOWN button should stores the current state of the machine to a config File
+// and close the GUI
 
 //" For eclipse, use hot key "control + /" can quickly comment out and uncomment lines
 
@@ -169,12 +171,12 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
 		Locale locale = Locale.CANADA;
 //		POP Vending Machine
 		AbstractVendingMachine vm = new VMRUS_SFF_P_C(locale,coinvalue);		
-//		initialize(vm, true, true, true, true, true, false, false); // no touch screen, with pop buttons
+		initialize(vm, true, true, true, true, true, true, false); // no touch screen, with pop buttons
 //		Candy Vending Machine
 //		AbstractVendingMachine vm = new VMRUS_COM_C_M(locale,coinvalue, popcost);
 //		initialize(vm, true, true, true, true, false, true, false); // no touch screen, with candy buttons
 //		Touch Screen Not Ready Yet
-		initialize(vm, true, true, true, true, false, false, true); // Touch screen
+//		initialize(vm, true, true, true, true, false, false, true); // Touch screen
 		
 	}
 
@@ -481,6 +483,10 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
             machine.getDeliveryChute().register(this);
 //            TODO register the GUI to listen to the Internet light
 //            machine.getInternetLight().register(this);
+            
+//            TODO need to register the GUI to the software
+            
+            
             if(popBtns == true){
                 for(int i = 0; i< machine.getNumberOfProductRacks(); i++){
                 	machine.getProductRack(i).register(this);
@@ -786,9 +792,6 @@ public class StandardMachineGUI extends VendingMachineGUI implements ProductRack
         			System.out.println("Before Inseting coin");
         			buttonPressed = true;
                     machine.getCoinSlot().addCoin(coin);                                        
-//        			System.out.println("After inserted coin------------");
-//        			String msg = "$"+(double)(coin.getValue())/100;
-//        			machine.getDisplay().display(msg);
                 } catch (NoSuchHardwareException e) {
                     e.printStackTrace();
                 } catch (DisabledException e) {

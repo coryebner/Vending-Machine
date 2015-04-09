@@ -157,7 +157,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
 		String [] popname = {"Coke","DietCode","RootBeer", "asdf", "qwer","zxcv"};
 		Locale locale = Locale.CANADA;
 		AbstractVendingMachine vm = new VMRUS_SFF_P_C(locale,coinvalue);
-		initialize(vm, true, true, true, true, true, false);
+		initialize(vm, true, true, true, true, true, true);
 	}
 	
 	public StandardTouchMachineGUI(AbstractVendingMachine machine, ArrayList<Boolean> parts) {
@@ -716,19 +716,14 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
 	 */
 	public void machine6Setup() {
 		ArrayList<String> names = new ArrayList();
-
-		names.add("Pop 1");
-		names.add("Pop 2");
-		names.add("Pop 3");
-		names.add("Pop 4");
-		names.add("Pop 5");
-		names.add("Pop 6");
-		names.add("Pop 7");
-		names.add("Pop 8");
-		names.add("Pop 9");
-		names.add("Pop 10");
-		names.add("Pop 11");
-		names.add("Pop 12");
+		
+		try {
+			for(int i=0; i< machine.getNumberOfProductRacks(); i++){
+				names.add("Pop "+ i);
+			}
+		} catch (NoSuchHardwareException e) {
+			e.printStackTrace();
+		}
 
 		createPopButtons(names);
 		reloadPopButtons();

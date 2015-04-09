@@ -3,6 +3,8 @@ package gui;
 
 //import hardware.AbstractVendingMachine;
 
+import hardware.simulators.AbstractVendingMachine;
+
 import java.awt.Container;
 import java.awt.EventQueue;
 
@@ -22,6 +24,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import java.util.ArrayList;
 
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
@@ -254,7 +257,8 @@ public class VMConfigGUI {
 		JButton btnConfigFile = new JButton("Use Config File");
 		btnConfigFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				// TODO need to open a list of config file name 
+				// and let the user to pick one, send it to configuration 
 			}
 		});
 		btnConfigFile.setBounds(26, 104, 139, 29);
@@ -266,21 +270,12 @@ public class VMConfigGUI {
 		btnLaunch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { 
 				if(reportConfig!=null && machineConfig!=null){	
-
 //					ProperSetup
 //					receive the vending machine from BussinessLogic
-//					AbstractVendingMachine machine = loadVendingMachine();
-//					if(machine.getTouchScreen != null){
-//						Launch the touchscreen GUI
-//					
-//					}else{
-//						GUI window = new GUI(machine, parts);
-//						window.frmVendingMachines.setVisible(true);
-//						frmVendingMachinesRUS.setVisible(false);	
-//					}
-//			
-//					Will always launch the default vending machine inside the standardMachineGUI
-					VendingMachineGUI window = new StandardMachineGUI();
+					Configuration config = new Configuration();
+					AbstractVendingMachine machine = config.load(machineConfig,reportConfig);
+					ArrayList<Boolean> parts = config.parts();
+					VendingMachineGUI window = new StandardMachineGUI(machine,parts);
 					window.getMainFrame().setVisible(true);
 					frmVendingMachinesRUS.setVisible(false);
 				}else{
