@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JScrollPane;
 
 import java.awt.GridLayout;
 
@@ -347,12 +348,23 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		});
 		pnlMisc.add(btnShutDown);
 
-		pnlPopButtons = new JPanel();
+		JScrollPane popScroller = new JScrollPane();
+		popScroller.setBorder(new LineBorder(new Color(0, 0, 0)));
 		if (hasPopButtons) {
-			pnlMachineButtons.add(pnlPopButtons);
+			pnlMachineButtons.add(popScroller);
 		}
-		pnlPopButtons.setBorder(new LineBorder(new Color(0, 0, 0)));
+		
+		pnlPopButtons = new JPanel();
 		pnlPopButtons.setLayout(new GridLayout(0, 2, 2, 2));
+		popScroller.add(pnlPopButtons);
+		
+//		old verison without scroller
+//		pnlPopButtons = new JPanel();
+//		if (hasPopButtons) {
+//			pnlMachineButtons.add(pnlPopButtons);
+//		}
+//		pnlPopButtons.setBorder(new LineBorder(new Color(0, 0, 0)));
+//		pnlPopButtons.setLayout(new GridLayout(0, 2, 2, 2));
 
 		pnlCandyButtons = new JPanel();
 		if (hasCandyButtons) {
