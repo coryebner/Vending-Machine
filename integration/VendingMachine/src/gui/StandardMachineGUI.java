@@ -12,12 +12,14 @@ import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 import java.awt.GridLayout;
 
 import javax.swing.JButton;
 
 import java.awt.ComponentOrientation;
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -359,6 +361,8 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		pnlPopButtons = new JPanel();
 		pnlPopButtons.setLayout(new GridLayout(0, 2, 2, 2));
 		popScroller.setViewportView(pnlPopButtons);
+		popScroller.setMaximumSize(new Dimension(100, 500));
+		popScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
 //		old verison without scroller
 //		pnlPopButtons = new JPanel();
@@ -567,6 +571,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 			e2.printStackTrace();
 		}
 		canadaSetup();
+		popScroller.setPreferredSize(new Dimension(200,200));
 	}
 
 	// Get Methods, mainly used for testing
@@ -833,13 +838,23 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		// names.add("Root Beer");
 		// names.add("Water");
 
-		try {
-			for (int i = 0; i < machine.getNumberOfProductRacks(); i++) {
-				names.add("Pop " + i);
-			}
-		} catch (NoSuchHardwareException e) {
-			e.printStackTrace();
+//		try {
+//			for (int i = 0; i < machine.getNumberOfProductRacks(); i++) {
+//				names.add("Pop " + i);
+//			}
+//		} catch (NoSuchHardwareException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		for (int i = 0; i < 50; i++) {
+//			names.add("Pop " + i);
+//		}
+
+		
+		for (int i = 0; i < 50; i++) {
+			names.add("Pop " + i);
 		}
+
 		
 		createPopButtons(names);
 		reloadPopButtons();
