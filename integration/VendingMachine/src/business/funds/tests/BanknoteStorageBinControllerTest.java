@@ -85,5 +85,4 @@ public class BanknoteStorageBinControllerTest {
 		controller.banknoteAdded(null, new Banknote(value));
 		assert(outOfOrderLight.isActive());
 	}
-
 }

@@ -14,7 +14,9 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import SDK.rifffish.Rifffish;
+import SDK.logger.Logger;
+import SDK.rifffish.Rifffish.PaymentMethod;
+import SDK.rifffish.Transaction;
 import business.selection_delivery.InventoryController;
 
 /**
@@ -50,6 +52,12 @@ public class FundsController {
 	private Currency machineCurrencies;
 
 	private HashMap<String, String> LOG;
+	
+	private Logger logger;
+	
+	private boolean cashUsed = false;
+	private boolean cardUsed = false;
+	private boolean paypalused = false;
 
 	/**
 	 * @param Locale locale
@@ -126,9 +134,9 @@ public class FundsController {
 			
 			IndicatorLight outOfOrderLight,								//NOT NULL - needed for full and out of order statuses
 			InventoryController inventoryController,					//NOT NULL - needed for exact change calculations
-			Rifffish logger												//Needed for logging purposes
+			Logger logger												//Needed for logging purposes
 			) {
-		
+		this.logger = logger;
 		this.machineCurrencies = new Currency(locale);
 
 		this.LOG = new HashMap<String, String>();
@@ -168,15 +176,19 @@ public class FundsController {
 					inventoryController,
 					coinsController.getCoinRackControllers());
 		}
-		if (availablePaymentMethods.contains(PaymentMethods.CREDITCARD)) {
-			this.creditCardPresent = true;
-			this.creditCardController = new CreditCardController(
-					this.payPalController);
-		}
 		if (availablePaymentMethods.contains(PaymentMethods.PAYPAL)) {
 			this.payPalPresent = true;
 			this.payPalController = new PayPalController();
 		}
+		if (availablePaymentMethods.contains(PaymentMethods.CREDITCARD)) {
+			this.creditCardPresent = true;
+			if(this.payPalController == null){
+				this.payPalController = new PayPalController();
+			}
+			this.creditCardController = new CreditCardController(
+					this.payPalController);
+		}
+
 	}
 
 	/**
@@ -188,6 +200,9 @@ public class FundsController {
 	 *         returnValue of ConductTransaction
 	 */
 	public TransactionReturnCode ConductTransaction(int productID, int price) {
+		cardUsed = false;
+		cashUsed = false;
+		paypalused = false;
 		TransactionReturnCode returnCode = TransactionReturnCode.INSUFFICIENTFUNDS;
 		TransactionReturnCode returnCodeCC_PP = TransactionReturnCode.INSUFFICIENTFUNDS;
 
@@ -210,6 +225,20 @@ public class FundsController {
 				returnCode = returnCodeCC_PP;
 			}
 		}
+		if(cashUsed && (!cardUsed && !paypalused)){
+			
+			logger.log(new Transaction(availableFunds, PaymentMethod.COIN, true));
+		}
+		else if(cardUsed && (!cashUsed && !paypalused)){
+			logger.log(new Transaction(availableFunds, PaymentMethod.CREDIT_CARD, true));
+		}
+		else if(paypalused && (!cashUsed && !cardUsed)){
+			logger.log(new Transaction(availableFunds, PaymentMethod.PAYPAL, true));
+		}
+		else{
+			logger.log(new Transaction(availableFunds, PaymentMethod.COIN, true));
+			//logger.log(new Transaction(availableFunds, PaymentMethod.MIXED, true));
+		}
 		return returnCode;
 
 	}
@@ -231,10 +260,12 @@ public class FundsController {
 
 		if (creditCardPresent) {
 			creditCardReturn = creditCardController.ConductTransaction(price);
+			cardUsed =creditCardReturn.equals(TransactionReturnCode.SUCCESSFUL);
 		}
 		if (creditCardReturn != TransactionReturnCode.SUCCESSFUL
 				&& payPalPresent) {
 			payPalReturn = payPalController.ConductTransaction(price);
+			paypalused = payPalReturn.equals(TransactionReturnCode.SUCCESSFUL);
 			return payPalReturn;
 		}
 		return creditCardReturn;
@@ -258,18 +289,21 @@ public class FundsController {
 			amount = Math.min(ppFunds, balance);
 			returnCodePP = prepaidController.ConductTransaction(amount);
 			balance -= amount;
+			cardUsed = true;
 		}
 		if (billsPresent && balance > 0) {
 			int billsFunds = bankNoteController.getAvailableBalance();
 			amount = Math.min(billsFunds, balance);
 			returnCodeC = bankNoteController.ConductTransaction(amount);
 			balance -= amount;
+			cashUsed = false;
 		}
 		if (coinsPresent && balance > 0) {
 			int coinsFunds = coinsController.getAvailableBalance();
 			amount = Math.min(coinsFunds, balance);
 			returnCodeC = coinsController.ConductTransaction(amount);
 			balance -= amount;
+			cashUsed = false;
 		}
 
 		if (returnCodePP == TransactionReturnCode.SUCCESSFUL
@@ -408,7 +442,11 @@ public class FundsController {
 	 * @return An array of CoinRackControllers for registration
 	 */
 	public CoinRackController[] getCoinRackControllers() {
-		return null;
+		if(!coinsPresent){
+			return null;
+		}
+		CoinRackController[] coinRackControllers = coinsController.getCoinRackControllers();
+		return coinRackControllers;
 	}
 
 	public CoinStorageBinController getCoinStorageBinTracker() {
@@ -425,7 +463,9 @@ public class FundsController {
 	public PayPalController getPayPalController(){
 		return this.payPalController;
 	}
-
+	public ExactChangeController getExactChangeController(){
+		return this.exactChangeController;
+	}
 	public void ONLY_FOR_TESTING_setControllerState(boolean present,
 			Object object, Class<?> classType) {
 		if (classType == PrepaidController.class) {
