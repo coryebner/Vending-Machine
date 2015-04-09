@@ -733,13 +733,25 @@ public class Configuration {
 		}
 	}
 	
-	protected void createDisplayController(AbstractVendingMachine m,
-										   ButtonSelectionController buttons,
-										   CoinsController coins) 
+	protected void createDisplayController(AbstractVendingMachine m) 
 		throws ConfigurationException
 	{
 		try {
 			display = new DisplayController(m.getDisplay(), funds);
+			
+			if (buttonSelectionController != null) {
+				buttonSelectionController.register(display);
+			}
+			if (codeSelectionController != null) {
+				codeSelectionController.register(display);
+			}
+			
+			if (funds.isCoinsPresent()) {
+				m.getCoinReceptacle().register(display);
+			}
+			if (funds.isBillsPresent()) {
+				//m.getBanknoteReceptacle().register(display);
+			}
 		}
 		catch (NoSuchHardwareException e) {
 			throw new ConfigurationException("Unable to find hardware necessary for display controller");
@@ -792,7 +804,7 @@ public class Configuration {
 		//Create a selection button controller
 		createButtonSelectionController(m);
 		
-		createDisplayController(m, buttonSelectionController, funds.getCoinsController());		
+		createDisplayController(m);		
 	}
 
 	protected AbstractVendingMachine createSFFPCI()
@@ -811,7 +823,7 @@ public class Configuration {
 		
 		//Create a selection button controller
 		createButtonSelectionController(machine);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 		
 		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(True)
 		return machine;
@@ -834,7 +846,7 @@ public class Configuration {
 		//Create a selection button controller
 		createButtonSelectionController(machine);
 
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 		
 		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(True)
 		return machine;
@@ -855,7 +867,7 @@ public class Configuration {
 		
 		//Create a selection button controller
 		createButtonSelectionController(machine);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 		
 		//TODO: Displaycontroller(Basic), keyboardController(Physical), internetController(True)
 		return machine;
@@ -876,7 +888,7 @@ public class Configuration {
 		
 		//Create a selection button controller
 		createButtonSelectionController(machine);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 	
 		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(False)
 		return machine;
@@ -897,7 +909,7 @@ public class Configuration {
 	
 		//Create Code selection controller
 		createCodeController(machine, 0);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 		
 		//TODO: Displaycontroller(basic), keyboardController(Physical), internetController(True)
 		return machine;
@@ -918,7 +930,7 @@ public class Configuration {
 
 		//Create Code selection controller
 		createCodeController(machine, 0);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 		
 		//TODO: Displaycontroller(basic), keyboardController(none), internetController(false)
 		return machine;
@@ -939,7 +951,7 @@ public class Configuration {
 	
 		//Create a selection button controller
 		createButtonSelectionController(machine);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 		
 		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(True)
 		return machine;
@@ -960,7 +972,7 @@ public class Configuration {
 
 		//Create a selection button controller
 		createButtonSelectionController(machine);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 	
 		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(False)
 		return machine;		
@@ -981,7 +993,7 @@ public class Configuration {
 	
 		//Create Code selection controller
 		createButtonSelectionController(machine);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 	
 		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(True)
 		return machine;
@@ -1001,7 +1013,7 @@ public class Configuration {
 	
 		//Create a selection button controller
 		createButtonSelectionController(machine);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 
 		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(false)
 		return machine;
@@ -1021,7 +1033,7 @@ public class Configuration {
 
 		//Create a selection button controller
 		createButtonSelectionController(machine);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 
 		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(true)
 		return machine;		
