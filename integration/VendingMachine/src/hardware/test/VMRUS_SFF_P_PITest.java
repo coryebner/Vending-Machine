@@ -254,7 +254,7 @@ public class VMRUS_SFF_P_PITest {
 	
 	@Test
 	public void testInsertCardWhileDisabled(){
-		Exception caught=null;
+		Exception caught= new Exception(); //to prevent null pointer dereference
 		hardware.enableSafety();
 		try{
 			hardware.getCardSlot().insertCard(card);

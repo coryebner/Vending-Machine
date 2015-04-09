@@ -82,6 +82,8 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 	
 	/**
 	 * @exactChangeStatus - indicates if the exact change status is active or not
+	 * returns true if the exact change light is on signaling exact change in unavailable
+	 * returns false if the exact change light is off signaling exact change in available
 	 */
 	public boolean isExactChangeActive(){
 		return !exactChangePossible;
@@ -149,19 +151,19 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 			trail.push(coinRacks.length - 1);
 			sum = coinRacks[coinRacks.length - 1].getCoinRackDenomination();
 			prevPop = coinRacks.length;
-			while(!trail.isEmpty() || prevPop != 0) {
+			while((!trail.isEmpty() || prevPop != 0)) {
 				if(prevPop == 0) {
 					prevPop = trail.pop();
 					sum-= coinRacks[prevPop].getCoinRackDenomination();
 					continue;
 				}
 				
-				if(sum>productPrice) {
+				if((sum>productPrice) && (!trail.isEmpty())) {
 					if(!returnValues.contains(new Integer(sum-productPrice)))
 						returnValues.add(new Integer(sum-productPrice));
 					prevPop = trail.pop();
 					sum-= coinRacks[prevPop].getCoinRackDenomination();
-				} else if(sum == productPrice) {
+				} else if((sum == productPrice) && (!trail.isEmpty())) {
 					prevPop = trail.pop();
 					sum-= coinRacks[prevPop].getCoinRackDenomination();
 				} else {

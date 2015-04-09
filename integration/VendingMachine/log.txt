@@ -1,5 +1,1 @@
-Stockout,1,out_of_stock,2015-03-21 10:27:09.318
-Transaction,null,0,1,credit_cards,true,2015-03-21 10:28:15.764,null
-Transaction,null,0,1,coins,true,2015-03-21 10:28:15.906,null
-Transaction,null,0,1,coins,true,2015-03-21 10:28:16.198,null
-Transaction,null,0,1,coins,true,2015-03-21 10:28:16.344,null
+Stockout,1,out_of_stock,2015-04-09 15:00:35.208
