@@ -10,6 +10,7 @@ import org.jmock.lib.legacy.ClassImposteriser;
 
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.racks.ProductRack;
+import hardware.ui.IndicatorLight;
 import hardware.ui.PushButton;
 import hardware.ui.PushButtonCodeInterpreter;
 
@@ -40,7 +41,8 @@ public class ConfigurationTest extends Configuration {
 						+ "coinracks 0 0 0 0 0\n"
 						+ "coinstorage 0 0 0 0 0\n"
 						+ "billracks 0 0 0 0 0\n"
-						+ "billstorage 0 0 0 0 0\n"));
+						+ "billstorage 0 0 0 0 0\n"
+						+ "locale CA"));
 
 		readConfigFile(input);
 
@@ -68,7 +70,8 @@ public class ConfigurationTest extends Configuration {
 						+ "coinracks 0 0 0 0 0\n"
 						+ "coinstorage 0 0 0 0 0\n"
 						+ "billracks 0 0 0 0 0\n"
-						+ "billstorage 0 0 0 0 0\n"));
+						+ "billstorage 0 0 0 0 0\n"
+						+ "locale CA"));
 
 		readConfigFile(input);
 		fail("Exception should have been thrown by now");
@@ -83,7 +86,8 @@ public class ConfigurationTest extends Configuration {
 						+ "coinracks 0 0 0 0 0\n"
 						+ "coinstorage 0 0 0 0 0\n"
 						+ "billracks 0 0 0 0 0\n"
-						+ "billstorage 0 0 0 0 0\n"));
+						+ "billstorage 0 0 0 0 0\n"
+						+ "locale CA"));
 
 		readConfigFile(input);
 		fail("Exception should have been thrown by now");
@@ -101,13 +105,14 @@ public class ConfigurationTest extends Configuration {
 	public void testReadSavedConfigFile() throws Exception {
 		BufferedReader input = new BufferedReader(new StringReader(
 				"VMRUS-SFF-PC\n"
-						+ "names Pepsi Coke 7-up Sprite\n"
-						+ "prices 125 150 200 100\n"
-						+ "quantities 1 9 0 15\n"
-						+ "coinracks 30 15 12 0 10\n"
-						+ "coinstorage 90 23 12 14 55\n"
-						+ "billracks 98 53 22 10 64\n"
-						+ "billstorage 2 5 19 21 3\n"));
+				+ "names Pepsi Coke 7-up Sprite\n"
+				+ "prices 125 150 200 100\n"
+				+ "quantities 1 9 0 15\n"
+				+ "coinracks 30 15 12 0 10\n"
+				+ "coinstorage 90 23 12 14 55\n"
+				+ "billracks 98 53 22 10 64\n"
+				+ "billstorage 2 5 19 21 3\n"
+				+ "locale CA"));
 
 		readConfigFile(input);
 
@@ -144,6 +149,7 @@ public class ConfigurationTest extends Configuration {
 		try {
 			// Setting up the expectations for the mock object.
 			context.checking(new Expectations() {{
+				oneOf(mockMachine).getOutOfOrderLight(); will(returnValue(new IndicatorLight()));
 				oneOf(mockMachine).getNumberOfSelectionButtons(); will(returnValue(1));
 				PushButton button = new PushButton();
 				exactly(2).of(mockMachine).getSelectionButton(0); will(returnValue(button));
@@ -158,6 +164,8 @@ public class ConfigurationTest extends Configuration {
 		this.machine= mockMachine;
 		this.inventoryController = inventory;
 		this.displayController = display;
+		
+		createFundsController(machine, false, false, false, false);
 
 		// Assertion that the Button Selection Controller is null as it was not initialized before
 		assertNull("Button Selection Controller doesn't exist",this.buttonSelectionController);
@@ -244,6 +252,7 @@ public class ConfigurationTest extends Configuration {
 		try {
 			context.checking(new Expectations() {{
 				ProductRack pr = context.mock(ProductRack.class);
+//				oneOf(mockMachine).getOutOfOrderLight(); will(returnValue(new IndicatorLight()));
 				oneOf(mockMachine).getProductRack(0); will(returnValue(pr));
 				oneOf(pr).getMaxCapacity(); will(returnValue(1));
 				exactly(3).of(mockMachine).getNumberOfProductRacks(); will(returnValue(1));
@@ -255,6 +264,7 @@ public class ConfigurationTest extends Configuration {
 		}
 
 		this.machine= mockMachine;
+		createFundsController(machine, false, false, false, false);
 		assertNull(this.inventoryController);
 		createInventoryController(this.machine);
 		assertNotNull(this.inventoryController);
