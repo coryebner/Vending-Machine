@@ -27,6 +27,15 @@ public class EndToEndTest {
 		
 		assertItemTypesReturned(Product.class, 0, "No products should have been dispensed");
 	}
+	
+	@Test
+	public void testMakeChangeFromCoin() throws Exception {
+		machine.getCoinSlot().addCoin(new Coin(100));
+		machine.getCoinSlot().addCoin(new Coin(100));
+		machine.getSelectionButton(0).press();
+		
+		assertItemTypesReturned(Coin.class, 1, "A coin should have been returned");
+	}
 
 	private void assertItemTypesReturned(Class c, int n, String message) throws Exception {
 		Object [] items = machine.getDeliveryChute().removeItems();

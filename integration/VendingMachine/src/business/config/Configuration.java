@@ -1002,14 +1002,6 @@ public class Configuration {
 		createButtonSelectionController(machine);
 		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 
-		//Create Code selection controller
-		try {
-			createCodeController(machine, machine.getNumberOfSelectionButtons());
-		}
-		catch (NoSuchHardwareException e) {
-			throw new ConfigurationException("Unable to get selection buttons from machine!");
-		}
-
 		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(false)
 		return machine;
 	}
@@ -1029,14 +1021,6 @@ public class Configuration {
 		//Create a selection button controller
 		createButtonSelectionController(machine);
 		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
-
-		try {
-			//Create Code selection controller
-			createCodeController(machine, machine.getNumberOfSelectionButtons());
-		}
-		catch (NoSuchHardwareException e) {
-			throw new ConfigurationException("Unable to get selection buttons from machine!");
-		}
 
 		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(true)
 		return machine;		
