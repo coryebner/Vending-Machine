@@ -7,6 +7,9 @@ import javax.swing.Timer;
 
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
+import hardware.funds.Banknote;
+import hardware.funds.BanknoteReceptacle;
+import hardware.funds.BanknoteReceptacleListener;
 import hardware.funds.Coin;
 import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinReceptacleListener;
@@ -26,7 +29,7 @@ import business.funds.FundsController;
  */
 
 
-public class DisplayController implements SelectionControllerListener, CoinReceptacleListener{
+public class DisplayController implements SelectionControllerListener, CoinReceptacleListener, BanknoteReceptacleListener{
 
 	
 	Display display;
@@ -139,5 +142,33 @@ public class DisplayController implements SelectionControllerListener, CoinRecep
 			ret+= cents%100;
 		}
 		return ret;
+	}
+
+	@Override
+	public void banknoteAdded(BanknoteReceptacle receptacle, Banknote banknote) {
+		display(centsToString(getTotalBalance()));
+	}
+
+	@Override
+	public void banknoteRemoved(BanknoteReceptacle receptacle) {
+		display(centsToString(getTotalBalance()));
+	}
+
+	@Override
+	public void banknoteFull(BanknoteReceptacle receptacle) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void enabled(BanknoteReceptacle receptacle) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void disabled(BanknoteReceptacle receptacle) {
+		// TODO Auto-generated method stub
+		
 	}
 }
