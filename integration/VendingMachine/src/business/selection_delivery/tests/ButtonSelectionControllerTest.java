@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -15,21 +18,26 @@ import org.junit.Test;
 
 import business.funds.FundsController;
 import business.funds.PaymentMethods;
+import business.funds.TransactionReturnCode;
 import SDK.logger.Logger;
 import SDK.rifffish.Machine;
 import SDK.rifffish.Rifffish;
 import business.selection_delivery.ButtonSelectionController;
 import business.selection_delivery.InventoryController;
+import hardware.acceptors.AbstractProductAcceptor;
+import hardware.channels.ProductChannel;
 import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinSlot;
 import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
+import hardware.ui.DeliveryChute;
 import hardware.ui.IndicatorLight;
 import hardware.ui.PushButton;
 
 public class ButtonSelectionControllerTest {
 
 	private ButtonSelectionController buttonSelectionController;
+	private Mockery context;
 
 	//All the Controllers needed for ButtonSelectionController
 	private  InventoryController inventoryController;
@@ -68,35 +76,35 @@ public class ButtonSelectionControllerTest {
 	
 	
 	IndicatorLight outOfOrderLight;
-	Rifffish r = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
 	Logger logger = new Logger();
-	Machine newMachine;
 
 
 
 
-	@BeforeClass
-	public static void BeforeRoutine() {
 
-
-	}
+//	@BeforeClass
+//	public static void BeforeRoutine() {
+//
+//
+//	}
 
 	@Before
 	public void setup() {
 		
-		//Machine newMachine = r.createMachine(new Machine("Test Machine", "vmrs_sff_p_c", "in_service", "CAD"));
+		context = new Mockery() {{
+			setImposteriser(ClassImposteriser.INSTANCE);
+		}};
 
 		pushButtonListenerStub = new PushButtonListenerStub();
 
 		rackcount = 6;
 		numberOfButtons = 6;
-
+		
 		//Setting up the push buttons
 		pushButtonArray = new PushButton[rackcount];
 		for(int i = 0; i < rackcount; i++ )
 		{
 			pushButtonArray[i] = new PushButton();
-			pushButtonArray[i].register(pushButtonListenerStub);
 		}
 
 		//Setting up the inventory manager
@@ -153,22 +161,24 @@ public class ButtonSelectionControllerTest {
 		availablePaymentMethods = new ArrayList<PaymentMethods>();
 		availablePaymentMethods.add(PaymentMethods.COINS);
 		
-		
-		fundsController = new FundsController(locale, availablePaymentMethods, 
-				bestEffortChange, coinRackDenominations, coinSlot, 
-				tempCoinReceptacle, tempCoinRecepticleBalance, overflowCoinReceptacle,
-				coinOverflowCoinRecepticleQuantities, coinRacks, coinRackQuantities, 
-				null, null, null, null, 
-				0, outOfOrderLight, inventoryController, logger);
+		fundsController = 	context.mock(FundsController.class);
 		
 		buttonSelectionController = new ButtonSelectionController(inventoryController, fundsController, pushButtonArray, numberOfButtons);
 
+		//Add sinks to racks
+		AbstractProductAcceptor acceptor = new DeliveryChute(100);
+		ProductChannel sink = new ProductChannel(acceptor);
+		
+		for(int i=0; i<rackcount; i++){
+			inventoryController.getRack(i).connect(sink);
+		}
 
 		pushButtonListenerStub.init();
 	}
 
 	@After
 	public void teardown() {
+		context = null;
 		
 		//Teardown the buttons and listeners
 		for(int i = 0; i < rackcount; i++ )
@@ -200,17 +210,30 @@ public class ButtonSelectionControllerTest {
 
 	@Test
 	public void testPressPushButtonLowerBound() {
-		pushButtonListenerStub.expect("pressed");
-		pushButtonArray[0].press();
-		pushButtonListenerStub.assertProtocol();
+		context.checking(new Expectations(){
+			{
+			atLeast(1).of(fundsController).ConductTransaction(with(any(Integer.class)),with(any(Integer.class)));
+			will(returnValue(TransactionReturnCode.SUCCESSFUL));
+			}
+		});
+		//pushButtonListenerStub.expect("pressed");
+		buttonSelectionController.pressed(pushButtonArray[0]);
+		//pushButtonListenerStub.assertProtocol();
 	}
 	
 	@Test
 	public void testPressPushButtonUpperBound() {
-		pushButtonListenerStub.expect("pressed");
-		pushButtonArray[5].press();
-		pushButtonListenerStub.assertProtocol();
+		context.checking(new Expectations(){
+			{
+			atLeast(1).of(fundsController).ConductTransaction(with(any(Integer.class)),with(any(Integer.class)));
+			will(returnValue(TransactionReturnCode.SUCCESSFUL));
+			}
+		});
+		//pushButtonListenerStub.expect("pressed");
+		buttonSelectionController.pressed(pushButtonArray[5]);
+		//pushButtonListenerStub.assertProtocol();
 	}
+
 	
 	@Test
 	public void testConstructorForPressPushButtonController() {
