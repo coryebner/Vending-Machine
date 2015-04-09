@@ -6,6 +6,7 @@ import hardware.racks.ProductRack;
 import org.junit.Before;
 import org.junit.Test;
 
+import SDK.logger.Logger;
 import business.selection_delivery.InventoryController;
 
 
@@ -35,7 +36,7 @@ public class InventoryControllerTest {
 		productID[0] = 7331;
 		productID[1] = 42;
 
-		manager = new InventoryController(rack,rackcount,names,costs,quantity,productID);
+		manager = new InventoryController(rack,rackcount,names,costs,quantity, null, new Logger(), 0);
 	}
 
 	@Test
@@ -150,7 +151,7 @@ public class InventoryControllerTest {
 		cost[0] = 0;
 		id[0] = 0;
 		
-		InventoryController test = new InventoryController(testrack,1,nom,cost,quant,id);
+		InventoryController test = new InventoryController(testrack,1,nom,cost,quant,null, new Logger(), 0);
 		
 		assertEquals(true,test.isEmpty(0));
 	}
@@ -173,13 +174,13 @@ public class InventoryControllerTest {
 		assertEquals("Product2", manager.getName(1));		
 	}
 	
-	@Test
-	public void testChangeProductID() {
-		
-		manager.changeProductID(0, 1123581321);
-		
-		assertEquals(1123581321, manager.getProductID(0));
-		assertEquals(42, manager.getProductID(1));
-	}
+//	@Test
+//	public void testChangeProductID() {
+//		
+//		manager.changeProductID(0, 1123581321);
+//		
+//		assertEquals(1123581321, manager.getProductID(0));
+//		assertEquals(42, manager.getProductID(1));
+//	}
 
 }

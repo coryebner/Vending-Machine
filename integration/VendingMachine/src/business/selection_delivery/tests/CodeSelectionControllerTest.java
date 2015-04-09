@@ -96,7 +96,7 @@ public class CodeSelectionControllerTest {
 		productID[1] = 42;
 		productID[2] = 666;
 		
-		inv = new InventoryController(rack, rackcount, names, costs, quantity, productID);
+		inv = new InventoryController(rack, rackcount, names, costs, quantity, null, new Logger(), 0);
 		fun = new FundsController(Locale.US, payments, true, cdenom, cslot, tempcrecep, tempcrecepbal, overcrecep, overcquant, crack, cquant, bslot, tempbrecep, permbrecep, tempbquant, permbquant, out, inv, log);
 		test = new CodeSelectionController(inv, fun, off);
 	}
