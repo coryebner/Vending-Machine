@@ -17,7 +17,7 @@ import java.util.Map;
 
 import SDK.logger.LogDate;
 import SDK.logger.LogDate.LoggingType;
-import SDK.logger.Logger;
+import logger.Logger;
 import SDK.rifffish.Rifffish;
 import business.funds.CoinRackController;
 import business.funds.FundsController;
@@ -80,7 +80,7 @@ public class Configuration {
 	protected CodeSelectionController codeSelectionController; // Maria: Added CodeSelectionController object
 	protected DisplayController displayController; // Maria: added for the displayController
 	protected ButtonSelectionController buttonSelectionController;
-	protected Logger logger;
+	protected logger.Logger logger;
 	protected ConfigPanelLogic configLogic;
 
 	public static final String SFFPC = "VMRUS-SFF-P/C";
