@@ -750,7 +750,7 @@ public class Configuration {
 				m.getCoinReceptacle().register(display);
 			}
 			if (funds.isBillsPresent()) {
-				//m.getBanknoteReceptacle().register(display);
+				m.getBanknoteReceptacle().register(display);
 			}
 		}
 		catch (NoSuchHardwareException e) {
