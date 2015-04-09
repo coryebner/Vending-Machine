@@ -64,7 +64,7 @@ public class ExactChangeControllerTest {
 	    	crc[i] = new CoinRackController(cr[i], rackDenomination[i], amount[i]);	
 	    }
 	    
-		ExactChangeController exactChangeController = new ExactChangeController(ic, crc, productRacks, cr);
+		ExactChangeController exactChangeController = new ExactChangeController(ic, crc);
 		
 		Vector<Integer> returnValues = exactChangeController.getReturnValues();
 		Vector<Integer> expectedReturnValues = new Vector<Integer>();
@@ -110,7 +110,7 @@ public class ExactChangeControllerTest {
 	    	crc[i] = new CoinRackController(cr[i], rackDenomination[i], amount[i]);	
 	    }
 	    
-		ExactChangeController exactChangeController = new ExactChangeController(ic, crc, productRacks, cr);
+		ExactChangeController exactChangeController = new ExactChangeController(ic, crc);
 		
 		
 		Vector<Integer> returnValues = exactChangeController.getReturnValues();
@@ -153,7 +153,7 @@ public class ExactChangeControllerTest {
 	    	crc[i] = new CoinRackController(cr[i], rackDenomination[i], amount[i]);	
 	    }
 	    
-		ExactChangeController exactChangeController = new ExactChangeController(ic, crc, productRacks, cr);
+		ExactChangeController exactChangeController = new ExactChangeController(ic, crc);
 		
 		
 		Vector<Integer> returnValues = exactChangeController.getReturnValues();

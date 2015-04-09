@@ -12,12 +12,13 @@ import hardware.AbstractHardwareListener;
 import hardware.funds.Coin;
 import hardware.products.Product;
 import hardware.racks.CoinRack;
+import hardware.racks.CoinRackListener;
 import hardware.racks.ProductRack;
 import hardware.racks.ProductRackListener;
 import business.config.ConfigurationListener;
 import business.selection_delivery.InventoryController;
 
-public class ExactChangeController implements ConfigurationListener, ProductRackListener, hardware.racks.CoinRackListener {
+public class ExactChangeController implements ConfigurationListener, ProductRackListener, CoinRackListener {
 
 	private class TrackedProduct{
 		public boolean isEmpty;
@@ -35,6 +36,16 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 	
 	/**
 	 * 
+	 * ExactChangeController tracks coin funds and determines if exact change is available for all purchases.
+	 * 
+	 * The ExactChangeController promises to notify its listeners of exactChangeAvailable and exactChangeUnavailable
+	 * Events when the status of exact change changes.
+	 * 
+	 * The ExactChangeController must be registered to
+	 * 				-All coin rack events
+	 * 				-All product rack events
+	 * 				-Configuration events
+	 * 
 	 * @param InventoryController ic
 	 * 			- the inventory controller associated with the vending machine
 	 * @param CoinRackController coinRacks
@@ -45,8 +56,7 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 	 * 			- the hardware coin racks associated with the vending machine
 	 */
 	//ASSUME COIN RACKS ARE IN ASSENDING ORDER
-	public ExactChangeController(InventoryController ic, CoinRackController coinRacks[],
-			ProductRack[] productRacks, CoinRack[] hardwareCoinRacks){
+	public ExactChangeController(InventoryController ic, CoinRackController coinRacks[]){
 		if(ic == null){
 			throw new InvalidParameterException();
 		}
@@ -66,12 +76,6 @@ public class ExactChangeController implements ConfigurationListener, ProductRack
 			rackToProductMap.put(ic.getRack(i), products[i]);
 		}
 		
-		for(int i = 0; i < productRacks.length; i++) {
-			productRacks[i].register(this);
-		}
-		for(int i = 0; i < hardwareCoinRacks.length; i++) {
-			hardwareCoinRacks[i].register(this);
-		}
 		calculateChangeToMake();
 		recalculateExactChange();
 	}
