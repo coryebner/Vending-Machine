@@ -14,9 +14,13 @@ import hardware.ui.IndicatorLight;
 import hardware.ui.PushButton;
 import hardware.ui.PushButtonCodeInterpreter;
 
+import java.util.Currency;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import SDK.rifffish.Machine;
+import SDK.rifffish.Rifffish;
 
 /**
  * Configuration 8 of the Vending Machine:
@@ -66,8 +70,14 @@ public class VMRUS_COM_C_MI extends AbstractVendingMachine{
 
 	// CONSTRUCTOR
 	public VMRUS_COM_C_MI(Locale locale, int[] coinValues, int[] banknoteValues) {
-
+		
 		this.locale = locale;
+		
+		// Create new Rifffish object for logging
+		rifffLogger = new Rifffish("rsh_Dv5iLASQA2FRlYzANQdelAtt");
+		
+		// Create new machine representation in Rifffish
+		rifffMachine = this.getRifffishLogger().createMachine(new Machine("That Vending Machine", "vmrus_com_c_mi", "In Service", Currency.getInstance(this.getLocale()).getCurrencyCode()));
 		
 		int numOfProducts = 24;	
 		

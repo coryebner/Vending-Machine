@@ -14,10 +14,9 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import logger.Logger;
-import rifffish.Rifffish;
-import rifffish.Rifffish.PaymentMethod;
-import rifffish.Transaction;
+import SDK.logger.Logger;
+import SDK.rifffish.Rifffish.PaymentMethod;
+import SDK.rifffish.Transaction;
 import business.selection_delivery.InventoryController;
 
 /**

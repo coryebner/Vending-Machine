@@ -1,8 +1,8 @@
 package business.selection_delivery;
 
-import business.stub.DisplayController;
-import business.stub.FundsController;
-
+import business.funds.FundsController;
+import business.funds.TransactionReturnCode;
+import business.notifications.DisplayController;
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
 import hardware.exceptions.DisabledException;
@@ -30,9 +30,9 @@ public class CodeSelectionController
 	 * Registers us with the CandyVendingMachine's PushButtonInterpreter to
 	 *  listen for codeEntered() events.
 	 */
-	public CodeSelectionController(InventoryController inv, DisplayController disp, FundsController f, PushButtonCodeInterpreter interp, int off)
+	public CodeSelectionController(InventoryController inv, FundsController f, int off)
 	{
-		super(inv, disp, f);
+		super(inv, f);
 		
 		offset = off;
 	}
@@ -46,46 +46,44 @@ public class CodeSelectionController
 	 *  @param interpreter	interpreter which received the code
 	 */
 	@Override
-	public void codeEntered(String code, PushButtonCodeInterpreter interpreter) {
+	public void codeEntered(String code, PushButtonCodeInterpreter arg1) {
 		int index = productIndex(code, offset);
 		int cost = inventory.getCost(index);
-		
+		int id = inventory.getProductID(index);
+
 		if (index == -1)
 		{//Index of -1 is thrown by getIndex as an error.
 			notifyInvalidSelection();
 			//display.setDisplay("Error: Invalid code", 5000);
 			return;
 		}
-		
+
 		if (inventory.isEmpty(index))
 		{//We are out of stock. Output message and leave function.
 			notifyEmptySelection();
 			//display.setDisplay("The product selected is empty", 5000);
 			return;
 		}
-			
-		if (funds.conductTransaction(cost))
-		{//If we can afford paying
-			dispense(index);
 
-			try
-			{//Attempt to eject the card after a transaction.
-				funds.getCardSlot().ejectCard();
-			}
-			catch (EmptyException | DisabledException e)
-			{
-				//Catch block. There might not have been a card.
-				//We don't care. We always try anyway. Does not matter if it does not work.
-			}
+		TransactionReturnCode transInfo = funds.ConductTransaction(id,cost);
+
+		switch(transInfo){
+		case SUCCESSFUL: 
+			dispense(index);
+			break;
+		case UNSUCCESSFUL:
+			break;
+		case INSUFFICIENTFUNDS:
+			notifyInsufficientFunds(cost);
+			break;
+		case DISABLED:
+			break;
+		case TIMEOUT:
+			break;
+		case CREDITCARDERROR:
+			break;
 		}
-		else
-		{//We cannot afford to pay
-			notifyInsufficientFunds();
-			/*display.setDisplay("Insufficient funds for product: $"
-														+ Double.toString( cost / 100)
-														+ " required"
-														, 4000);*/
-		}
+
 	}
 	
 	/**
@@ -95,7 +93,7 @@ public class CodeSelectionController
 	 * @param code			code to interpret
 	 * @return				product index for dispense()
 	 */
-	private int productIndex(String code, int offset)
+	public int productIndex(String code, int offset) //made this public for testing purposes, was private
 	{
 		/**
 		 * Parse the parts of the string code into chars.

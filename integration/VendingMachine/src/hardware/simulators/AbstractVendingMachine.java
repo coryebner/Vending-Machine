@@ -2,6 +2,8 @@ package hardware.simulators;
 
 import java.util.Locale;
 
+import SDK.rifffish.Machine;
+import SDK.rifffish.Rifffish;
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.funds.BanknoteReceptacle;
 import hardware.funds.BanknoteSlot;
@@ -21,6 +23,8 @@ public abstract class AbstractVendingMachine {
 
 	protected boolean safetyOn = false;
 	protected Locale locale;
+	protected Rifffish rifffLogger;
+	protected Machine rifffMachine;
 
 	/**
 	 * Returns the out of order light.
@@ -336,6 +340,24 @@ public abstract class AbstractVendingMachine {
 	 */
 	public int getNumberOfCoinRacks() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
+	}
+	
+	/**
+	 * Returns the Rifffish object for logging purposes.
+	 * 
+	 * @return the Rifffish object.
+	 */
+	public Rifffish getRifffishLogger(){
+		return rifffLogger;
+	}
+	
+	/**
+	 * Returns the Rifffish Machine object for logging purposes.
+	 * 
+	 * @return the Rifffish Machine object.
+	 */
+	public Machine getRifffishMachine(){
+		return rifffMachine;
 	}
 
 	/**
