@@ -12,15 +12,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import SDK.logger.LogDate;
+import SDK.logger.LogDate.LoggingType;
 import SDK.logger.Logger;
 import SDK.rifffish.Rifffish;
 import business.funds.CoinRackController;
 import business.funds.FundsController;
 import business.funds.PaymentMethods;
+import business.notifications.DisplayController;
 import business.selection_delivery.ButtonSelectionController;
 import business.selection_delivery.CodeSelectionController;
 import business.selection_delivery.InventoryController;
-import business.notifications.DisplayController;
 import hardware.simulators.AbstractVendingMachine;
 import hardware.simulators.VMRUS_COM_C_M;
 import hardware.simulators.VMRUS_COM_C_MI;
@@ -455,7 +457,7 @@ public class Configuration {
 										
 										m.getOutOfOrderLight(),
 										inventoryController,
-										new Rifffish("BAD_API_KEY")); // TODO: This needs to be a Logger()
+										logger;
 			
 			m.getCoinReceptacle().register(fundsNew.getCoinsController());
 			m.getBanknoteReceptacle().register(fundsNew.getBankNoteController());
@@ -562,18 +564,22 @@ public class Configuration {
 	 */
 	protected void createLogger(AbstractVendingMachine m, String frequency)
 	{
-		Rifffish r = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
+		String r = "rsh_3wL4MyhWW4z3kfjoYfyN0gtt";
 		if(frequency.equalsIgnoreCase("instant")){
-			this.logger= new Logger()
+			this.logger= new Logger(r,0);
 			
 		} else if(frequency.equalsIgnoreCase("batch")){
+			this.logger= new Logger(r,100);
 			
 		}else if(frequency.equalsIgnoreCase("daily")){
 			
+			LogDate logdate = new LogDate(LoggingType.Daily,0,4,0);
+			this.logger= new Logger(r,logdate);
+			
 		}else if(frequency.equalsIgnoreCase("offline")){
-			// I guess it's the offline
+			this.logger= new Logger();
 		}
-		this.logger= new Logger();
+		
 	}
 
 	/**
