@@ -21,7 +21,7 @@ import java.util.Map;
 import business.config.Configuration;
 import business.config.ConfigurationException;
 import business.selection_delivery.InventoryController;
-import business.stub.DisplayController;
+import business.notifications.DisplayController;
 import business.funds.FundsController;
 
 public class ConfigurationTest extends Configuration {

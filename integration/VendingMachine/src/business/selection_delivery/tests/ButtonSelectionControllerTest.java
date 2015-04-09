@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import business.funds.FundsController;
 import business.funds.PaymentMethods;
-import business.stub.DisplayController;
+import business.notifications.DisplayController;
 import business.selection_delivery.ButtonSelectionController;
 import business.selection_delivery.InventoryController;
 import hardware.racks.CoinRack;

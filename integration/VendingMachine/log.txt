@@ -1,0 +1,3 @@
+Transaction,null,10000,1,credit_cards,true,2015-04-08 21:11:49.798,null
+Transaction,null,10000,1,credit_cards,true,2015-04-08 21:12:13.934,null
+Transaction,null,10000,1,credit_cards,true,2015-04-08 21:12:51.516,null

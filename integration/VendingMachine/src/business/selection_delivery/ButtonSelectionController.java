@@ -4,7 +4,7 @@ import java.security.InvalidParameterException;
 
 import business.funds.FundsController;
 import business.funds.TransactionReturnCode;
-import business.stub.DisplayController;
+import business.notifications.DisplayController;
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
 import hardware.exceptions.DisabledException;
