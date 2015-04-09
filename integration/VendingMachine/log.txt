@@ -13,3 +13,9 @@ Transaction,null,150,1,coins,true,2015-04-08 23:20:01.774,null
 Transaction,null,50,1,coins,true,2015-04-08 23:20:06.754,null
 Transaction,null,50,1,coins,true,2015-04-08 23:25:03.291,null
 Transaction,null,50,1,coins,true,2015-04-08 23:35:31.332,null
+Transaction,null,0,1,credit_cards,true,2015-04-09 00:32:49.065,null
+Transaction,null,0,1,credit_cards,true,2015-04-09 00:32:55.747,null
+Transaction,null,0,1,credit_cards,true,2015-04-09 00:32:55.997,null
+Transaction,null,0,1,credit_cards,true,2015-04-09 00:43:53.994,null
+Transaction,null,0,1,credit_cards,true,2015-04-09 00:43:54.198,null
+Transaction,null,0,1,credit_cards,true,2015-04-09 00:50:22.981,null

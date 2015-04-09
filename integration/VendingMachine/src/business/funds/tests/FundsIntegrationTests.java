@@ -113,12 +113,13 @@ public class FundsIntegrationTests {
 		}
 		config = new Configuration();
 		bnReceptacle = hw.getBanknoteReceptacle();
-		tempbnReceptacle = new BanknoteReceptacle(10);
+		tempbnReceptacle = hw.getBanknoteReceptacle();
+		
 		overflowCoinReceptacle = new CoinReceptacle(10);
 		
-		prepaidController = new PrepaidController(currency);
+		//prepaidController = new PrepaidController(currency);
 		cardSlot = hw.getCardSlot();
-		cardSlot.register(prepaidController);
+		//cardSlot.register(prepaidController);
 		
 		availablePaymentMethods = new ArrayList<PaymentMethods>();
 		availablePaymentMethods.add(PaymentMethods.PREPAID);
@@ -275,8 +276,9 @@ public class FundsIntegrationTests {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		try {
-			banknoteSlot.addBanknote(new Banknote(500));
+			banknoteSlot.addBanknote(new Banknote(5));
 		} catch (DisabledException e) {
 			
 		}
