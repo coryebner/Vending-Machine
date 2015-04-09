@@ -31,4 +31,9 @@ public class EndToEndTest_SFFPC extends EndToEndTest {
 	public void testMakeChangeFromPriorPurchase() throws Exception {
 		super.testMakeChangeFromPriorPurchase();
 	}
+	
+	@Test
+	public void testCoinReturn() throws Exception {
+		super.testCoinReturn();
+	}
 }
