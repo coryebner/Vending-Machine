@@ -545,7 +545,6 @@ public class Configuration {
 			}
 			
 			if (funds.isCoinsPresent()) {
-				m.getCoinReceptacle().register(funds.getCoinsController());
 				// Register the coinracks
 			
 				ProductRack [] racks = new ProductRack[m.getNumberOfProductRacks()];
