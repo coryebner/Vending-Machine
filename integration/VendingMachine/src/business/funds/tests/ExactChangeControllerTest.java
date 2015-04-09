@@ -45,11 +45,7 @@ public class ExactChangeControllerTest {
 	    int costs[] = {1,1,1,1,100};
 	    int quantity[] = {1,1,1,1,1};
 
-	    ProductRack productRacks[];
-		productRacks = new ProductRack[numProductRacks];
-	    for(int i = 0; i < productRacks.length; i++) {
-	    	productRacks[i] = new ProductRack(10);
-	    }
+	    ProductRack productRacks[] = new ProductRack[]{new ProductRack(10),new ProductRack(10),new ProductRack(10),new ProductRack(10),new ProductRack(10)};
 		
 		InventoryController ic = new InventoryController(productRacks, numProductRacks, names, costs, quantity, null, new Logger(), 0);
 		

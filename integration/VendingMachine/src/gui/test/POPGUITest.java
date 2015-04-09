@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -32,7 +33,7 @@ public class POPGUITest {
 		int [] coinValue = {5,10,25,100,200};
 		int [] billValue = {500,1000,2000};
 		ArrayList<Boolean> parts = new ArrayList();//{true,true,true,true,true,false,false};
-		for(int i = 0; i< 7; i++){			
+		for(int i = 0; i<= 7; i++){			
 			if(i==5 || i == 6){
 				parts.add(false);
 			}else{

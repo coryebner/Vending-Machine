@@ -100,8 +100,10 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 
 	private JComboBox cmbCurr;
 	private JButton billEject;
+	private JButton takeProducts;
 	private JButton btnReturn;
 	private JTextPane Display_text;
+	private JTextPane DeliveryChuteText;
 
 	private JLabel lblExactChange;
 	private JLabel lblOutOfOrder;
@@ -124,6 +126,8 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 	private boolean hasCandyButtons = true;
 	private boolean hasTouchScreen = false;
 	private boolean hasPayPal = true;
+	
+	private String chuteDisplayString ="";
 
 	/**
 	 * Needed for Image generation. Used for testing purposes, This should come
@@ -265,7 +269,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		pnlDeliveryChute.add(DeliveryChute);
 		DeliveryChute.setSize(35, 1);
 
-		JTextPane DeliveryChuteText = new JTextPane();
+		DeliveryChuteText = new JTextPane();
 		DeliveryChuteText
 				.setText("                                                                                ");
 		DeliveryChuteText.setSize(500, 1);
@@ -293,6 +297,17 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 			}
 		});
 		pnlMisc.add(btnReturn);
+		takeProducts = new JButton("Take Products");
+		takeProducts.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				chuteDisplayString = "";
+				setDeliveryChuteText(chuteDisplayString);
+			}
+			
+		});
+		pnlMisc.add(takeProducts);
 
 		lblExactChange = new JLabel("ExactChange");
 		lblExactChange.setBackground(Color.LIGHT_GRAY);
@@ -839,7 +854,6 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 			public void actionPerformed(ActionEvent arg0) {
 				Coin coin = new Coin(amount);
 				try {
-					System.out.println("Before Inseting coin");
 					buttonPressed = true;
 					machine.getCoinSlot().addCoin(coin);
 				} catch (NoSuchHardwareException e) {
@@ -971,7 +985,6 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 	public void messageChange(Display display, String oldMsg, String newMsg) {
 		// prevents wrong enabling cases for timed messages
 		if (!oldMsg.equals(newMsg)) {
-			System.out.println(newMsg);
 			GUIHelper.enableComponents(getMainFrame(), true);
 			Display_text.setText(newMsg);
 		}
@@ -990,7 +1003,6 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					System.out.println("Inside Button Action");
 					buttonPressed = true;
 					GUIHelper.enableComponents(getMainFrame(), false);
 					machine.getSelectionButton(key).press();
@@ -1123,8 +1135,18 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 	@Override
 	public void itemDelivered(DeliveryChute chute) {
 		GUIHelper.enableComponents(getMainFrame(), true);
-		for (Object item : chute.removeItems())
-			System.out.println(item);
+		Object [] items = chute.removeItems();
+		for (int i = 0; i< items.length; i++){
+			if(items[i] instanceof Coin){
+				chuteDisplayString += centsToString(((Coin) items[i]).getValue())   ;
+			}else if(items[i] instanceof Product){
+				chuteDisplayString += "Product   ";
+			}
+		}
+		DeliveryChuteText.setText(chuteDisplayString);
+	}
+	private void setDeliveryChuteText(String string){
+		DeliveryChuteText.setText(string);
 	}
 
 	@Override
@@ -1143,5 +1165,16 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 	public void chuteFull(DeliveryChute chute) {
 		// TODO Auto-generated method stub
 
+	}
+	private String centsToString(int cents){
+		String ret = "";
+		ret+= "$"+ cents/100+".";
+		if(cents%100 <10){
+			ret+= "0"+ cents%100;
+		}
+		else{
+			ret+= cents%100;
+		}
+		return ret;
 	}
 }

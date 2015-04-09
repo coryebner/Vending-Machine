@@ -545,7 +545,6 @@ public class Configuration {
 			}
 			
 			if (funds.isCoinsPresent()) {
-				m.getCoinReceptacle().register(funds.getCoinsController());
 				// Register the coinracks
 			
 				ProductRack [] racks = new ProductRack[m.getNumberOfProductRacks()];
@@ -686,7 +685,7 @@ public class Configuration {
 	 * @param frequency				logging frequency
 	 * 								  (one of either "instant", "batch" or "daily")
 	 */
-	protected void createLogger(AbstractVendingMachine m, String frequency)
+	protected void createLogger(AbstractVendingMachine m, String frequency) throws ConfigurationException
 	{
 		String r = "rsh_3wL4MyhWW4z3kfjoYfyN0gtt";
 		if(frequency.equalsIgnoreCase("instant")){
@@ -707,7 +706,9 @@ public class Configuration {
 			this.logger= new Logger();
 			machineID = getMachineID(false);
 		}
-		
+		else {
+			throw new ConfigurationException("Invalid logging frequency " + frequency + " - must be one of instant, batch, daily or offline");
+		}
 	}
 
 	/**
@@ -778,6 +779,9 @@ public class Configuration {
 	protected void controllerCreator(AbstractVendingMachine m)
 		throws ConfigurationException
 	{
+		//Create the logger
+		createLogger(m, logFrequency);
+
 		//Create the inventory manager
 		createInventoryController(m);
 		
@@ -787,11 +791,7 @@ public class Configuration {
 		//Create a selection button controller
 		createButtonSelectionController(m);
 		
-		createDisplayController(m, buttonSelectionController, funds.getCoinsController());
-
-		//Create the logger
-		createLogger(m, logFrequency);
-		
+		createDisplayController(m, buttonSelectionController, funds.getCoinsController());		
 	}
 
 	protected AbstractVendingMachine createSFFPCI()
@@ -1002,14 +1002,6 @@ public class Configuration {
 		createButtonSelectionController(machine);
 		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
 
-		//Create Code selection controller
-		try {
-			createCodeController(machine, machine.getNumberOfSelectionButtons());
-		}
-		catch (NoSuchHardwareException e) {
-			throw new ConfigurationException("Unable to get selection buttons from machine!");
-		}
-
 		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(false)
 		return machine;
 	}
@@ -1029,14 +1021,6 @@ public class Configuration {
 		//Create a selection button controller
 		createButtonSelectionController(machine);
 		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
-
-		try {
-			//Create Code selection controller
-			createCodeController(machine, machine.getNumberOfSelectionButtons());
-		}
-		catch (NoSuchHardwareException e) {
-			throw new ConfigurationException("Unable to get selection buttons from machine!");
-		}
 
 		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(true)
 		return machine;		

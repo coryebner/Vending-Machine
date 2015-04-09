@@ -57,11 +57,11 @@ public class VMConfigGUI {
 		});
 	}
 
-	public VMConfigGUI() {
+	public VMConfigGUI(){
 		initialize();
 	}
 
-	private void initialize() {
+	private void initialize()  {
 		frmVendingMachinesRUS = new JFrame();
 		frmVendingMachinesRUS.setTitle("Vending Machines R Us");
 		frmVendingMachinesRUS.setBounds(100, 100, 386, 463);
@@ -236,19 +236,19 @@ public class VMConfigGUI {
 		ActionListener reportConfigListener = new ReportConfigListener();
 		//Remote reporting configurations
 		JRadioButton reportConfig1 = new JRadioButton("Every transaction");
-		reportConfig1.setActionCommand("Every transaction");
+		reportConfig1.setActionCommand("instant");
 		reportConfig1.setBounds(6, 6, 172, 23);
 		reportConfig1.addActionListener(reportConfigListener);
 		panel_2.add(reportConfig1);
 		
 		JRadioButton reportConfig2 = new JRadioButton("Every 100 transactions");
-		reportConfig2.setActionCommand("Every 100 transactions");
+		reportConfig2.setActionCommand("batch");
 		reportConfig2.setBounds(6, 30, 178, 23);
 		reportConfig2.addActionListener(reportConfigListener);
 		panel_2.add(reportConfig2);
 		
 		JRadioButton reportConfig3 = new JRadioButton("Daily at 4:00am");
-		reportConfig3.setActionCommand("Daily at 4:00am");
+		reportConfig3.setActionCommand("daily");
 		reportConfig3.setBounds(6, 54, 172, 23);
 		reportConfig3.addActionListener(reportConfigListener);
 		panel_2.add(reportConfig3);
@@ -302,6 +302,7 @@ public class VMConfigGUI {
 					ArrayList<Boolean> parts = null;
 					parts= config.parts();
 				
+					ArrayList<Boolean> parts = config.parts();
 					VendingMachineGUI window = new StandardMachineGUI(machine,parts);
 					window.getMainFrame().setVisible(true);
 					frmVendingMachinesRUS.setVisible(false);
