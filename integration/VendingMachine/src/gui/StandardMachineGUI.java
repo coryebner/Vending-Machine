@@ -362,7 +362,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		pnlPopButtons.setLayout(new GridLayout(0, 2, 2, 2));
 		popScroller.setViewportView(pnlPopButtons);
 		popScroller.setMaximumSize(new Dimension(100, 500));
-		popScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		popScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
 //		old verison without scroller
 //		pnlPopButtons = new JPanel();
@@ -838,23 +838,13 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		// names.add("Root Beer");
 		// names.add("Water");
 
-//		try {
-//			for (int i = 0; i < machine.getNumberOfProductRacks(); i++) {
-//				names.add("Pop " + i);
-//			}
-//		} catch (NoSuchHardwareException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		for (int i = 0; i < 50; i++) {
-//			names.add("Pop " + i);
-//		}
-
-		
-		for (int i = 0; i < 50; i++) {
-			names.add("Pop " + i);
+		try {
+			for (int i = 0; i < machine.getNumberOfProductRacks(); i++) {
+				names.add("Pop " + i);
+			}
+		} catch (NoSuchHardwareException e) {
+			e.printStackTrace();
 		}
-
 		
 		createPopButtons(names);
 		reloadPopButtons();
