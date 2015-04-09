@@ -12,7 +12,7 @@ import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
 import hardware.simulators.VMRUS_COM_C_M;
 import hardware.ui.PushButton;
-import logger.Logger;
+import SDK.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
