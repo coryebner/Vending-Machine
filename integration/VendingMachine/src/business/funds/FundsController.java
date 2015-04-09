@@ -177,15 +177,19 @@ public class FundsController {
 					inventoryController,
 					coinsController.getCoinRackControllers());
 		}
-		if (availablePaymentMethods.contains(PaymentMethods.CREDITCARD)) {
-			this.creditCardPresent = true;
-			this.creditCardController = new CreditCardController(
-					this.payPalController);
-		}
 		if (availablePaymentMethods.contains(PaymentMethods.PAYPAL)) {
 			this.payPalPresent = true;
 			this.payPalController = new PayPalController();
 		}
+		if (availablePaymentMethods.contains(PaymentMethods.CREDITCARD)) {
+			this.creditCardPresent = true;
+			if(this.payPalController == null){
+				this.payPalController = new PayPalController();
+			}
+			this.creditCardController = new CreditCardController(
+					this.payPalController);
+		}
+
 	}
 
 	/**
@@ -456,7 +460,9 @@ public class FundsController {
 	public PayPalController getPayPalController(){
 		return this.payPalController;
 	}
-
+	public ExactChangeController getExactChangeController(){
+		return this.exactChangeController;
+	}
 	public void ONLY_FOR_TESTING_setControllerState(boolean present,
 			Object object, Class<?> classType) {
 		if (classType == PrepaidController.class) {
