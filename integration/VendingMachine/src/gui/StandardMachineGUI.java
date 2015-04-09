@@ -195,9 +195,13 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 
 	public StandardMachineGUI(AbstractVendingMachine machine,
 			ArrayList<Boolean> parts) {
-		initialize(machine, parts.get(0), parts.get(1), parts.get(2),
+		if(machine != null){
+			initialize(machine, parts.get(0), parts.get(1), parts.get(2),
 				parts.get(3), parts.get(4), parts.get(5), parts.get(6),
 				parts.get(7));
+		}else{
+			System.out.println("No vending machine is being passed to the GUI.\n Program terminated.");
+		}
 	}
 
 	/**
