@@ -20,6 +20,7 @@ import java.util.Map;
 
 import business.config.Configuration;
 import business.config.ConfigurationException;
+import business.selection_delivery.ButtonSelectionController;
 import business.selection_delivery.InventoryController;
 import business.notifications.DisplayController;
 import business.funds.FundsController;
@@ -155,13 +156,16 @@ public class ConfigurationTest extends Configuration {
 		// mocking other required objects for when the method is called
 		final InventoryController inventory = context.mock(InventoryController.class);
 		final DisplayController display = context.mock(DisplayController.class); 
+		FundsController fundsC = context.mock(FundsController.class);
 		this.machine= mockMachine;
+		this.funds = fundsC;
 		this.inventoryController = inventory;
 		this.displayController = display;
 
 		// Assertion that the Button Selection Controller is null as it was not initialized before
 		assertNull("Button Selection Controller doesn't exist",this.buttonSelectionController);
 		createButtonSelectionController(this.machine);
+		
 		// Assertion that this buttonSelectionController object was created after the previous call
 		assertNotNull("Button Selection Controller created", this.buttonSelectionController);
 		try {
