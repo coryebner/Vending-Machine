@@ -1,4 +1,4 @@
-package hardware.test;
+package hardware.test.simulators;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -6,25 +6,17 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
-
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
-import hardware.exceptions.CapacityExceededException;
 import hardware.exceptions.DisabledException;
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.exceptions.SimulationException;
 import hardware.funds.Card;
-import hardware.funds.CardSlotListener;
-import hardware.funds.Coin;
 import hardware.products.PopCan;
-import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
 import hardware.simulators.AbstractVendingMachine;
 import hardware.simulators.VMRUS_SFF_P_PI;
 import hardware.test.stub.CardSlotListenerStub;
-import hardware.test.stub.CoinRackListenerStub;
-import hardware.test.stub.CoinReceptacleListenerStub;
-import hardware.test.stub.CoinSlotListenerStub;
 import hardware.test.stub.DeliveryChuteListenerStub;
 import hardware.test.stub.IndicatorLightListenerStub;
 import hardware.test.stub.ProductRackListenerStub;
@@ -37,7 +29,6 @@ import org.junit.Test;
 
 public class VMRUS_SFF_P_PITest {
 
-	private final int NO_COINRACKS = 0;
 	private final int NO_PRODUCTRACKS = 6;
 	private final int NO_SELECTIONBUTTONS = 6;
 
