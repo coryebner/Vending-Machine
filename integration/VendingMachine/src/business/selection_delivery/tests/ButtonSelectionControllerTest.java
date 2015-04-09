@@ -121,7 +121,7 @@ public class ButtonSelectionControllerTest {
 		for(int i = 0; i < rackcount; i++)
 			productID[i] = i + 1;
 			
-		inventoryController = new InventoryController(rack, rackcount, names, costs, quantity, productID);
+		inventoryController = new InventoryController(rack, rackcount, names, costs, quantity, null, new Logger(), 0);
 
 		//Setting up the funds manager
 		bestEffortChange = true;

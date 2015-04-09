@@ -22,7 +22,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import rifffish.Rifffish;
+import SDK.logger.Logger;
+import SDK.rifffish.Rifffish.PaymentMethod;
+import SDK.rifffish.Transaction;
 import business.funds.BanknoteController;
 import business.funds.CoinsController;
 import business.funds.CreditCardController;
@@ -56,11 +58,13 @@ public class FundsControllerTest {
 	BanknoteReceptacle bnReceptacle;
 	int[] banknoteDenominations;
 	InventoryController inventoryController;
+	Logger logger;
 	
 	int id = 10;
 
 	@Before
 	public void setUp() throws Exception {
+		logger = context.mock(Logger.class);
 	}
 
 	@After
@@ -171,12 +175,13 @@ public class FundsControllerTest {
 		int [] nothing = null;
 		CoinRack[] coinRack = null;
 		List<PaymentMethods> availablePaymentMethods = new ArrayList<PaymentMethods>();
-		FundsController funds = new FundsController(locale, availablePaymentMethods, false,nothing,null,null,0,null,null,null,nothing,null,null,null,null,0,null,null,null);
+		FundsController funds = new FundsController(locale, availablePaymentMethods, false,nothing,null,null,0,null,null,null,nothing,null,null,null,null,0,null,null,logger);
 		prepaidController = context.mock(PrepaidController.class);
 		coinsController = context.mock(CoinsController.class);
 		bankNoteController = context.mock(BanknoteController.class) ;
 		creditCardController = context.mock(CreditCardController.class);
 		payPalController = context.mock(PayPalController.class);
+		
 		
 		if(prepaid){
 			funds.ONLY_FOR_TESTING_setControllerState(prepaid, prepaidController, PrepaidController.class);
@@ -206,6 +211,7 @@ public class FundsControllerTest {
 		FundsController funds = setupControllers(true, false, false, false, false);
 		context.checking(new Expectations(){
 			{
+				allowing(logger).log(with(any(Transaction.class)));
 			atLeast(1).of(prepaidController).getAvailableBalance();
 			will(returnValue(25));
 			}
@@ -220,6 +226,7 @@ public class FundsControllerTest {
 		FundsController funds = setupControllers(true, false, false, false, false);
 		context.checking(new Expectations(){
 			{
+				allowing(logger).log(with(any(Transaction.class)));
 			atLeast(1).of(prepaidController).getAvailableBalance();
 			will(returnValue(100));
 			oneOf(prepaidController).ConductTransaction(100);
@@ -236,6 +243,7 @@ public class FundsControllerTest {
 		FundsController funds = setupControllers(true, false, false, false, false);
 		context.checking(new Expectations(){
 			{
+				allowing(logger).log(with(any(Transaction.class)));
 			atLeast(1).of(prepaidController).getAvailableBalance();
 			will(returnValue(110));
 			oneOf(prepaidController).ConductTransaction(100);
@@ -256,6 +264,7 @@ public class FundsControllerTest {
 		FundsController funds = setupControllers(false, true, false, false, false);
 		context.checking(new Expectations(){
 			{
+				allowing(logger).log(with(any(Transaction.class)));
 			atLeast(1).of(bankNoteController).getAvailableBalance();
 			will(returnValue(500));
 			}
@@ -270,6 +279,7 @@ public class FundsControllerTest {
 		FundsController funds = setupControllers(false, true, false, false, false);
 		context.checking(new Expectations(){
 			{
+				allowing(logger).log(with(any(Transaction.class)));
 			atLeast(1).of(bankNoteController).getAvailableBalance();
 			will(returnValue(500));
 			oneOf(bankNoteController).ConductTransaction(500);
@@ -286,6 +296,7 @@ public class FundsControllerTest {
 		FundsController funds = setupControllers(false, true, false, false, false);
 		context.checking(new Expectations(){
 			{
+			allowing(logger).log(with(any(Transaction.class)));
 			atLeast(1).of(bankNoteController).getAvailableBalance();
 			will(returnValue(500));
 			oneOf(bankNoteController).ConductTransaction(100);
@@ -307,6 +318,7 @@ public class FundsControllerTest {
 		FundsController funds = setupControllers(false, false, true, false, false);
 		context.checking(new Expectations(){
 			{
+				allowing(logger).log(with(any(Transaction.class)));
 			atLeast(1).of(coinsController).getAvailableBalance();
 			will(returnValue(25));
 			}
@@ -322,6 +334,7 @@ public class FundsControllerTest {
 		FundsController funds = setupControllers(false, false, true, false, false);
 		context.checking(new Expectations(){
 			{
+				allowing(logger).log(with(any(Transaction.class)));
 			atLeast(1).of(coinsController).getAvailableBalance();
 			will(returnValue(100));
 			oneOf(coinsController).ConductTransaction(100);
@@ -338,6 +351,7 @@ public class FundsControllerTest {
 		FundsController funds = setupControllers(false, false, true, false, false);
 		context.checking(new Expectations(){
 			{
+				allowing(logger).log(with(any(Transaction.class)));
 			atLeast(1).of(coinsController).getAvailableBalance();
 			will(returnValue(500));
 			oneOf(coinsController).ConductTransaction(100);
@@ -360,6 +374,7 @@ public class FundsControllerTest {
 		FundsController funds = setupControllers(false, false, false, true, false);
 		context.checking(new Expectations(){
 			{
+				allowing(logger).log(with(any(Transaction.class)));
 			atLeast(1).of(creditCardController).ConductTransaction(100);
 			will(returnValue(TransactionReturnCode.UNSUCCESSFUL));
 			}
@@ -374,6 +389,7 @@ public class FundsControllerTest {
 		FundsController funds = setupControllers(false, false, false, true, false);
 		context.checking(new Expectations(){
 			{
+			allowing(logger).log(with(any(Transaction.class)));
 			atLeast(1).of(creditCardController).ConductTransaction(100);
 			will(returnValue(TransactionReturnCode.SUCCESSFUL));
 			}
@@ -391,6 +407,7 @@ public class FundsControllerTest {
 		FundsController funds = setupControllers(false, false, false, false, true);
 		context.checking(new Expectations(){
 			{
+				allowing(logger).log(new Transaction(id, PaymentMethod.PAYPAL, true));
 			atLeast(1).of(payPalController).ConductTransaction(100);
 			will(returnValue(TransactionReturnCode.UNSUCCESSFUL));
 			}
@@ -405,6 +422,7 @@ public class FundsControllerTest {
 		FundsController funds = setupControllers(false, false, false, false, true);
 		context.checking(new Expectations(){
 			{
+				allowing(logger).log(new Transaction(id, PaymentMethod.PAYPAL, true));
 			atLeast(1).of(payPalController).ConductTransaction(100);
 			will(returnValue(TransactionReturnCode.TIMEOUT));
 			}
@@ -419,6 +437,7 @@ public class FundsControllerTest {
 		FundsController funds = setupControllers(false, false, false, false, true);
 		context.checking(new Expectations(){
 			{
+				allowing(logger).log(with(any(Transaction.class)));
 			atLeast(1).of(payPalController).ConductTransaction(100);
 			will(returnValue(TransactionReturnCode.SUCCESSFUL));
 			}

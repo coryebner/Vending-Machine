@@ -8,6 +8,7 @@ import hardware.ui.Display;
 import org.junit.Before;
 import org.junit.Test;
 
+import SDK.logger.Logger;
 import business.config.ConfigPanelLogic;
 import business.config.ConfigurationListener;
 import business.selection_delivery.InventoryController;
@@ -42,7 +43,7 @@ public class ConfigurationTest {
 		quantity [1] = 3;
 
 		display = new Display();
-		manager = new InventoryController(rack,rackcount,names,costs,quantity, ids);
+		manager = new InventoryController(rack,rackcount,names,costs,quantity, null, new Logger(), 0);
 		test = new ConfigurationPanelTransmitter();
 		sub = new ConfigPanelLogic(display);
 		test.register(sub);

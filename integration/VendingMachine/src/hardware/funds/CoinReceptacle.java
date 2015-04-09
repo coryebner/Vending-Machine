@@ -164,8 +164,8 @@ public class CoinReceptacle extends AbstractHardware<CoinReceptacleListener> imp
 	if(!coinsEntered.isEmpty()) {
 	    coinsEntered.clear();
 
-	    notifyCoinsRemoved();
 	}
+	 notifyCoinsRemoved();
     }
 
     /**

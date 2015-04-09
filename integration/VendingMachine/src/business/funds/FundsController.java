@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import SDK.logger.Logger;
 import SDK.rifffish.Rifffish.PaymentMethod;
@@ -227,16 +225,16 @@ public class FundsController {
 		}
 		if(cashUsed && (!cardUsed && !paypalused)){
 			
-			logger.log(new Transaction(availableFunds, PaymentMethod.COIN, true));
+			logger.log(new Transaction(productID, PaymentMethod.COIN, true));
 		}
 		else if(cardUsed && (!cashUsed && !paypalused)){
-			logger.log(new Transaction(availableFunds, PaymentMethod.CREDIT_CARD, true));
+			logger.log(new Transaction(productID, PaymentMethod.CREDIT_CARD, true));
 		}
 		else if(paypalused && (!cashUsed && !cardUsed)){
-			logger.log(new Transaction(availableFunds, PaymentMethod.PAYPAL, true));
+			logger.log(new Transaction(productID, PaymentMethod.PAYPAL, true));
 		}
-		else{
-			logger.log(new Transaction(availableFunds, PaymentMethod.COIN, true));
+		else if(paypalused || cashUsed || cardUsed){
+			logger.log(new Transaction(productID, PaymentMethod.COIN, true));
 			//logger.log(new Transaction(availableFunds, PaymentMethod.MIXED, true));
 		}
 		return returnCode;
@@ -286,24 +284,30 @@ public class FundsController {
 				noChangeDueToPrepaidExceed = true;// set to tell if change
 													// should be provided
 			}
-			amount = Math.min(ppFunds, balance);
-			returnCodePP = prepaidController.ConductTransaction(amount);
-			balance -= amount;
-			cardUsed = true;
+			if(ppFunds >0){
+				amount = Math.min(ppFunds, balance);
+				returnCodePP = prepaidController.ConductTransaction(amount);
+				balance -= amount;
+				cardUsed = true;
+			}
 		}
 		if (billsPresent && balance > 0) {
 			int billsFunds = bankNoteController.getAvailableBalance();
-			amount = Math.min(billsFunds, balance);
-			returnCodeC = bankNoteController.ConductTransaction(amount);
-			balance -= amount;
-			cashUsed = false;
+			if(billsFunds >0){
+				amount = Math.min(billsFunds, balance);
+				returnCodeC = bankNoteController.ConductTransaction(amount);
+				balance -= amount;
+				cashUsed = true;
+			}
 		}
 		if (coinsPresent && balance > 0) {
 			int coinsFunds = coinsController.getAvailableBalance();
-			amount = Math.min(coinsFunds, balance);
-			returnCodeC = coinsController.ConductTransaction(amount);
-			balance -= amount;
-			cashUsed = false;
+			if(coinsFunds >0){
+				amount = Math.min(coinsFunds, balance);
+				returnCodeC = coinsController.ConductTransaction(amount);
+				balance -= amount;
+				cashUsed = true;
+			}
 		}
 
 		if (returnCodePP == TransactionReturnCode.SUCCESSFUL
