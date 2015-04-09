@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import business.funds.FundsController;
 import business.funds.PaymentMethods;
+import SDK.logger.Logger;
 import SDK.rifffish.Machine;
 import SDK.rifffish.Rifffish;
 import business.selection_delivery.ButtonSelectionController;
@@ -68,7 +69,7 @@ public class ButtonSelectionControllerTest {
 	
 	IndicatorLight outOfOrderLight;
 	Rifffish r = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
-	logger.Logger logger = new logger.Logger();
+	Logger logger = new Logger();
 	Machine newMachine;
 
 

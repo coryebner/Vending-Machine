@@ -1,6 +1,7 @@
 package business.selection_delivery.tests;
 
 import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,6 +12,7 @@ import hardware.racks.ProductRack;
 import hardware.racks.CoinRack;
 import hardware.ui.PushButtonCodeInterpreter;
 import business.funds.PaymentMethods;
+import SDK.logger.Logger;
 import SDK.rifffish.Rifffish;
 import hardware.funds.BanknoteReceptacle;
 import hardware.funds.BanknoteSlot;
@@ -60,7 +62,7 @@ public class CodeSelectionControllerTest {
 	public IndicatorLight out = new IndicatorLight();
 	// InventoryController inventoryController (created earlier)
 	public static Rifffish r = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
-	public logger.Logger log = new logger.Logger();
+	public Logger log = new Logger();
 	//holy moe I should have mocked this
 	
 	@Before
