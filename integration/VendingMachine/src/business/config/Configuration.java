@@ -149,7 +149,7 @@ public class Configuration {
 		configLogic.register(listener);
 	}
 	
-	public List<Boolean> parts() {
+	public ArrayList<Boolean> parts() {
 		Boolean [] parts = {(type != SFFPPI), // coinslot
 							(type != SFFPPI && type != SFFPCI && type != SFFPC), // billslot
 							(type != SFFPC && type != SFFPCI), // cardslot
@@ -159,7 +159,10 @@ public class Configuration {
 							(type.startsWith("TOC")), // touchscreen
 		};
 		
-		return Arrays.asList(parts);
+		ArrayList<Boolean> ret = new ArrayList<Boolean>();
+		ret.addAll(Arrays.asList(parts));
+		
+		return ret;
 	}
 	
 	private AbstractVendingMachine load(BufferedReader config) throws ConfigurationException, IOException {
