@@ -121,6 +121,7 @@ public class Configuration {
 		}
 
 		// Read all the data we need from machine, funds and inventory
+		updateValues();
 		BufferedWriter output = new BufferedWriter(new FileWriter(filename));
 		writeConfigFile(output);
 	}
@@ -191,34 +192,34 @@ public class Configuration {
 			prices[i]=inventoryController.getCost(i);
 		}
 		
-		//coinStorageQuantities = funds.getCoinStorageBinTracker().getQuantities
-		//if(locale.equals(Locale.CANADA){
-		//		coinStorage[0]=coinStorageQuantities.get(5);
-		//		coinStorage[1]=coinStorageQuantities.get(10);
-		//		coinStorage[2]=coinStorageQuantities.get(25);
-		//		coinStorage[3]=coinStorageQuantities.get(100);
-		//		coinStorage[4]=coinStorageQuantities.get(200);
-		//}
-		//if(locale.equals(Locale.UK){
-		//		coinStorage[0]=coinStorageQuantities.get(5);
-		//		coinStorage[1]=coinStorageQuantities.get(10);
-		//		coinStorage[2]=coinStorageQuantities.get(20);
-		//		coinStorage[3]=coinStorageQuantities.get(50);
-		//		coinStorage[4]=coinStorageQuantities.get(100);
-		//		coinStorage[5]=coinStorageQuantities.get(200);
-		//}
-		//if(locale.equals(Locale.US){
-		//		coinStorage[0]=coinStorageQuantities.get(5);
-		//		coinStorage[1]=coinStorageQuantities.get(10);
-		//		coinStorage[2]=coinStorageQuantities.get(25);
-		//		coinStorage[3]=coinStorageQuantities.get(50);
-		//		coinStorage[4]=coinStorageQuantities.get(100);
-		//}
-		//int CRackcount=funds.getCoinRackControllers().length;
-		//for(int i=0;i<CRackcount;i++){
-			//coinRackQuantities[i]=funds.getCoinRackControllers()[i].getQuantity();
-		//}
-		//billStorageQuantities[0]=funds.getBankNoteStorageBinTracker().getQuantity();
+		coinStorageQuantities = funds.getCoinStorageBinTracker().getQuantities
+		if(locale.equals(Locale.CANADA){
+			coinStorage[0]=coinStorageQuantities.get(5);
+				coinStorage[1]=coinStorageQuantities.get(10);
+				coinStorage[2]=coinStorageQuantities.get(25);
+				coinStorage[3]=coinStorageQuantities.get(100);
+				coinStorage[4]=coinStorageQuantities.get(200);
+		}
+		if(locale.equals(Locale.UK){
+				coinStorage[0]=coinStorageQuantities.get(5);
+				coinStorage[1]=coinStorageQuantities.get(10);
+				coinStorage[2]=coinStorageQuantities.get(20);
+				coinStorage[3]=coinStorageQuantities.get(50);
+				coinStorage[4]=coinStorageQuantities.get(100);
+				coinStorage[5]=coinStorageQuantities.get(200);
+		}
+		if(locale.equals(Locale.US){
+				coinStorage[0]=coinStorageQuantities.get(5);
+				coinStorage[1]=coinStorageQuantities.get(10);
+				coinStorage[2]=coinStorageQuantities.get(25);
+				coinStorage[3]=coinStorageQuantities.get(50);
+				coinStorage[4]=coinStorageQuantities.get(100);
+		}
+		int CRackcount=funds.getCoinRackControllers().length;
+		for(int i=0;i<CRackcount;i++){
+			coinRackQuantities[i]=funds.getCoinRackControllers()[i].getQuantity();
+		}
+		billStorageQuantities[0]=funds.getBankNoteStorageBinTracker().getQuantity();
 
 		//TODO Anish: Working on this
 		//Add funds controller stuff here
