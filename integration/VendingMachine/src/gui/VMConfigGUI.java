@@ -301,8 +301,7 @@ public class VMConfigGUI {
 					}
 					ArrayList<Boolean> parts = null;
 					parts= config.parts();
-				
-					ArrayList<Boolean> parts = config.parts();
+
 					VendingMachineGUI window = new StandardMachineGUI(machine,parts);
 					window.getMainFrame().setVisible(true);
 					frmVendingMachinesRUS.setVisible(false);
