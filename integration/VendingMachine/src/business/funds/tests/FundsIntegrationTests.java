@@ -1,6 +1,7 @@
 package business.funds.tests;
 
 import hardware.exceptions.DisabledException;
+
 import hardware.funds.Banknote;
 import hardware.funds.BanknoteReceptacle;
 import hardware.funds.BanknoteSlot;

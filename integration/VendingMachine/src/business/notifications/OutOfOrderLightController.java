@@ -1,5 +1,8 @@
 package business.notifications;
 
+import SDK.logger.Logger;
+import SDK.rifffish.Problem;
+import SDK.rifffish.Rifffish.ProblemTypes;
 import business.funds.CoinStorageBinController;
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
@@ -18,6 +21,7 @@ import hardware.ui.IndicatorLight;
 
 public class OutOfOrderLightController implements hardware.funds.CoinReceptacleListener{
 	IndicatorLight light;
+	Logger log;
 	/**
 	 * @param IndicatorLight light
 	 *            - the out of order light on the vending machine
@@ -27,8 +31,9 @@ public class OutOfOrderLightController implements hardware.funds.CoinReceptacleL
 	 *            - the storageBin controller associated with the vending machine   
 	 */
 	public OutOfOrderLightController(IndicatorLight light, CoinReceptacle storageBin,
-			CoinStorageBinController storagebinController) {
+			CoinStorageBinController storagebinController, Logger log) {
 		this.light = light;
+		this.log = log;
 		storageBin.register(this);
 		if(storagebinController.isFull())
 			light.activate();
@@ -56,6 +61,7 @@ public class OutOfOrderLightController implements hardware.funds.CoinReceptacleL
 	@Override
 	public void coinsFull(CoinReceptacle receptacle) {
 		light.activate();
+		log.log(new Problem(ProblemTypes.OUTOFORDER));
 	}
 
 	@Override

@@ -2,10 +2,14 @@ package business.selection_delivery.tests;
 
 import static org.junit.Assert.*;
 
+import org.jmock.Mockery;
+import org.jmock.Expectations;
+import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Before;
 import org.junit.Test;
 
 import business.funds.FundsController;
+import business.funds.TransactionReturnCode;
 import business.selection_delivery.CodeSelectionController;
 import business.selection_delivery.InventoryController;
 import hardware.racks.ProductRack;
@@ -14,6 +18,7 @@ import hardware.ui.PushButtonCodeInterpreter;
 import business.funds.PaymentMethods;
 import SDK.logger.Logger;
 import SDK.rifffish.Rifffish;
+import SDK.rifffish.Transaction;
 import hardware.funds.BanknoteReceptacle;
 import hardware.funds.BanknoteSlot;
 import hardware.funds.CoinReceptacle;
@@ -27,6 +32,8 @@ import java.util.Locale;
 import java.util.Map;
 
 public class CodeSelectionControllerTest {
+	
+	private Mockery context;
 
 	public CodeSelectionController test;
 	public InventoryController inv;
@@ -67,6 +74,9 @@ public class CodeSelectionControllerTest {
 	
 	@Before
 	public void setUp() throws Exception {
+		context = new Mockery() {{
+			setImposteriser(ClassImposteriser.INSTANCE);
+		}};
 		rack[0] = new ProductRack(20);
 		rack[1] = new ProductRack(20);
 		rack[2] = new ProductRack(20);
@@ -97,7 +107,8 @@ public class CodeSelectionControllerTest {
 		productID[2] = 666;
 		
 		inv = new InventoryController(rack, rackcount, names, costs, quantity, null, new Logger(), 0);
-		fun = new FundsController(Locale.US, payments, true, cdenom, cslot, tempcrecep, tempcrecepbal, overcrecep, overcquant, crack, cquant, bslot, tempbrecep, permbrecep, tempbquant, permbquant, out, inv, log);
+		fun = 	context.mock(FundsController.class);
+				//new FundsController(Locale.US, payments, true, cdenom, cslot, tempcrecep, tempcrecepbal, overcrecep, overcquant, crack, cquant, bslot, tempbrecep, permbrecep, tempbquant, permbquant, out, inv, log);
 		test = new CodeSelectionController(inv, fun, off);
 	}
 
@@ -108,6 +119,12 @@ public class CodeSelectionControllerTest {
 	
 	@Test
 	public void testCodeEntered() {
+		context.checking(new Expectations(){
+			{
+			atLeast(1).of(fun).ConductTransaction(with(any(Integer.class)),with(any(Integer.class)));
+			will(returnValue(TransactionReturnCode.SUCCESSFUL));
+			}
+		});
 		test.codeEntered("A1", dud);
 		//all is well with the world
 		assertTrue(true);
@@ -115,41 +132,89 @@ public class CodeSelectionControllerTest {
 	
 	@Test
 	public void testProductIndexValidLowerBound() {
+		context.checking(new Expectations(){
+			{
+			atLeast(1).of(fun).ConductTransaction(with(any(Integer.class)),with(any(Integer.class)));
+			will(returnValue(TransactionReturnCode.SUCCESSFUL));
+			}
+		});
 		assertEquals(0, test.productIndex("A0", off));
 	}
 	
 	@Test 
 	public void testProductIndexValidUpperBound() {
+		context.checking(new Expectations(){
+			{
+			atLeast(1).of(fun).ConductTransaction(with(any(Integer.class)),with(any(Integer.class)));
+			will(returnValue(TransactionReturnCode.SUCCESSFUL));
+			}
+		});
 		assertEquals(2, test.productIndex("A2", off));
 	}
 	
 	@Test
 	public void testProductIndexFirstInvalidLowerBound() {
+		context.checking(new Expectations(){
+			{
+			atLeast(1).of(fun).ConductTransaction(with(any(Integer.class)),with(any(Integer.class)));
+			will(returnValue(TransactionReturnCode.SUCCESSFUL));
+			}
+		});
 		assertEquals(-1, test.productIndex("@0", off));
 	}
 	
 	@Test
 	public void testProductIndexFirstInvalidUpperBound() {
+		context.checking(new Expectations(){
+			{
+			atLeast(1).of(fun).ConductTransaction(with(any(Integer.class)),with(any(Integer.class)));
+			will(returnValue(TransactionReturnCode.SUCCESSFUL));
+			}
+		});
 		assertEquals(-1, test.productIndex("[0", off));
 	}
 
 	@Test
 	public void testProductIndexSecondInvalidLowerBound() {
+		context.checking(new Expectations(){
+			{
+			atLeast(1).of(fun).ConductTransaction(with(any(Integer.class)),with(any(Integer.class)));
+			will(returnValue(TransactionReturnCode.SUCCESSFUL));
+			}
+		});
 		assertEquals(-1, test.productIndex("A/", off));
 	}
 	
 	@Test
 	public void testProductIndexSecondInvalidUpperBound() {
+		context.checking(new Expectations(){
+			{
+			atLeast(1).of(fun).ConductTransaction(with(any(Integer.class)),with(any(Integer.class)));
+			will(returnValue(TransactionReturnCode.SUCCESSFUL));
+			}
+		});
 		assertEquals(-1, test.productIndex("A:", off));
 	}
 	
 	@Test
 	public void testProductIndexBothInvalid() {
+		context.checking(new Expectations(){
+			{
+			atLeast(1).of(fun).ConductTransaction(with(any(Integer.class)),with(any(Integer.class)));
+			will(returnValue(TransactionReturnCode.SUCCESSFUL));
+			}
+		});
 		assertEquals(-1, test.productIndex("$}", off));
 	}
 	
 	@Test
 	public void testProductIndexInvalidArg() {
+		context.checking(new Expectations(){
+			{
+			atLeast(1).of(fun).ConductTransaction(with(any(Integer.class)),with(any(Integer.class)));
+			will(returnValue(TransactionReturnCode.SUCCESSFUL));
+			}
+		});
 		assertEquals(-1, test.productIndex("A11", off));
 	}
 }
