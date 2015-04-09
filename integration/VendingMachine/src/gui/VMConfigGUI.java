@@ -283,7 +283,7 @@ public class VMConfigGUI {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					ArrayList<Boolean> parts = (ArrayList<Boolean>)config.parts();
+					ArrayList<Boolean> parts = config.parts();
 					VendingMachineGUI window = new StandardMachineGUI(machine,parts);
 					window.getMainFrame().setVisible(true);
 					frmVendingMachinesRUS.setVisible(false);
