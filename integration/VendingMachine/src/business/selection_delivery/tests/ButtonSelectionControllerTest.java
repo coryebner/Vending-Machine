@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,11 +15,15 @@ import org.junit.Test;
 
 import business.funds.FundsController;
 import business.funds.PaymentMethods;
-import business.notifications.DisplayController;
+import SDK.rifffish.Machine;
+import SDK.rifffish.Rifffish;
 import business.selection_delivery.ButtonSelectionController;
 import business.selection_delivery.InventoryController;
+import hardware.funds.CoinReceptacle;
+import hardware.funds.CoinSlot;
 import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
+import hardware.ui.IndicatorLight;
 import hardware.ui.PushButton;
 
 public class ButtonSelectionControllerTest {
@@ -27,7 +32,6 @@ public class ButtonSelectionControllerTest {
 
 	//All the Controllers needed for ButtonSelectionController
 	private  InventoryController inventoryController;
-	private  DisplayController displayController;
 	private  FundsController fundsController;
 	private  PushButton[] pushButtonArray;
 	private  int numberOfButtons;
@@ -45,11 +49,28 @@ public class ButtonSelectionControllerTest {
 
 	//Fields for FundsController
 	private Locale locale;
-	private boolean bestEffortChange;
-	private CoinRack[] coinRacks;
-	private int[] coinRackDenominations;
-	private int[] coinRackQuantities;
 	private List<PaymentMethods> availablePaymentMethods;
+	
+	private boolean bestEffortChange;
+	private int[] coinRackDenominations;
+	private CoinSlot coinSlot;
+	private int[] validValues = {5,10,25,100,200};
+	
+	CoinReceptacle tempCoinReceptacle;
+	int tempCoinRecepticleBalance;
+	
+	CoinReceptacle overflowCoinReceptacle;
+	Map<Integer, Integer> coinOverflowCoinRecepticleQuantities;
+	
+	private CoinRack[] coinRacks;
+	private int[] coinRackQuantities;
+	
+	
+	IndicatorLight outOfOrderLight;
+	Rifffish r = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
+	logger.Logger logger = new logger.Logger();
+	Machine newMachine;
+
 
 
 
@@ -61,7 +82,8 @@ public class ButtonSelectionControllerTest {
 
 	@Before
 	public void setup() {
-
+		
+		Machine newMachine = r.createMachine(new Machine("Test Machine", "vmrs_sff_p_c", "in_service", "CAD"));
 
 		pushButtonListenerStub = new PushButtonListenerStub();
 
@@ -97,14 +119,16 @@ public class ButtonSelectionControllerTest {
 
 		for(int i = 0; i < rackcount; i++)
 			productID[i] = i + 1;
-
+			
 		inventoryController = new InventoryController(rack, rackcount, names, costs, quantity, productID);
-
-		//Setting up the display controller
-		displayController = new DisplayController();
 
 		//Setting up the funds manager
 		bestEffortChange = true;
+		coinSlot = new CoinSlot(validValues);
+		
+		tempCoinReceptacle = new CoinReceptacle(100);
+		overflowCoinReceptacle = new CoinReceptacle(100);
+		
 		CoinRack[] coinRacks = new CoinRack[5];
 		coinRacks[0] = new CoinRack(100);
 		coinRacks[1] = new CoinRack(100);
@@ -127,15 +151,14 @@ public class ButtonSelectionControllerTest {
 
 		availablePaymentMethods = new ArrayList<PaymentMethods>();
 		availablePaymentMethods.add(PaymentMethods.COINS);
-
-		System.out.println(coinRackDenominations);
-		System.out.println(coinRackQuantities);
-		System.out.println(availablePaymentMethods);
-		System.out.println(inventoryController);
-		System.out.println(bestEffortChange);
-		System.out.println(coinRacks);
-
-		fundsController = new FundsController(Locale.CANADA, bestEffortChange, coinRacks, coinRackDenominations, coinRackQuantities, availablePaymentMethods, inventoryController);
+		
+		
+		fundsController = new FundsController(locale, availablePaymentMethods, 
+				bestEffortChange, coinRackDenominations, coinSlot, 
+				tempCoinReceptacle, tempCoinRecepticleBalance, overflowCoinReceptacle,
+				coinOverflowCoinRecepticleQuantities, coinRacks, coinRackQuantities, 
+				null, null, null, null, 
+				0, outOfOrderLight, inventoryController, logger);
 		
 		buttonSelectionController = new ButtonSelectionController(inventoryController, fundsController, pushButtonArray, numberOfButtons);
 
