@@ -2,6 +2,8 @@ package business.selection_delivery.tests;
 
 import static org.junit.Assert.*;
 
+import java.security.InvalidParameterException;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -10,6 +12,8 @@ import org.junit.Test;
 
 import hardware.racks.*;
 import SDK.logger.Logger;
+import SDK.rifffish.Machine;
+import SDK.rifffish.Rifffish;
 import business.selection_delivery.ProductRackController;
 
 public class ProductRackControllerTest {
@@ -92,6 +96,7 @@ public class ProductRackControllerTest {
 		assertNotNull(rackManager);
 	}
 	
+	@Test
 	public void test_constructor_Quantity()
 	{
 		quantity = 5;
@@ -99,6 +104,26 @@ public class ProductRackControllerTest {
 		rackManager = new ProductRackController(rack, name, cost, quantity, null, new Logger(), 0);
 		
 		assertNotNull(rackManager);
+	}
+	
+	@Test
+	public void test_default_constructor()
+	{	
+		rackManager = new ProductRackController();
+		
+		assertNotNull(rackManager);
+	}
+	
+	@Test
+	public void test_constructor_null_racks()
+	{	
+		try{
+			rackManager = new ProductRackController(null, name, cost, quantity, null, new Logger(), 0);
+		} catch(InvalidParameterException e){
+			assertTrue(true);
+		}
+		
+		//assertTrue(false);
 	}
 	
 	@Test
@@ -119,6 +144,17 @@ public class ProductRackControllerTest {
 		
 		int countReturn = rackManager.getCount();
 		assertEquals(quant, countReturn);
+	}
+	
+	@Test
+	public void test_refillQuantity_overCapacity()
+	{
+		int quant = 100;
+		
+		rackManager.refillQuantity(quant);
+		
+		int countReturn = rackManager.getCount();
+		assertEquals(rackManager.getCapacity(), countReturn);
 	}
 	
 	/**
