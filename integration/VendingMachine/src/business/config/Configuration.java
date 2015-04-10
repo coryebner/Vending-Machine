@@ -671,11 +671,21 @@ public class Configuration {
 
 	}
 	
-	protected int getMachineID(boolean online)
+	protected int getMachineID(boolean online) throws ConfigurationException
 	{
 		if (online) {
 			rifffish = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
-			Machine m = rifffish.createMachine(new Machine("VENDINGMACHINE", type.toLowerCase().replace('/', '_'), "in_service", locale.getCountry()));
+			String rtype = type.toLowerCase().replace('/', '_').replace('-', '_').replace("u", "");
+			String rloc = null;
+			if (locale.getCountry() == "CA") rloc = "CAD";
+			if (locale.getCountry() == "US") rloc = "USD";
+			if (locale.getCountry() == "UK") rloc = "EUR";
+			Machine m = rifffish.createMachine(new Machine("VENDINGMACHINE", rtype, "in_service", rloc));
+			
+			if (m == null) {
+				throw new ConfigurationException("Unable to create logger!");
+			}
+			
 			return m.getId();
 		}
 		else {
@@ -690,7 +700,7 @@ public class Configuration {
 	 * @param frequency				logging frequency
 	 * 								  (one of either "instant", "batch" or "daily")
 	 */
-	protected void createLogger(AbstractVendingMachine m, String frequency)
+	protected void createLogger(AbstractVendingMachine m, String frequency) throws ConfigurationException
 	{
 		String r = "rsh_3wL4MyhWW4z3kfjoYfyN0gtt";
 		if(frequency.equalsIgnoreCase("instant")){
