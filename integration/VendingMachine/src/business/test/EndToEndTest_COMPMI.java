@@ -15,7 +15,6 @@ public class EndToEndTest_COMPMI extends EndToEndTest {
 	public void setUp() throws Exception{
 		this.config = new Configuration();
 		machine = config.load("VMRUS-COM-P/MI", "offline");
-		
 	}
 	
 	@After

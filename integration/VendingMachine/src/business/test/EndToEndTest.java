@@ -33,16 +33,37 @@ public class EndToEndTest {
 		assertItemTypesReturned(items, Product.class, 0, "No products should have been dispensed");
 	}
 
-
 	protected void testMakeChangeFromCoin() throws Exception {
-		machine.getCoinSlot().addCoin(new Coin(100));
-		machine.getCoinSlot().addCoin(new Coin(100));
+		machine.getCoinSlot().addCoin(new Coin(25));
+		machine.getCoinSlot().addCoin(new Coin(25));
+		machine.getCoinSlot().addCoin(new Coin(25));
+		machine.getCoinSlot().addCoin(new Coin(25));
 		machine.getSelectionButton(0).press();
-
 		Object [] items = machine.getDeliveryChute().removeItems();
-		assertItemTypesReturned(items, Coin.class, 1, "A coin should have been returned");
+		
+		machine.getCoinSlot().addCoin(new Coin(200));
+		machine.getSelectionButton(0).press();
+		items = machine.getDeliveryChute().removeItems();
+		assertItemTypesReturned(items, Coin.class, 4, "A coin should have been returned");
 	}
 
+    protected void testMakeMixedChangeFromCoin() throws Exception {
+		machine.getCoinSlot().addCoin(new Coin(25));
+		machine.getCoinSlot().addCoin(new Coin(25));
+		machine.getCoinSlot().addCoin(new Coin(10));
+		machine.getCoinSlot().addCoin(new Coin(10));
+		machine.getCoinSlot().addCoin(new Coin(5));
+		machine.getCoinSlot().addCoin(new Coin(25));
+		machine.getSelectionButton(0).press();
+		
+		Object [] items = machine.getDeliveryChute().removeItems();
+		
+		machine.getCoinSlot().addCoin(new Coin(200));
+		machine.getSelectionButton(0).press();
+		items = machine.getDeliveryChute().removeItems();
+		assertItemTypesReturned(items, Coin.class, 6, "Six coins should have been returned");
+	}
+	
 	protected void testMakeChangeFromPriorPurchase() throws Exception {
 		machine.getCoinSlot().addCoin(new Coin(100));
 		machine.getSelectionButton(0).press();
@@ -160,7 +181,7 @@ public class EndToEndTest {
 	}
 	
 	/**@author Adrian Wu
-	 * Method to purchase all the pop in a specific rack
+	 * Method to test Out of Product light is on when machine is out of product
 	 */
 	protected void testPurchaseAllPop() throws Exception{
 		Object[] itemRet = new Object[15];
@@ -175,7 +196,16 @@ public class EndToEndTest {
 		machine.getSelectionButton(0).press();
 		assertEquals("Nothing should have been vended", 0, machine.getDeliveryChute().removeItems().length);
 		assertTrue("Out of product light 0 should be on", machine.getOutOfProductLight(0).isActive());
-		
+	}
+	
+	/**@author Adrian Wu
+	 * Method to test Out of Order light is on when storage bin is full of coins
+	 */
+	protected void testFullOfCoins() throws Exception{
+		while(!config.getFunds().getCoinStorageBinTracker().isFull()){
+			machine.getCoinSlot().addCoin(new Coin(5));
+		}
+		assertTrue("Out of Order light should be on", machine.getOutOfOrderLight().isActive());
 	}
 	
 	/**@author M. Diaz
