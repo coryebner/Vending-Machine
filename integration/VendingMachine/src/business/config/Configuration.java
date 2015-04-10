@@ -25,6 +25,9 @@ import business.funds.CoinRackController;
 import business.funds.CoinsController;
 import business.funds.FundsController;
 import business.funds.PaymentMethods;
+import business.funds.CoinStorageBinController;
+import business.notifications.OutOfOrderLightController;
+import business.notifications.OutOfProductLightController;
 import business.notifications.DisplayController;
 import business.selection_delivery.ButtonSelectionController;
 import business.selection_delivery.CodeSelectionController;
@@ -53,6 +56,7 @@ import hardware.ui.ConfigurationPanelTransmitter;
 import hardware.ui.ConfigurationPanelTransmitterListener;
 import hardware.ui.PushButton;
 import hardware.ui.PushButtonCodeInterpreter;
+import hardware.ui.IndicatorLight;
 
 public class Configuration {
 
@@ -742,6 +746,14 @@ public class Configuration {
 	{
 		try {
 			display = new DisplayController(m.getDisplay(), buttons, coins, m.getCoinReceptacle());
+			ProductRack[] racks = new ProductRack[m.getNumberOfProductRacks()];
+			IndicatorLight[] productLights = new IndicatorLight[m.getNumberOfOutOfProductLights()];
+			for(int i = 0; i < racks.length; i++)
+				racks[i] = m.getProductRack(i);
+			for(int i = 0; i < productLights.length; i++)
+				productLights[i] = m.getOutOfProductLight(i);
+			new OutOfOrderLightController(m.getOutOfOrderLight(), m.getCoinStorageBin(), funds.getCoinStorageBinTracker());
+			new OutOfProductLightController(productLights, racks, inventoryController);
 		}
 		catch (NoSuchHardwareException e) {
 			throw new ConfigurationException("Unable to find hardware necessary for display controller");
