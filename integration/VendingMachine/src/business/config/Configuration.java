@@ -532,7 +532,7 @@ public class Configuration {
 										coinStorageQuantities,
 										
 										cr,
-										quantities,
+										coinRackQuantities,
 										
 										(bill) ? m.getBanknoteSlot() : null,
 										(bill) ? m.getBanknoteReceptacle() : null,
@@ -675,7 +675,7 @@ public class Configuration {
 	{
 		if (online) {
 			rifffish = new Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
-			Machine m = rifffish.createMachine(new Machine("VENDINGMACHINE", type, "in_service", locale.getCountry()));
+			Machine m = rifffish.createMachine(new Machine("VENDINGMACHINE", type.toLowerCase().replace('/', '_'), "in_service", locale.getCountry()));
 			return m.getId();
 		}
 		else {

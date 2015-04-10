@@ -12,7 +12,7 @@ public class LoggerProblemExample {
 	@Test
 	public void test() {
 		SDK.rifffish.Rifffish r = new SDK.rifffish.Rifffish("rsh_3wL4MyhWW4z3kfjoYfyN0gtt");
-		SDK.rifffish.Machine m = r.createMachine(new SDK.rifffish.Machine("VENDINGMACHINE", "VMRUS-SFF-P/C", "in_service", "CAD"));
+		SDK.rifffish.Machine m = r.createMachine(new SDK.rifffish.Machine("VENDINGMACHINE", "vmrs_sff_p_c", "in_service", "CAD"));
 		assertNotNull(m);
 	}
 

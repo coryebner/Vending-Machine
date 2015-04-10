@@ -42,6 +42,23 @@ public class EndToEndTest {
 		assertItemTypesReturned(items, Coin.class, 1, "A coin should have been returned");
 	}
 	
+	protected void testMakeMixedChangeFromCoin() throws Exception {
+		machine.getCoinSlot().addCoin(new Coin(25));
+		machine.getCoinSlot().addCoin(new Coin(25));
+		machine.getCoinSlot().addCoin(new Coin(10));
+		machine.getCoinSlot().addCoin(new Coin(10));
+		machine.getCoinSlot().addCoin(new Coin(5));
+		machine.getCoinSlot().addCoin(new Coin(25));
+		machine.getSelectionButton(0).press();
+		
+		Object [] items = machine.getDeliveryChute().removeItems();
+		
+		machine.getCoinSlot().addCoin(new Coin(200));
+		machine.getSelectionButton(0).press();
+		items = machine.getDeliveryChute().removeItems();
+		assertItemTypesReturned(items, Coin.class, 6, "Six coins should have been returned");
+	}
+	
 	protected void testMakeChangeFromPriorPurchase() throws Exception {
 		machine.getCoinSlot().addCoin(new Coin(100));
 		machine.getSelectionButton(0).press();

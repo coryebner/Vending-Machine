@@ -28,6 +28,11 @@ public class EndToEndTest_SFFPC extends EndToEndTest {
 	}
 	
 	@Test
+	public void testMakeMixedChangeFromCoin() throws Exception {
+		super.testMakeMixedChangeFromCoin();
+	}
+	
+	@Test
 	public void testMakeChangeFromPriorPurchase() throws Exception {
 		super.testMakeChangeFromPriorPurchase();
 	}
