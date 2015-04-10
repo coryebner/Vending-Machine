@@ -775,9 +775,10 @@ public class Configuration {
 			for (int i = 0; i < productlights.length; ++i) {
 				productlights[i] = m.getOutOfProductLight(i);
 			}
-			
-			new OutOfOrderLightController(m.getOutOfOrderLight(), m.getCoinStorageBin(),
+			if(funds.isCoinsPresent()){
+				new OutOfOrderLightController(m.getOutOfOrderLight(), m.getCoinStorageBin(),
 										  funds.getCoinStorageBinTracker(), logger);
+			}
 			new OutOfProductLightController(productlights, racks, inventoryController);
 		}
 		catch (NoSuchHardwareException e) {

@@ -49,7 +49,7 @@ public abstract class AbstractVendingMachine {
 	public IndicatorLight getExactChangeLight() throws NoSuchHardwareException {
 		throw new NoSuchHardwareException();
 	}
-
+@Deprecated
 	/**
 	 * Returns the no Internet connection light.
 	 * 
