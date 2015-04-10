@@ -302,10 +302,16 @@ public class Configuration {
 				coinStorage[4]=coinStorageQuantities.get(100);
 		}
 		int CRackcount=funds.getCoinRackControllers().length;
-		for(int i=0;i<CRackcount;i++){
-			coinRackQuantities[i]=funds.getCoinRackControllers()[i].getQuantity();
+		
+		try {
+			for(int i=0;i<CRackcount;i++){
+				coinRackQuantities[i]=funds.getCoinRackControllers()[i].getQuantity();
+			}
+			billStorageQuantities[0]=funds.getBankNoteStorageBinTracker().getQuantity();
 		}
-		billStorageQuantities[0]=funds.getBankNoteStorageBinTracker().getQuantity();
+		catch (Exception e) {
+			// pass - no bills supported - greasy hack
+		}
 
 		//TODO Anish: Working on this
 		//Add funds controller stuff here
@@ -779,7 +785,7 @@ public class Configuration {
 			for (int i = 0; i < productlights.length; ++i) {
 				productlights[i] = m.getOutOfProductLight(i);
 			}
-			new OutOfProductLightController(productlights, racks, inventoryController);
+				new OutOfProductLightController(productlights, racks, inventoryController);
 			}catch(NoSuchHardwareException e){
 				//Moving forward
 			}

@@ -71,5 +71,4 @@ public class EndToENdTest_TOCCplus extends EndToEndTest {
 	public void testMakeChangeFromBills() throws Exception{
 		super.testMakeChangeFromBills();
 	}
-
 }
