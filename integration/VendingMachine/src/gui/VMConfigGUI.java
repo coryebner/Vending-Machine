@@ -247,7 +247,7 @@ public class VMConfigGUI {
 		panel_2.add(reportConfig3);
 		
 		JRadioButton reportConfig4 = new JRadioButton("Offline");
-		reportConfig4.setActionCommand("offine");
+		reportConfig4.setActionCommand("offline");
 		reportConfig4.setBounds(6, 80, 172, 23);
 		reportConfig4.addActionListener(reportConfigListener);
 		panel_2.add(reportConfig4);
