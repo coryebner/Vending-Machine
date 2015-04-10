@@ -187,17 +187,20 @@ public class EndToEndTest {
 	/**@author Adrian Wu
 	 * Method to test Out of Product light is on when machine is out of product
 	 */
-	protected void testPurchaseAllPop() throws Exception{
-		Object[] itemRet = new Object[15];
-		for(int i = 0; i < itemRet.length; i++){
+	protected void testPurchaseAllPop() throws Exception
+	{
+		for(int i = 0; i < machine.getProductRack(0).getMaxCapacity(); i++){
 			machine.getCoinSlot().addCoin(new Coin(100));
 			machine.getSelectionButton(0).press();
-			itemRet[i] = machine.getDeliveryChute().removeItems()[0];
 		}
-		assertItemTypesReturned(itemRet, Product.class, 15, "A product should have been vended");
+		
+		Object [] items = machine.getDeliveryChute().removeItems();
+		assertItemTypesReturned(items, Product.class, 10, "A product should have been vended");
 		assertTrue("Rack should be empty", config.getInventory().isEmpty(0));
+
 		machine.getCoinSlot().addCoin(new Coin(100));
 		machine.getSelectionButton(0).press();
+
 		assertEquals("Nothing should have been vended", 0, machine.getDeliveryChute().removeItems().length);
 		assertTrue("Out of product light 0 should be on", machine.getOutOfProductLight(0).isActive());
 	}
@@ -206,9 +209,10 @@ public class EndToEndTest {
 	 * Method to test Out of Order light is on when storage bin is full of coins
 	 */
 	protected void testFullOfCoins() throws Exception{
-		while(!config.getFunds().getCoinStorageBinTracker().isFull()){
+		while(machine.getCoinReceptacle().hasSpace()) {
 			machine.getCoinSlot().addCoin(new Coin(5));
 		}
+
 		assertTrue("Out of Order light should be on", machine.getOutOfOrderLight().isActive());
 	}
 	

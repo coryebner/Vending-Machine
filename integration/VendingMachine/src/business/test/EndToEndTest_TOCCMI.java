@@ -38,7 +38,7 @@ public class EndToEndTest_TOCCMI extends EndToEndTest {
 	}
 
 	@Test
-	public void makeChangeFromCoins() throws Exception{
+	public void testMakeChangeFromCoins() throws Exception{
 		super.testMakeChangeFromCoin();
 	}
 	
@@ -46,7 +46,7 @@ public class EndToEndTest_TOCCMI extends EndToEndTest {
 	public void testCoinReturn() throws Exception{
 		super.testCoinReturn();
 	}
-	
+
 	@Test
 	public void testPurchaseAll() throws Exception{
 		super.testPurchaseAllPop();
@@ -60,5 +60,15 @@ public class EndToEndTest_TOCCMI extends EndToEndTest {
 	@Test
 	public void testFullOfCoin() throws Exception{
 		super.testFullOfCoins();
+	}
+	
+	@Test
+	public void testDisplayChangesProductEmpty() throws Exception {
+		super.testDisplayChangesProductEmpty();
+	}
+	
+	@Test
+	public void testDisplayChangesInsufficientFunds() throws Exception {
+		super.testDisplayChangesInsufficientFunds();
 	}
 }
