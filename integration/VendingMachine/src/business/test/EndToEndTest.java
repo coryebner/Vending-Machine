@@ -32,8 +32,8 @@ public class EndToEndTest {
 	
 	protected void fillCoins(AbstractVendingMachine machine) throws Exception{
 		for(int i = 0; i < machine.getNumberOfCoinRacks(); i++){
-			for(int j = 0; j <10; i++){
-				machine.getCoinRack(i).loadWithoutEvents(new Coin(getCoinValueFromIndex(i)));
+			for(int j = 0; j <10; j++){
+				machine.getCoinRack(i).acceptCoin(new Coin(getCoinValueFromIndex(i)));
 			}
 		}
 	}
