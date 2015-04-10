@@ -157,4 +157,23 @@ public class EndToEndTest {
 		
 		
 	}
+	
+	/**@author Adrian Wu
+	 * Method to purchase all the pop in a specific rack
+	 */
+	protected void testPurchaseAllPop() throws Exception{
+		Object[] itemRet = new Object[15];
+		for(int i = 0; i < itemRet.length; i++){
+			machine.getCoinSlot().addCoin(new Coin(100));
+			machine.getSelectionButton(0).press();
+			itemRet[i] = machine.getDeliveryChute().removeItems()[0];
+		}
+		assertItemTypesReturned(itemRet, Product.class, 15, "A product should have been vended");
+		assertTrue("Rack should be empty", config.getInventory().isEmpty(0));
+		machine.getCoinSlot().addCoin(new Coin(100));
+		machine.getSelectionButton(0).press();
+		assertEquals("Nothing should have been vended", 0, machine.getDeliveryChute().removeItems().length);
+		assertTrue("Out of product light 0 should be on", machine.getOutOfProductLight(0).isActive());
+		
+	}
 }
