@@ -3,12 +3,14 @@ package business.funds.tests;
 import hardware.funds.BanknoteReceptacle;
 import hardware.funds.CoinReceptacle;
 import hardware.racks.CoinRack;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import org.jmock.Mockery;
 import org.jmock.Expectations;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.jmock.lib.legacy.ClassImposteriser;
 
 import static org.junit.Assert.*;
@@ -34,6 +36,12 @@ public class FundsControllerTest {
 	
 	
 	private Mockery context = new Mockery() {{
+		/* 
+		 * ThreadPolicy is an object used to track the state,
+		 * Synchronization here, permits multiple threads
+		 * to invoke mocked object methods, etc.
+		 */
+	    setThreadingPolicy(new Synchroniser());
 	    setImposteriser(ClassImposteriser.INSTANCE);
 	}};
 	
