@@ -281,6 +281,28 @@ public class EndToEndTest {
 		
 	}
 	
+	protected void testDisplayChangesProductEmptyPrepaid() throws Exception {
+		DisplayLogger displayLogger = new DisplayLogger();
+		this.machine.getDisplay().register(displayLogger);
+		
+		int numberOfProducts = config.getInventory().getCount(0);
+		for(int i=0; i < numberOfProducts; i++){
+			machine.getProductRack(0).dispenseProduct();
+			Object [] items = machine.getDeliveryChute().removeItems();
+			assertItemTypesReturned(items, Product.class, 1, "A product should be dispensed");
+		}
+		
+		machine.getCardSlot().insertCard(new Card(CardType.PREPAID,
+												  "12345678",
+												  "Liam",
+												  "0000",
+												  "12/2019",
+												  Locale.CANADA,
+												  200));
+		machine.getSelectionButton(0).press();
+		assertTrue(displayLogger.toString().contains("Product empty"));
+	}
+	
 
 	/**@author Maria Diaz
 	 * 
