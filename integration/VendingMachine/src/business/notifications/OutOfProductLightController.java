@@ -26,6 +26,7 @@ public class OutOfProductLightController implements ProductRackListener{
 	 */
 	public OutOfProductLightController(IndicatorLight outOfProductLight[], ProductRack productRacks[],
 			InventoryController inventory) {
+		rackLightMap = new HashMap<ProductRack, IndicatorLight>();
 		if(productRacks.length != outOfProductLight.length)
 			throw new IllegalArgumentException();
 		
