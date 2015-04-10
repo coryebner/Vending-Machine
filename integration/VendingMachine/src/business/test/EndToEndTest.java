@@ -6,12 +6,16 @@ import java.util.Locale;
 
 import org.junit.Test;
 
+import hardware.AbstractHardware;
+import hardware.AbstractHardwareListener;
 import hardware.funds.Banknote;
 import hardware.funds.Card;
 import hardware.funds.Card.CardType;
 import hardware.funds.Coin;
 import hardware.products.Product;
 import hardware.simulators.AbstractVendingMachine;
+import hardware.ui.Display;
+import hardware.ui.DisplayListener;
 import business.config.Configuration;
 
 public class EndToEndTest {
@@ -223,7 +227,8 @@ public class EndToEndTest {
 	}
 	
 	/**@author M. Diaz
-	 * Method to check notification light out of order is on when a product is empty
+	 * Method to check notification light product empty is on when a product is empty
+	 * TODO fails, I don't know why. YOLO
 	 * */
 	protected void testOutOfProductEmpty() throws Exception {
 		
@@ -238,8 +243,90 @@ public class EndToEndTest {
 		machine.getSelectionButton(0).press();
 		assertEquals("Nothing should have been vended", 0, machine.getDeliveryChute().removeItems().length);
 		assertTrue(machine.getOutOfProductLight(0).isActive());
-		machine.getConfigurationPanelTransmitter().
 		
 	}
 	
+	/**@author M. Diaz
+	 * Method to check notification light out of order is on when machine is out of order
+	 * */
+	protected void testOutOfOrderLight() throws Exception {
+		int coinValue = config.getFunds().getCoinRackControllers()[4].getCoinRackDenomination();
+		while(machine.getCoinRack(4).hasSpace()){
+			machine.getCoinRack(4).acceptCoin(new Coin(coinValue));
+		}
+		machine.getCoinSlot().addCoin(new Coin(coinValue));	
+		machine.getSelectionButton(0);
+		assertTrue(machine.getOutOfOrderLight().isActive());
+	}
+	
+	
+	/**@author M. Diaz
+	 * Method to check display changes when a product is empty
+	 * */
+	protected void testDisplayChangesProductEmpty() throws Exception {
+
+		DisplayLogger displayLogger = new DisplayLogger();
+		this.machine.getDisplay().register(displayLogger);
+		
+		int numberOfProducts = config.getInventory().getCount(0);
+		for(int i=0; i < numberOfProducts; i++){
+			machine.getProductRack(0).dispenseProduct();
+			Object [] items = machine.getDeliveryChute().removeItems();
+			assertItemTypesReturned(items, Product.class, 1, "A product should be dispensed");
+		}
+		
+		machine.getCoinSlot().addCoin(new Coin(100));
+		machine.getSelectionButton(0).press();
+		assertTrue(displayLogger.toString().contains("Product empty"));
+		
+	}
+	
+
+	/**@author Maria Diaz
+	 * 
+	 * test that checks that the Display has changed the message when insufficient funds
+	 * */
+	protected void testDisplayChangesInsufficientFunds() throws Exception{
+		DisplayLogger displayLogger = new DisplayLogger();
+		this.machine.getDisplay().register(displayLogger);
+		
+		machine.getSelectionButton(0).press();
+		assertTrue(displayLogger.toString().contains("Insufficient funds. Product costs:"));
+	}
+	
+	
+	/**@author Liam Mitchell
+	 * 
+	 * This class listens for events of the Display, when the message displayed changes.
+	 * */
+	private class DisplayLogger implements DisplayListener
+	{
+	    private StringBuilder sb;
+
+	    public String toString()
+	    {
+	    	if(sb!=null){
+	    		return sb.toString();
+	    	}
+	    	else return " ";
+	    }
+
+		@Override
+		public void enabled(AbstractHardware<AbstractHardwareListener> hardware) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void messageChange(Display display, String oldMsg, String newMsg) {
+			sb.append(newMsg);
+			
+		}
+	}
 }
