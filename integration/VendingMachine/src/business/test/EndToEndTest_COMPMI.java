@@ -52,7 +52,23 @@ public class EndToEndTest_COMPMI extends EndToEndTest {
 	}
 	
 	@Test
-	public void testCheckPrepaidCard() throws Exception {
+	public void testCheckPrepaidCardPrecedence() throws Exception {
 		super.testCheckPrepaidCardFirstOrderPrecedence();
+	}
+	
+	@Test
+	public void testCoinsPrecedenceOverBanknotes() throws Exception {
+		
+		super.testCheckCoinsPrecedenceOverBanknotes();
+	}
+	
+	@Test
+	public void testFailOutOfProduct() throws Exception {
+		super.testFailOutOfProduct();
+	}
+	
+	@Test
+	public void testFailFullOfCoins() throws Exception {
+		super.testFailFullOfCoins();
 	}
 }
