@@ -540,7 +540,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		JButton btnAdmin = new JButton("Admin");
 		btnAdmin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				VirtualKeyboard vk = new VirtualKeyboard(getMainFrame());
+				VirtualKeyboard vk = new VirtualKeyboard(getMainFrame(),machine);
 			}
 		});
 		pnlAdminBtn.add(btnAdmin);
