@@ -208,10 +208,13 @@ public class Configuration {
 		if (machine == null) {
 			throw new ConfigurationException("Attempted to save a nonexistent machine!");
 		}
+		
+		updateValues();
 
 		// Read all the data we need from machine, funds and inventory
 		BufferedWriter output = new BufferedWriter(new FileWriter(config));
 		writeConfigFile(output);
+		output.close();
 	}
 	
 	public String getType()
@@ -781,9 +784,10 @@ public class Configuration {
 			for (int i = 0; i < productlights.length; ++i) {
 				productlights[i] = m.getOutOfProductLight(i);
 			}
-			
-			new OutOfOrderLightController(m.getOutOfOrderLight(), m.getCoinStorageBin(),
+			if(funds.isCoinsPresent()){
+				new OutOfOrderLightController(m.getOutOfOrderLight(), m.getCoinStorageBin(),
 										  funds.getCoinStorageBinTracker(), logger);
+			}
 			new OutOfProductLightController(productlights, racks, inventoryController);
 		}
 		catch (NoSuchHardwareException e) {

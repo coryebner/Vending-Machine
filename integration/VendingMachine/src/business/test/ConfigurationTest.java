@@ -15,8 +15,13 @@ import hardware.ui.PushButton;
 import hardware.ui.PushButtonCodeInterpreter;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.StringReader;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import business.config.Configuration;
@@ -272,5 +277,39 @@ public class ConfigurationTest extends Configuration {
 		assertNull(this.inventoryController);
 		createInventoryController(this.machine);
 		assertNotNull(this.inventoryController);
+	}
+	
+	@Test
+	public void testLoad() throws ConfigurationException
+	{
+		machine = load("VMRUS-SFF-P/C", "offline");
+	}
+	
+	@Test
+	public void testSave() throws Exception
+	{
+		File config = new File("test-config-save.txt");
+		machine = load("VMRUS-SFF-P/C", "offline");
+		save(config);
+		machine = load(config);
+		
+		Files.delete(FileSystems.getDefault().getPath("", "test-config-save.txt"));
+		
+		String [] expectedNames = {"Coke", "Pepsi", "7-up", "Sprite", "Fanta", "Crush"};
+		int [] expectedPrices = {100, 100, 100, 100, 100, 100};
+		int [] expectedQuantities = {10, 10, 10, 10, 10, 10};
+		int [] expectedCoinRacks = {0, 0, 0, 0, 0, 0};
+		int [] expectedCoinStorage = {0, 0, 0, 0, 0, 0};
+		int [] expectedBillStorage = {0, 0, 0, 0, 0};
+		Locale expectedLocale = Locale.CANADA;
+
+		assertArrayEquals("Correct names found", expectedNames, names);
+		assertArrayEquals("Correct prices found", expectedPrices, prices);
+		assertArrayEquals("Correct quantities found", expectedQuantities, quantities);
+		assertArrayEquals("Correct coinracks found", expectedCoinRacks, coinRackQuantities);
+		assertArrayEquals("Correct coinstorage found", expectedCoinStorage, coinStorage);
+		assertArrayEquals("Correct billstorage found", expectedBillStorage, billStorageQuantities);
+		
+		assertEquals("Correct locale found", expectedLocale, locale);
 	}
 }

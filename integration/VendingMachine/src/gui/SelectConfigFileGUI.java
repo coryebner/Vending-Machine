@@ -108,7 +108,13 @@ public class SelectConfigFileGUI {
 					Configuration config = new Configuration();
 					AbstractVendingMachine machine = null;
 					try {
-						machine = config.load(new File(fileName));
+						File vendingMachineConfiguration =new File("configfiles/"+fileName);
+						if(vendingMachineConfiguration.canRead()){
+							machine = config.load(vendingMachineConfiguration);
+						}else{
+							System.out.println("Failed to load file");
+							return;
+						}
 					} catch (ConfigurationException e1) {
 						e1.printStackTrace();
 					}
