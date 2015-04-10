@@ -61,4 +61,9 @@ public class EndToEndTest_TOCCMI extends EndToEndTest {
 	public void testMixedChange() throws Exception{
 		super.testMakeMixedChangeFromCoin();
 	}
+	
+	@Test
+	public void testFullOfCoin() throws Exception{
+		super.testFullOfCoins();
+	}
 }

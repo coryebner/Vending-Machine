@@ -202,7 +202,7 @@ public class EndToEndTest {
 	 */
 	protected void testFullOfCoins() throws Exception{
 		while(!config.getFunds().getCoinStorageBinTracker().isFull()){
-			machine.getCoinSlot().addCoin(new Coin(5));
+			machine.getCoinStorageBin().acceptCoin(new Coin(5));
 		}
 		assertTrue("Out of Order light should be on", machine.getOutOfOrderLight().isActive());
 	}
