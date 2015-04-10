@@ -10,18 +10,16 @@ import java.util.Map;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import business.funds.FundsController;
 import business.funds.PaymentMethods;
 import business.funds.TransactionReturnCode;
 import SDK.logger.Logger;
-import SDK.rifffish.Machine;
-import SDK.rifffish.Rifffish;
 import business.selection_delivery.ButtonSelectionController;
 import business.selection_delivery.InventoryController;
 import hardware.acceptors.AbstractProductAcceptor;
@@ -34,6 +32,7 @@ import hardware.ui.DeliveryChute;
 import hardware.ui.IndicatorLight;
 import hardware.ui.PushButton;
 
+@SuppressWarnings("unused")
 public class ButtonSelectionControllerTest {
 
 	private ButtonSelectionController buttonSelectionController;
@@ -92,6 +91,12 @@ public class ButtonSelectionControllerTest {
 	public void setup() {
 		
 		context = new Mockery() {{
+			/* 
+			 * ThreadPolicy is an object used to track the state,
+			 * Synchronization here, permits multiple threads
+			 * to invoke mocked object methods, etc.
+			 */
+		    setThreadingPolicy(new Synchroniser());
 			setImposteriser(ClassImposteriser.INSTANCE);
 		}};
 

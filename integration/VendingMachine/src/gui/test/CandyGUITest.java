@@ -3,12 +3,9 @@ package gui.test;
 import static org.junit.Assert.*;
 
 import java.awt.Color;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import gui.*;
-import hardware.*;
 import hardware.exceptions.*;
 import hardware.simulators.*;
 
@@ -35,6 +32,7 @@ public class CandyGUITest {
 	public static void tearDownAfterClass() throws Exception {
 	}
 
+	@SuppressWarnings("unused")
 	@Before
 	public void setUp() throws Exception {
 		int [] coinValue = {5,10,25,100,200};
@@ -49,7 +47,7 @@ public class CandyGUITest {
 		}
 		
 		Configuration config = new Configuration();
-		machine = config.load(config.TOCCMI,"offline");
+		machine = config.load(Configuration.TOCCMI,"offline");
 		window = new StandardMachineGUI (machine,config, parts);
 		window.getMainFrame().setVisible(true);
 	}

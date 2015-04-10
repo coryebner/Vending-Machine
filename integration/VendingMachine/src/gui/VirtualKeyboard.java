@@ -24,7 +24,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Timer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -34,15 +33,15 @@ import javax.swing.JToggleButton;
 
 //import net.miginfocom.swing.MigLayout;
 
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-
 import javax.swing.SwingConstants;
 
 public class VirtualKeyboard extends JFrame implements DisplayListener{
 
-    //---Methods to do with registering and deregistering listeners to the virtual keyboard.
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 12L;
+	//---Methods to do with registering and deregistering listeners to the virtual keyboard.
     ArrayList<VirtualKeyboardListener> listeners = new ArrayList<VirtualKeyboardListener>();
     public void Register(VirtualKeyboardListener listener) {listeners.add(listener);}
     public boolean DeRegister(VirtualKeyboardListener listener) {return listeners.remove(listener);}
@@ -291,7 +290,8 @@ public class VirtualKeyboard extends JFrame implements DisplayListener{
     
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
-            public void run() {
+            @SuppressWarnings("unused")
+			public void run() {
                 VirtualKeyboard virtualKeyboard = new VirtualKeyboard();
             }
         });

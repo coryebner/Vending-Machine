@@ -1,7 +1,6 @@
 package business.funds.tests;
 
 import hardware.exceptions.DisabledException;
-
 import hardware.funds.Banknote;
 import hardware.funds.BanknoteReceptacle;
 import hardware.funds.BanknoteSlot;
@@ -24,6 +23,7 @@ import java.util.Locale;
 
 import org.jmock.Mockery;
 import org.jmock.Expectations;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.jmock.lib.legacy.ClassImposteriser;
 
 import static org.junit.Assert.*;
@@ -91,6 +91,12 @@ public class FundsIntegrationTests {
 	@Before
 	public void setUp() throws Exception {
 		context = new Mockery() {{
+			/* 
+			 * ThreadPolicy is an object used to track the state,
+			 * Synchronization here, permits multiple threads
+			 * to invoke mocked object methods, etc.
+			 */
+		    setThreadingPolicy(new Synchroniser());
 			setImposteriser(ClassImposteriser.INSTANCE);
 		}};
 		// The cause of all your troubles

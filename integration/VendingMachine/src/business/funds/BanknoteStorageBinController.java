@@ -1,16 +1,10 @@
 package business.funds;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
 import hardware.funds.Banknote;
 import hardware.funds.BanknoteReceptacle;
 import hardware.funds.BanknoteReceptacleListener;
-import hardware.funds.Coin;
-import hardware.funds.CoinReceptacle;
-import hardware.funds.CoinReceptacleListener;
 import hardware.ui.IndicatorLight;
 
 /**

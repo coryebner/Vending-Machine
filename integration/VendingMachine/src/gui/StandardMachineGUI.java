@@ -20,23 +20,16 @@ import javax.swing.JButton;
 
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 
 import java.awt.Color;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.spi.LocaleNameProvider;
 
-import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
-import javax.swing.border.BevelBorder;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -45,7 +38,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JTextPane;
-import javax.swing.JList;
 
 import business.config.Configuration;
 import business.config.ConfigurationException;
@@ -58,7 +50,6 @@ import hardware.products.Product;
 import hardware.racks.*;
 import hardware.simulators.*;
 import hardware.ui.*;
-import gui.test.*;
 
 /**
  * Initial setup will involve being passed an abstract vending machine as well
@@ -218,13 +209,13 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 			boolean popBtns, boolean candyBtns, boolean touchScreen,
 			boolean payPal) {
 		this.machine = machine;
-		coinButtons = new ArrayList();
-		billButtons = new ArrayList();
-		cardButtons = new ArrayList();
-		outOfProductLabels = new ArrayList();
-		popButtons = new ArrayList();
-		candyLetterButtons = new ArrayList();
-		candyNumberButtons = new ArrayList();
+		coinButtons = new ArrayList<JButton>();
+		billButtons = new ArrayList<JButton>();
+		cardButtons = new ArrayList<JButton>();
+		outOfProductLabels = new ArrayList<JLabel>();
+		popButtons = new ArrayList<JButton>();
+		candyLetterButtons = new ArrayList<JButton>();
+		candyNumberButtons = new ArrayList<JButton>();
 
 		hasCoinSlot = coinSlot;
 		hasBillSlot = billSlot;
@@ -540,6 +531,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		JButton btnAdmin = new JButton("Admin");
 		btnAdmin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				@SuppressWarnings("unused")
 				VirtualKeyboard vk = new VirtualKeyboard(getMainFrame(),machine);
 			}
 		});
@@ -740,9 +732,9 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		pnlBillBtns.removeAll();
 		pnlCardBtns.removeAll();
 
-		coinButtons = new ArrayList();
-		billButtons = new ArrayList();
-		cardButtons = new ArrayList();
+		coinButtons = new ArrayList<JButton>();
+		billButtons = new ArrayList<JButton>();
+		cardButtons = new ArrayList<JButton>();
 	}
 
 	/**
@@ -848,7 +840,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 	 * currently correct Will not be used for actual program 
 	 */
 	public void machineSetup() {
-		ArrayList<String> names = new ArrayList();
+		ArrayList<String> names = new ArrayList<String>();
 
 		try {
 			for (int i = 0; i < machine.getNumberOfProductRacks(); i++) {

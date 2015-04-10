@@ -3,7 +3,6 @@ package gui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.PrintStream;
 
 import javax.swing.*;
 
@@ -30,7 +29,7 @@ public class ControlPanelGUI {
 		myFrame.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			/**
-			 * Renables caller window's components on close
+			 * Re-enables caller window's components on close
 			 */
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 				GUIHelper.enableComponents(callerContainer, true);
@@ -227,6 +226,5 @@ public class ControlPanelGUI {
   
 	public static void main(String[] args) {
 		ControlPanelGUI myGUI = new ControlPanelGUI();
-
 	}
 }
