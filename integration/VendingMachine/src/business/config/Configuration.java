@@ -209,6 +209,11 @@ public class Configuration {
 		BufferedWriter output = new BufferedWriter(new FileWriter(config));
 		writeConfigFile(output);
 	}
+	
+	public String getType()
+	{
+		return type;
+	}
 
 	/**
 	 * Wrap the nasty type -> machine creation function if statement up in its own little
