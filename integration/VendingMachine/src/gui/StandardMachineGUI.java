@@ -552,7 +552,11 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-					machine.getBanknoteSlot().removeBanknote();
+					try {
+						machine.getBanknoteReceptacle().returnBanknotes();
+					} catch (CapacityExceededException | DisabledException e1) {
+						e1.printStackTrace();
+					}
 				} catch (NoSuchHardwareException e1) {
 					e1.printStackTrace();
 				}
@@ -1165,9 +1169,11 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		Object [] items = chute.removeItems();
 		for (int i = 0; i< items.length; i++){
 			if(items[i] instanceof Coin){
-				chuteDisplayString += centsToString(((Coin) items[i]).getValue())   ;
+				chuteDisplayString += centsToString(((Coin) items[i]).getValue()) + "COIN ";
 			}else if(items[i] instanceof Product){
-				chuteDisplayString += "Product   ";
+				chuteDisplayString += "Product   "; 
+			}else if(items[i] instanceof Banknote){
+				chuteDisplayString += centsToString(((Banknote) items[i]).getValue()) + "BILL ";
 			}
 		}
 		DeliveryChuteText.setText(chuteDisplayString);
