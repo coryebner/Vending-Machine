@@ -213,7 +213,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(AbstractVendingMachine machine, boolean coinSlot,
+	private void initialize(final AbstractVendingMachine machine, boolean coinSlot,
 			boolean billSlot, boolean cardSlot, boolean internetLight,
 			boolean popBtns, boolean candyBtns, boolean touchScreen,
 			boolean payPal) {
@@ -330,7 +330,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 				pnlMisc.add(lblOutOfOrder);
 			}
 		} catch (NoSuchHardwareException e3) {
-			e3.printStackTrace();
+			//
 		}
 		
 		
@@ -868,7 +868,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 	 *            is the currency identifier (ex. $)
 	 * @return the button being asked for
 	 */
-	public JButton createCoinButton(int amount, String currType) {
+	public JButton createCoinButton(final int amount, String currType) {
 		DecimalFormat df = new DecimalFormat("0.00");
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
@@ -899,7 +899,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 	 *            is the currency identifier (ex. $)
 	 * @return the button being asked for
 	 */
-	public JButton createBillButton(int amount, String currType) {
+	public JButton createBillButton(final int amount, String currType) {
 		DecimalFormat df = new DecimalFormat("0.00");
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
@@ -929,7 +929,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 	 *            is the currency identifier (ex. $)
 	 * @return the button being asked for
 	 */
-	public JButton createCardButton(int amount, String currType) {
+	public JButton createCardButton(final int amount, String currType) {
 		DecimalFormat df = new DecimalFormat("0.00");
 		Double amountInDollars = (double) amount / 100;
 		String buttonText = currType + df.format(amountInDollars);
@@ -1021,7 +1021,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 	 * @param key
 	 *            to the product rack
 	 */
-	public void addButtonAction(JButton button, int key) {
+	public void addButtonAction(JButton button,final int key) {
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1036,7 +1036,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		});
 	}
 
-	public void addNumButtonAction(JButton button, int key) {
+	public void addNumButtonAction(JButton button,final int key) {
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1053,7 +1053,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		});
 	}
 
-	public void addLetterButtonAction(JButton button, int key) {
+	public void addLetterButtonAction(JButton button,final int key) {
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

@@ -289,34 +289,34 @@ public class Configuration {
 			prices[i]=inventoryController.getCost(i);
 		}
 		
-		//coinStorageQuantities = funds.getCoinStorageBinTracker().getQuantities
-		//if(locale.equals(Locale.CANADA){
-		//		coinStorage[0]=coinStorageQuantities.get(5);
-		//		coinStorage[1]=coinStorageQuantities.get(10);
-		//		coinStorage[2]=coinStorageQuantities.get(25);
-		//		coinStorage[3]=coinStorageQuantities.get(100);
-		//		coinStorage[4]=coinStorageQuantities.get(200);
-		//}
-		//if(locale.equals(Locale.UK){
-		//		coinStorage[0]=coinStorageQuantities.get(5);
-		//		coinStorage[1]=coinStorageQuantities.get(10);
-		//		coinStorage[2]=coinStorageQuantities.get(20);
-		//		coinStorage[3]=coinStorageQuantities.get(50);
-		//		coinStorage[4]=coinStorageQuantities.get(100);
-		//		coinStorage[5]=coinStorageQuantities.get(200);
-		//}
-		//if(locale.equals(Locale.US){
-		//		coinStorage[0]=coinStorageQuantities.get(5);
-		//		coinStorage[1]=coinStorageQuantities.get(10);
-		//		coinStorage[2]=coinStorageQuantities.get(25);
-		//		coinStorage[3]=coinStorageQuantities.get(50);
-		//		coinStorage[4]=coinStorageQuantities.get(100);
-		//}
-		//int CRackcount=funds.getCoinRackControllers().length;
-		//for(int i=0;i<CRackcount;i++){
-			//coinRackQuantities[i]=funds.getCoinRackControllers()[i].getQuantity();
-		//}
-		//billStorageQuantities[0]=funds.getBankNoteStorageBinTracker().getQuantity();
+		coinStorageQuantities = funds.getCoinStorageBinTracker().getQuantities();
+		if(locale.equals(Locale.CANADA)){
+				coinStorage[0]=coinStorageQuantities.get(5);
+				coinStorage[1]=coinStorageQuantities.get(10);
+				coinStorage[2]=coinStorageQuantities.get(25);
+				coinStorage[3]=coinStorageQuantities.get(100);
+				coinStorage[4]=coinStorageQuantities.get(200);
+		}
+		if(locale.equals(Locale.UK)){
+				coinStorage[0]=coinStorageQuantities.get(5);
+				coinStorage[1]=coinStorageQuantities.get(10);
+				coinStorage[2]=coinStorageQuantities.get(20);
+				coinStorage[3]=coinStorageQuantities.get(50);
+				coinStorage[4]=coinStorageQuantities.get(100);
+				coinStorage[5]=coinStorageQuantities.get(200);
+		}
+		if(locale.equals(Locale.US)){
+				coinStorage[0]=coinStorageQuantities.get(5);
+				coinStorage[1]=coinStorageQuantities.get(10);
+				coinStorage[2]=coinStorageQuantities.get(25);
+				coinStorage[3]=coinStorageQuantities.get(50);
+				coinStorage[4]=coinStorageQuantities.get(100);
+		}
+		int CRackcount=funds.getCoinRackControllers().length;
+		for(int i=0;i<CRackcount;i++){
+			coinRackQuantities[i]=funds.getCoinRackControllers()[i].getQuantity();
+		}
+		billStorageQuantities[0]=funds.getBankNoteStorageBinTracker().getQuantity();
 
 		//TODO Anish: Working on this
 		//Add funds controller stuff here
@@ -775,22 +775,26 @@ public class Configuration {
 			}
 			
 			ProductRack [] racks = new ProductRack[m.getNumberOfProductRacks()];
-			IndicatorLight [] productlights = new IndicatorLight[m.getNumberOfOutOfProductLights()];
 			
 			for (int i = 0; i < racks.length; ++i) {
 				racks[i] = m.getProductRack(i);
 			}
-			
+			try{
+			IndicatorLight [] productlights = new IndicatorLight[m.getNumberOfOutOfProductLights()];
 			for (int i = 0; i < productlights.length; ++i) {
 				productlights[i] = m.getOutOfProductLight(i);
+			}
+			new OutOfProductLightController(productlights, racks, inventoryController);
+			}catch(NoSuchHardwareException e){
+				//Moving forward
 			}
 			if(funds.isCoinsPresent()){
 				new OutOfOrderLightController(m.getOutOfOrderLight(), m.getCoinStorageBin(),
 										  funds.getCoinStorageBinTracker(), logger);
 			}
-			new OutOfProductLightController(productlights, racks, inventoryController);
 		}
 		catch (NoSuchHardwareException e) {
+			e.printStackTrace();
 			throw new ConfigurationException("Unable to find hardware necessary for display controller");
 		}
 	}
