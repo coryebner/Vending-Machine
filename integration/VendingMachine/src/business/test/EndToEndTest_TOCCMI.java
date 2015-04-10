@@ -44,4 +44,9 @@ public class EndToEndTest_TOCCMI extends EndToEndTest {
 	public void testMakeChangeFromPrior() throws Exception{
 		super.testMakeChangeFromPriorPurchase();
 	}
+	
+	@Test
+	public void testPurchaseAll() throws Exception{
+		super.testPurchaseAllPop();
+	}
 }
