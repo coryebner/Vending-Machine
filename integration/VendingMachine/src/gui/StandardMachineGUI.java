@@ -311,20 +311,22 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		});
 		pnlMisc.add(takeProducts);
 
+			lblExactChange = new JLabel("ExactChange");
+			lblExactChange.setBackground(Color.LIGHT_GRAY);
+			lblExactChange.setForeground(Color.LIGHT_GRAY);
+			lblExactChange.setOpaque(true);
+			
+			lblOutOfOrder = new JLabel("Out of Order");
+			lblOutOfOrder.setOpaque(true);
+			lblOutOfOrder.setForeground(Color.LIGHT_GRAY);
+			lblOutOfOrder.setBackground(Color.LIGHT_GRAY);
+			
+			
 		try {
 			if(machine.getExactChangeLight() != null ){
-				lblExactChange = new JLabel("ExactChange");
-				lblExactChange.setBackground(Color.LIGHT_GRAY);
-				lblExactChange.setForeground(Color.LIGHT_GRAY);
-				lblExactChange.setOpaque(true);
 				pnlMisc.add(lblExactChange);
 			}
-		
 			if(machine.getOutOfOrderLight() != null){
-				lblOutOfOrder = new JLabel("Out of Order");
-				lblOutOfOrder.setOpaque(true);
-				lblOutOfOrder.setForeground(Color.LIGHT_GRAY);
-				lblOutOfOrder.setBackground(Color.LIGHT_GRAY);
 				pnlMisc.add(lblOutOfOrder);
 			}
 		} catch (NoSuchHardwareException e3) {
@@ -354,7 +356,9 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		btnShutDown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					config.save(new File("configfiles/MachineState.txt"));
+					String filename = config.getType();
+					filename = filename.replace('/', '-');
+					config.save(new File("configfiles/" +filename+".txt"));
 				} catch (IOException | ConfigurationException e1) {
 					e1.printStackTrace();
 				}
