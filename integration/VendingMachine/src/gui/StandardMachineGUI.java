@@ -568,7 +568,8 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 			machine.getDisplay().register(this);
 			machine.getDeliveryChute().register(this);
 			if(hasInternetLight){
-				machine.getNoInternetConnectionLight().register(this);
+				//Depreciated and cut from scope
+				//	machine.getNoInternetConnectionLight().register(this);
 			}
 			
 			// Register the GUI to listen to the name change event from configuration
