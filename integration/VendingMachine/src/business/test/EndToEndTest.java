@@ -21,6 +21,22 @@ import business.config.Configuration;
 public class EndToEndTest {
 	protected AbstractVendingMachine machine;
 	protected Configuration config;
+	
+	private int getCoinValueFromIndex(int index) throws Exception{
+		if (index == 0) return 5;
+		else if (index == 1) return 10;
+		else if (index == 2) return 25;
+		else if (index == 3) return 100;
+		else return 200;
+	}
+	
+	protected void fillCoins(AbstractVendingMachine machine) throws Exception{
+		for(int i = 0; i < machine.getNumberOfCoinRacks(); i++){
+			for(int j = 0; j <10; i++){
+				machine.getCoinRack(i).loadWithoutEvents(new Coin(getCoinValueFromIndex(i)));
+			}
+		}
+	}
 
 	protected void testPurchaseProductCoin() throws Exception {
 		machine.getCoinSlot().addCoin(new Coin(100));
@@ -38,33 +54,20 @@ public class EndToEndTest {
 	}
 
 	protected void testMakeChangeFromCoin() throws Exception {
-		machine.getCoinSlot().addCoin(new Coin(25));
-		machine.getCoinSlot().addCoin(new Coin(25));
-		machine.getCoinSlot().addCoin(new Coin(25));
-		machine.getCoinSlot().addCoin(new Coin(25));
-		machine.getSelectionButton(0).press();
-		Object [] items = machine.getDeliveryChute().removeItems();
+		fillCoins(machine);
 		
 		machine.getCoinSlot().addCoin(new Coin(200));
 		machine.getSelectionButton(0).press();
-		items = machine.getDeliveryChute().removeItems();
+		Object[] items = machine.getDeliveryChute().removeItems();
 		assertItemTypesReturned(items, Coin.class, 4, "A coin should have been returned");
 	}
 
     protected void testMakeMixedChangeFromCoin() throws Exception {
-		machine.getCoinSlot().addCoin(new Coin(25));
-		machine.getCoinSlot().addCoin(new Coin(25));
-		machine.getCoinSlot().addCoin(new Coin(10));
-		machine.getCoinSlot().addCoin(new Coin(10));
-		machine.getCoinSlot().addCoin(new Coin(5));
-		machine.getCoinSlot().addCoin(new Coin(25));
-		machine.getSelectionButton(0).press();
-		
-		Object [] items = machine.getDeliveryChute().removeItems();
+		fillCoins(machine);
 		
 		machine.getCoinSlot().addCoin(new Coin(200));
 		machine.getSelectionButton(0).press();
-		items = machine.getDeliveryChute().removeItems();
+		Object[] items = machine.getDeliveryChute().removeItems();
 		assertItemTypesReturned(items, Coin.class, 6, "Six coins should have been returned");
 	}
 	
@@ -100,6 +103,26 @@ public class EndToEndTest {
 
 		Object [] items = machine.getDeliveryChute().removeItems();
 		assertItemTypesReturned(items, Coin.class, 1, "A coin should have been returned");
+	}
+	
+	protected void testPurchaseWithBills() throws Exception {
+		Banknote bnote = new Banknote(500);
+		machine.getBanknoteSlot().addBanknote(bnote);
+		machine.getSelectionButton(0).press();
+		
+		Object[] items = machine.getDeliveryChute().removeItems();
+		assertItemTypesReturned(items, Product.class, 1, "A product should have been dispensed");
+	}
+	
+	protected void testMakeChangeFromBills() throws Exception {
+		fillCoins(machine);
+		
+		Banknote bnote = new Banknote(500);
+		machine.getBanknoteSlot().addBanknote(bnote);
+		machine.getSelectionButton(0).press();
+		
+		Object[] items = machine.getDeliveryChute().removeItems();
+		assertItemTypesReturned(items, Coin.class, 2, "Two toonies should be given");
 	}
 
 	protected void assertItemTypesReturned(Object [] items, Class c, int n, String message) throws Exception {
