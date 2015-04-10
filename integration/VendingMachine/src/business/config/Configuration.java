@@ -590,13 +590,20 @@ public class Configuration {
 	 * Create a ButtonController, and register it with all the buttons it needs
 	 *  to be registered with.
 	 */
-	protected void createButtonSelectionController(AbstractVendingMachine m)
+	protected void createButtonSelectionController(AbstractVendingMachine m) throws ConfigurationException
 	{
-
 		try {
-			int numberOfButtons = m.getNumberOfSelectionButtons();
-			PushButton [] pushButtons = new PushButton[numberOfButtons];
-			for(int i = 0; i < numberOfButtons; i++){
+			createButtonSelectionController(m, m.getNumberOfSelectionButtons());
+		}
+		catch (NoSuchHardwareException e) {
+			throw new ConfigurationException("Unable to get selection buttons");
+		}
+	}
+	
+	protected void createButtonSelectionController(AbstractVendingMachine m, int n) {
+		try {
+			PushButton [] pushButtons = new PushButton[n];
+			for(int i = 0; i < n; i++){
 
 				pushButtons[i] = m.getSelectionButton(i);
 			}
@@ -604,13 +611,12 @@ public class Configuration {
 			this.buttonSelectionController = new ButtonSelectionController(this.inventoryController, this.funds, pushButtons, numberOfButtons);
 
 			// Registering the buttons from hardware with the buttonSelectionController
-			for(int i=0; i < numberOfButtons; i++){
+			for(int i=0; i < n; i++){
 				pushButtons[i].register(buttonSelectionController);
 			}
 		} catch (NoSuchHardwareException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -1042,7 +1048,8 @@ public class Configuration {
 		createFundsController(machine, true, true, false, true);
 	
 		//Create a selection button controller
-		createButtonSelectionController(machine);
+		createButtonSelectionController(machine, 12);
+		createCodeController(machine, 12);
 		createDisplayController(machine);
 
 		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(false)
@@ -1062,7 +1069,8 @@ public class Configuration {
 		createFundsController(machine, true, true, true, true);
 
 		//Create a selection button controller
-		createButtonSelectionController(machine);
+		createButtonSelectionController(machine, 12);
+		createCodeController(machine, 12);
 		createDisplayController(machine);
 
 		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(true)
