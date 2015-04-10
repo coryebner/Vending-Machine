@@ -15,18 +15,12 @@ import business.config.Configuration;
 import business.config.ConfigurationException;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Panel;
-
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
-
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class SelectConfigFileGUI {
 
