@@ -53,6 +53,15 @@ public class EndToEndTest {
 		Object [] items = machine.getDeliveryChute().removeItems();
 		assertItemTypesReturned(items, Product.class, 0, "No products should have been dispensed");
 	}
+	
+	protected void testPurchaseProductNoFundsCode() throws Exception {
+		machine.getSelectionButton(0).press();
+		machine.getSelectionButton(6).press();
+
+		Object [] items = machine.getDeliveryChute().removeItems();
+		assertItemTypesReturned(items, Product.class, 0, "No products should have been dispensed");
+		
+	}
 
 	protected void testMakeChangeFromCoin() throws Exception {
 		fillCoins(machine);
@@ -117,12 +126,34 @@ public class EndToEndTest {
 		assertItemTypesReturned(items, Product.class, 1, "A product should have been dispensed");
 	}
 	
+	protected void testPurchaseProductBillCode() throws Exception {
+		Banknote bnote = new Banknote(500);
+		machine.getBanknoteSlot().addBanknote(bnote);
+		machine.getSelectionButton(0).press();
+		machine.getSelectionButton(6).press();
+		
+		Object[] items = machine.getDeliveryChute().removeItems();
+		assertItemTypesReturned(items, Product.class, 1, "A product should have been dispensed");		
+	}
+	
 	protected void testMakeChangeFromBills() throws Exception {
 		fillCoins(machine);
 		
 		Banknote bnote = new Banknote(500);
 		machine.getBanknoteSlot().addBanknote(bnote);
 		machine.getSelectionButton(0).press();
+		
+		Object[] items = machine.getDeliveryChute().removeItems();
+		assertItemTypesReturned(items, Coin.class, 2, "Two toonies should be given");
+	}
+	
+	protected void testMakeChangeFromBillsCode() throws Exception {
+		fillCoins(machine);
+		
+		Banknote bnote = new Banknote(500);
+		machine.getBanknoteSlot().addBanknote(bnote);
+		machine.getSelectionButton(0).press();
+		machine.getSelectionButton(6).press();
 		
 		Object[] items = machine.getDeliveryChute().removeItems();
 		assertItemTypesReturned(items, Coin.class, 2, "Two toonies should be given");
@@ -204,26 +235,25 @@ public class EndToEndTest {
 		Object [] items = machine.getDeliveryChute().removeItems();
 		assertItemTypesReturned(items, Product.class, 0, "A product should not be dispensed");
 		assertEquals(100,config.getFunds().getCoinsController().getAvailableBalance());
-		
-		
-		
-		
 	}
 	
 	/**@author Adrian Wu
 	 * Method to test Out of Product light is on when machine is out of product
 	 */
-	protected void testPurchaseAllPop() throws Exception{
-		Object[] itemRet = new Object[15];
-		for(int i = 0; i < itemRet.length; i++){
+	protected void testPurchaseAllPop() throws Exception
+	{
+		for(int i = 0; i < machine.getProductRack(0).getMaxCapacity(); i++){
 			machine.getCoinSlot().addCoin(new Coin(100));
 			machine.getSelectionButton(0).press();
-			itemRet[i] = machine.getDeliveryChute().removeItems()[0];
 		}
-		assertItemTypesReturned(itemRet, Product.class, 15, "A product should have been vended");
+		
+		Object [] items = machine.getDeliveryChute().removeItems();
+		assertItemTypesReturned(items, Product.class, 10, "A product should have been vended");
 		assertTrue("Rack should be empty", config.getInventory().isEmpty(0));
+
 		machine.getCoinSlot().addCoin(new Coin(100));
 		machine.getSelectionButton(0).press();
+
 		assertEquals("Nothing should have been vended", 0, machine.getDeliveryChute().removeItems().length);
 		assertTrue("Out of product light 0 should be on", machine.getOutOfProductLight(0).isActive());
 	}
@@ -232,9 +262,10 @@ public class EndToEndTest {
 	 * Method to test Out of Order light is on when storage bin is full of coins
 	 */
 	protected void testFullOfCoins() throws Exception{
-		while(!config.getFunds().getCoinStorageBinTracker().isFull()){
+		while(machine.getCoinReceptacle().hasSpace()) {
 			machine.getCoinSlot().addCoin(new Coin(5));
 		}
+
 		assertTrue("Out of Order light should be on", machine.getOutOfOrderLight().isActive());
 	}
 	
@@ -305,6 +336,28 @@ public class EndToEndTest {
 		machine.getSelectionButton(0).press();
 		assertTrue(displayLogger.toString().contains("Product empty"));
 		
+	}
+	
+	protected void testDisplayChangesProductEmptyPrepaid() throws Exception {
+		DisplayLogger displayLogger = new DisplayLogger();
+		this.machine.getDisplay().register(displayLogger);
+		
+		int numberOfProducts = config.getInventory().getCount(0);
+		for(int i=0; i < numberOfProducts; i++){
+			machine.getProductRack(0).dispenseProduct();
+			Object [] items = machine.getDeliveryChute().removeItems();
+			assertItemTypesReturned(items, Product.class, 1, "A product should be dispensed");
+		}
+		
+		machine.getCardSlot().insertCard(new Card(CardType.PREPAID,
+												  "12345678",
+												  "Liam",
+												  "0000",
+												  "12/2019",
+												  Locale.CANADA,
+												  200));
+		machine.getSelectionButton(0).press();
+		assertTrue(displayLogger.toString().contains("Product empty"));
 	}
 	
 

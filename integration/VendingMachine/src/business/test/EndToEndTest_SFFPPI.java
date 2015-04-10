@@ -22,4 +22,18 @@ public class EndToEndTest_SFFPPI extends EndToEndTest {
 		super.testPurchaseProductPrepaid();
 	}
 
+	@Test
+	public void testPurchaseProductNoFunds() throws Exception {
+		super.testPurchaseProductNoFunds();
+	}
+	
+	@Test
+	public void testDisplayChangesProductEmptyPrepaid() throws Exception {
+		super.testDisplayChangesProductEmptyPrepaid();
+	}
+	
+	@Test
+	public void testDisplayChangesInsufficientFunds() throws Exception {
+		super.testDisplayChangesInsufficientFunds();
+	}
 }
