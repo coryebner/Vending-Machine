@@ -79,6 +79,7 @@ public class VirtualKeyboard extends JFrame {
 		this();
 		callerContainer = caller;
 		GUIHelper.enableComponents(caller, false);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			/**
@@ -141,7 +142,6 @@ public class VirtualKeyboard extends JFrame {
         }
 		
         
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         add(parent);
         pack();
         setVisible(true);

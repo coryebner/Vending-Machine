@@ -56,6 +56,9 @@ public class FundsController {
 	private boolean cashUsed = false;
 	private boolean cardUsed = false;
 	private boolean paypalused = false;
+	
+	private int banknoteValueReturnedNotUsed = 0;
+	private int coinValueReturnedNotUsed = 0;
 
 	/**
 	 * @param Locale locale
@@ -204,6 +207,9 @@ public class FundsController {
 		TransactionReturnCode returnCode = TransactionReturnCode.INSUFFICIENTFUNDS;
 		TransactionReturnCode returnCodeCC_PP = TransactionReturnCode.INSUFFICIENTFUNDS;
 
+		banknoteValueReturnedNotUsed = 0;
+		coinValueReturnedNotUsed = 0;
+		
 		noChangeDueToPrepaidExceed = false;
 
 		int availableFunds = 0;
@@ -212,7 +218,7 @@ public class FundsController {
 		// Try to conductTransaction with funds we know are available
 		if (availableFunds >= price) {
 			returnCode = conductTransactionFromAvailableFunds(price);
-			giveChange(availableFunds - price);
+			giveChange(availableFunds - price - banknoteValueReturnedNotUsed - coinValueReturnedNotUsed);
 		} else {
 			// try with credit card and paypal
 			int remainingBalance = price - availableFunds;
@@ -291,15 +297,7 @@ public class FundsController {
 				cardUsed = true;
 			}
 		}
-		if (billsPresent && balance > 0) {
-			int billsFunds = bankNoteController.getAvailableBalance();
-			if(billsFunds >0){
-				amount = Math.min(billsFunds, balance);
-				returnCodeC = bankNoteController.ConductTransaction(amount);
-				balance -= amount;
-				cashUsed = true;
-			}
-		}
+
 		if (coinsPresent && balance > 0) {
 			int coinsFunds = coinsController.getAvailableBalance();
 			if(coinsFunds >0){
@@ -309,7 +307,25 @@ public class FundsController {
 				cashUsed = true;
 			}
 		}
+		else if(coinsPresent && balance == 0){ // transaction has been covered by coins
+			coinValueReturnedNotUsed = coinsController.getAvailableBalance();
+			coinsController.pressed(null); // releases the coins
+		}
 
+		if (billsPresent && balance > 0) {
+			int billsFunds = bankNoteController.getAvailableBalance();
+			if(billsFunds >0){
+				amount = Math.min(billsFunds, balance);
+				returnCodeC = bankNoteController.ConductTransaction(amount);
+				balance -= amount;
+				cashUsed = true;
+			}
+		}
+		else if(billsPresent && balance ==0){ // tran saction has been covered by prepaid and/or coins don't use bills
+			banknoteValueReturnedNotUsed = bankNoteController.getAvailableBalance();
+			bankNoteController.pressed(null); // releases unused bank notes
+		}
+		
 		if (returnCodePP == TransactionReturnCode.SUCCESSFUL
 				&& returnCodeBN == TransactionReturnCode.SUCCESSFUL
 				&& returnCodeC == TransactionReturnCode.SUCCESSFUL) {

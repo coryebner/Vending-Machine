@@ -21,6 +21,7 @@ import java.util.Map;
 
 import business.config.Configuration;
 import business.config.ConfigurationException;
+import business.selection_delivery.ButtonSelectionController;
 import business.selection_delivery.InventoryController;
 import business.notifications.DisplayController;
 import business.funds.FundsController;
@@ -42,7 +43,7 @@ public class ConfigurationTest extends Configuration {
 						+ "coinstorage 0 0 0 0 0\n"
 						+ "billracks 0 0 0 0 0\n"
 						+ "billstorage 0 0 0 0 0\n"
-						+ "locale CA"));
+						+ "locale CA\n"));
 
 		readConfigFile(input);
 
@@ -161,7 +162,9 @@ public class ConfigurationTest extends Configuration {
 		// mocking other required objects for when the method is called
 		final InventoryController inventory = context.mock(InventoryController.class);
 		final DisplayController display = context.mock(DisplayController.class); 
+		FundsController fundsC = context.mock(FundsController.class);
 		this.machine= mockMachine;
+		this.funds = fundsC;
 		this.inventoryController = inventory;
 		this.displayController = display;
 		
@@ -170,6 +173,7 @@ public class ConfigurationTest extends Configuration {
 		// Assertion that the Button Selection Controller is null as it was not initialized before
 		assertNull("Button Selection Controller doesn't exist",this.buttonSelectionController);
 		createButtonSelectionController(this.machine);
+		
 		// Assertion that this buttonSelectionController object was created after the previous call
 		assertNotNull("Button Selection Controller created", this.buttonSelectionController);
 		try {
@@ -247,14 +251,14 @@ public class ConfigurationTest extends Configuration {
 			// Allows JMock to mock concrete classes, and not only interfaces
 		}};
 		final MockAbstractVendingMachine mockMachine = context.mock(MockAbstractVendingMachine.class);
-
+		ProductRack pr = new ProductRack(10);
 		// Setting up the expectations for the mock object.
 		try {
 			context.checking(new Expectations() {{
 				ProductRack pr = context.mock(ProductRack.class);
 //				oneOf(mockMachine).getOutOfOrderLight(); will(returnValue(new IndicatorLight()));
 				oneOf(mockMachine).getProductRack(0); will(returnValue(pr));
-				oneOf(pr).getMaxCapacity(); will(returnValue(1));
+				
 				exactly(3).of(mockMachine).getNumberOfProductRacks(); will(returnValue(1));
 
 			}});

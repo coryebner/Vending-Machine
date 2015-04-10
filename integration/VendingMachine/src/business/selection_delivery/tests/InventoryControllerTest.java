@@ -122,12 +122,12 @@ public class InventoryControllerTest {
 		assertEquals("Product2", manager.getName(1));		
 	}
 	
-	@Test
-	public void testGetProductID() {
-		
-		assertEquals(7331, manager.getProductID(0));
-		assertEquals(42, manager.getProductID(1));
-	}
+//	@Test
+//	public void testGetProductID() {
+//		
+//		assertEquals(7331, manager.getProductID(0));
+//		assertEquals(42, manager.getProductID(1));
+//	}
 
 	@Test
 	public void testIsFull() {

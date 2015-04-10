@@ -33,7 +33,7 @@ import SDK.rifffish.Rifffish;
  * <li>CardSlot: Y</li>
  * <li>PayPal: N</li>
  * <li>TouchScreen: N</li>
- * <li>VMSocket (Internet): N</li>
+ * <li>Internet: N</li>
  * <li>OutOfOrderLight: Y</li>
  * <li>ExactChangeLight: Y</li>
  * <li>NoInternetConnectionLight: N</li>
@@ -51,7 +51,7 @@ public class VMRUS_COM_C_M extends AbstractVendingMachine{
 	private CoinRack[] coinRacks;
 	private Map<Integer, CoinChannel> coinRackChannels;
 	private ProductRack[] productRacks;
-	private Display display;
+	private Display display, configPanelDisplay;
     private PushButton[] characterButtons;
     private PushButtonCodeInterpreter interpreter;
 	private PushButton returnButton;
@@ -122,6 +122,7 @@ public class VMRUS_COM_C_M extends AbstractVendingMachine{
 		outOfOrderLight = new IndicatorLight();
 		
 		display = new Display();
+		configPanelDisplay = new Display();
 		configurationPanelTransmitter = new ConfigurationPanelTransmitter();
 
 		characterButtons = new PushButton[16];
@@ -197,6 +198,11 @@ public class VMRUS_COM_C_M extends AbstractVendingMachine{
 	@Override
 	public Display getDisplay() {
 		return display;
+	}
+	
+	@Override
+	public Display getConfigPanelDisplay() {
+		return configPanelDisplay;
 	}
 
 	@Override

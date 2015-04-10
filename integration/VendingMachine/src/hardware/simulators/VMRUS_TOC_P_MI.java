@@ -3,7 +3,6 @@ package hardware.simulators;
 import hardware.channels.BanknoteChannel;
 import hardware.channels.CoinChannel;
 import hardware.channels.ProductChannel;
-import hardware.exceptions.NoSuchHardwareException;
 import hardware.exceptions.SimulationException;
 import hardware.funds.*;
 import hardware.racks.CoinRack;
@@ -33,7 +32,7 @@ import SDK.rifffish.Rifffish;
  * <li>CardSlot: Y</li>
  * <li>PayPal: Y</li>
  * <li>TouchScreen: Y</li>
- * <li>VMSocket (Internet): Y</li>
+ * <li>Internet: Y</li>
  * <li>OutOfOrderLight: Y</li>
  * <li>ExactChangeLight: Y</li>
  * <li>NoInternetConnectionLight: Y</li>
@@ -51,12 +50,11 @@ public class VMRUS_TOC_P_MI extends AbstractVendingMachine{
 	private CoinRack[] coinRacks;
 	private Map<Integer, CoinChannel> coinRackChannels;
 	private ProductRack[] productRacks;
-	private Display display;
+	private Display display, configPanelDisplay;
 	private PushButton[] selectionButtons;
 	private PushButton returnButton;	
 	private IndicatorLight exactChangeLight, outOfOrderLight, noInternetConnectionLight;
 	private IndicatorLight[] outOfProductLights;
-	private VMSocket socket;
 	private ConfigurationPanelTransmitter configurationPanelTransmitter;
 
 	protected static int banknoteReceptacleCapacity = 20;
@@ -129,7 +127,7 @@ public class VMRUS_TOC_P_MI extends AbstractVendingMachine{
 			outOfProductLights[i] = new IndicatorLight();
 
 		display = new Display();
-		socket = new VMSocket();
+		configPanelDisplay = new Display();
 		configurationPanelTransmitter = new ConfigurationPanelTransmitter();
 
 	}
@@ -193,6 +191,11 @@ public class VMRUS_TOC_P_MI extends AbstractVendingMachine{
 	public Display getDisplay() {
 		return display;
 	}
+	
+	@Override
+	public Display getConfigPanelDisplay() {
+		return configPanelDisplay;
+	}
 
 	@Override
 	public int getNumberOfCoinRacks() {
@@ -229,11 +232,6 @@ public class VMRUS_TOC_P_MI extends AbstractVendingMachine{
 		return selectionButtons[index];
 	}
 
-	@Override
-	public VMSocket getSocket() throws NoSuchHardwareException {
-		return socket;
-	}
-	
 	@Override
 	public BanknoteReceptacle getBanknoteStorageBin() {
 		return banknoteStorageBin;

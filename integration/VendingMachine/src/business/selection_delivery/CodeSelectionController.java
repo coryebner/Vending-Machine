@@ -22,10 +22,12 @@ public class CodeSelectionController
 	private int offset;
 	
 	/**
-	 * Constructor
-	 * 
 	 * Registers us with the CandyVendingMachine's PushButtonInterpreter to
-	 *  listen for codeEntered() events.
+	 * listen for codeEntered() events.
+	 * 
+	 * @param inv		A reference to the inventory controller
+	 * @param f			A reference to the funds controller
+	 * @param off		Product Offset
 	 */
 	public CodeSelectionController(InventoryController inv, FundsController f, int off)
 	{
@@ -88,6 +90,8 @@ public class CodeSelectionController
 	 *  into the machine's product racks.
 	 *  
 	 * @param code			code to interpret
+	 * @param offset		Product offset
+	 * 
 	 * @return				product index for dispense()
 	 */
 	public int productIndex(String code, int offset) //made this public for testing purposes, was private
