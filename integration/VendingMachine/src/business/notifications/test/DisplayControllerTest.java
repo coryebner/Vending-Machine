@@ -28,14 +28,15 @@ public class DisplayControllerTest {
 	
 	public void SimulateTimer() {
 		int time = 0;
-	    Scanner sc = new Scanner(System.in);
+	    try(Scanner sc = new Scanner(System.in)) {
 		while(time >= 0) {
 		    time = sc.nextInt();
 			eventTimer.setInitialDelay(time);
 			eventTimer.restart();
 			System.out.println("start");
 			eventTimer.start();
-		}
+			}
+	    }
 	}
 
 	public static void main(String[] args) {

@@ -1,19 +1,16 @@
 package business.funds.tests;
 
 import hardware.funds.BanknoteReceptacle;
-import hardware.funds.BanknoteSlot;
 import hardware.funds.CoinReceptacle;
-import hardware.funds.CoinSlot;
 import hardware.racks.CoinRack;
-import hardware.ui.IndicatorLight;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.jmock.Mockery;
 import org.jmock.Expectations;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.jmock.lib.legacy.ClassImposteriser;
 
 import static org.junit.Assert.*;
@@ -39,6 +36,12 @@ public class FundsControllerTest {
 	
 	
 	private Mockery context = new Mockery() {{
+		/* 
+		 * ThreadPolicy is an object used to track the state,
+		 * Synchronization here, permits multiple threads
+		 * to invoke mocked object methods, etc.
+		 */
+	    setThreadingPolicy(new Synchroniser());
 	    setImposteriser(ClassImposteriser.INSTANCE);
 	}};
 	
@@ -171,9 +174,7 @@ public class FundsControllerTest {
 	
 	private FundsController setupControllers(boolean prepaid, boolean banknote, boolean coins,
 			boolean creditCard, boolean payPal){
-		InventoryController inventoryController = null;
 		int [] nothing = null;
-		CoinRack[] coinRack = null;
 		List<PaymentMethods> availablePaymentMethods = new ArrayList<PaymentMethods>();
 		FundsController funds = new FundsController(locale, availablePaymentMethods, false,nothing,null,null,0,null,null,null,nothing,null,null,null,null,0,null,null,logger);
 		prepaidController = context.mock(PrepaidController.class);

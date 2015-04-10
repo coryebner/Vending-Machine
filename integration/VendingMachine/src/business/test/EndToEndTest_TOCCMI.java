@@ -61,4 +61,13 @@ public class EndToEndTest_TOCCMI extends EndToEndTest {
 	public void testFullOfCoin() throws Exception{
 		super.testFullOfCoins();
 	}
+	@Test
+	public void testMakePurcaseWithBill() throws Exception{
+		super.testPurchaseWithBills();
+	}
+	
+	@Test
+	public void testMakeChangeFromBills() throws Exception{
+		super.testMakeChangeFromBills();
+	}
 }

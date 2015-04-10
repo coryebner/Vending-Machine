@@ -12,7 +12,6 @@ import SDK.logger.Logger;
 import business.config.ConfigPanelLogic;
 import business.config.ConfigurationListener;
 import business.selection_delivery.InventoryController;
-import business.funds.FundsController;
 
 public class ConfigurationTest {
 

@@ -5,8 +5,6 @@ import hardware.AbstractHardwareListener;
 import hardware.ui.ConfigurationPanelTransmitter;
 import hardware.ui.Display;
 
-import java.util.Scanner;
-
 import business.selection_delivery.AbstractController;
 
 public class ConfigPanelLogic extends AbstractController<ConfigurationListener> implements hardware.ui.ConfigurationPanelTransmitterListener {
