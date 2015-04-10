@@ -208,10 +208,13 @@ public class Configuration {
 		if (machine == null) {
 			throw new ConfigurationException("Attempted to save a nonexistent machine!");
 		}
+		
+		updateValues();
 
 		// Read all the data we need from machine, funds and inventory
 		BufferedWriter output = new BufferedWriter(new FileWriter(config));
 		writeConfigFile(output);
+		output.close();
 	}
 	
 	public String getType()
