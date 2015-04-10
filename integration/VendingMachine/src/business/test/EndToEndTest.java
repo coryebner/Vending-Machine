@@ -294,6 +294,17 @@ public class EndToEndTest {
 		assertTrue(displayLogger.toString().contains("Insufficient funds. Product costs:"));
 	}
 	
+	protected void testPurchaseProductCoinCode() throws Exception
+	{
+		machine.getCoinSlot().addCoin(new Coin(100));
+		machine.getSelectionButton(0).press();
+		machine.getSelectionButton(6).press();
+		
+		Object [] items = machine.getDeliveryChute().removeItems();
+		
+		assertItemTypesReturned(items, Product.class, 1, "Typing a code should dispense a product");
+	}
+	
 	
 	/**@author Liam Mitchell
 	 * 
