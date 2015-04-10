@@ -1,4 +1,4 @@
-package hardware.test;
+package hardware.test.simulators;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -19,7 +19,7 @@ import hardware.products.PopCan;
 import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
 import hardware.simulators.AbstractVendingMachine;
-import hardware.simulators.VMRUS_COM_P_M;
+import hardware.simulators.VMRUS_TOC_CP;
 import hardware.test.stub.BanknoteReceptacleListenerStub;
 import hardware.test.stub.BanknoteSlotListenerStub;
 import hardware.test.stub.CardSlotListenerStub;
@@ -36,11 +36,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class VMRUS_COM_P_MTest {
+public class VMRUS_TOC_CPTest {
 
 	private final int NO_COINRACKS = 5;
-	private final int NO_PRODUCTRACKS = 12;
-	private final int NO_SELECTIONBUTTONS = 12;
+	private final int NO_PRODUCTRACKS = 48;
 
 	private AbstractVendingMachine hardware;
 	private Coin coin;
@@ -55,16 +54,14 @@ public class VMRUS_COM_P_MTest {
 	private CoinRackListenerStub[] coinRackListeners;
 	private ProductRackListenerStub[] productRackListeners;
 	private IndicatorLightListenerStub outOfOrderListener, exactChangeListener;
-	private PushButtonListenerStub[] pushButtonListeners;
 	private PushButtonListenerStub returnButtonListener;
-	private IndicatorLightListenerStub outOfProductListeners[];
 	private Banknote banknote;
 	
 
 	@Before
 	public void setup() throws NoSuchHardwareException {
 
-		hardware = new VMRUS_COM_P_M(Locale.CANADA, new int[] { 5, 10, 25, 100,
+		hardware = new VMRUS_TOC_CP(Locale.CANADA, new int[] { 5, 10, 25, 100,
 				200 }, new int[] {5, 10, 20, 50, 100});
 
 		coin = new Coin(100);
@@ -89,10 +86,6 @@ public class VMRUS_COM_P_MTest {
 			hardware.getProductRack(i).register(productRackListeners[i]);
 		}
 
-		pushButtonListeners = new PushButtonListenerStub[NO_SELECTIONBUTTONS];
-		for (int i = 0; i < NO_SELECTIONBUTTONS; i++) {
-			hardware.getSelectionButton(i).register(pushButtonListeners[i]);
-		}
 
 		returnButtonListener = new PushButtonListenerStub();
 		hardware.getReturnButton().register(returnButtonListener);
@@ -100,12 +93,7 @@ public class VMRUS_COM_P_MTest {
 		outOfOrderListener = new IndicatorLightListenerStub();
 		exactChangeListener = new IndicatorLightListenerStub();
 
-		
-		outOfProductListeners = new IndicatorLightListenerStub[NO_SELECTIONBUTTONS];
-		for(int i=0; i<NO_SELECTIONBUTTONS; i++){
-			outOfProductListeners[i]=new IndicatorLightListenerStub();
-			hardware.getOutOfProductLight(i).register(outOfProductListeners[i]);
-		}
+	
 		hardware.getBanknoteReceptacle().register(banknoteReceptacleListener);
 		hardware.getBanknoteSlot().register(banknoteSlotListener);
 		hardware.getCoinSlot().register(coinSlotListener);
@@ -115,7 +103,6 @@ public class VMRUS_COM_P_MTest {
 		hardware.getDeliveryChute().register(deliveryChuteListener);
 		hardware.getExactChangeLight().register(exactChangeListener);
 		hardware.getOutOfOrderLight().register(outOfOrderListener);
-		
 	}
 
 	@After
@@ -140,15 +127,6 @@ public class VMRUS_COM_P_MTest {
 			productRackListeners[i] = null;
 		}
 
-		for (int i = 0; i < NO_SELECTIONBUTTONS; i++) {
-			hardware.getSelectionButton(i).deregisterAll();
-			pushButtonListeners[i] = null;
-		}
-		
-		for (int i = 0; i < NO_SELECTIONBUTTONS; i++) {
-			hardware.getOutOfProductLight(i).deregisterAll();
-			outOfProductListeners[i] = null;
-		}
 
 		hardware.getReturnButton().deregisterAll();
 		returnButtonListener = null;
@@ -166,18 +144,19 @@ public class VMRUS_COM_P_MTest {
 		outOfOrderListener = null;
 		banknoteSlotListener=null;
 		banknoteReceptacleListener=null;
+
 	}
 
 	@Test(expected = SimulationException.class)
 	public void testNullCoinValues() {
 		
-		 hardware = new VMRUS_COM_P_M(Locale.CANADA, null, new int[] {5,10,20,50,100});
+		 hardware = new VMRUS_TOC_CP(Locale.CANADA, null, new int[]{5,10,20,50,100});
 	}
 	
 	@Test(expected = SimulationException.class)
 	public void testNullBanknoteValues() {
 		
-		 hardware = new VMRUS_COM_P_M(Locale.CANADA, new int[] {5,10,25,100, 200}, null);
+		 hardware = new VMRUS_TOC_CP(Locale.CANADA, new int[]{5,10,25,100,200}, null);
 	}
 
 	@Test
@@ -435,18 +414,6 @@ public class VMRUS_COM_P_MTest {
 		}
 	}
 
-	@Test
-	public void testGetSelectionButtons() throws NoSuchHardwareException {
-		int count = hardware.getNumberOfSelectionButtons();
-		assertTrue(count == NO_PRODUCTRACKS);
-		assertFalse(hardware.getSelectionButton(0) == null);
-		assertFalse(hardware.getSelectionButton(count - 1) == null);
-		try {
-			hardware.getSelectionButton(count);
-			fail();
-		} catch (IndexOutOfBoundsException e) {
-		}
-	}
 
 	@Test
 	public void testGetDisplay() throws NoSuchHardwareException {
@@ -494,15 +461,8 @@ public class VMRUS_COM_P_MTest {
 		}
 		deliveryChuteListener.assertProtocol();
 		chuteContents = hardware.getDeliveryChute().removeItems();
-		
-		// TODO: Verify with Luigi - changed April 4, 2015 - wwright
-		// Changed anticipated length to 5 rather than 1
-		// hardware.getNumberOfCoinRacks() yields 5
-		// chuterContents.length yields 5
-		// original: assertTrue(cuteContents.length == 1)
-		
+
 		assertTrue(chuteContents.length == 5);
-		System.out.println(chuteContents[0].getClass());
 		 assertTrue(chuteContents[0].getClass() == Coin.class);
 	}
 
@@ -515,20 +475,6 @@ public class VMRUS_COM_P_MTest {
 
 	}
 	
-	//test out of product indicator light
-	@Test
-	public void testOutOfProductIndicatorLights() throws NoSuchHardwareException{
-		for(int i=0; i<NO_SELECTIONBUTTONS; i++){
-			outOfProductListeners[i].expect("activated");
-			hardware.getOutOfProductLight(i).activate();
-			outOfProductListeners[i].assertProtocol();
-		}
-		for(int i=0; i<NO_SELECTIONBUTTONS; i++){
-			outOfProductListeners[i].expect("deactivated");
-			hardware.getOutOfProductLight(i).deactivate();
-			outOfProductListeners[i].assertProtocol();
-		}
-	}
 	
 	//Test Banknotes
 	@Test

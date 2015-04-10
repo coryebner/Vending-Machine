@@ -1,0 +1,2 @@
+Transaction,null,0,1,coins,true,2015-04-09 16:34:02.456,null
+Transaction,null,7,1,coins,true,2015-04-09 16:35:24.895,null

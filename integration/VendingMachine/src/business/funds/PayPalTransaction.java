@@ -1,6 +1,8 @@
 package business.funds;
 import java.util.*;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import com.paypal.api.payments.Amount;
@@ -23,6 +25,8 @@ public class PayPalTransaction {
 	String clientID, clientSecret;
 	static final String defaultClientID = "AUqkth4JyvL-S5HnPwbPsOX9iR23megQdlsSznWg69KQxqBgTYOmy2OmR74GN-_bdNVOSe-7DDPHOsZx";
 	static final String defaultClientSecret = "EEUCy7qzSQQowLeg55m1JXx2Ci6g5MIY449ifjOlSk7gLgbCvptdSPgnJug5yy61dWE5E6BKYxslZAxs";
+	
+	boolean closed;
 	
 	// Access token and cancel url needed
 	String accessToken = null, cancel_url;
@@ -50,6 +54,7 @@ public class PayPalTransaction {
 		
 		// Set the configuration
 		apiContext.setConfigurationMap(sdkConfig);
+		closed = false;
 	}
 	
 	// Default constructor using our own clientID and clientSecret
@@ -89,10 +94,24 @@ public class PayPalTransaction {
 		final String url = approval_url;
 		
 		final SwingBrowser browser = new SwingBrowser();
+		
+		browser.addWindowListener(new java.awt.event.WindowAdapter()
+		{
+			@Override
+			public void windowClosing (java.awt.event.WindowEvent windowEvent) 
+			{
+				int reply = JOptionPane.showConfirmDialog(browser, "Are you sure you want to close this window?", "Attempt a close", JOptionPane.YES_NO_OPTION);
+				if (reply == JOptionPane.YES_OPTION)
+					closed = true;
+					
+			}
+		});
+		
 		SwingUtilities.invokeLater(new Runnable () {
 			public void run () {
 				browser.setVisible(true);
 				browser.loadURL(url);
+				browser.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			}
 		});
 		
@@ -114,6 +133,9 @@ public class PayPalTransaction {
 		for (int i = 0; i < 12; i++)
 		{
 			Thread.sleep(5000);
+			
+			if (closed)
+				return TransactionReturnCode.UNSUCCESSFUL;
 
 			// If payer accepts payment, close browser and set payer ID
 			if (temp.getPayer().getPayerInfo().getPayerId() != null)

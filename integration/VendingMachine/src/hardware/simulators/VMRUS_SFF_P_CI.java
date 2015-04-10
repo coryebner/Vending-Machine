@@ -47,7 +47,7 @@ public class VMRUS_SFF_P_CI extends AbstractVendingMachine {
 	private CoinRack[] coinRacks;
 	private Map<Integer, CoinChannel> coinRackChannels;
 	private ProductRack[] productRacks;
-	private Display display;
+	private Display display, configPanelDisplay;
 	private PushButton[] selectionButtons;
 	private PushButton returnButton;
 	private IndicatorLight exactChangeLight, outOfOrderLight;
@@ -144,6 +144,11 @@ public class VMRUS_SFF_P_CI extends AbstractVendingMachine {
 	@Override
 	public Display getDisplay() {
 		return display;
+	}
+	
+	@Override
+	public Display getConfigPanelDisplay() {
+		return configPanelDisplay;
 	}
 
 	@Override

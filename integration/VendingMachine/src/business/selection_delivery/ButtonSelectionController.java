@@ -12,7 +12,7 @@ import hardware.ui.PushButtonListener;
 
 
 /**
- * @class PopSelectionController
+ * @class ButtonSelectionController
  * 
  * Implementation of SelectionController for pop vending machines. Listens
  *  for pressed() events from the PushButtonListener, then selects the correct
@@ -26,10 +26,13 @@ public class ButtonSelectionController
 	private int numButtons;
 	
 	/**
-	 * Constructor
-	 * 
 	 * Registers us with the PopVendingMachine's PushButtons to listen for
-	 *  pressed() events.
+	 * pressed() events.
+	 * 
+	 * @param inv 		A reference to the inventory controller
+	 * @param f 		A reference to the funds controller
+	 * @param butts 	An array of push buttons
+	 * @param numButts	The number of buttons on the machine
 	 */
 	public ButtonSelectionController(InventoryController inv, FundsController f, PushButton[] butts, int numButts)
 	{

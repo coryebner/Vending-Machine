@@ -2156,7 +2156,7 @@ public class BusinessTouchScreenTest {
 		inputField.requestFocusInWindow();
 		Thread.sleep(90);
 		touchScreen.OnKeyDown('\b');
-		Thread.sleep(40);
+		Thread.sleep(60);
 		assertEquals(input, '\b');
 	}
 

@@ -7,13 +7,15 @@ import javax.swing.Timer;
 
 import hardware.AbstractHardware;
 import hardware.AbstractHardwareListener;
+import hardware.funds.Banknote;
+import hardware.funds.BanknoteReceptacle;
+import hardware.funds.BanknoteReceptacleListener;
 import hardware.funds.Coin;
 import hardware.funds.CoinReceptacle;
 import hardware.funds.CoinReceptacleListener;
 import hardware.ui.Display;
-import business.selection_delivery.ButtonSelectionController;
 import business.selection_delivery.SelectionControllerListener;
-import business.funds.CoinsController;
+import business.funds.FundsController;
 
 /*
  * Promises:
@@ -27,37 +29,36 @@ import business.funds.CoinsController;
  */
 
 
-public class DisplayController implements SelectionControllerListener, CoinReceptacleListener{
+public class DisplayController implements SelectionControllerListener, CoinReceptacleListener, BanknoteReceptacleListener{
 
 	
 	Display display;
 	String currentMsg;
 	Timer eventTimer;
-	CoinsController coinsController;
+	FundsController funds;
 	/**
+	 * 
+	 * DisplayController must be registered to the following based on availability
+	 * 			-CoinReceptacle
+	 * 			-BankNotesReceptacle
+	 * 			-SelectionHandler
+	 * 
 	 * @param Display display
 	 *            - the main display on the vending machine
-	 * @param ButtonSelectionController selection
-	 *            - The button selection controller associated with the machine   
-	 * @param CoinsController coinsController
-	 *            - The coin controller associated with the machine  
-	 * @param CoinReceptacle receptacle
-	 *            - The coin receptacle in the vending machine
+	 * @param FundsController funds
+	 * 			  - the main FundsController associated with the vending machine
 	 */
-	public DisplayController(Display display, ButtonSelectionController selection,
-			CoinsController coinsController, CoinReceptacle receptacle) {
+	public DisplayController(Display display, FundsController funds) {
 		this.display = display;
-		this.coinsController = coinsController;
+		this.funds = funds;
 		eventTimer = new Timer(5000, listener);
 		
-		selection.register(this);
-		receptacle.register(this);
-		display(centsToString(this.coinsController.getAvailableBalance()));
+		display(centsToString(getTotalBalance()));
 	}
 	
 	ActionListener listener = new ActionListener(){
 		  public void actionPerformed(ActionEvent event){
-			  display(centsToString(coinsController.getAvailableBalance()));
+			  display(centsToString(getTotalBalance()));
 			 eventTimer.stop();
 		  }
 	};
@@ -95,12 +96,12 @@ public class DisplayController implements SelectionControllerListener, CoinRecep
 
 	@Override
 	public void coinAdded(CoinReceptacle receptacle, Coin coin) {
-		display(centsToString(this.coinsController.getAvailableBalance()));
+		display(centsToString(getTotalBalance()));
 	}
 
 	@Override
 	public void coinsRemoved(CoinReceptacle receptacle) {
-		display(centsToString(this.coinsController.getAvailableBalance()));
+		display(centsToString(getTotalBalance()));
 	}
 	
 	@Override
@@ -126,6 +127,18 @@ public class DisplayController implements SelectionControllerListener, CoinRecep
 	public void disabled(CoinReceptacle receptacle) {
 
 	}
+
+	private int getTotalBalance() {
+		int amount = 0;
+		if (funds.isBillsPresent()) {
+			amount += funds.getBankNoteController().getAvailableBalance();
+		}
+		if (funds.isCoinsPresent()) {
+			amount += funds.getCoinsController().getAvailableBalance();
+		}
+		return amount;
+	}
+	
 	private String centsToString(int cents){
 		String ret = "";
 		ret+= "$"+ cents/100+".";
@@ -136,5 +149,33 @@ public class DisplayController implements SelectionControllerListener, CoinRecep
 			ret+= cents%100;
 		}
 		return ret;
+	}
+
+	@Override
+	public void banknoteAdded(BanknoteReceptacle receptacle, Banknote banknote) {
+		display(centsToString(getTotalBalance()));
+	}
+
+	@Override
+	public void banknoteRemoved(BanknoteReceptacle receptacle) {
+		display(centsToString(getTotalBalance()));
+	}
+
+	@Override
+	public void banknoteFull(BanknoteReceptacle receptacle) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void enabled(BanknoteReceptacle receptacle) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void disabled(BanknoteReceptacle receptacle) {
+		// TODO Auto-generated method stub
+		
 	}
 }

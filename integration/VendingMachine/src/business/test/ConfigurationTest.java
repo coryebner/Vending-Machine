@@ -10,6 +10,7 @@ import org.jmock.lib.legacy.ClassImposteriser;
 
 import hardware.exceptions.NoSuchHardwareException;
 import hardware.racks.ProductRack;
+import hardware.racks.ProductRackListener;
 import hardware.ui.PushButton;
 import hardware.ui.PushButtonCodeInterpreter;
 
@@ -41,7 +42,8 @@ public class ConfigurationTest extends Configuration {
 						+ "coinracks 0 0 0 0 0\n"
 						+ "coinstorage 0 0 0 0 0\n"
 						+ "billracks 0 0 0 0 0\n"
-						+ "billstorage 0 0 0 0 0\n"));
+						+ "billstorage 0 0 0 0 0\n"
+						+ "locale CA\n"));
 
 		readConfigFile(input);
 
@@ -108,7 +110,8 @@ public class ConfigurationTest extends Configuration {
 						+ "coinracks 30 15 12 0 10\n"
 						+ "coinstorage 90 23 12 14 55\n"
 						+ "billracks 98 53 22 10 64\n"
-						+ "billstorage 2 5 19 21 3\n"));
+						+ "billstorage 2 5 19 21 3\n"
+						+ "locale CA\n"));
 
 		readConfigFile(input);
 
@@ -243,13 +246,13 @@ public class ConfigurationTest extends Configuration {
 			// Allows JMock to mock concrete classes, and not only interfaces
 		}};
 		final MockAbstractVendingMachine mockMachine = context.mock(MockAbstractVendingMachine.class);
-
+		ProductRack pr = new ProductRack(10);
 		// Setting up the expectations for the mock object.
 		try {
 			context.checking(new Expectations() {{
-				ProductRack pr = context.mock(ProductRack.class);
+				
 				oneOf(mockMachine).getProductRack(0); will(returnValue(pr));
-				oneOf(pr).getMaxCapacity(); will(returnValue(1));
+				
 				exactly(3).of(mockMachine).getNumberOfProductRacks(); will(returnValue(1));
 
 			}});

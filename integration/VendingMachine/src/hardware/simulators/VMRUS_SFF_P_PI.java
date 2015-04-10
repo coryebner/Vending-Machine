@@ -39,7 +39,7 @@ public class VMRUS_SFF_P_PI extends AbstractVendingMachine {
 	private DeliveryChute deliveryChute;
 	private CardSlot cardSlot;
 	private ProductRack[] productRacks;
-	private Display display;
+	private Display display, configPanelDisplay;
 	private PushButton[] selectionButtons;
 	private PushButton returnButton;
 	private IndicatorLight outOfOrderLight;
@@ -86,6 +86,7 @@ public class VMRUS_SFF_P_PI extends AbstractVendingMachine {
 			outOfProductLights[i] = new IndicatorLight();
 
 		display = new Display();
+		configPanelDisplay = new Display();
 		configurationPanelTransmitter = new ConfigurationPanelTransmitter();
 
 	}
@@ -108,6 +109,11 @@ public class VMRUS_SFF_P_PI extends AbstractVendingMachine {
 	@Override
 	public Display getDisplay() {
 		return display;
+	}
+	
+	@Override
+	public Display getConfigPanelDisplay() {
+		return configPanelDisplay;
 	}
 
 	@Override

@@ -335,4 +335,85 @@ public class FundsIntegrationTests {
 		}
 		assertEquals(TransactionReturnCode.INSUFFICIENTFUNDS, fundsController.ConductTransaction(0, 505));
 	}
+	
+	@Test
+	public void testCoinsBeforeBillsTransactionSufficient(){
+		context.checking(new Expectations(){
+			{
+			allowing(logger).log(with(any(Transaction.class)));
+			//atLeast(1).of(payPalController).ConductTransaction(5);
+			//will(returnValue(TransactionReturnCode.INSUFFICIENTFUNDS));
+			}
+		});
+		try {
+			banknoteSlot.addBanknote(new Banknote(500));
+			coinSlot.addCoin(new Coin(200));
+		} catch (DisabledException e) {
+			
+		}
+		TransactionReturnCode retCode = fundsController.ConductTransaction(0, 150);
+		assertEquals(TransactionReturnCode.SUCCESSFUL, retCode );
+		Object[] delChute = hw.getDeliveryChute().removeItems();
+		List<Banknote> bn = new ArrayList<Banknote>();
+		List<Coin> coins = new ArrayList<Coin>();
+		for(Object ob: delChute){
+			if(ob.getClass() == Coin.class){
+				coins.add((Coin) ob);
+			}
+			if(ob.getClass()==(Banknote.class)){
+				bn.add((Banknote) ob);
+			}
+		}
+		assertEquals(1,bn.size()); // ensure the BN has been returned
+		assertEquals(500,bn.get(0).getValue()); // ensure it was the BN we entered
+		int change = 0;
+		for(Coin c: coins){
+			change += c.getValue();
+		}
+		assertEquals(50,change);// make sure we got 50 cent change back
+		
+	}
+	
+	@Test
+	public void testPPBeforeCoinsAndBillsTransactionSufficient(){
+		context.checking(new Expectations(){
+			{
+			allowing(logger).log(with(any(Transaction.class)));
+			//atLeast(1).of(payPalController).ConductTransaction(5);
+			//will(returnValue(TransactionReturnCode.INSUFFICIENTFUNDS));
+			}
+		});
+		try {
+			cardSlot.insertCard(new Card(Card.CardType.PREPAID, "7373737373", "Defualt Prepaid" , "", "00/0000", Locale.CANADA, 50));
+		} catch (CardSlotNotEmptyException | DisabledException e) {
+			fail();
+		}
+		try {
+			banknoteSlot.addBanknote(new Banknote(500));
+			coinSlot.addCoin(new Coin(200));
+		} catch (DisabledException e) {
+			
+		}
+		TransactionReturnCode retCode = fundsController.ConductTransaction(0, 50);
+		assertEquals(TransactionReturnCode.SUCCESSFUL, retCode );
+		Object[] delChute = hw.getDeliveryChute().removeItems();
+		List<Banknote> bn = new ArrayList<Banknote>();
+		List<Coin> coins = new ArrayList<Coin>();
+		for(Object ob: delChute){
+			if(ob.getClass() == Coin.class){
+				coins.add((Coin) ob);
+			}
+			if(ob.getClass()==(Banknote.class)){
+				bn.add((Banknote) ob);
+			}
+		}
+		assertEquals(1,bn.size()); // ensure the BN has been returned
+		assertEquals(500,bn.get(0).getValue()); // ensure it was the BN we entered
+		int change = 0;
+		for(Coin c: coins){
+			change += c.getValue();
+		}
+		assertEquals(200,change);// make sure we got 50 cent change back
+		
+	}
 }

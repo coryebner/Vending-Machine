@@ -1,4 +1,4 @@
-package hardware.test;
+package hardware.test.simulators;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -19,7 +19,7 @@ import hardware.products.PopCan;
 import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
 import hardware.simulators.AbstractVendingMachine;
-import hardware.simulators.VMRUS_TOC_C_MI;
+import hardware.simulators.VMRUS_TOC_CP_I;
 import hardware.test.stub.BanknoteReceptacleListenerStub;
 import hardware.test.stub.BanknoteSlotListenerStub;
 import hardware.test.stub.CardSlotListenerStub;
@@ -36,10 +36,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class VMRUS_TOC_C_MITest {
+public class VMRUS_TOC_CP_ITest {
 
 	private final int NO_COINRACKS = 5;
-	private final int NO_PRODUCTRACKS = 24;
+	private final int NO_PRODUCTRACKS = 48;
 
 	private AbstractVendingMachine hardware;
 	private Coin coin;
@@ -62,7 +62,7 @@ public class VMRUS_TOC_C_MITest {
 	@Before
 	public void setup() throws NoSuchHardwareException {
 
-		hardware = new VMRUS_TOC_C_MI(Locale.CANADA, new int[] { 5, 10, 25, 100,
+		hardware = new VMRUS_TOC_CP_I(Locale.CANADA, new int[] { 5, 10, 25, 100,
 				200 }, new int[] {5, 10, 20, 50, 100});
 
 		coin = new Coin(100);
@@ -153,13 +153,13 @@ public class VMRUS_TOC_C_MITest {
 	@Test(expected = SimulationException.class)
 	public void testNullCoinValues() {
 		
-		 hardware = new VMRUS_TOC_C_MI(Locale.CANADA, null, new int[]{5,10,20,50,100});
+		 hardware = new VMRUS_TOC_CP_I(Locale.CANADA, null, new int[]{5,10,20,50,100});
 	}
 	
 	@Test(expected = SimulationException.class)
 	public void testNullBanknoteValues() {
 		
-		 hardware = new VMRUS_TOC_C_MI(Locale.CANADA, new int[]{5,10,25,100,200}, null);
+		 hardware = new VMRUS_TOC_CP_I(Locale.CANADA, new int[]{5,10,25,100,200}, null);
 	}
 
 	@Test
@@ -465,14 +465,7 @@ public class VMRUS_TOC_C_MITest {
 		deliveryChuteListener.assertProtocol();
 		chuteContents = hardware.getDeliveryChute().removeItems();
 		
-		// TODO: Verify with Luigi - changed April 4, 2015 - wwright
-		// Changed anticipated length to 5 rather than 1
-		// hardware.getNumberOfCoinRacks() yields 5
-		// chuterContents.length yields 5
-		// original: assertTrue(cuteContents.length == 1)
-		
 		assertTrue(chuteContents.length == 5);
-		System.out.println(chuteContents[0].getClass());
 		 assertTrue(chuteContents[0].getClass() == Coin.class);
 	}
 
