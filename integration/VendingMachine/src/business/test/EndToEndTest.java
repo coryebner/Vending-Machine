@@ -87,4 +87,22 @@ public class EndToEndTest {
 		
 		assertEquals(message, n, count);
 	}
+	
+	/**@author M. Diaz
+	 * Method to check that the prepaid card has precendence when coins are present
+	 * at the moment of a pop purchase.
+	 * */
+	protected void testCheckPrepaidCardFirstOrderPrecedence() throws Exception {
+		machine.getCardSlot().insertCard(new Card(CardType.PREPAID,
+				  "12345678",
+				  "Ruby",
+				  "0000",
+				  "12/2019",
+				  Locale.CANADA,
+				  200));
+		machine.getCoinSlot().addCoin(new Coin(100));
+		machine.getSelectionButton(0).press();
+		assertEquals("Balance should still be 100 for coins",100,config.getFunds().getCoinsController().getAvailableBalance());
+		
+	}
 }
