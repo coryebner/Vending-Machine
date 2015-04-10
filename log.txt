@@ -37,3 +37,16 @@ Transaction,null,72,1,coins,true,2015-04-09 21:23:03.19,null
 Transaction,null,96,1,coins,true,2015-04-09 21:23:03.265,null
 Transaction,null,144,1,credit_cards,true,2015-04-09 21:23:05.716,null
 Transaction,null,168,1,coins,true,2015-04-09 21:23:05.787,null
+Problem,null,out_of_order,2015-04-09 23:18:54.482
+Transaction,null,24,1,coins,true,2015-04-09 23:18:54.557,null
+Transaction,null,48,1,coins,true,2015-04-09 23:18:54.631,null
+Transaction,null,72,1,coins,true,2015-04-09 23:18:54.728,null
+Transaction,null,96,1,coins,true,2015-04-09 23:18:54.798,null
+Transaction,null,144,1,credit_cards,true,2015-04-09 23:18:56.979,null
+Transaction,null,168,1,coins,true,2015-04-09 23:18:57.046,null
+Problem,null,out_of_order,2015-04-09 23:19:07.947
+Transaction,null,24,1,coins,true,2015-04-09 23:19:08.026,null
+Transaction,null,48,1,coins,true,2015-04-09 23:19:08.094,null
+Transaction,null,72,1,coins,true,2015-04-09 23:19:08.184,null
+Transaction,null,120,1,credit_cards,true,2015-04-09 23:19:10.363,null
+Transaction,null,144,1,coins,true,2015-04-09 23:19:10.43,null
