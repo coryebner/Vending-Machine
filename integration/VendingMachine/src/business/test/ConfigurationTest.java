@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;
-import org.jmock.integration.junit4.JUnit4Mockery;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.jmock.lib.legacy.ClassImposteriser;
 
 import hardware.exceptions.NoSuchHardwareException;
@@ -19,14 +19,12 @@ import java.io.File;
 import java.io.StringReader;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import business.config.Configuration;
 import business.config.ConfigurationException;
-import business.selection_delivery.ButtonSelectionController;
 import business.selection_delivery.InventoryController;
 import business.notifications.DisplayController;
 import business.funds.FundsController;
@@ -146,6 +144,12 @@ public class ConfigurationTest extends Configuration {
 
 		/**Create a  MockAbstractVendingMachine*/ 
 		Mockery context = new Mockery(){{
+			/* 
+			 * ThreadPolicy is an object used to track the state,
+			 * Synchronization here, permits multiple threads
+			 * to invoke mocked object methods, etc.
+			 */
+		    setThreadingPolicy(new Synchroniser());
 			setImposteriser(ClassImposteriser.INSTANCE); 
 			// Alows JMock to mock concrete classes, and not only interfaces
 		}};
@@ -199,6 +203,12 @@ public class ConfigurationTest extends Configuration {
 		int offset = 2;
 		/**Create a  MockAbstractVendingMachine*/ 
 		Mockery context = new Mockery(){{
+			/* 
+			 * ThreadPolicy is an object used to track the state,
+			 * Synchronization here, permits multiple threads
+			 * to invoke mocked object methods, etc.
+			 */
+		    setThreadingPolicy(new Synchroniser());
 			setImposteriser(ClassImposteriser.INSTANCE); 
 			// Allows JMock to mock concrete classes, and not only interfaces
 		}};

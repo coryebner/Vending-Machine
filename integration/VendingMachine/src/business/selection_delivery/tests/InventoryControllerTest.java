@@ -47,11 +47,8 @@ public class InventoryControllerTest {
 	@Test
 	public void testInventoryManager() {
 		InventoryController defaultconstructormanager = new InventoryController();
-
-		if(defaultconstructormanager == null)
-			assertTrue(false);
-		else
-			assertTrue(true);
+		
+		assertNotNull("Instantionation of InventoryController should not return a null object", defaultconstructormanager);
 	}
 
 	@Test

@@ -3,13 +3,10 @@ package gui.test;
 import static org.junit.Assert.*;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Locale;
 
 import gui.*;
-import hardware.*;
 import hardware.exceptions.*;
 import hardware.simulators.*;
 
@@ -43,8 +40,8 @@ public class POPGUITest {
 			}
 		}
 		Configuration config = new Configuration();
-		machine = new VMRUS_COM_P_M(Locale.CANADA,coinValue,billValue);
-		window = new StandardMachineGUI (machine, config,parts);
+		machine = config.load("VMRUS-COM-P/M", "instant");
+		window = new StandardMachineGUI (machine, config, parts);
 		window.getMainFrame().setVisible(true);
 	}
 

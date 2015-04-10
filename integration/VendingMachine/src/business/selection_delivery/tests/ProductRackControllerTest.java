@@ -12,8 +12,6 @@ import org.junit.Test;
 
 import hardware.racks.*;
 import SDK.logger.Logger;
-import SDK.rifffish.Machine;
-import SDK.rifffish.Rifffish;
 import business.selection_delivery.ProductRackController;
 
 public class ProductRackControllerTest {

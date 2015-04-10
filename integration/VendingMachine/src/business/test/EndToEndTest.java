@@ -22,6 +22,7 @@ public class EndToEndTest {
 	protected AbstractVendingMachine machine;
 	protected Configuration config;
 	
+	//Blatant Hack, I'm over it. --Taylor
 	private int getCoinValueFromIndex(int index) throws Exception{
 		if (index == 0) return 5;
 		else if (index == 1) return 10;
