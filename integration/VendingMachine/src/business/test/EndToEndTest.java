@@ -305,6 +305,17 @@ public class EndToEndTest {
 		assertItemTypesReturned(items, Product.class, 1, "Typing a code should dispense a product");
 	}
 	
+	protected void testEnterInvalidCode() throws Exception
+	{
+		machine.getCoinSlot().addCoin(new Coin(100));
+		machine.getSelectionButton(0).press();
+		machine.getSelectionButton(0).press();
+		
+		Object [] items = machine.getDeliveryChute().removeItems();
+		
+		assertItemTypesReturned(items, Product.class, 0, "Typing the wrong code should not dispense product");
+	}
+	
 	
 	/**@author Liam Mitchell
 	 * 
@@ -314,6 +325,11 @@ public class EndToEndTest {
 	{
 	    private StringBuilder sb;
 
+	    public DisplayLogger()
+	    {
+	    	sb = new StringBuilder();
+	    }
+	    
 	    public String toString()
 	    {
 	    	if(sb!=null){

@@ -21,4 +21,9 @@ public class EndToEndTest_COMCM extends EndToEndTest {
 	public void testPurchaseProductCoinCode() throws Exception {
 		super.testPurchaseProductCoinCode();
 	}
+	
+	@Test
+	public void testEnterInvalidCode() throws Exception {
+		super.testEnterInvalidCode();
+	}
 }

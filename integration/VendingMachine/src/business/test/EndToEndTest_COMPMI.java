@@ -25,9 +25,7 @@ public class EndToEndTest_COMPMI extends EndToEndTest {
 	
 	@Test
 	public void testPurchaseCoins() throws Exception {
-
-			super.testPurchaseProductCoin();
-
+		super.testPurchaseProductCoin();
 	}
 	
 	@Test
@@ -57,7 +55,6 @@ public class EndToEndTest_COMPMI extends EndToEndTest {
 	
 	@Test
 	public void testCoinsPrecedenceOverBanknotes() throws Exception {
-		
 		super.testCheckCoinsPrecedenceOverBanknotes();
 	}
 	
