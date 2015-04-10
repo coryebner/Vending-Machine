@@ -140,7 +140,7 @@ public class ConfigurationTest extends Configuration {
 	/**Test for createButtonSelectionController
 	 * */
 	@Test
-	public void testCreateButtonSelectionController(){
+	public void testCreateButtonSelectionController() throws Exception {
 
 		/**Create a  MockAbstractVendingMachine*/ 
 		Mockery context = new Mockery(){{
