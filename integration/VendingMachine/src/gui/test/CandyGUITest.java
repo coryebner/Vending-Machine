@@ -49,7 +49,7 @@ public class CandyGUITest {
 		}
 		
 		Configuration config = new Configuration();
-		machine = new VMRUS_COM_C_MI(Locale.CANADA,coinValue, billValue);
+		machine = config.load(config.TOCCMI,"offline");
 		window = new StandardMachineGUI (machine,config, parts);
 		window.getMainFrame().setVisible(true);
 	}
@@ -139,6 +139,10 @@ public class CandyGUITest {
 	@Test
 	public void SelectionButton_ATest(){
 		window.resetButtonPressedStatus();
+
+		window.getbillButtons(2).doClick(); //Insert money
+
+
 		window.getPopBtn(0).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
@@ -146,6 +150,9 @@ public class CandyGUITest {
 	@Test
 	public void SelectionButton_BTest(){
 		window.resetButtonPressedStatus();
+
+		window.getbillButtons(2).doClick(); //Insert money
+
 		window.getPopBtn(1).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
@@ -153,6 +160,9 @@ public class CandyGUITest {
 	@Test
 	public void SelectionButton_CTest(){
 		window.resetButtonPressedStatus();
+
+		window.getbillButtons(2).doClick(); //Insert money
+
 		window.getPopBtn(2).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
@@ -160,6 +170,9 @@ public class CandyGUITest {
 	@Test
 	public void SelectionButton_DTest(){
 		window.resetButtonPressedStatus();
+
+		window.getbillButtons(2).doClick(); //Insert money
+
 		window.getPopBtn(3).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
@@ -167,6 +180,9 @@ public class CandyGUITest {
 	@Test
 	public void SelectionButton_ETest(){
 		window.resetButtonPressedStatus();
+
+		window.getbillButtons(2).doClick(); //Insert money
+
 		window.getPopBtn(4).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
@@ -174,6 +190,9 @@ public class CandyGUITest {
 	@Test
 	public void SelectionButton_FTest(){
 		window.resetButtonPressedStatus();
+
+		window.getbillButtons(2).doClick(); //Insert money
+
 		window.getPopBtn(5).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
@@ -181,6 +200,9 @@ public class CandyGUITest {
 	@Test
 	public void SelectionButton1Test(){
 		window.resetButtonPressedStatus();
+
+		window.getbillButtons(2).doClick(); //Insert money
+
 		window.getNumButtons(1).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
@@ -188,6 +210,9 @@ public class CandyGUITest {
 	@Test
 	public void SelectionButton2Test(){
 		window.resetButtonPressedStatus();
+
+		window.getbillButtons(2).doClick(); //Insert money
+
 		window.getPopBtn(2).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
@@ -195,6 +220,9 @@ public class CandyGUITest {
 	@Test
 	public void SelectionButton3Test(){
 		window.resetButtonPressedStatus();
+
+		window.getbillButtons(2).doClick(); //Insert money
+
 		window.getNumButtons(3).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
@@ -202,6 +230,9 @@ public class CandyGUITest {
 	@Test
 	public void SelectionButton4Test(){
 		window.resetButtonPressedStatus();
+
+		window.getbillButtons(2).doClick(); //Insert money
+
 		window.getNumButtons(4).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
@@ -209,6 +240,9 @@ public class CandyGUITest {
 	@Test
 	public void SelectionButton5Test(){
 		window.resetButtonPressedStatus();
+
+		window.getbillButtons(2).doClick(); //Insert money
+
 		window.getNumButtons(5).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
@@ -216,12 +250,18 @@ public class CandyGUITest {
 	@Test
 	public void SelectionButton6Test(){
 		window.resetButtonPressedStatus();
+
+		window.getbillButtons(2).doClick(); //Insert money
+
 		window.getNumButtons(6).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
 	@Test
 	public void SelectionButton7Test(){
 		window.resetButtonPressedStatus();
+
+		window.getbillButtons(2).doClick(); //Insert money
+
 		window.getNumButtons(7).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
@@ -229,6 +269,9 @@ public class CandyGUITest {
 	@Test
 	public void SelectionButton8Test(){
 		window.resetButtonPressedStatus();
+
+		window.getbillButtons(2).doClick(); //Insert money
+
 		window.getNumButtons(8).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
@@ -236,6 +279,9 @@ public class CandyGUITest {
 	@Test
 	public void SelectionButton9Test(){
 		window.resetButtonPressedStatus();
+
+		window.getbillButtons(2).doClick(); //Insert money
+
 		window.getNumButtons(9).doClick();
 		assertTrue(window.getButtonPressStatus());				
 	}
@@ -250,6 +296,9 @@ public class CandyGUITest {
 	@Test
 	public void ReturnButtonTest(){
 		window.resetButtonPressedStatus();
+
+		window.getbillButtons(2).doClick(); //Insert money
+
 		window.getReturnButton().doClick();
 		assertTrue(window.getButtonPressStatus());
 	}
