@@ -3,13 +3,10 @@ package gui.test;
 import static org.junit.Assert.*;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Locale;
 
 import gui.*;
-import hardware.*;
 import hardware.exceptions.*;
 import hardware.simulators.*;
 

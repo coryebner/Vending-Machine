@@ -10,6 +10,8 @@ import hardware.funds.Card.CardType;
 import hardware.products.Product;
 import hardware.racks.ProductRack;
 import hardware.racks.ProductRackListener;
+import hardware.simulators.AbstractVendingMachine;
+import hardware.simulators.VMRUS_SFF_P_C;
 import hardware.ui.IndicatorLight;
 import hardware.ui.IndicatorLightListener;
 
@@ -30,11 +32,7 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 
 import java.awt.ComponentOrientation;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 
 import java.awt.Color;
@@ -42,26 +40,15 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
-import javax.swing.border.BevelBorder;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JTextPane;
-import javax.swing.JList;
 
 import hardware.*;
-import hardware.exceptions.*;
-import hardware.funds.*;
-import hardware.funds.Card.*;
-import hardware.products.Product;
-import hardware.racks.*;
-import hardware.simulators.*;
-import hardware.ui.*;
-import gui.test.*;
 
 
 /**
@@ -150,6 +137,7 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
 	/**
 	 * Create the application.
 	 */
+	@SuppressWarnings("unused")
 	public StandardTouchMachineGUI() {
 		int []coinvalue = { 5, 10, 25, 100, 200 };
 		int []banknote = {500,1000,2000};
@@ -187,13 +175,13 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
 	 */
 	private void initialize(final AbstractVendingMachine machine, boolean coinSlot, boolean billSlot, boolean cardSlot, boolean internetLight, boolean popBtns, boolean candyBtns) {
 		this.machine = machine;
-		coinButtons = new ArrayList();
-		billButtons = new ArrayList();
-		cardButtons = new ArrayList();
-		outOfProductLabels = new ArrayList();
-		popButtons = new ArrayList();
-		candyLetterButtons = new ArrayList();
-		candyNumberButtons = new ArrayList();
+		coinButtons = new ArrayList<JButton>();
+		billButtons = new ArrayList<JButton>();
+		cardButtons = new ArrayList<JButton>();
+		outOfProductLabels = new ArrayList<JLabel>();
+		popButtons = new ArrayList<JButton>();
+		candyLetterButtons = new ArrayList<JButton>();
+		candyNumberButtons = new ArrayList<JButton>();
 		
 		hasCoinSlot = coinSlot;
 		hasBillSlot = billSlot;
@@ -606,9 +594,9 @@ public class StandardTouchMachineGUI extends VendingMachineGUI implements Produc
 		pnlBillBtns.removeAll();
 		pnlCardBtns.removeAll();
 
-		coinButtons = new ArrayList();
-		billButtons = new ArrayList();
-		cardButtons = new ArrayList();
+		coinButtons = new ArrayList<JButton>();
+		billButtons = new ArrayList<JButton>();
+		cardButtons = new ArrayList<JButton>();
 	}
 
 	/**

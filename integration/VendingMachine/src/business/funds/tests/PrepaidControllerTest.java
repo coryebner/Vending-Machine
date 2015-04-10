@@ -38,7 +38,7 @@ public class PrepaidControllerTest {
 	VMRUS_COM_C_M hw;
 	AbstractHardware<AbstractHardwareListener> abstractHW;
 
-	class abHardwareStub extends AbstractHardware {
+	class abHardwareStub extends AbstractHardware<AbstractHardwareListener> {
 		
 	}
 	

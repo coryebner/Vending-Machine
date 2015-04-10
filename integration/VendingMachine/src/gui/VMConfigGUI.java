@@ -5,7 +5,6 @@ package gui;
 
 import hardware.simulators.AbstractVendingMachine;
 
-import java.awt.Container;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
