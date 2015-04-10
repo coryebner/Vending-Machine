@@ -115,7 +115,7 @@ public class SelectConfigFileGUI {
 					ArrayList<Boolean> parts = null;
 					parts = config.parts();
 
-					VendingMachineGUI window = new StandardMachineGUI(machine,parts);
+					VendingMachineGUI window = new StandardMachineGUI(machine, config, parts);
 					window.getMainFrame().setVisible(true);
 					frame.setVisible(false);
 				}

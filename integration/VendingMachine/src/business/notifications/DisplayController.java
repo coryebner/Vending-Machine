@@ -129,7 +129,14 @@ public class DisplayController implements SelectionControllerListener, CoinRecep
 	}
 
 	private int getTotalBalance() {
-		return funds.getBankNoteController().getAvailableBalance() + funds.getCoinsController().getAvailableBalance();
+		int amount = 0;
+		if (funds.isBillsPresent()) {
+			amount += funds.getBankNoteController().getAvailableBalance();
+		}
+		if (funds.isCoinsPresent()) {
+			amount += funds.getCoinsController().getAvailableBalance();
+		}
+		return amount;
 	}
 	
 	private String centsToString(int cents){

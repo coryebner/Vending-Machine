@@ -18,6 +18,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
+import business.config.Configuration;
+
 
 public class POPGUITest {
 
@@ -40,8 +42,9 @@ public class POPGUITest {
 				parts.add(true);
 			}
 		}
+		Configuration config = new Configuration();
 		machine = new VMRUS_COM_P_M(Locale.CANADA,coinValue,billValue);
-		window = new StandardMachineGUI (machine,parts);
+		window = new StandardMachineGUI (machine, config,parts);
 		window.getMainFrame().setVisible(true);
 	}
 

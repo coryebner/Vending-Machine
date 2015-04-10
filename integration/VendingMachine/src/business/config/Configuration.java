@@ -22,10 +22,13 @@ import SDK.logger.Logger;
 import SDK.rifffish.Machine;
 import SDK.rifffish.Rifffish;
 import business.funds.CoinRackController;
+import business.funds.CoinStorageBinController;
 import business.funds.CoinsController;
 import business.funds.FundsController;
 import business.funds.PaymentMethods;
 import business.notifications.DisplayController;
+import business.notifications.OutOfOrderLightController;
+import business.notifications.OutOfProductLightController;
 import business.selection_delivery.ButtonSelectionController;
 import business.selection_delivery.CodeSelectionController;
 import business.selection_delivery.InventoryController;
@@ -51,6 +54,7 @@ import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
 import hardware.ui.ConfigurationPanelTransmitter;
 import hardware.ui.ConfigurationPanelTransmitterListener;
+import hardware.ui.IndicatorLight;
 import hardware.ui.PushButton;
 import hardware.ui.PushButtonCodeInterpreter;
 
@@ -208,6 +212,11 @@ public class Configuration {
 		// Read all the data we need from machine, funds and inventory
 		BufferedWriter output = new BufferedWriter(new FileWriter(config));
 		writeConfigFile(output);
+	}
+	
+	public String getType()
+	{
+		return type;
 	}
 
 	/**
@@ -750,8 +759,23 @@ public class Configuration {
 				m.getCoinReceptacle().register(display);
 			}
 			if (funds.isBillsPresent()) {
-				//m.getBanknoteReceptacle().register(display);
+				m.getBanknoteReceptacle().register(display);
 			}
+			
+			ProductRack [] racks = new ProductRack[m.getNumberOfProductRacks()];
+			IndicatorLight [] productlights = new IndicatorLight[m.getNumberOfOutOfProductLights()];
+			
+			for (int i = 0; i < racks.length; ++i) {
+				racks[i] = m.getProductRack(i);
+			}
+			
+			for (int i = 0; i < productlights.length; ++i) {
+				productlights[i] = m.getOutOfProductLight(i);
+			}
+			
+			new OutOfOrderLightController(m.getOutOfOrderLight(), m.getCoinStorageBin(),
+										  funds.getCoinStorageBinTracker(), logger);
+			new OutOfProductLightController(productlights, racks, inventoryController);
 		}
 		catch (NoSuchHardwareException e) {
 			throw new ConfigurationException("Unable to find hardware necessary for display controller");

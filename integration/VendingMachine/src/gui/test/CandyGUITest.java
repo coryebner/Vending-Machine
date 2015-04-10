@@ -17,6 +17,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
+import business.config.Configuration;
+
 
 /*
  * Counldn't find the candy vending machine hardware.
@@ -46,8 +48,9 @@ public class CandyGUITest {
 			}
 		}
 		
+		Configuration config = new Configuration();
 		machine = new VMRUS_COM_C_MI(Locale.CANADA,coinValue, billValue);
-		window = new StandardMachineGUI (machine,parts);
+		window = new StandardMachineGUI (machine,config, parts);
 		window.getMainFrame().setVisible(true);
 	}
 

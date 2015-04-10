@@ -40,10 +40,16 @@ import javax.swing.border.BevelBorder;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JTextPane;
 import javax.swing.JList;
 
+import business.config.Configuration;
+import business.config.ConfigurationException;
+import business.config.ConfigurationListener;
 import hardware.*;
 import hardware.exceptions.*;
 import hardware.funds.*;
@@ -53,12 +59,6 @@ import hardware.racks.*;
 import hardware.simulators.*;
 import hardware.ui.*;
 import gui.test.*;
-
-// TODO need to have a SHUT DOWN button for the GUI 
-// SHUT DOWN button should stores the current state of the machine to a config File
-// and close the GUI
-
-//" For eclipse, use hot key "control + /" can quickly comment out and uncomment lines
 
 /**
  * Initial setup will involve being passed an abstract vending machine as well
@@ -73,7 +73,7 @@ import gui.test.*;
 
 public class StandardMachineGUI extends VendingMachineGUI implements
 		ProductRackListener, IndicatorLightListener, DisplayListener,
-		DeliveryChuteListener {
+		DeliveryChuteListener, ConfigurationListener {
 
 	// AP : This image is just a placeholder, config will give us resources (?)
 	ImageIcon coke = createImageIcon("img/coca_cola.png", "Coke Logo");
@@ -81,6 +81,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 	// unicode for the euro symbol
 	private final String EURO = "\u20ac";
 	private AbstractVendingMachine machine;
+	private Configuration config;
 	private static final String[] ALPHABET = { "A", "B", "C", "D", "E", "F",
 			"G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
 			"T", "U", "V", "W", "X", "Y", "Z" };
@@ -200,15 +201,13 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 
 	}
 
-	public StandardMachineGUI(AbstractVendingMachine machine,
+	public StandardMachineGUI(AbstractVendingMachine machine, Configuration config,
 			ArrayList<Boolean> parts) {
-		if(machine != null){
-			initialize(machine, parts.get(0), parts.get(1), parts.get(2),
+		this.config = config;
+		initialize(machine, parts.get(0), parts.get(1), parts.get(2),
 				parts.get(3), parts.get(4), parts.get(5), parts.get(6),
 				parts.get(7));
-		}else{
-			System.out.println("No vending machine is being passed to the GUI.\n Program terminated.");
-		}
+
 	}
 
 	/**
@@ -312,18 +311,27 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		});
 		pnlMisc.add(takeProducts);
 
-		lblExactChange = new JLabel("ExactChange");
-		lblExactChange.setBackground(Color.LIGHT_GRAY);
-		lblExactChange.setForeground(Color.LIGHT_GRAY);
-		lblExactChange.setOpaque(true);
-		pnlMisc.add(lblExactChange);
-
-		lblOutOfOrder = new JLabel("Out of Order");
-		lblOutOfOrder.setOpaque(true);
-		lblOutOfOrder.setForeground(Color.LIGHT_GRAY);
-		lblOutOfOrder.setBackground(Color.LIGHT_GRAY);
-		pnlMisc.add(lblOutOfOrder);
-
+		try {
+			if(machine.getExactChangeLight() != null ){
+				lblExactChange = new JLabel("ExactChange");
+				lblExactChange.setBackground(Color.LIGHT_GRAY);
+				lblExactChange.setForeground(Color.LIGHT_GRAY);
+				lblExactChange.setOpaque(true);
+				pnlMisc.add(lblExactChange);
+			}
+		
+			if(machine.getOutOfOrderLight() != null){
+				lblOutOfOrder = new JLabel("Out of Order");
+				lblOutOfOrder.setOpaque(true);
+				lblOutOfOrder.setForeground(Color.LIGHT_GRAY);
+				lblOutOfOrder.setBackground(Color.LIGHT_GRAY);
+				pnlMisc.add(lblOutOfOrder);
+			}
+		} catch (NoSuchHardwareException e3) {
+			e3.printStackTrace();
+		}
+		
+		
 		lblInternetLight = new JLabel("InternetLight");
 		lblInternetLight.setOpaque(true);
 		lblInternetLight.setForeground(Color.LIGHT_GRAY);
@@ -345,9 +353,12 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		JButton btnShutDown = new JButton("Shut down");
 		btnShutDown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO: save machine state to config file
-				
-				
+				try {
+					config.save(new File("configfiles/MachineState.txt"));
+				} catch (IOException | ConfigurationException e1) {
+					e1.printStackTrace();
+				}
+				mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
 			}
 		});
 		pnlMisc.add(btnShutDown);
@@ -362,7 +373,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		pnlPopButtons.setLayout(new GridLayout(0, 2, 2, 2));
 		popScroller.setViewportView(pnlPopButtons);
 		popScroller.setMaximumSize(new Dimension(100, 500));
-		popScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		popScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
 //		old verison without scroller
 //		pnlPopButtons = new JPanel();
@@ -451,7 +462,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 			key++;
 		}
 
-		machine1Setup();
+		machineSetup();
 
 		JPanel pnlMoney = new JPanel();
 		pnlMoney.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -526,9 +537,6 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 		btnAdmin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VirtualKeyboard vk = new VirtualKeyboard(getMainFrame());
-
-				// ControlPanelGUI configPanel = new ControlPanelGUI(
-				// getMainFrame());
 			}
 		});
 		pnlAdminBtn.add(btnAdmin);
@@ -556,12 +564,11 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 			machine.getDisplay().register(this);
 			machine.getDeliveryChute().register(this);
 			if(hasInternetLight){
-				// TODO register the GUI to listen to the Internet light
-				
+				machine.getNoInternetConnectionLight().register(this);
 			}
-
-			// TODO need to register the GUI to the software
-
+			
+			// Register the GUI to listen to the name change event from configuration
+			config.registerConfigListener(this);
 			if (popBtns == true) {
 				for (int i = 0; i < machine.getNumberOfProductRacks(); i++) {
 					machine.getProductRack(i).register(this);
@@ -825,36 +832,20 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 
 	/**
 	 * Should load the required components for the first machine's setup Not
-	 * currently correct Will not be used for actual program TODO remove when
-	 * functionality complete
+	 * currently correct Will not be used for actual program 
 	 */
-	public void machine1Setup() {
+	public void machineSetup() {
 		ArrayList<String> names = new ArrayList();
 
-		// names.add("Coke");
-		// names.add("Diet Coke");
-		// names.add("Coke Zero");
-		// names.add("Sprite");
-		// names.add("Root Beer");
-		// names.add("Water");
-
-//		try {
-//			for (int i = 0; i < machine.getNumberOfProductRacks(); i++) {
-//				names.add("Pop " + i);
-//			}
-//		} catch (NoSuchHardwareException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		for (int i = 0; i < 50; i++) {
-//			names.add("Pop " + i);
-//		}
-
-		
-		for (int i = 0; i < 50; i++) {
-			names.add("Pop " + i);
+		try {
+			for (int i = 0; i < machine.getNumberOfProductRacks(); i++) {
+				names.add("Pop " + i);
+				// getName() is deprecated
+//				names.add(machine.getProductRack(i).getName());
+			}
+		} catch (NoSuchHardwareException e) {
+			e.printStackTrace();
 		}
-
 		
 		createPopButtons(names);
 		reloadPopButtons();
@@ -1078,13 +1069,13 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 
 	@Override
 	public void enabled(AbstractHardware<AbstractHardwareListener> hardware) {
-		// TODO Auto-generated method stub
+		// Nothing needs to be done
 
 	}
 
 	@Override
 	public void disabled(AbstractHardware<AbstractHardwareListener> hardware) {
-		// TODO Auto-generated method stub
+		// Nothing needs to be done
 
 	}
 
@@ -1178,19 +1169,19 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 
 	@Override
 	public void doorOpened(DeliveryChute chute) {
-		// TODO Auto-generated method stub
+		// Nothing needs to be done
 
 	}
 
 	@Override
 	public void doorClosed(DeliveryChute chute) {
-		// TODO Auto-generated method stub
+		// Nothing needs to be done
 
 	}
 
 	@Override
 	public void chuteFull(DeliveryChute chute) {
-		// TODO Auto-generated method stub
+		// Nothing needs to be done
 
 	}
 	private String centsToString(int cents){
@@ -1203,5 +1194,15 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 			ret+= cents%100;
 		}
 		return ret;
+	}
+
+	@Override
+	public void priceChanged(int index, int newPrice) {
+		// Nothing needs to be done
+	}
+
+	@Override
+	public void nameChanged(int index, String newName) {
+		popButtons.get(index).setName(newName);
 	}
 }
