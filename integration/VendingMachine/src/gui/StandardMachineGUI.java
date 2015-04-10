@@ -551,12 +551,16 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 			}
 		});
 
+		try {
+			machine.getExactChangeLight().register(this);
+		} catch (NoSuchHardwareException e1) {
+			//continue
+		}
 		// Registering GUI to listen to parts of the vending machine
 		try {
 			// Added type cast to the machine because the class type of the
 			// machine is Object
 			machine.getOutOfOrderLight().register(this);
-			machine.getExactChangeLight().register(this);
 			machine.getDisplay().register(this);
 			machine.getDeliveryChute().register(this);
 			if(hasInternetLight){
