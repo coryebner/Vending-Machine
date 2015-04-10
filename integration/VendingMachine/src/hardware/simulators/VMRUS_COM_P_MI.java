@@ -3,7 +3,6 @@ package hardware.simulators;
 import hardware.channels.BanknoteChannel;
 import hardware.channels.CoinChannel;
 import hardware.channels.ProductChannel;
-import hardware.exceptions.NoSuchHardwareException;
 import hardware.exceptions.SimulationException;
 import hardware.funds.*;
 import hardware.racks.CoinRack;
