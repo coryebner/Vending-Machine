@@ -95,8 +95,8 @@ public class PushButtonCodeInterpreter extends AbstractHardware<PushButtonCodeIn
 
     private void notifyCodeEntered() {
 	Class<?>[] parameterTypes = new Class<?>[] {String.class, PushButtonCodeInterpreter.class};
-	Object[] args = new Object[] {this};
-	notifyListeners(PushButtonCodeInterpreterListener.class, "pressed", parameterTypes, args);
+	Object[] args = new Object[] {sb.toString(), this};
+	notifyListeners(PushButtonCodeInterpreterListener.class, "codeEntered", parameterTypes, args);
     }
 
 }
