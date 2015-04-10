@@ -8,7 +8,6 @@ import java.util.Map;
 import hardware.channels.CoinChannel;
 import hardware.exceptions.CapacityExceededException;
 import hardware.exceptions.DisabledException;
-import hardware.exceptions.EmptyException;
 import hardware.funds.Coin;
 import hardware.funds.CoinReceptacle;
 import hardware.racks.CoinRack;
