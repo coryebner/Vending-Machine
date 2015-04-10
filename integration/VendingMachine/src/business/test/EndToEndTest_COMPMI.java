@@ -80,4 +80,19 @@ public class EndToEndTest_COMPMI extends EndToEndTest {
 	public void testOutOfProductEmpty() throws Exception {
 		super.testOutOfProductEmpty();
 	}
+	
+	@Test
+	public void testDisplayChangesProductEmpty() throws Exception {
+		super.testDisplayChangesProductEmpty();
+	}
+	
+	@Test
+	public void testDisplayChangesInsufficientFunds() throws Exception {
+		super.testDisplayChangesInsufficientFunds();
+	}
+	
+	@Test
+	public void testOutOfOrderLightCoinsFull() throws Exception {
+		super.testOutOfOrderLight();
+	}
 }
