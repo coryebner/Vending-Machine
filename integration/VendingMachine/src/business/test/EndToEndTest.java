@@ -228,7 +228,7 @@ public class EndToEndTest {
 	
 	/**@author M. Diaz
 	 * Method to check notification light product empty is on when a product is empty
-	 * TODO fails, I don't know why. YOLO
+	 * 
 	 * */
 	protected void testOutOfProductEmpty() throws Exception {
 		
