@@ -1,1 +1,8 @@
 Stockout,1,out_of_stock,2015-04-10 07:21:14.321
+Transaction,null,3,1,credit_cards,true,2015-04-09 18:12:04.409,null
+Transaction,null,3,1,credit_cards,true,2015-04-09 18:13:30.999,null
+Transaction,null,1,1,credit_cards,true,2015-04-09 18:13:51.532,null
+Transaction,null,0,1,credit_cards,true,2015-04-09 18:15:06.66,null
+Transaction,null,2,1,credit_cards,true,2015-04-09 18:15:24.834,null
+Transaction,null,2,1,coins,true,2015-04-09 18:15:43.39,null
+Transaction,null,1,1,credit_cards,true,2015-04-09 18:17:10.153,null

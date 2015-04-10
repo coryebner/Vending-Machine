@@ -330,7 +330,7 @@ public class StandardMachineGUI extends VendingMachineGUI implements
 				pnlMisc.add(lblOutOfOrder);
 			}
 		} catch (NoSuchHardwareException e3) {
-			e3.printStackTrace();
+			//
 		}
 		
 		

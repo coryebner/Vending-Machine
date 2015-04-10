@@ -763,22 +763,26 @@ public class Configuration {
 			}
 			
 			ProductRack [] racks = new ProductRack[m.getNumberOfProductRacks()];
-			IndicatorLight [] productlights = new IndicatorLight[m.getNumberOfOutOfProductLights()];
 			
 			for (int i = 0; i < racks.length; ++i) {
 				racks[i] = m.getProductRack(i);
 			}
-			
+			try{
+			IndicatorLight [] productlights = new IndicatorLight[m.getNumberOfOutOfProductLights()];
 			for (int i = 0; i < productlights.length; ++i) {
 				productlights[i] = m.getOutOfProductLight(i);
+			}
+			new OutOfProductLightController(productlights, racks, inventoryController);
+			}catch(NoSuchHardwareException e){
+				//Moving forward
 			}
 			if(funds.isCoinsPresent()){
 				new OutOfOrderLightController(m.getOutOfOrderLight(), m.getCoinStorageBin(),
 										  funds.getCoinStorageBinTracker(), logger);
 			}
-			new OutOfProductLightController(productlights, racks, inventoryController);
 		}
 		catch (NoSuchHardwareException e) {
+			e.printStackTrace();
 			throw new ConfigurationException("Unable to find hardware necessary for display controller");
 		}
 	}
