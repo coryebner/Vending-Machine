@@ -43,8 +43,8 @@ public class POPGUITest {
 			}
 		}
 		Configuration config = new Configuration();
-		machine = new VMRUS_COM_P_M(Locale.CANADA,coinValue,billValue);
-		window = new StandardMachineGUI (machine, config,parts);
+		machine = config.load("VMRUS-COM-P/M", "instant");
+		window = new StandardMachineGUI (machine, config, parts);
 		window.getMainFrame().setVisible(true);
 	}
 
