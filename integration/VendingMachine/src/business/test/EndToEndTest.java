@@ -32,8 +32,8 @@ public class EndToEndTest {
 	
 	protected void fillCoins(AbstractVendingMachine machine) throws Exception{
 		for(int i = 0; i < machine.getNumberOfCoinRacks(); i++){
-			for(int j = 0; j <10; i++){
-				machine.getCoinRack(i).loadWithoutEvents(new Coin(getCoinValueFromIndex(i)));
+			for(int j = 0; j <10; j++){
+				machine.getCoinRack(i).acceptCoin(new Coin(getCoinValueFromIndex(i)));
 			}
 		}
 	}
@@ -51,6 +51,15 @@ public class EndToEndTest {
 
 		Object [] items = machine.getDeliveryChute().removeItems();
 		assertItemTypesReturned(items, Product.class, 0, "No products should have been dispensed");
+	}
+	
+	protected void testPurchaseProductNoFundsCode() throws Exception {
+		machine.getSelectionButton(0).press();
+		machine.getSelectionButton(6).press();
+
+		Object [] items = machine.getDeliveryChute().removeItems();
+		assertItemTypesReturned(items, Product.class, 0, "No products should have been dispensed");
+		
 	}
 
 	protected void testMakeChangeFromCoin() throws Exception {
@@ -116,12 +125,34 @@ public class EndToEndTest {
 		assertItemTypesReturned(items, Product.class, 1, "A product should have been dispensed");
 	}
 	
+	protected void testPurchaseProductBillCode() throws Exception {
+		Banknote bnote = new Banknote(500);
+		machine.getBanknoteSlot().addBanknote(bnote);
+		machine.getSelectionButton(0).press();
+		machine.getSelectionButton(6).press();
+		
+		Object[] items = machine.getDeliveryChute().removeItems();
+		assertItemTypesReturned(items, Product.class, 1, "A product should have been dispensed");		
+	}
+	
 	protected void testMakeChangeFromBills() throws Exception {
 		fillCoins(machine);
 		
 		Banknote bnote = new Banknote(500);
 		machine.getBanknoteSlot().addBanknote(bnote);
 		machine.getSelectionButton(0).press();
+		
+		Object[] items = machine.getDeliveryChute().removeItems();
+		assertItemTypesReturned(items, Coin.class, 2, "Two toonies should be given");
+	}
+	
+	protected void testMakeChangeFromBillsCode() throws Exception {
+		fillCoins(machine);
+		
+		Banknote bnote = new Banknote(500);
+		machine.getBanknoteSlot().addBanknote(bnote);
+		machine.getSelectionButton(0).press();
+		machine.getSelectionButton(6).press();
 		
 		Object[] items = machine.getDeliveryChute().removeItems();
 		assertItemTypesReturned(items, Coin.class, 2, "Two toonies should be given");
@@ -203,10 +234,6 @@ public class EndToEndTest {
 		Object [] items = machine.getDeliveryChute().removeItems();
 		assertItemTypesReturned(items, Product.class, 0, "A product should not be dispensed");
 		assertEquals(100,config.getFunds().getCoinsController().getAvailableBalance());
-		
-		
-		
-		
 	}
 	
 	/**@author Adrian Wu

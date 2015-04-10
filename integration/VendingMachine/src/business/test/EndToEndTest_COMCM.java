@@ -23,7 +23,27 @@ public class EndToEndTest_COMCM extends EndToEndTest {
 	}
 	
 	@Test
+	public void testPurchaseProductNoFundsCode() throws Exception {
+		super.testPurchaseProductNoFundsCode();
+	}
+	
+	@Test
 	public void testEnterInvalidCode() throws Exception {
 		super.testEnterInvalidCode();
+	}
+	
+	@Test
+	public void testPurchaseProductBillCode() throws Exception {
+		super.testPurchaseProductBillCode();
+	}
+	
+	@Test
+	public void testMakeChangeFromBillsCode() throws Exception {
+		super.testMakeChangeFromBillsCode();
+	}
+	
+	@Test
+	public void testCoinReturn() throws Exception {
+		super.testCoinReturn();
 	}
 }
