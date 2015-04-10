@@ -137,6 +137,7 @@ public class EndToEndTest {
 		machine.getBanknoteSlot().addBanknote(new Banknote(500));
 		machine.getSelectionButton(0).press();
 		Object [] items = machine.getDeliveryChute().removeItems();
+		// TODO the precendence for machine 4 fails for this. It takes banknotes before coins
 		assertItemTypesReturned(items, Banknote.class, 1, "A banknote should have been returned");
 
 	}
@@ -163,7 +164,7 @@ public class EndToEndTest {
 	/**@author M. Diaz
 	 * Method to check that purchase fails when the machine is full of coins
 	 * */
-	protected void testFailFullOfCoins() throws Exception {
+	protected void testFailFullOfCoinsRack() throws Exception {
 		int coinValue = config.getFunds().getCoinRackControllers()[4].getCoinRackDenomination();
 		while(machine.getCoinRack(4).hasSpace()){
 			machine.getCoinRack(4).acceptCoin(new Coin(coinValue));
@@ -171,7 +172,7 @@ public class EndToEndTest {
 		machine.getCoinSlot().addCoin(new Coin(coinValue));	
 		machine.getSelectionButton(0);
 		Object [] items = machine.getDeliveryChute().removeItems();
-		assertItemTypesReturned(items, Product.class, 0, "A product should be dispensed");
+		assertItemTypesReturned(items, Product.class, 0, "A product should not be dispensed");
 		assertEquals(100,config.getFunds().getCoinsController().getAvailableBalance());
 		
 		
@@ -206,4 +207,39 @@ public class EndToEndTest {
 		}
 		assertTrue("Out of Order light should be on", machine.getOutOfOrderLight().isActive());
 	}
+	
+	/**@author M. Diaz
+	 * Method to check that purchase fails when the machine is full of coins (coin slot)
+	 * */
+	protected void testFailFullOfCoinsSlot() throws Exception {
+		
+		while(machine.getCoinReceptacle().hasSpace()){
+			machine.getCoinSlot().addCoin(new Coin(100));
+		}
+		
+		machine.getCoinSlot().addCoin(new Coin(100));
+		Object [] items = machine.getDeliveryChute().removeItems();
+		assertItemTypesReturned(items, Coin.class, 1, "A coin should be returned");
+	}
+	
+	/**@author M. Diaz
+	 * Method to check notification light out of order is on when a product is empty
+	 * */
+	protected void testOutOfProductEmpty() throws Exception {
+		
+		int numberOfProducts = config.getInventory().getCount(0);
+		for(int i=0; i < numberOfProducts; i++){
+			machine.getProductRack(0).dispenseProduct();
+			Object [] items = machine.getDeliveryChute().removeItems();
+			assertItemTypesReturned(items, Product.class, 1, "A product should be dispensed");
+		}
+
+		machine.getCoinSlot().addCoin(new Coin(100));
+		machine.getSelectionButton(0).press();
+		assertEquals("Nothing should have been vended", 0, machine.getDeliveryChute().removeItems().length);
+		assertTrue(machine.getOutOfProductLight(0).isActive());
+		//machine.getConfigurationPanelTransmitter().
+		
+	}
+	
 }

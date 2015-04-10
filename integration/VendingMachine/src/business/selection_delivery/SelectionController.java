@@ -8,12 +8,11 @@ import hardware.exceptions.DisabledException;
 import hardware.exceptions.EmptyException;
 
 
-/*
- * The Selection Controller is the abstract shell for the CodeSelectionController
- * and ButtonSelectionController
+/**
+ * @class SelectionController
  * 
- * REQUIRES: Instantiate this as either a code or button selection controller 
- * 				ex: selectionController = new CodeSelectionController();
+ * Abstract class that handles selection and product dispensing events
+ * for the vending machine.
  */
 public abstract class SelectionController extends
 	AbstractController<SelectionControllerListener> {
@@ -21,6 +20,12 @@ public abstract class SelectionController extends
 	protected InventoryController inventory;
 	protected FundsController funds;
 	
+	/**
+	 * Sets up the selection controller.
+	 * 
+	 * @param inv		A reference to the inventory controller
+	 * @param f 		a reference to the funds controller
+	 */
 	public SelectionController(InventoryController inv, FundsController f)
 	{
 		if(inv == null || f == null)
@@ -30,10 +35,11 @@ public abstract class SelectionController extends
 		funds = f;
 	}
 	
-	/*
-	 * REQUIRES: The rack index
+	/**
+	 * Dispenses a product at the given rack index. Handles any exception 
+	 * that may occur.
 	 * 
-	 * PROMISES: A pop will be dispensed if funds are sufficient
+	 * @param index		The index of the rack
 	 */
 	protected void dispense(int index)
 	{

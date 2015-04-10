@@ -22,13 +22,13 @@ import SDK.logger.Logger;
 import SDK.rifffish.Machine;
 import SDK.rifffish.Rifffish;
 import business.funds.CoinRackController;
+import business.funds.CoinStorageBinController;
 import business.funds.CoinsController;
 import business.funds.FundsController;
 import business.funds.PaymentMethods;
-import business.funds.CoinStorageBinController;
+import business.notifications.DisplayController;
 import business.notifications.OutOfOrderLightController;
 import business.notifications.OutOfProductLightController;
-import business.notifications.DisplayController;
 import business.selection_delivery.ButtonSelectionController;
 import business.selection_delivery.CodeSelectionController;
 import business.selection_delivery.InventoryController;
@@ -54,9 +54,9 @@ import hardware.racks.CoinRack;
 import hardware.racks.ProductRack;
 import hardware.ui.ConfigurationPanelTransmitter;
 import hardware.ui.ConfigurationPanelTransmitterListener;
+import hardware.ui.IndicatorLight;
 import hardware.ui.PushButton;
 import hardware.ui.PushButtonCodeInterpreter;
-import hardware.ui.IndicatorLight;
 
 public class Configuration {
 
@@ -154,12 +154,12 @@ public class Configuration {
 	}
 	
 	public ArrayList<Boolean> parts() {
-		Boolean [] parts = {(type != SFFPPI), // coinslot
-							(type != SFFPPI && type != SFFPCI && type != SFFPC), // billslot
-							(type != SFFPC && type != SFFPCI), // cardslot
-							(type != SFFPC && type != COMPM && type != COMCM && type != TOCCp), // internet
-							(type != COMCM && type != TOCCMI), // pop buttons
-							(type == COMCMI || type == COMCM || type == TOCCMI || type == TOCCp || type == TOCCpI), // candy buttons
+		Boolean [] parts = {!(type.equals(SFFPPI)), // coinslot
+							!(type.equals(SFFPPI) || type.equals(SFFPCI) || type.equals(SFFPC)), // billslot
+							!(type.equals(SFFPC) || type.equals(SFFPCI)), // cardslot
+							!(type.equals(SFFPC) || type.equals(COMPM) || type.equals(COMCM) || type.equals(TOCCp)), // internet
+							!(type.equals(COMCM) || type.equals(TOCCMI)), // pop buttons
+							(type.equals(COMCMI) || type.equals(COMCM) || type.equals(TOCCMI) || type.equals(TOCCp) || type.equals(TOCCpI)), // candy buttons
 							(type.startsWith("TOC")), // touchscreen
 							false, // paypal
 		};
@@ -725,7 +725,9 @@ public class Configuration {
 			this.logger= new Logger();
 			machineID = getMachineID(false);
 		}
-		
+		else {
+			throw new ConfigurationException("Invalid logging frequency " + frequency + " - must be one of instant, batch, daily or offline");
+		}
 	}
 
 	/**
@@ -749,21 +751,40 @@ public class Configuration {
 		}
 	}
 	
-	protected void createDisplayController(AbstractVendingMachine m,
-										   ButtonSelectionController buttons,
-										   CoinsController coins) 
+	protected void createDisplayController(AbstractVendingMachine m) 
 		throws ConfigurationException
 	{
 		try {
-			display = new DisplayController(m.getDisplay(), buttons, coins, m.getCoinReceptacle());
-			ProductRack[] racks = new ProductRack[m.getNumberOfProductRacks()];
-			IndicatorLight[] productLights = new IndicatorLight[m.getNumberOfOutOfProductLights()];
-			for(int i = 0; i < racks.length; i++)
+			display = new DisplayController(m.getDisplay(), funds);
+			
+			if (buttonSelectionController != null) {
+				buttonSelectionController.register(display);
+			}
+			if (codeSelectionController != null) {
+				codeSelectionController.register(display);
+			}
+			
+			if (funds.isCoinsPresent()) {
+				m.getCoinReceptacle().register(display);
+			}
+			if (funds.isBillsPresent()) {
+				m.getBanknoteReceptacle().register(display);
+			}
+			
+			ProductRack [] racks = new ProductRack[m.getNumberOfProductRacks()];
+			IndicatorLight [] productlights = new IndicatorLight[m.getNumberOfOutOfProductLights()];
+			
+			for (int i = 0; i < racks.length; ++i) {
 				racks[i] = m.getProductRack(i);
-			for(int i = 0; i < productLights.length; i++)
-				productLights[i] = m.getOutOfProductLight(i);
-			new OutOfOrderLightController(m.getOutOfOrderLight(), m.getCoinStorageBin(), funds.getCoinStorageBinTracker());
-			new OutOfProductLightController(productLights, racks, inventoryController);
+			}
+			
+			for (int i = 0; i < productlights.length; ++i) {
+				productlights[i] = m.getOutOfProductLight(i);
+			}
+			
+			new OutOfOrderLightController(m.getOutOfOrderLight(), m.getCoinStorageBin(),
+										  funds.getCoinStorageBinTracker(), logger);
+			new OutOfProductLightController(productlights, racks, inventoryController);
 		}
 		catch (NoSuchHardwareException e) {
 			throw new ConfigurationException("Unable to find hardware necessary for display controller");
@@ -816,7 +837,7 @@ public class Configuration {
 		//Create a selection button controller
 		createButtonSelectionController(m);
 		
-		createDisplayController(m, buttonSelectionController, funds.getCoinsController());		
+		createDisplayController(m);		
 	}
 
 	protected AbstractVendingMachine createSFFPCI()
@@ -835,7 +856,7 @@ public class Configuration {
 		
 		//Create a selection button controller
 		createButtonSelectionController(machine);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 		
 		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(True)
 		return machine;
@@ -858,7 +879,7 @@ public class Configuration {
 		//Create a selection button controller
 		createButtonSelectionController(machine);
 
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 		
 		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(True)
 		return machine;
@@ -879,7 +900,7 @@ public class Configuration {
 		
 		//Create a selection button controller
 		createButtonSelectionController(machine);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 		
 		//TODO: Displaycontroller(Basic), keyboardController(Physical), internetController(True)
 		return machine;
@@ -900,7 +921,7 @@ public class Configuration {
 		
 		//Create a selection button controller
 		createButtonSelectionController(machine);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 	
 		//TODO: Displaycontroller(Basic), keyboardController(None), internetController(False)
 		return machine;
@@ -921,7 +942,7 @@ public class Configuration {
 	
 		//Create Code selection controller
 		createCodeController(machine, 0);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 		
 		//TODO: Displaycontroller(basic), keyboardController(Physical), internetController(True)
 		return machine;
@@ -942,7 +963,7 @@ public class Configuration {
 
 		//Create Code selection controller
 		createCodeController(machine, 0);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 		
 		//TODO: Displaycontroller(basic), keyboardController(none), internetController(false)
 		return machine;
@@ -963,7 +984,7 @@ public class Configuration {
 	
 		//Create a selection button controller
 		createButtonSelectionController(machine);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 		
 		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(True)
 		return machine;
@@ -984,7 +1005,7 @@ public class Configuration {
 
 		//Create a selection button controller
 		createButtonSelectionController(machine);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 	
 		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(False)
 		return machine;		
@@ -1005,7 +1026,7 @@ public class Configuration {
 	
 		//Create Code selection controller
 		createButtonSelectionController(machine);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 	
 		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(True)
 		return machine;
@@ -1025,7 +1046,7 @@ public class Configuration {
 	
 		//Create a selection button controller
 		createButtonSelectionController(machine);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 
 		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(false)
 		return machine;
@@ -1045,7 +1066,7 @@ public class Configuration {
 
 		//Create a selection button controller
 		createButtonSelectionController(machine);
-		createDisplayController(machine, buttonSelectionController, funds.getCoinsController());
+		createDisplayController(machine);
 
 		//TODO: Displaycontroller(touchscreen), keyboardController(digital), internetController(true)
 		return machine;		

@@ -25,9 +25,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.util.ArrayList;
-import java.util.List;
 
-import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 
 import business.config.Configuration;
@@ -60,7 +58,7 @@ public class VMConfigGUI {
 	private void initialize()  {
 		frmVendingMachinesRUS = new JFrame();
 		frmVendingMachinesRUS.setTitle("Vending Machines R Us");
-		frmVendingMachinesRUS.setBounds(100, 100, 386, 440);
+		frmVendingMachinesRUS.setBounds(100, 100, 386, 463);
 		frmVendingMachinesRUS.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
@@ -82,29 +80,32 @@ public class VMConfigGUI {
 		//Auto-generated layout spaghetti code
 		GroupLayout groupLayout = new GroupLayout(frmVendingMachinesRUS.getContentPane());
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
+			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(panel_4, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-						.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
 						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(lblConfigFile)
-							.addGap(62)))
-					.addContainerGap())
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+							.addGap(64))
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addGap(6)
+							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+								.addComponent(panel_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+								.addComponent(panel_4, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE))
+							.addContainerGap())))
+				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
 					.addContainerGap())
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(22)
 					.addComponent(lblVendingMachineType)
 					.addPreferredGap(ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
 					.addComponent(lblRemoteReportingType)
 					.addGap(30))
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(panel_3, GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
 					.addContainerGap())
@@ -119,17 +120,17 @@ public class VMConfigGUI {
 						.addComponent(lblVendingMachineType)
 						.addComponent(lblRemoteReportingType))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(lblConfigFile)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(panel_4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-						.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 258, GroupLayout.PREFERRED_SIZE))
+							.addComponent(panel_4, GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE))
+						.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(67, Short.MAX_VALUE))
+					.addContainerGap())
 		);
 		panel_3.setLayout(null);
 
@@ -229,43 +230,54 @@ public class VMConfigGUI {
 		ActionListener reportConfigListener = new ReportConfigListener();
 		//Remote reporting configurations
 		JRadioButton reportConfig1 = new JRadioButton("Every transaction");
-		reportConfig1.setActionCommand("Every transaction");
+		reportConfig1.setActionCommand("instant");
 		reportConfig1.setBounds(6, 6, 172, 23);
 		reportConfig1.addActionListener(reportConfigListener);
 		panel_2.add(reportConfig1);
 		
 		JRadioButton reportConfig2 = new JRadioButton("Every 100 transactions");
-		reportConfig2.setActionCommand("Every 100 transactions");
+		reportConfig2.setActionCommand("batch");
 		reportConfig2.setBounds(6, 30, 178, 23);
 		reportConfig2.addActionListener(reportConfigListener);
 		panel_2.add(reportConfig2);
 		
 		JRadioButton reportConfig3 = new JRadioButton("Daily at 4:00am");
-		reportConfig3.setActionCommand("Daily at 4:00am");
+		reportConfig3.setActionCommand("daily");
 		reportConfig3.setBounds(6, 54, 172, 23);
 		reportConfig3.addActionListener(reportConfigListener);
 		panel_2.add(reportConfig3);
+		
+		JRadioButton reportConfig4 = new JRadioButton("Offline");
+		reportConfig4.setActionCommand("offine");
+		reportConfig4.setBounds(6, 80, 172, 23);
+		reportConfig4.addActionListener(reportConfigListener);
+		panel_2.add(reportConfig4);
 		panel_1.setLayout(null);
 		
 		reportConfigRadioGroup = new ButtonGroup();
 		reportConfigRadioGroup.add(reportConfig1);
 		reportConfigRadioGroup.add(reportConfig2);
 		reportConfigRadioGroup.add(reportConfig3);
+		reportConfigRadioGroup.add(reportConfig4);
+		
 		
 		//Config file
 		JLabel lblwhenYouClick = new JLabel("<html>When you click this button,<br>the program launches a<br>vending machine based on<br>the settings stored in its<br>.config file.</html>");
 		lblwhenYouClick.setForeground(Color.DARK_GRAY);
-		lblwhenYouClick.setBounds(6, 10, 178, 83);
+		lblwhenYouClick.setBounds(6, 14, 178, 83);
 		panel_4.add(lblwhenYouClick);
 		
+		// Use config button
 		JButton btnConfigFile = new JButton("Use Config File");
 		btnConfigFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO need to open a list of config file name 
-				// and let the user to pick one, send it to configuration 
+				FileFinder finder = new FileFinder ();
+				SelectConfigFileGUI selectConfigFileGUI = new SelectConfigFileGUI(frmVendingMachinesRUS,finder);
+				selectConfigFileGUI.getMainFrame().setVisible(true);
+				frmVendingMachinesRUS.setVisible(false);	
 			}
 		});
-		btnConfigFile.setBounds(26, 104, 139, 29);
+		btnConfigFile.setBounds(27, 105, 139, 29);
 		panel_4.add(btnConfigFile);
 		panel_2.setLayout(null);
 		
@@ -273,21 +285,22 @@ public class VMConfigGUI {
 		JButton btnLaunch = new JButton("Launch");
 		btnLaunch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { 
-				if(reportConfig!=null && machineConfig!=null){	
+				if((reportConfig!=null || reportConfig == "offline")&& machineConfig!=null){	
 					Configuration config = new Configuration();
 					AbstractVendingMachine machine = null;
 					try {
 						machine = config.load(machineConfig,reportConfig);
 					} catch (ConfigurationException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					
 					ArrayList<Boolean> parts = config.parts();
-
-					VendingMachineGUI window = new StandardMachineGUI(machine,parts);
-					window.getMainFrame().setVisible(true);
-					frmVendingMachinesRUS.setVisible(false);
+					if(machine == null){
+						System.out.println("No such vending machine return from Configuration.");
+					}else{
+						VendingMachineGUI window = new StandardMachineGUI(machine,config,parts);
+						window.getMainFrame().setVisible(true);
+						frmVendingMachinesRUS.setVisible(false);
+					}
 				}else{
 					System.out.println("Please choose the configuration for the vending machine and the report");
 				}
