@@ -17,6 +17,7 @@ import java.util.Map;
 import SDK.logger.LogDate;
 import SDK.logger.LogDate.LoggingType;
 import SDK.logger.Logger;
+import SDK.rifffish.Machine;
 import SDK.rifffish.Rifffish;
 import business.funds.CoinRackController;
 import business.funds.FundsController;
