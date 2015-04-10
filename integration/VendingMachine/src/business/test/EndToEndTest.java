@@ -188,9 +188,8 @@ public class EndToEndTest {
 		for(int i = 0; i < itemRet.length; i++){
 			machine.getCoinSlot().addCoin(new Coin(100));
 			machine.getSelectionButton(0).press();
-			itemRet[i] = machine.getDeliveryChute().removeItems()[0];
+			machine.getDeliveryChute().removeItems();
 		}
-		assertItemTypesReturned(itemRet, Product.class, 15, "A product should have been vended");
 		assertTrue("Rack should be empty", config.getInventory().isEmpty(0));
 		machine.getCoinSlot().addCoin(new Coin(100));
 		machine.getSelectionButton(0).press();
