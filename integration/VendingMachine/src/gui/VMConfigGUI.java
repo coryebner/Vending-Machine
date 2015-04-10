@@ -294,10 +294,13 @@ public class VMConfigGUI {
 						e1.printStackTrace();
 					}
 					ArrayList<Boolean> parts = config.parts();
-
-					VendingMachineGUI window = new StandardMachineGUI(machine,parts);
-					window.getMainFrame().setVisible(true);
-					frmVendingMachinesRUS.setVisible(false);
+					if(machine == null){
+						System.out.println("No such vending machine return from Configuration.");
+					}else{
+						VendingMachineGUI window = new StandardMachineGUI(machine,config,parts);
+						window.getMainFrame().setVisible(true);
+						frmVendingMachinesRUS.setVisible(false);
+					}
 				}else{
 					System.out.println("Please choose the configuration for the vending machine and the report");
 				}
