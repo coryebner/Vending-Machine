@@ -608,7 +608,7 @@ public class Configuration {
 				pushButtons[i] = m.getSelectionButton(i);
 			}
 			//Creation of controller
-			this.buttonSelectionController = new ButtonSelectionController(this.inventoryController, this.funds, pushButtons, numberOfButtons);
+			this.buttonSelectionController = new ButtonSelectionController(this.inventoryController, this.funds, pushButtons, n);
 
 			// Registering the buttons from hardware with the buttonSelectionController
 			for(int i=0; i < n; i++){
