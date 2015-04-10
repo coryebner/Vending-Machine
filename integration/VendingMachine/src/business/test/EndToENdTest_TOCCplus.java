@@ -1,8 +1,5 @@
 package business.test;
 
-import static org.junit.Assert.*;
-import hardware.funds.Coin;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -84,6 +84,8 @@ public class EndToEndTest {
 	}
 	
 	protected void testMakeChangeFromPriorPurchase() throws Exception {
+		fillCoins(machine);
+		
 		machine.getCoinSlot().addCoin(new Coin(100));
 		machine.getSelectionButton(0).press();
 		machine.getDeliveryChute().removeItems();

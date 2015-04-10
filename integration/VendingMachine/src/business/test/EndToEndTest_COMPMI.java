@@ -40,7 +40,7 @@ public class EndToEndTest_COMPMI extends EndToEndTest {
 	
 	@Test
 	public void testPurchaseProductNoFunds() throws Exception {
-		//super.testPurchaseProductNoFunds();
+		super.testPurchaseProductNoFunds();
 	}
 	
 	@Test
