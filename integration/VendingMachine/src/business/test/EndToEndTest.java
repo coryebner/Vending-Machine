@@ -238,7 +238,7 @@ public class EndToEndTest {
 		machine.getSelectionButton(0).press();
 		assertEquals("Nothing should have been vended", 0, machine.getDeliveryChute().removeItems().length);
 		assertTrue(machine.getOutOfProductLight(0).isActive());
-		machine.getConfigurationPanelTransmitter().
+		//machine.getConfigurationPanelTransmitter().
 		
 	}
 	
